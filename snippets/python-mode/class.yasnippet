@@ -6,6 +6,6 @@ class ${1:`(let ((fn (capitalize (file-name-nondirectory
 				 (or (buffer-file-name)
 				     (buffer-name (current-buffer))))))))
            (cond
-             ((string-match "_" fn) (yas-underscore-to-camel fn))
+             ((string-match "_" fn) (s-upper-camel-case fn))
               (t fn)))`}${2:(${3:`(if (string-match "test.py$" (or (buffer-file-name) (buffer-name (current-buffer)))) "unittest.TestCase" "object")`})}:
     $0

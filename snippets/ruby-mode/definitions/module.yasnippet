@@ -6,7 +6,7 @@ module ${1:`(let ((fn (capitalize (file-name-nondirectory
 				 (or (buffer-file-name)
 				     (buffer-name (current-buffer))))))))
            (cond
-             ((string-match "_" fn) (yas-underscore-to-camel fn))
+             ((string-match "_" fn) (s-upper-camel-case fn))
               (t fn)))`}
   $0
 end

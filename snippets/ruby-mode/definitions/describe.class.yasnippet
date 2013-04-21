@@ -9,7 +9,7 @@ describe ${1:`(let ((fn
                       (or (buffer-file-name)
                           (buffer-name (current-buffer)))))))))
   (cond
-   ((string-match "_" fn) (yas-underscore-to-camel fn))
+   ((string-match "_" fn) (s-upper-camel-case fn))
    (t fn)))`} do
   $0
 end

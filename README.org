@@ -540,7 +540,9 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
     (define-key ctl-x-r-map (kbd "C-f") 'mc/mark-sgml-tag-pair)
     
     (global-unset-key (kbd "C-<down-mouse-1>"))
-    (global-set-key (kbd "C-<mouse-1>") 'mc/add-cursor-on-click))
+    (global-set-key (kbd "C-<mouse-1>") 'mc/add-cursor-on-click)
+
+    (global-set-key (kbd "C-3") 'mc/mark-all-like-this))
 #+END_SRC
 
 ** dired

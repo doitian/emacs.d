@@ -412,7 +412,8 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
         (magit-refresh))
     
       (defun init--magit-mode ()
-        (define-key magit-mode-map (kbd "W") 'magit-toggle-whitespace))
+        (define-key magit-mode-map (kbd "W") 'magit-toggle-whitespace)
+        (local-set-key [f12] 'magit-quit-window))
     
       (defun init--magit-log-edit-mode ()
         (flyspell-mode 1)
@@ -565,7 +566,9 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
       (define-key ctl-x-r-map (kbd "C-f") 'mc/mark-sgml-tag-pair)
     
       (global-unset-key (kbd "C-<down-mouse-1>"))
-      (global-set-key (kbd "C-<mouse-1>") 'mc/add-cursor-on-click))
+      (global-set-key (kbd "C-<mouse-1>") 'mc/add-cursor-on-click)
+    
+      (global-set-key (kbd "C-3") 'mc/mark-all-like-this))
 
 <a name="sec-7-11"></a>
 ## dired

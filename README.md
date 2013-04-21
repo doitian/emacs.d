@@ -42,6 +42,7 @@
 <li><a href="#sec-7-14">7.14. window-manager</a></li>
 <li><a href="#sec-7-15">7.15. vc</a></li>
 <li><a href="#sec-7-16">7.16. isearch</a></li>
+<li><a href="#sec-7-17">7.17. revert</a></li>
 </ul>
 </li>
 </ul>
@@ -568,7 +569,8 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
       (global-unset-key (kbd "C-<down-mouse-1>"))
       (global-set-key (kbd "C-<mouse-1>") 'mc/add-cursor-on-click)
     
-      (global-set-key (kbd "C-3") 'mc/mark-all-like-this))
+      (global-set-key (kbd "C-3") 'mc/mark-all-like-this)
+      (define-key ctl-x-r-map [return] 'set-rectangular-region-anchor))
 
 <a name="sec-7-11"></a>
 ## dired
@@ -679,6 +681,11 @@ add changes interactively using `ediff`.
     
       (add-to-list 'auto-mode-alist '("\\.gitconfig\\'" . conf-mode))
       (add-to-list 'auto-mode-alist '("\\.git/config\\'" . conf-mode))
+    
+      (defadvice vc-mode-line (after colorize-vc-mode-line activate)
+        (when vc-mode
+          ;; git is default
+          (put-text-property 1 (length vc-mode) 'face 'font-lock-doc-face vc-mode)))
       )
 
 <a name="sec-7-16"></a>
@@ -718,3 +725,20 @@ add changes interactively using `ediff`.
               (isearch-forward regexp-p no-recursive-edit)))))
     
       (define-key my-keymap "8" 'isearch-forward-at-point))
+
+<a name="sec-7-17"></a>
+## revert
+
+Auto revert, and helper functions to revert without confirmation.
+
+    (define-module revert
+      (defun revert-buffer-no-confirm ()
+        "Revert buffer without confirmation."
+        (interactive) (flet ((yes-or-no-p (prompt) t)) (revert-buffer)))
+    
+      ;; Auto refresh buffers
+      (global-auto-revert-mode 1)
+    
+      ;; Also auto refresh dired, but be quiet about it
+      (setq global-auto-revert-non-file-buffers t)
+      (setq auto-revert-verbose nil))

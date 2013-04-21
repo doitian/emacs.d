@@ -4,5 +4,5 @@
 *.elc
 
 /init.el
+/elpa
 
-/data/*

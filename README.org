@@ -1055,6 +1055,21 @@ Misc editing config
         ad-do-it)))
 #+END_SRC
 
+** recentf
+
+#+BEGIN_SRC emacs-lisp
+  (define-module recentf
+    (custom-set-variables
+     '(recentf-arrange-rules (quote (("Elisp files (%d)" ".\\.el\\'") ("Java files (%d)" ".\\.java\\'") ("C/C++ files (%d)" ".\\.c\\(pp\\)?\\'" ".\\.h\\(pp\\)?\\'") ("Org files (%d)" ".\\.org\\'"))))
+     '(recentf-exclude (quote ("semantic\\.cache" "COMMIT_EDITMSG" "git-emacs-tmp.*" "\\.breadcrumb" "\\.ido\\.last" "\\.projects.ede" "/g/org/")))
+     '(recentf-menu-filter (quote recentf-arrange-by-rule))
+     '(recentf-max-saved-items 200))
+  
+    (recentf-mode +1)
+  
+    (global-set-key [f2] 'recentf-open-files))
+#+END_SRC
+
 * TODO Backlog
 
 #+BEGIN_EXAMPLE

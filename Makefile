@@ -40,7 +40,7 @@ site-lisp/my-loaddefs.el: $(SITE_ELFILES)
 		 -f batch-update-autoloads site-lisp
 
 init.el: README.org
-	$(BATCH) -l org -eval "(org-babel-tangle-file \"$<\" \"$@\")"
+	$(BATCH) -l ob-tangle -eval "(org-babel-tangle-file \"$<\" \"$@\")"
 
 doc: README.md
 

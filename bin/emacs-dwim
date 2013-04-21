@@ -1,0 +1,86 @@
+#!/bin/bash
+# Author: Ian Yang
+
+# recommend aliases
+#
+# alias e=emacs-dwim
+# alias et='emacs-dwim -t'
+# alias en='emacs-dwim -n'
+export LC_CTYPE=zh_CN.UTF-8
+export LC_ALL=
+UNAME=`uname -s`
+
+if [ "$UNAME" = "Darwin" ]; then
+    exec emacs-dwim.mac "$@"
+fi
+
+_is_emacs_daemon_started () {
+    netstat -nlpx 2> /dev/null | awk '{print $NF}' | grep -q "emacs$UID/server"
+}
+
+_is_emacs_window_exist () {
+    wmctrl -lx 2> /dev/null | awk '{print $3}' | grep -qF 'emacs.Emacs'
+}
+
+_active_window_id () {
+    xprop -root 2> /dev/null |\
+        sed -n 's/^_NET_ACTIVE_WINDOW(WINDOW): window id # //p;T;q'
+}
+
+main () {
+    if ! _is_emacs_daemon_started; then
+        echo -n 'starting emacs daemon'
+        if emacs --daemon &> /tmp/emacs$UID.log; then
+            echo ' [sucess]'
+        else
+            echo ' [faild]'
+            return 1
+        fi
+    fi
+
+    if [ -n "$DISPLAY" -a "$1" != "-t" -a "$1" != "-n" ]; then
+        local cur=$(_active_window_id)
+        if _is_emacs_window_exist; then
+            wmctrl -x -a emacs.Emacs &> /dev/null
+            if [ -n "$1" ]; then
+                emacsclient "$@"
+                [ -n "$cur" ] && wmctrl -i -a "$cur"
+            fi
+        else
+            if [ -n "$1" ]; then
+                emacsclient -c "$@" &
+            else
+                emacsclient -n -c &
+            fi
+            local -i tries=3
+            while ! wmctrl -x -a emacs.Emacs &> /dev/null &&\
+                    [ $tries -gt 0 ]; do
+                sleep 1
+                tries=tries-1
+            done
+            wait $!
+            [ -n "$1" -a -n "$cur" -a "$1" != "-n" ] && wmctrl -i -a "$cur"
+        fi
+    else
+        if [ "$1" = "-t" -o "$1" = "-n" ]; then
+            if _is_emacs_window_exist; then
+                emacsclient "$@"
+            else
+                emacsclient -c "$@"
+            fi
+        else
+            emacsclient -t "$@"
+        fi
+    fi
+}
+
+kill_emacs () {
+    pidof emacs && \
+    emacsclient -e -n '(let ((desktop-save '\''if-exists)) (dolist (f (cdr-safe (reverse (frame-list)))) (delete-frame f t)) (kill-emacs "yyyyyy"))'
+    pidof emacs && killall emacs
+    return 0
+}
+
+[ -n "$1" -a "$1" = "-q" ] \
+    && kill_emacs \
+    || main "$@"

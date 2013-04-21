@@ -1,0 +1,87 @@
+#!/bin/bash
+# Author: Ian Yang
+
+# recommend aliases
+#
+# alias e=emacs-dwim
+# alias et='emacs-dwim -t'
+# alias en='emacs-dwim -n'
+
+AUTOMATOR=
+# AUTOMATOR=1
+#   set AUTOMATOR to 1 when used in automator as Application:
+#
+#   1.  Create an Application in Automator
+#   2.  Add an action to run Shell
+#   3.  Select "pass input as arguments".
+#   4.  Paste this file into the text area, and set AUTOMATOR=1
+#
+#   -   You can use the Application in "Open With..." or used as default handler.
+#   -   You can drag a file into this Application, and the file is opened in Emacs.
+#   -   You can add this Application in "System Preference -> Accounts -> Login Items" to auto
+#       start Emacs daemon.
+#
+EMACS=/Applications/Emacs.app/Contents/MacOS/Emacs
+EMACSCLIENT=/Applications/Emacs.app/Contents/MacOS/bin/emacsclient
+
+export LC_CTYPE=zh_CN.UTF-8
+export LC_ALL=
+
+_is_emacs_daemon_started () {
+  netstat -nl 2> /dev/null | awk '{print $NF}' | grep -q "emacs$UID/server"
+}
+_is_emacs_window_exist () {
+  _is_emacs_daemon_started && \
+    $EMACSCLIENT -e '(<= 2 (length (visible-frame-list)))' | grep -q -x t
+}
+
+kill_emacs () {
+  if _is_emacs_daemon_started; then
+    $EMACSCLIENT -e -n '(let ((desktop-save '\''if-exists)) (dolist (f (cdr-safe (reverse (frame-list)))) (delete-frame f t)) (kill-emacs "yyyyyy"))'
+    if _is_emacs_daemon_started; then
+      ps -u $UID -o pid,comm= | grep Emacs$ | cut -d' ' -f1 | xargs -n 1 kill
+    fi
+  fi
+  return 0
+}
+
+main () {
+  if ! _is_emacs_daemon_started; then
+    if $EMACS --daemon &> /tmp/emacs$UID.log; then
+      echo ' [sucess]'
+    else
+      echo ' [faild]'
+      return 1
+    fi
+  fi
+
+  local cur=$(osascript -e 'path to frontmost application as Unicode text')
+  if [ "$1" = "-t" ]; then
+    $EMACSCLIENT "$@"
+  elif [ -z "$1" ]; then
+    if ! _is_emacs_window_exist; then
+      $EMACSCLIENT -n -c
+    fi
+    osascript -e 'tell application "Emacs" to activate'
+    return 0
+  else
+    if ! _is_emacs_window_exist; then
+      $EMACSCLIENT -n -c
+    fi
+    if ! echo "$*" | grep -q -e '-n'; then
+      osascript -e 'tell application "Emacs" to activate'
+    fi
+    $EMACSCLIENT "$@"
+  fi
+  osascript -e "tell application \"${cur}\" to activate"
+}
+
+if [ -n "$AUTOMATOR" ]; then
+  [ -n "$1" ] \
+    && main -n "$@" \
+    || main
+else
+  [ -n "$1" -a "$1" = "-q" ] \
+    && kill_emacs \
+    || main "$@"
+fi

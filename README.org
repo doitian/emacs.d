@@ -645,7 +645,7 @@ add changes interactively using =ediff=.
     
     (setq revert-without-query
           (append 
-           ("COMMIT_EDITMSG\\'" "git-rebase-todo")
+           '("COMMIT_EDITMSG\\'" "git-rebase-todo")
            revert-without-query))
   
     (let ((git-emacs-dir (concat my-vendor-dir "git-emacs")))
@@ -715,7 +715,7 @@ Auto revert, and helper functions to revert without confirmation.
       (interactive) (flet ((yes-or-no-p (prompt) t)) (revert-buffer)))
   
     ;; Auto refresh buffers
-    (global-auto-revert-mode 1)
+    (global-auto-revert-mode +1)
   
     ;; Also auto refresh dired, but be quiet about it
     (setq global-auto-revert-non-file-buffers t)

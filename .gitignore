@@ -1,0 +1,8 @@
+\#*
+*~
+*.swp
+*.elc
+
+/init.el
+
+/data/*

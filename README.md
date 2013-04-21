@@ -46,6 +46,8 @@
 <li><a href="#sec-7-18">7.18. eshell</a></li>
 <li><a href="#sec-7-19">7.19. eproject</a></li>
 <li><a href="#sec-7-20">7.20. helm</a></li>
+<li><a href="#sec-7-21">7.21. octave-mode</a></li>
+<li><a href="#sec-7-22">7.22. compile-and-run</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Backlog</a></li>
@@ -854,7 +856,7 @@ Auto revert, and helper functions to revert without confirmation.
        '(helm-quick-update nil)
        '(helm-enable-shortcuts 'prefix))
     
-      (eval-after-load "helm"
+      (eval-after-load 'helm
         '(progn
            (require 'helm-mode)
            (require 'helm-config)
@@ -923,6 +925,96 @@ Auto revert, and helper functions to revert without confirmation.
         (let ((helm-pattern (helm-pattern-to-regexp helm-pattern)))
           ad-do-it))
       )
+
+<a name="sec-7-21"></a>
+## octave-mode
+
+    (define-module octave-mode
+      (add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode)))
+
+<a name="sec-7-22"></a>
+## compile-and-run
+
+    (define-module compile-and-run
+      (custom-set-variables
+       '(compilation-window-height 11)
+       '(compilation-auto-jump-to-first-error nil)
+       '(compilation-context-lines 5)
+       '(compilation-scroll-output (quote first-error)))
+    
+      (add-to-list 'compilation-error-regexp-alist-alist
+                   '(maven "^\\[\\w+\\] \\(.*\\):\\[\\([0-9]+\\),\\([0-9]+\\)\\] \\(.*\\)$" 1 2 3 (4)))
+      (add-to-list 'compilation-error-regexp-alist 'maven)
+    
+      (require 'ansi-color)
+      (defun colorize-compilation-buffer ()
+        (toggle-read-only)
+        (ansi-color-apply-on-region (point-min) (point-max))
+        (toggle-read-only))
+      (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+    
+      (defun compilation-notify-result (buffer message)
+        (with-current-buffer buffer
+          (notify mode-name message)))
+    
+      (when (fboundp 'notify)
+        (add-hook 'compilation-finish-functions 'compilation-notify-result))
+    
+      (autoload 'smart-compile "smart-compile+" nil t)
+      (autoload 'smart-run "smart-compile+" nil t)
+      (autoload 'smart-compile-replace "smart-compile+" nil t)
+    
+      (eval-after-load 'smart-compile+
+        '(progn
+           (setq smart-run-alist
+                 (append
+                  (list
+                   (cons "_spec\\.rb\\'" '(compile (concat "cd " (eproject-root) "; rr rspec --no-color " (file-relative-name (buffer-file-name) (eproject-root)))))
+                   (cons "\\.rb\\'" "rr ruby %F")
+                   (cons "\\.go\\'" "go run %F")
+                   (cons "\\.py\\'" "python %F"))
+                  smart-run-alist))
+           (setq smart-compile-alist
+                 (append
+                  (list
+                   (cons "\\.coffee$" "coffee -c %f"))
+                  smart-compile-alist))
+           (setq smart-executable-alist
+                 (append '("%n.rb" "%n.go" "%n.py") smart-executable-alist))))
+    
+      (defvar run-this--hist nil "History for `run-this'")
+    
+      (defun run-this (command &optional remember)
+        (interactive (list (if (minibufferp)
+                               (buffer-substring (minibuffer-prompt-end) (point-max))
+                             (read-from-minibuffer "Shell command: "
+                                                   (car run-this--hist) nil nil
+                                                   '(run-this--hist . 1)))
+                           current-prefix-arg))
+        (if (minibufferp)
+            (progn
+              (delete-minibuffer-contents)
+              (goto-char (minibuffer-prompt-end))
+              (insert (with-current-buffer (window-buffer (minibuffer-selected-window))
+                        (smart-compile-replace command))))
+          (setq command (smart-compile-replace command))
+          (when remember
+            (let ((map (make-sparse-keymap))
+                  (dir default-directory))
+              (define-key map (kbd "r") (eval `(lambda () (interactive)
+                                                 (iy-go-compile ,command ,dir))))
+              (global-set-key (kbd "M-s v") map)))
+          (compile command)))
+    
+      (global-set-key [f5] 'compile)
+      (define-key my-keymap (kbd "M-c") 'recompile)
+    
+      (define-key my-keymap (kbd "c") 'smart-compile)
+      (define-key my-keymap (kbd "x") 'smart-run)
+      (global-set-key (kbd "C-1") 'run-this)
+      (define-key my-keymap (kbd "1") 'run-this)
+      (global-set-key (kbd "C-`") 'next-error)
+      (global-set-key (kbd "C-~") 'previous-error))
 
 <a name="sec-8"></a>
 # TODO Backlog

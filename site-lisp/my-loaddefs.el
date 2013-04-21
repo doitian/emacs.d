@@ -85,6 +85,18 @@ Define a minor mode for `my-keymap'
 
 ;;;***
 
+;;;### (autoloads (notify) "notify" "notify.el" (20852 19297 530129
+;;;;;;  146000))
+;;; Generated autoloads from notify.el
+
+(autoload 'notify "notify" "\
+Notify TITLE, BODY via `notify-method'.
+ARGS may be amongst :timeout, :icon, :urgency, :app and :category.
+
+\(fn TITLE BODY &rest ARGS)" nil nil)
+
+;;;***
+
 ;;;### (autoloads (pick-backup-and-view pick-backup-and-revert pick-backup-and-diff
 ;;;;;;  pick-backup-and-ediff) "pick-backup" "pick-backup.el" (20852
 ;;;;;;  1222 783265 748000))
@@ -112,8 +124,8 @@ View one of FILE's backups.
 
 ;;;***
 
-;;;### (autoloads nil nil ("dash.el" "eproject-plus.el" "sequential-command.el")
-;;;;;;  (20852 17164 902665 837000))
+;;;### (autoloads nil nil ("dash.el" "eproject-plus.el" "sequential-command.el"
+;;;;;;  "smart-compile+.el") (20852 19425 973372 725000))
 
 ;;;***
 

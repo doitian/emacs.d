@@ -51,6 +51,8 @@
 <li><a href="#sec-7-23">7.23. compile-and-run</a></li>
 <li><a href="#sec-7-24">7.24. editing</a></li>
 <li><a href="#sec-7-25">7.25. kill-ring</a></li>
+<li><a href="#sec-7-26">7.26. recentf</a></li>
+<li><a href="#sec-7-27">7.27. desktop</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Backlog</a></li>
@@ -1075,6 +1077,42 @@ Misc editing config
             (kill-ring-search)
           (barf-if-buffer-read-only)
           ad-do-it)))
+
+<a name="sec-7-26"></a>
+## recentf
+
+    (define-module recentf
+      (custom-set-variables
+       '(recentf-arrange-rules (quote (("Elisp files (%d)" ".\\.el\\'") ("Java files (%d)" ".\\.java\\'") ("C/C++ files (%d)" ".\\.c\\(pp\\)?\\'" ".\\.h\\(pp\\)?\\'") ("Org files (%d)" ".\\.org\\'"))))
+       '(recentf-exclude (quote ("semantic\\.cache" "COMMIT_EDITMSG" "git-emacs-tmp.*" "\\.breadcrumb" "\\.ido\\.last" "\\.projects.ede" "/g/org/")))
+       '(recentf-menu-filter (quote recentf-arrange-by-rule))
+       '(recentf-max-saved-items 200))
+    
+      (recentf-mode +1)
+    
+      (global-set-key [f2] 'recentf-open-files))
+
+<a name="sec-7-27"></a>
+## desktop
+
+    (define-module desktop
+      (custom-set-variables
+       '(desktop-base-file-name ".emacs.desktop")
+       '(desktop-path (list "." user-emacs-directory))
+       '(desktop-restore-eager 14)
+       '(desktop-save (quote ask-if-new))
+       '(desktop-load-locked-desktop t)
+       '(desktop-clear-preserve-buffers (list "\\*scratch\\*" "\\*Messages\\*" "\\*server\\*" "\\*tramp/.+\\*" "\\*Warnings\\*"
+                                              "\\*Org Agenda\\*" ".*\\.org"))
+       ;; Quietly load safe variables, otherwise it hang up Emacs when starting as daemon.
+       '(enable-local-variables :safe))
+    
+      (desktop-save-mode +1)
+      (setq history-length 250)
+      (add-to-list 'desktop-globals-to-save 'file-name-history)
+      (add-to-list 'desktop-modes-not-to-save 'Info-mode)
+      (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
+      (add-to-list 'desktop-modes-not-to-save 'fundamental-mode))
 
 <a name="sec-8"></a>
 # TODO Backlog

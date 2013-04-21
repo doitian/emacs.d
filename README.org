@@ -1070,6 +1070,28 @@ Misc editing config
     (global-set-key [f2] 'recentf-open-files))
 #+END_SRC
 
+** desktop
+
+#+BEGIN_SRC emacs-lisp
+  (define-module desktop
+    (custom-set-variables
+     '(desktop-base-file-name ".emacs.desktop")
+     '(desktop-path (list "." user-emacs-directory))
+     '(desktop-restore-eager 14)
+     '(desktop-save (quote ask-if-new))
+     '(desktop-load-locked-desktop t)
+     '(desktop-clear-preserve-buffers (list "\\*scratch\\*" "\\*Messages\\*" "\\*server\\*" "\\*tramp/.+\\*" "\\*Warnings\\*"
+                                            "\\*Org Agenda\\*" ".*\\.org"))
+     ;; Quietly load safe variables, otherwise it hang up Emacs when starting as daemon.
+     '(enable-local-variables :safe))
+  
+    (desktop-save-mode +1)
+    (setq history-length 250)
+    (add-to-list 'desktop-globals-to-save 'file-name-history)
+    (add-to-list 'desktop-modes-not-to-save 'Info-mode)
+    (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
+    (add-to-list 'desktop-modes-not-to-save 'fundamental-mode))
+#+END_SRC
 * TODO Backlog
 
 #+BEGIN_EXAMPLE

@@ -5,6 +5,7 @@
 <li><a href="#sec-1">1. Usage</a>
 <ul>
 <li><a href="#sec-1-1">1.1. Generate init.el</a></li>
+<li><a href="#sec-1-2">1.2. vendor</a></li>
 </ul>
 </li>
 <li><a href="#sec-2">2. Startup</a></li>
@@ -29,6 +30,7 @@
 <li><a href="#sec-5-3">5.3. ido</a></li>
 <li><a href="#sec-5-4">5.4. magit</a></li>
 <li><a href="#sec-5-5">5.5. org</a></li>
+<li><a href="#sec-5-6">5.6. case-dwim</a></li>
 </ul>
 </li>
 </ul>
@@ -47,6 +49,12 @@ Use `make` or eval following lisp code. Move to the end of the expression, and p
         (update-directory-autoloads (concat dir "site-lisp"))
         (org-babel-tangle-file (buffer-file-name) outfile)
         (byte-compile-file outfile)))
+
+## vendor
+
+Some packages are large, and are not stable to install from ELPA. Install them using `make vendor`.
+
+    make vendor
 
 # Startup
 
@@ -238,7 +246,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
       (define-key my-keymap "d" 'zap-up-to-char)
       (define-key my-keymap "D" 'zap-back-up-to-char)
     
-      (global-set-key "\C-a" 'back-to-indentation))
+      (global-set-key "\C-a" 'back-to-indentation-or-beginning))
 
 ## ido
 
@@ -327,3 +335,29 @@ Install latest org by running `make org`. Othewise system bundled version is use
                 (--remove (string= "org" (file-name-nondirectory it)) load-path))
           (setq load-path (cons (concat org-load-path "/lisp") load-path))
           (or (require 'org-loaddefs nil t) (require 'org nil t)))))
+
+## case-dwim
+
+Ease inserting dash `-` and undersocre `_`.
+
+To downcase, upcase, capitalize words backword, start with nagative
+prefix, and then repeat. For example, upcase 3 words before point:
+<kbd>M&#x2013; M-u M-u M-u</kbd>
+
+If the last command is case transformation (if region is action or
+using <kbd>M-U</kbd>, <kbd>M-L</kbd>, <kbd>M-C</kbd>), dash or
+underscore will not be inserted, and these commands will do case
+transformations.
+
+These commands are also `multiple-cursors` compatible.
+
+    (define-module case-dwim
+      (global-set-key (kbd "M-l") 'case-dwim-dash)
+      (global-set-key (kbd "M-u") 'case-dwim-underscore)
+      (global-set-key (kbd "M-L") 'case-dwim-downcase)
+      (global-set-key (kbd "M-U") 'case-dwim-upcase)
+      (global-set-key (kbd "M-c") 'case-dwim-capitalize)
+      (global-set-key (kbd "M-C") 'case-dwim-capitalize)
+    
+      (define-key isearch-mode-map (kbd "M-l") 'case-dwim-isearch-dash)
+      (define-key isearch-mode-map (kbd "M-u") 'case-dwim-isearch-underscore))

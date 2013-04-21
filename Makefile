@@ -20,8 +20,13 @@ ORG_VERSION := 8.0.1
 ORG_PKGNAME := org-$(ORG_VERSION)
 ORG_TARBALL := $(ORG_PKGNAME).tar.gz
 ORG_DOWNLOAD_URL := http://orgmode.org/$(ORG_TARBALL)
+ORG_INSTALLED := 
 
 all: init.elc
+
+ifneq (,$(wildcard vendor/$(ORG_PKGNAME)/lisp))
+all: doc
+endif
 
 .SUFFIXES: .el .elc
 
@@ -36,6 +41,11 @@ site-lisp/my-loaddefs.el: $(SITE_ELFILES)
 
 init.el: README.org
 	$(BATCH) -l org -eval "(org-babel-tangle-file \"$<\" \"$@\")"
+
+doc: README.md
+
+README.md: README.org
+	$(BATCH) -L vendor/$(ORG_PKGNAME)/lisp -l ox-md --file $< -f org-md-export-to-markdown
 
 clean:
 	rm -rf init.el site-lisp/my-loaddefs.el $(ELCFILES)
@@ -56,4 +66,4 @@ vendor/$(ORG_PKGNAME): tmp/${ORG_TARBALL}
 tmp/${ORG_TARBALL}:
 	curl -o $@ ${ORG_DOWNLOAD_URL}
 
-.PHONY: all clean vendor org
+.PHONY: all doc clean vendor org

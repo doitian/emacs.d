@@ -27,15 +27,20 @@
 <li><a href="#sec-7">7. Modules</a>
 <ul>
 <li><a href="#sec-7-1">7.1. delete-keys-hacks</a></li>
-<li><a href="#sec-7-2">7.2. char-motion</a></li>
-<li><a href="#sec-7-3">7.3. ido</a></li>
-<li><a href="#sec-7-4">7.4. magit</a></li>
-<li><a href="#sec-7-5">7.5. org</a></li>
-<li><a href="#sec-7-6">7.6. case-dwim</a></li>
-<li><a href="#sec-7-7">7.7. server</a></li>
-<li><a href="#sec-7-8">7.8. backup</a></li>
-<li><a href="#sec-7-9">7.9. ctl-comma</a></li>
+<li><a href="#sec-7-2">7.2. my-basic-keybindings</a></li>
+<li><a href="#sec-7-3">7.3. char-motion</a></li>
+<li><a href="#sec-7-4">7.4. ido</a></li>
+<li><a href="#sec-7-5">7.5. magit</a></li>
+<li><a href="#sec-7-6">7.6. org</a></li>
+<li><a href="#sec-7-7">7.7. case-dwim</a></li>
+<li><a href="#sec-7-8">7.8. server</a></li>
+<li><a href="#sec-7-9">7.9. backup</a></li>
 <li><a href="#sec-7-10">7.10. multiple-cursors</a></li>
+<li><a href="#sec-7-11">7.11. dired</a></li>
+<li><a href="#sec-7-12">7.12. buffer-explore</a></li>
+<li><a href="#sec-7-13">7.13. window-nav</a></li>
+<li><a href="#sec-7-14">7.14. window-manager</a></li>
+<li><a href="#sec-7-15">7.15. vc</a></li>
 </ul>
 </li>
 </ul>
@@ -295,6 +300,18 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
       (define-key key-translation-map [?\M-r] [?\C-\M-?]))
 
 <a name="sec-7-2"></a>
+## my-basic-keybindings
+
+-   Use <kbd>C-,</kbd> as rectangle commands prefix (<kbd>C-x r)
+
+-   Use <kbd>C-'</kbd> and <kbd>M-'</kbd> as negative argument.
+
+    (define-module my-basic-keybindings
+      (define-key my-minor-mode-map (kbd "C-,") ctl-x-r-map)
+      (define-key my-minor-mode-map (kbd "C-'") 'negative-argument)
+      (define-key my-minor-mode-map (kbd "M-'") 'negative-argument))
+
+<a name="sec-7-3"></a>
 ## char-motion
 
     (define-module char-motion
@@ -330,10 +347,12 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     
       (define-key my-keymap "d" 'zap-up-to-char)
       (define-key my-keymap "D" 'zap-back-up-to-char)
+      (define-key my-keymap (kbd ";") 'iy-go-to-char-continue)
+      (define-key my-keymap (kbd ":") 'iy-go-to-char-continue-backward)
     
       (global-set-key "\C-a" 'back-to-indentation-or-beginning))
 
-<a name="sec-7-3"></a>
+<a name="sec-7-4"></a>
 ## ido
 
     (define-module ido
@@ -362,7 +381,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     
       (add-hook 'ido-setup-hook 'init--ido-setup))
 
-<a name="sec-7-4"></a>
+<a name="sec-7-5"></a>
 ## magit
 
     (define-module magit
@@ -404,7 +423,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     
       (global-set-key [f12] 'magit-status))
 
-<a name="sec-7-5"></a>
+<a name="sec-7-6"></a>
 ## org
 
 Install latest org by running `make org`. Othewise system bundled version is used.
@@ -424,7 +443,7 @@ Install latest org by running `make org`. Othewise system bundled version is use
           (setq load-path (cons (concat org-load-path "/lisp") load-path))
           (or (require 'org-loaddefs nil t) (require 'org nil t)))))
 
-<a name="sec-7-6"></a>
+<a name="sec-7-7"></a>
 ## case-dwim
 
 Ease inserting dash `-` and undersocre `_`.
@@ -451,7 +470,7 @@ These commands are also `multiple-cursors` compatible.
       (define-key isearch-mode-map (kbd "M-l") 'case-dwim-isearch-dash)
       (define-key isearch-mode-map (kbd "M-u") 'case-dwim-isearch-underscore))
 
-<a name="sec-7-7"></a>
+<a name="sec-7-8"></a>
 ## server
 
 Start emacs server.
@@ -495,7 +514,7 @@ Start emacs server.
     
       (server-start))
 
-<a name="sec-7-8"></a>
+<a name="sec-7-9"></a>
 ## backup
 
 See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
@@ -523,14 +542,6 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
       ;; is auto saved. Otherwise Emacs only make one backup after opening the file.
       (add-hook 'auto-save-hook 'init--force-backup))
 
-<a name="sec-7-9"></a>
-## ctl-comma
-
-Use <kbd>C-,</kbd> as rectangle commands prefix (<kbd>C-x r)
-
-    (define-module ctl-comma
-      (define-key my-minor-mode-map (kbd "C-,") ctl-x-r-map))
-
 <a name="sec-7-10"></a>
 ## multiple-cursors
 
@@ -554,3 +565,114 @@ Use <kbd>C-,</kbd> as rectangle commands prefix (<kbd>C-x r)
     
       (global-unset-key (kbd "C-<down-mouse-1>"))
       (global-set-key (kbd "C-<mouse-1>") 'mc/add-cursor-on-click))
+
+<a name="sec-7-11"></a>
+## dired
+
+    (define-module dired
+      (custom-set-variables
+       '(dired-omit-verbose nil)
+       '(dired-dwim-target t)
+       '(dired-recursive-copies (quote top))
+       '(dired-recursive-deletes (quote top))
+    
+       '(dired-omit-files (rx (or (seq bol "#")
+                                  (seq bol ".")
+                                  (seq "~" eol)
+                                  (seq bol "svn" eol)
+                                  (seq bol "_region_")
+                                  (seq bol "prv" (* anything) ".log" eol)
+                                  (seq bol "cscope.files" eol)
+                                  (seq bol "GPATH" eol)
+                                  (seq bol "GRTAGS" eol)
+                                  (seq bol "GSYMS" eol)
+                                  (seq bol "GTAGS" eol)
+                                  ))))
+    
+      (defvar dired-user-omit-extensions nil)
+      (setq dired-user-omit-extensions
+            '(".auxbbl.make" ".auxdvi.make" ".aux.make" ".fls" ".ilg" ".ind" ".out" ".out.make" ".prv"
+              ".temp" ".toc.make" ".gpi.log" ".ps.log" ".pdf.log" ".bak" ".mp.log" ".mp.make" ".mpx"
+              ".sdb" ".nav" ".snm" ".fdb_latexmk"))
+    
+      (setq dired-guess-shell-alist-user
+            '(("\\.pdf\\'" "zathura" "evince")
+              ))
+    
+      (require-package 'dired+)
+      (require-package 'dired-details)
+      (require-package 'dired-details+)
+    
+      (autoload 'wdired-change-to-wdired-mode "wdired")
+    
+      (defun dired-open ()
+        (interactive)
+        (dired-do-shell-command
+         "open" nil
+         (dired-get-marked-files t current-prefix-arg)))
+    
+      (defun init--dired-load ()
+        (require 'dired-x)
+        (dired-details-install)
+    
+        (setq dired-omit-extensions
+              (append dired-user-omit-extensions    
+                      dired-omit-extensions))
+    
+        (define-key dired-mode-map "E" 'wdired-change-to-wdired-mode)
+        (define-key dired-mode-map (kbd "`") 'dired-clean-directory)
+        (define-key dired-mode-map (kbd ".") 'dired-omit-mode)
+        (define-key dired-mode-map "(" 'dired-details-toggle)
+        (define-key dired-mode-map ")" 'dired-details-toggle)
+        (define-key dired-mode-map (kbd "/") 'diredp-omit-marked)
+        (define-key dired-mode-map (kbd "M-<return>") 'dired-open))
+    
+      (defun init--dired-mode ()
+        (dired-omit-mode +1))
+    
+      (global-set-key (kbd "C-x C-j") 'dired-jump)
+      (add-hook 'dired-load-hook 'init--dired-load)
+      (add-hook 'dired-mode-hook 'init--dired-mode)
+    )
+
+<a name="sec-7-12"></a>
+## buffer-explore
+
+<a name="sec-7-13"></a>
+## window-nav
+
+    (define-module window-nav
+      (define-key my-minor-mode-map (kbd "M-o") 'other-window)
+      (define-key my-minor-mode-map (kbd "M-O") 'other-frame)
+      )
+
+<a name="sec-7-14"></a>
+## window-manager
+
+<a name="sec-7-15"></a>
+## vc
+
+Version Control backends.
+
+`git-emacs` can be install using `make vendor` or `make git-emacs`. See list
+of commands using <kbd>C-x g C-h</kbd>. My favrite one is <kbd>C-x g i</kbd>,
+add changes interactively using `ediff`.
+
+    (define-module vc
+      (custom-set-variables
+       '(git-state-modeline-decoration (quote git-state-decoration-large-dot))
+       '(vc-follow-symlinks t))
+    
+      (setq revert-without-query
+            (append 
+             ("COMMIT_EDITMSG\\'" "git-rebase-todo")
+             revert-without-query))
+    
+      (let ((git-emacs-dir (concat my-vendor-dir "git-emacs")))
+        (when (file-exists-p (concat git-emacs-dir "/git-emacs.el"))
+          (setq load-path (cons git-emacs-dir load-path))
+          (require 'git-emacs)))
+    
+      (add-to-list 'auto-mode-alist '("\\.gitconfig\\'" . conf-mode))
+      (add-to-list 'auto-mode-alist '("\\.git/config\\'" . conf-mode))
+      )

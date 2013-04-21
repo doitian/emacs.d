@@ -625,3 +625,32 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
 
 ** window-manager
 
+** vc
+
+Version Control backends.
+
+=git-emacs= can be install using =make vendor= or =make git-emacs=. See list
+of commands using <kbd>C-x g C-h</kbd>. My favrite one is <kbd>C-x g i</kbd>,
+add changes interactively using =ediff=.
+
+#+BEGIN_SRC emacs-lisp
+  (define-module vc
+    (custom-set-variables
+     '(git-state-modeline-decoration (quote git-state-decoration-large-dot))
+     '(vc-follow-symlinks t))
+    
+    (setq revert-without-query
+          (append 
+           ("COMMIT_EDITMSG\\'" "git-rebase-todo")
+           revert-without-query))
+  
+    (let ((git-emacs-dir (concat my-vendor-dir "git-emacs")))
+      (when (file-exists-p (concat git-emacs-dir "/git-emacs.el"))
+        (setq load-path (cons git-emacs-dir load-path))
+        (require 'git-emacs)))
+  
+    (add-to-list 'auto-mode-alist '("\\.gitconfig\\'" . conf-mode))
+    (add-to-list 'auto-mode-alist '("\\.git/config\\'" . conf-mode))
+    )
+  
+#+END_SRC

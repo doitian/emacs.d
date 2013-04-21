@@ -1,4 +1,4 @@
-oOSTYPE := $(shell echo $$OSTYPE)
+OSTYPE := $(shell echo $$OSTYPE)
 ifeq (,$(findstring darwin,$(OSTYPE)))
   EMACS := emacs
 else
@@ -55,7 +55,7 @@ clean:
 vendor-clean:
 	rm -rf tmp/org-* vendor/org-*
 
-vendor: org
+vendor: org git-emacs
 
 org: vendor/$(ORG_PKGNAME)/lisp/org-loaddefs.el
 
@@ -68,7 +68,16 @@ vendor/$(ORG_PKGNAME): tmp/${ORG_TARBALL}
 tmp/${ORG_TARBALL}:
 	curl -o $@ ${ORG_DOWNLOAD_URL}
 
+git-emacs: vendor/git-emacs/git-emacs.elc
+
+vendor/git-emacs/git-emacs.elc: vendor/git-emacs/git-emacs.el
+	cd vendor/git-emacs && make
+
+vendor/git-emacs/git-emacs.el:
+	git submodule init
+	git submodule update
+
 verify:
 	$(EMACS) --debug-init -q -eval "(setq module-black-list '(server))" -l ./init.elc -f module-initialize
 
-.PHONY: all doc verify clean vendor org
+.PHONY: all doc verify clean vendor org git-emacs git-submodule-update

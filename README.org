@@ -385,7 +385,8 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
       (magit-refresh))
   
     (defun init--magit-mode ()
-      (define-key magit-mode-map (kbd "W") 'magit-toggle-whitespace))
+      (define-key magit-mode-map (kbd "W") 'magit-toggle-whitespace)
+      (local-set-key [f12] 'magit-quit-window))
   
     (defun init--magit-log-edit-mode ()
       (flyspell-mode 1)

@@ -31,6 +31,7 @@
 <li><a href="#sec-5-4">5.4. magit</a></li>
 <li><a href="#sec-5-5">5.5. org</a></li>
 <li><a href="#sec-5-6">5.6. case-dwim</a></li>
+<li><a href="#sec-5-7">5.7. server</a></li>
 </ul>
 </li>
 </ul>
@@ -371,3 +372,41 @@ These commands are also `multiple-cursors` compatible.
     
       (define-key isearch-mode-map (kbd "M-l") 'case-dwim-isearch-dash)
       (define-key isearch-mode-map (kbd "M-u") 'case-dwim-isearch-underscore))
+
+## server
+
+Start emacs server.
+
+    (define-module server
+    
+      (defcustom server-delete-frame-functions
+        '(anything-c-adaptive-save-history
+          bookmark-exit-hook-internal
+          ac-comphist-save
+          ido-kill-emacs-hook
+          org-clock-save
+          org-id-locations-save
+          org-babel-remove-temporary-directory
+          recentf-save-list
+          semanticdb-kill-emacs-hook
+          session-save-session
+          w3m-arrived-shutdown
+          w3m-cookie-shutdown
+          tramp-dump-connection-properties)
+      "List of functions that should be called when a OS window is closed"
+      :group 'server
+      :type '(repeat symbol))
+    
+      (defun server--last-frontend-frame-p ()
+        (and (server-running-p)
+             (= 2 (length (frame-list)))))
+    
+      (defun server--run-delete-frame-functions (frame)
+        (when (server--last-frontend-frame-p)
+          (run-hooks 'server-delete-frame-functions)))
+    
+      ;; Buggy to run the functions in MacOS X
+      (unless (eq system-type 'darwin)
+        (add-hook 'delete-frame-functions 'server--run-delete-frame-functions))
+    
+      (server-start))

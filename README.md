@@ -32,6 +32,7 @@
 <li><a href="#sec-5-5">5.5. org</a></li>
 <li><a href="#sec-5-6">5.6. case-dwim</a></li>
 <li><a href="#sec-5-7">5.7. server</a></li>
+<li><a href="#sec-5-8">5.8. backup</a></li>
 </ul>
 </li>
 </ul>
@@ -199,7 +200,8 @@ Load package on demand
     (package-initialize)
     
     (setq package-archives
-          '(("melpa" . "http://melpa.milkbox.net/packages/")))
+          '(("melpa" . "http://melpa.milkbox.net/packages/")
+            ("gnu" . "http://elpa.gnu.org/packages/")))
 
 # Modules
 
@@ -410,3 +412,30 @@ Start emacs server.
         (add-hook 'delete-frame-functions 'server--run-delete-frame-functions))
     
       (server-start))
+
+## backup
+
+See commands in to diff or restore a backup.
+
+    (define-module backup
+      ;; Place all backup files into this directory
+      (make-directory (expand-file-name "backup" user-emacs-directory) t)
+    
+      (custom-set-variables
+       '(auto-save-interval 300)
+       '(auto-save-timeout 10)
+       '(backup-directory-alist (list (cons "." (expand-file-name "backup" user-emacs-directory))))
+       '(backup-by-copying t)
+       '(delete-old-versions t)
+       '(kept-new-versions 20)
+       '(kept-old-versions 2)
+       '(vc-make-backup-files t)
+       '(version-control t))
+    
+      (defun init--force-backup ()
+        "Reset backed up flag."
+        (setq buffer-backed-up nil))
+    
+      ;; Make a backup after save whenever the file
+      ;; is auto saved. Otherwise Emacs only make one backup after opening the file.
+      (add-hook 'auto-save-hook 'init--force-backup))

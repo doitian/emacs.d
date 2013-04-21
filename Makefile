@@ -67,6 +67,6 @@ tmp/${ORG_TARBALL}:
 	curl -o $@ ${ORG_DOWNLOAD_URL}
 
 verify:
-	$(EMACS) --debug-init --kill
+	$(EMACS) --debug-init -q -eval "(setq module-black-list '(server))" -l ./init.elc -f module-initialize
 
 .PHONY: all doc verify clean vendor org

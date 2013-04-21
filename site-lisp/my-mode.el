@@ -6,10 +6,10 @@
 (defvar my-keymap (make-sparse-keymap)
   "keymap binded to `my-keymap-prefix'")
 
-(defvar my--original-exec-path exec-path
+(defconst my--original-exec-path exec-path
   "Remember `exec-path'")
 
-(defvar my--original-env-path (getenv "PATH")
+(defconst my--original-env-path (getenv "PATH")
   "Remember env variable PATH")
 
 

@@ -14,6 +14,14 @@ Use =make= or eval following lisp code. Move to the end of the expression, and p
       (byte-compile-file outfile)))
 #+END_EXAMPLE
 
+** vendor
+
+Some packages are large, and are not stable to install from ELPA. Install them using =make vendor=.
+
+#+BEGIN_EXAMPLE
+  make vendor
+#+END_EXAMPLE
+
 * Startup
 
 Remove annoying UI
@@ -231,7 +239,7 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
     (define-key my-keymap "d" 'zap-up-to-char)
     (define-key my-keymap "D" 'zap-back-up-to-char)
   
-    (global-set-key "\C-a" 'back-to-indentation))
+    (global-set-key "\C-a" 'back-to-indentation-or-beginning))
 #+END_SRC
 
 ** ido
@@ -325,4 +333,32 @@ Install latest org by running =make org=. Othewise system bundled version is use
               (--remove (string= "org" (file-name-nondirectory it)) load-path))
         (setq load-path (cons (concat org-load-path "/lisp") load-path))
         (or (require 'org-loaddefs nil t) (require 'org nil t)))))
+#+END_SRC
+
+** case-dwim
+
+Ease inserting dash =-= and undersocre =_=.
+
+To downcase, upcase, capitalize words backword, start with nagative
+prefix, and then repeat. For example, upcase 3 words before point:
+<kbd>M-- M-u M-u M-u</kbd>
+
+If the last command is case transformation (if region is action or
+using <kbd>M-U</kbd>, <kbd>M-L</kbd>, <kbd>M-C</kbd>), dash or
+underscore will not be inserted, and these commands will do case
+transformations.
+
+These commands are also =multiple-cursors= compatible.
+
+#+BEGIN_SRC emacs-lisp
+  (define-module case-dwim
+    (global-set-key (kbd "M-l") 'case-dwim-dash)
+    (global-set-key (kbd "M-u") 'case-dwim-underscore)
+    (global-set-key (kbd "M-L") 'case-dwim-downcase)
+    (global-set-key (kbd "M-U") 'case-dwim-upcase)
+    (global-set-key (kbd "M-c") 'case-dwim-capitalize)
+    (global-set-key (kbd "M-C") 'case-dwim-capitalize)
+  
+    (define-key isearch-mode-map (kbd "M-l") 'case-dwim-isearch-dash)
+    (define-key isearch-mode-map (kbd "M-u") 'case-dwim-isearch-underscore))
 #+END_SRC

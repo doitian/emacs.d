@@ -9,3 +9,11 @@
 /vendor/*
 /backup/*
 
+/eshell/*
+!/eshell/alias
+
+/abbrev_defs
+
+/custom.readonly.el
+/secrets.el
+

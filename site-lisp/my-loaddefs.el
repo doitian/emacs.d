@@ -74,6 +74,24 @@ Load all defined modules in `module-list' except ones in `module-black-list'
 
 ;;;***
 
+;;;### (autoloads (mf-append-line-delimter-then-next-line-and-open-it-if-not-empty
+;;;;;;  mf-next-line-and-open-it-if-not-empty) "my-functions" "my-functions.el"
+;;;;;;  (20852 20442 966808 281000))
+;;; Generated autoloads from my-functions.el
+
+(autoload 'mf-next-line-and-open-it-if-not-empty "my-functions" "\
+Go to next line. Open it unless the line is empty
+
+\(fn)" t nil)
+
+(autoload 'mf-append-line-delimter-then-next-line-and-open-it-if-not-empty "my-functions" "\
+Append new line delimeter at the end of current line and go to next line.
+Open next line if it is not empty.
+
+\(fn)" t nil)
+
+;;;***
+
 ;;;### (autoloads (my-minor-mode) "my-mode" "my-mode.el" (20852 1222
 ;;;;;;  303265 744000))
 ;;; Generated autoloads from my-mode.el
@@ -125,7 +143,7 @@ View one of FILE's backups.
 ;;;***
 
 ;;;### (autoloads nil nil ("dash.el" "eproject-plus.el" "sequential-command.el"
-;;;;;;  "smart-compile+.el") (20852 19425 973372 725000))
+;;;;;;  "smart-compile+.el") (20852 21279 194234 291000))
 
 ;;;***
 

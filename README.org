@@ -257,6 +257,14 @@ Disable module by adding it to =module-black-list=.
 ;;   '(module-black-list '(tex r delete-keys-hacks)))
 #+END_SRC
 
+** s
+
+#+BEGIN_SRC emacs-lisp
+  (define-module s
+    (require-package 's)
+    (require 's nil t))
+#+END_SRC
+
 ** delete-keys-hacks
 
 Use <kbd>M-r</kbd> to delete word backward, <kbd>C-h</kbd> to delete char backword.
@@ -920,9 +928,11 @@ Auto revert, and helper functions to revert without confirmation.
      '(compilation-context-lines 5)
      '(compilation-scroll-output (quote first-error)))
   
-    (add-to-list 'compilation-error-regexp-alist-alist
-                 '(maven "^\\[\\w+\\] \\(.*\\):\\[\\([0-9]+\\),\\([0-9]+\\)\\] \\(.*\\)$" 1 2 3 (4)))
-    (add-to-list 'compilation-error-regexp-alist 'maven)
+    (eval-after-load 'compile
+      '(progn
+         (add-to-list 'compilation-error-regexp-alist-alist
+                      '(maven "^\\[\\w+\\] \\(.*\\):\\[\\([0-9]+\\),\\([0-9]+\\)\\] \\(.*\\)$" 1 2 3 (4)))
+         (add-to-list 'compilation-error-regexp-alist 'maven)))
   
     (require 'ansi-color)
     (defun colorize-compilation-buffer ()
@@ -995,8 +1005,57 @@ Auto revert, and helper functions to revert without confirmation.
     (global-set-key (kbd "C-~") 'previous-error))
 #+END_SRC
 
+** editing
+
+Misc editing config
+
+#+BEGIN_SRC emacs-lisp
+  (define-module editing
+    (custom-set-variables
+     '(kill-whole-line t))
+  
+    (require-package 'whole-line-or-region)
+    (whole-line-or-region-mode +1)
+  
+    (global-set-key (kbd "C-S-k") 'mf-smart-kill-whole-line)
+  
+    (define-key my-keymap (kbd "q u") 'mf-insert-user)
+    (define-key my-keymap (kbd "q t") 'mf-insert-time)
+    (define-key my-keymap (kbd "q s") 'mf-insert-timestamp)
+    (define-key my-keymap (kbd "q d") 'mf-insert-date)
+    (define-key my-keymap (kbd "q f") 'mf-insert-file-name)
+    (define-key my-keymap (kbd "q b") 'mf-jared/insert-file-or-buffer-name)
+  
+    (define-key global-map "\C-j" 'newline)
+    (define-key global-map "\C-m" 'newline-and-indent)
+    (global-set-key (kbd "M-<return>") 'mf-next-line-and-open-it-if-not-empty)
+    (global-set-key (kbd "M-S-<return>") 'mf-append-line-delimter-then-next-line-and-open-it-if-not-empty)
+    (global-set-key (kbd "s-<return>") 'mf-next-line-and-open-it-if-not-empty)
+    (global-set-key (kbd "C-x C-o") 'shrink-whitespaces))
+#+END_SRC
+
+** kill-ring
+
+#+BEGIN_SRC emacs-lisp
+  (define-module kill-ring
+    (custom-set-variables
+     '(kill-ring-max 500))
+  
+    (require-package 'browse-kill-ring)
+    (require-package 'kill-ring-search)
+  
+    (global-set-key (kbd "C-M-y") 'browse-kill-ring)
+  
+    (defadvice yank-pop (around kill-ring-search-maybe (arg) activate)
+      "If last action was not a yank, run `kill-ring-search' instead."
+      (interactive "p")
+      (if (not (eq last-command 'yank))
+          (kill-ring-search)
+        (barf-if-buffer-read-only)
+        ad-do-it)))
+#+END_SRC
+
 * TODO Backlog
 
 #+BEGIN_EXAMPLE
-  (global-set-key (kbd "<f5>") 'compile)
 #+END_EXAMPLE

@@ -26,28 +26,31 @@
 <li><a href="#sec-6">6. ELPA</a></li>
 <li><a href="#sec-7">7. Modules</a>
 <ul>
-<li><a href="#sec-7-1">7.1. delete-keys-hacks</a></li>
-<li><a href="#sec-7-2">7.2. my-basic-keybindings</a></li>
-<li><a href="#sec-7-3">7.3. char-motion</a></li>
-<li><a href="#sec-7-4">7.4. ido</a></li>
-<li><a href="#sec-7-5">7.5. magit</a></li>
-<li><a href="#sec-7-6">7.6. org</a></li>
-<li><a href="#sec-7-7">7.7. case-dwim</a></li>
-<li><a href="#sec-7-8">7.8. server</a></li>
-<li><a href="#sec-7-9">7.9. backup</a></li>
-<li><a href="#sec-7-10">7.10. multiple-cursors</a></li>
-<li><a href="#sec-7-11">7.11. dired</a></li>
-<li><a href="#sec-7-12">7.12. buffer-explore</a></li>
-<li><a href="#sec-7-13">7.13. window-nav</a></li>
-<li><a href="#sec-7-14">7.14. window-manager</a></li>
-<li><a href="#sec-7-15">7.15. vc</a></li>
-<li><a href="#sec-7-16">7.16. isearch</a></li>
-<li><a href="#sec-7-17">7.17. revert</a></li>
-<li><a href="#sec-7-18">7.18. eshell</a></li>
-<li><a href="#sec-7-19">7.19. eproject</a></li>
-<li><a href="#sec-7-20">7.20. helm</a></li>
-<li><a href="#sec-7-21">7.21. octave-mode</a></li>
-<li><a href="#sec-7-22">7.22. compile-and-run</a></li>
+<li><a href="#sec-7-1">7.1. s</a></li>
+<li><a href="#sec-7-2">7.2. delete-keys-hacks</a></li>
+<li><a href="#sec-7-3">7.3. my-basic-keybindings</a></li>
+<li><a href="#sec-7-4">7.4. char-motion</a></li>
+<li><a href="#sec-7-5">7.5. ido</a></li>
+<li><a href="#sec-7-6">7.6. magit</a></li>
+<li><a href="#sec-7-7">7.7. org</a></li>
+<li><a href="#sec-7-8">7.8. case-dwim</a></li>
+<li><a href="#sec-7-9">7.9. server</a></li>
+<li><a href="#sec-7-10">7.10. backup</a></li>
+<li><a href="#sec-7-11">7.11. multiple-cursors</a></li>
+<li><a href="#sec-7-12">7.12. dired</a></li>
+<li><a href="#sec-7-13">7.13. buffer-explore</a></li>
+<li><a href="#sec-7-14">7.14. window-nav</a></li>
+<li><a href="#sec-7-15">7.15. window-manager</a></li>
+<li><a href="#sec-7-16">7.16. vc</a></li>
+<li><a href="#sec-7-17">7.17. isearch</a></li>
+<li><a href="#sec-7-18">7.18. revert</a></li>
+<li><a href="#sec-7-19">7.19. eshell</a></li>
+<li><a href="#sec-7-20">7.20. eproject</a></li>
+<li><a href="#sec-7-21">7.21. helm</a></li>
+<li><a href="#sec-7-22">7.22. octave-mode</a></li>
+<li><a href="#sec-7-23">7.23. compile-and-run</a></li>
+<li><a href="#sec-7-24">7.24. editing</a></li>
+<li><a href="#sec-7-25">7.25. kill-ring</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Backlog</a></li>
@@ -295,6 +298,13 @@ Disable module by adding it to `module-black-list`.
     ;;   '(module-black-list '(tex r delete-keys-hacks)))
 
 <a name="sec-7-1"></a>
+## s
+
+    (define-module s
+      (require-package 's)
+      (require 's nil t))
+
+<a name="sec-7-2"></a>
 ## delete-keys-hacks
 
 Use <kbd>M-r</kbd> to delete word backward, <kbd>C-h</kbd> to delete char backword.
@@ -308,7 +318,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
       (define-key key-translation-map [?\C-h] [?\C-?])
       (define-key key-translation-map [?\M-r] [?\C-\M-?]))
 
-<a name="sec-7-2"></a>
+<a name="sec-7-3"></a>
 ## my-basic-keybindings
 
 -   Use <kbd>C-,</kbd> as rectangle commands prefix (<kbd>C-x r)
@@ -320,7 +330,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
       (define-key my-minor-mode-map (kbd "C-'") 'negative-argument)
       (define-key my-minor-mode-map (kbd "M-'") 'negative-argument))
 
-<a name="sec-7-3"></a>
+<a name="sec-7-4"></a>
 ## char-motion
 
     (define-module char-motion
@@ -361,7 +371,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     
       (global-set-key "\C-a" 'back-to-indentation-or-beginning))
 
-<a name="sec-7-4"></a>
+<a name="sec-7-5"></a>
 ## ido
 
     (define-module ido
@@ -390,7 +400,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     
       (add-hook 'ido-setup-hook 'init--ido-setup))
 
-<a name="sec-7-5"></a>
+<a name="sec-7-6"></a>
 ## magit
 
     (define-module magit
@@ -433,7 +443,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     
       (global-set-key [f12] 'magit-status))
 
-<a name="sec-7-6"></a>
+<a name="sec-7-7"></a>
 ## org
 
 Install latest org by running `make org`. Othewise system bundled version is used.
@@ -453,7 +463,7 @@ Install latest org by running `make org`. Othewise system bundled version is use
           (setq load-path (cons (concat org-load-path "/lisp") load-path))
           (or (require 'org-loaddefs nil t) (require 'org nil t)))))
 
-<a name="sec-7-7"></a>
+<a name="sec-7-8"></a>
 ## case-dwim
 
 Ease inserting dash `-` and undersocre `_`.
@@ -480,7 +490,7 @@ These commands are also `multiple-cursors` compatible.
       (define-key isearch-mode-map (kbd "M-l") 'case-dwim-isearch-dash)
       (define-key isearch-mode-map (kbd "M-u") 'case-dwim-isearch-underscore))
 
-<a name="sec-7-8"></a>
+<a name="sec-7-9"></a>
 ## server
 
 Start emacs server.
@@ -524,7 +534,7 @@ Start emacs server.
     
       (server-start))
 
-<a name="sec-7-9"></a>
+<a name="sec-7-10"></a>
 ## backup
 
 See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
@@ -552,7 +562,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
       ;; is auto saved. Otherwise Emacs only make one backup after opening the file.
       (add-hook 'auto-save-hook 'init--force-backup))
 
-<a name="sec-7-10"></a>
+<a name="sec-7-11"></a>
 ## multiple-cursors
 
     (define-module multiple-cursors
@@ -579,7 +589,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
       (global-set-key (kbd "C-3") 'mc/mark-all-like-this)
       (define-key ctl-x-r-map [return] 'set-rectangular-region-anchor))
 
-<a name="sec-7-11"></a>
+<a name="sec-7-12"></a>
 ## dired
 
     (define-module dired
@@ -652,10 +662,10 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
       (add-hook 'dired-mode-hook 'init--dired-mode)
     )
 
-<a name="sec-7-12"></a>
+<a name="sec-7-13"></a>
 ## buffer-explore
 
-<a name="sec-7-13"></a>
+<a name="sec-7-14"></a>
 ## window-nav
 
     (define-module window-nav
@@ -663,10 +673,10 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
       (define-key my-minor-mode-map (kbd "M-O") 'other-frame)
       )
 
-<a name="sec-7-14"></a>
+<a name="sec-7-15"></a>
 ## window-manager
 
-<a name="sec-7-15"></a>
+<a name="sec-7-16"></a>
 ## vc
 
 Version Control backends.
@@ -697,7 +707,7 @@ add changes interactively using `ediff`.
         (when vc-mode
           (put-text-property 1 (length vc-mode) 'face 'font-lock-string-face vc-mode))))
 
-<a name="sec-7-16"></a>
+<a name="sec-7-17"></a>
 ## isearch
 
     (define-module isearch
@@ -736,7 +746,7 @@ add changes interactively using `ediff`.
       (define-key my-keymap "*" 'isearch-forward-at-point)
       (define-key my-keymap "8" 'isearch-forward-at-point))
 
-<a name="sec-7-17"></a>
+<a name="sec-7-18"></a>
 ## revert
 
 Auto revert, and helper functions to revert without confirmation.
@@ -753,7 +763,7 @@ Auto revert, and helper functions to revert without confirmation.
       ; (setq global-auto-revert-non-file-buffers t)
       (setq auto-revert-verbose nil))
 
-<a name="sec-7-18"></a>
+<a name="sec-7-19"></a>
 ## eshell
 
     (define-module eshell
@@ -792,7 +802,7 @@ Auto revert, and helper functions to revert without confirmation.
       (define-key my-keymap (kbd "e") 'eshell-toggle)
       (define-key my-keymap (kbd "E") 'eshell-here))
 
-<a name="sec-7-19"></a>
+<a name="sec-7-20"></a>
 ## eproject
 
     (define-module eproject
@@ -801,7 +811,7 @@ Auto revert, and helper functions to revert without confirmation.
       (require 'eproject-plus)
       (define-key my-keymap "p" eproject-plus-keymap))
 
-<a name="sec-7-20"></a>
+<a name="sec-7-21"></a>
 ## helm
 
     (define-module helm
@@ -926,13 +936,13 @@ Auto revert, and helper functions to revert without confirmation.
           ad-do-it))
       )
 
-<a name="sec-7-21"></a>
+<a name="sec-7-22"></a>
 ## octave-mode
 
     (define-module octave-mode
       (add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode)))
 
-<a name="sec-7-22"></a>
+<a name="sec-7-23"></a>
 ## compile-and-run
 
     (define-module compile-and-run
@@ -942,9 +952,11 @@ Auto revert, and helper functions to revert without confirmation.
        '(compilation-context-lines 5)
        '(compilation-scroll-output (quote first-error)))
     
-      (add-to-list 'compilation-error-regexp-alist-alist
-                   '(maven "^\\[\\w+\\] \\(.*\\):\\[\\([0-9]+\\),\\([0-9]+\\)\\] \\(.*\\)$" 1 2 3 (4)))
-      (add-to-list 'compilation-error-regexp-alist 'maven)
+      (eval-after-load 'compile
+        '(progn
+           (add-to-list 'compilation-error-regexp-alist-alist
+                        '(maven "^\\[\\w+\\] \\(.*\\):\\[\\([0-9]+\\),\\([0-9]+\\)\\] \\(.*\\)$" 1 2 3 (4)))
+           (add-to-list 'compilation-error-regexp-alist 'maven)))
     
       (require 'ansi-color)
       (defun colorize-compilation-buffer ()
@@ -1016,7 +1028,53 @@ Auto revert, and helper functions to revert without confirmation.
       (global-set-key (kbd "C-`") 'next-error)
       (global-set-key (kbd "C-~") 'previous-error))
 
+<a name="sec-7-24"></a>
+## editing
+
+Misc editing config
+
+    (define-module editing
+      (custom-set-variables
+       '(kill-whole-line t))
+    
+      (require-package 'whole-line-or-region)
+      (whole-line-or-region-mode +1)
+    
+      (global-set-key (kbd "C-S-k") 'mf-smart-kill-whole-line)
+    
+      (define-key my-keymap (kbd "q u") 'mf-insert-user)
+      (define-key my-keymap (kbd "q t") 'mf-insert-time)
+      (define-key my-keymap (kbd "q s") 'mf-insert-timestamp)
+      (define-key my-keymap (kbd "q d") 'mf-insert-date)
+      (define-key my-keymap (kbd "q f") 'mf-insert-file-name)
+      (define-key my-keymap (kbd "q b") 'mf-jared/insert-file-or-buffer-name)
+    
+      (define-key global-map "\C-j" 'newline)
+      (define-key global-map "\C-m" 'newline-and-indent)
+      (global-set-key (kbd "M-<return>") 'mf-next-line-and-open-it-if-not-empty)
+      (global-set-key (kbd "M-S-<return>") 'mf-append-line-delimter-then-next-line-and-open-it-if-not-empty)
+      (global-set-key (kbd "s-<return>") 'mf-next-line-and-open-it-if-not-empty)
+      (global-set-key (kbd "C-x C-o") 'shrink-whitespaces))
+
+<a name="sec-7-25"></a>
+## kill-ring
+
+    (define-module kill-ring
+      (custom-set-variables
+       '(kill-ring-max 500))
+    
+      (require-package 'browse-kill-ring)
+      (require-package 'kill-ring-search)
+    
+      (global-set-key (kbd "C-M-y") 'browse-kill-ring)
+    
+      (defadvice yank-pop (around kill-ring-search-maybe (arg) activate)
+        "If last action was not a yank, run `kill-ring-search' instead."
+        (interactive "p")
+        (if (not (eq last-command 'yank))
+            (kill-ring-search)
+          (barf-if-buffer-read-only)
+          ad-do-it)))
+
 <a name="sec-8"></a>
 # TODO Backlog
-
-    (global-set-key (kbd "<f5>") 'compile)

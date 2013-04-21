@@ -66,4 +66,7 @@ vendor/$(ORG_PKGNAME): tmp/${ORG_TARBALL}
 tmp/${ORG_TARBALL}:
 	curl -o $@ ${ORG_DOWNLOAD_URL}
 
-.PHONY: all doc clean vendor org
+verify:
+	$(EMACS) --debug-init --kill
+
+.PHONY: all doc verify clean vendor org

@@ -80,7 +80,17 @@ Remove annoying UI
    '(default-major-mode (quote text-mode) t)
   
    '(enable-recursive-minibuffers t)
-   '(minibuffer-depth-indicate-mode t))
+   '(minibuffer-depth-indicate-mode t)
+   
+   '(tab-width 2)
+   '(indent-tabs-mode nil)
+   '(show-paren-mode t)
+   '(fill-column 78)
+   
+   ;; '(delete-active-region 'kill)
+   ;; '(delete-selection-mode t)
+   
+   '(set-mark-command-repeat-pop t))
 #+END_SRC
 
 ** File system

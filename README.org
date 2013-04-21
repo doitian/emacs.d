@@ -34,6 +34,7 @@ Remove annoying UI
   (setq inhibit-splash-screen t)
 #+END_SRC
 
+
 * Dependencies
 
 #+BEGIN_SRC emacs-lisp
@@ -114,6 +115,7 @@ Remove annoying UI
   
   (global-hl-line-mode)
 #+END_SRC
+
 
 * My Config
 
@@ -243,6 +245,7 @@ Load package on demand
           ("gnu" . "http://elpa.gnu.org/packages/")))
 #+END_SRC
 
+
 * Modules
 
 Disable module by adding it to =module-black-list=.
@@ -285,7 +288,8 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
         (back-to-indentation)))
   
     (require-package 'iy-go-to-char)
-  
+    (autoload 'zap-up-to-char "misc" "kill up to but not including char" t)
+
     (defun zap-back-to-char (arg char)
       (interactive "p\ncZap back to char: ")
       (zap-to-char (- arg) char))
@@ -296,10 +300,10 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
   
     (global-set-key "\C-z" 'iy-go-to-char)
     (global-set-key (kbd "M-m") 'iy-go-to-char)
-    (global-set-key (kbd "M-M") 'iy-go-to-char-backward)
-    (global-set-key "\C-Z" 'iy-go-to-char-backward)
+    (global-set-key (kbd "M-S-m") 'iy-go-to-char-backward)
+    (global-set-key (kbd "C-S-z") 'iy-go-to-char-backward)
   
-    (global-set-key (kbd "M-Z") 'zap-back-up-to-char)
+    (global-set-key (kbd "M-S-z") 'zap-back-up-to-char)
   
     (define-key my-keymap "d" 'zap-up-to-char)
     (define-key my-keymap "D" 'zap-back-up-to-char)
@@ -494,3 +498,38 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
     ;; is auto saved. Otherwise Emacs only make one backup after opening the file.
     (add-hook 'auto-save-hook 'init--force-backup))
 #+END_SRC
+** ctl-comma
+
+Use <kbd>C-,</kbd> as rectangle commands prefix (<kbd>C-x r)
+
+#+BEGIN_SRC emacs-lisp
+  (define-module ctl-comma
+    (define-key my-minor-mode-map (kbd "C-,") ctl-x-r-map))
+#+END_SRC
+
+** multiple-cursors
+
+#+BEGIN_SRC emacs-lisp
+  (define-module multiple-cursors
+    (require-package 'multiple-cursors)
+  
+    (define-key ctl-x-r-map (kbd "C-r") 'mc/edit-lines)
+    (define-key ctl-x-r-map (kbd ",") 'mc/edit-lines)
+    (define-key ctl-x-r-map (kbd "C-,") 'mc/edit-lines)
+    (define-key ctl-x-r-map (kbd "a") 'mc/mark-all-like-this)
+    (define-key ctl-x-r-map (kbd "C-n") 'mc/mark-next-like-this)
+    (define-key ctl-x-r-map (kbd "M-f") 'mc/mark-next-word-like-this)
+    (define-key ctl-x-r-map (kbd "M-F") 'mc/mark-next-symbol-like-this)
+    (define-key ctl-x-r-map (kbd "C-p") 'mc/mark-previous-like-this)
+    (define-key ctl-x-r-map (kbd "M-b") 'mc/mark-previous-word-like-this)
+    (define-key ctl-x-r-map (kbd "M-B") 'mc/mark-previous-symbol-like-this)
+    (define-key ctl-x-r-map (kbd "C-a") 'mc/edit-beginnings-of-lines)
+    (define-key ctl-x-r-map (kbd "C-e") 'mc/edit-ends-of-lines)
+    (define-key ctl-x-r-map (kbd "C-SPC") 'mc/mark-all-in-region)
+    (define-key ctl-x-r-map (kbd "C-f") 'mc/mark-sgml-tag-pair)
+    
+    (global-unset-key (kbd "C-<down-mouse-1>"))
+    (global-set-key (kbd "C-<mouse-1>") 'mc/add-cursor-on-click))
+#+END_SRC
+
+

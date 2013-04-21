@@ -34,6 +34,8 @@
 <li><a href="#sec-7-6">7.6. case-dwim</a></li>
 <li><a href="#sec-7-7">7.7. server</a></li>
 <li><a href="#sec-7-8">7.8. backup</a></li>
+<li><a href="#sec-7-9">7.9. ctl-comma</a></li>
+<li><a href="#sec-7-10">7.10. multiple-cursors</a></li>
 </ul>
 </li>
 </ul>
@@ -309,6 +311,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
           (back-to-indentation)))
     
       (require-package 'iy-go-to-char)
+      (autoload 'zap-up-to-char "misc" "kill up to but not including char" t)
     
       (defun zap-back-to-char (arg char)
         (interactive "p\ncZap back to char: ")
@@ -320,10 +323,10 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     
       (global-set-key "\C-z" 'iy-go-to-char)
       (global-set-key (kbd "M-m") 'iy-go-to-char)
-      (global-set-key (kbd "M-M") 'iy-go-to-char-backward)
-      (global-set-key "\C-Z" 'iy-go-to-char-backward)
+      (global-set-key (kbd "M-S-m") 'iy-go-to-char-backward)
+      (global-set-key (kbd "C-S-z") 'iy-go-to-char-backward)
     
-      (global-set-key (kbd "M-Z") 'zap-back-up-to-char)
+      (global-set-key (kbd "M-S-z") 'zap-back-up-to-char)
     
       (define-key my-keymap "d" 'zap-up-to-char)
       (define-key my-keymap "D" 'zap-back-up-to-char)
@@ -514,3 +517,35 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
       ;; Make a backup after save whenever the file
       ;; is auto saved. Otherwise Emacs only make one backup after opening the file.
       (add-hook 'auto-save-hook 'init--force-backup))
+
+<a name="sec-7-9"></a>
+## ctl-comma
+
+Use <kbd>C-,</kbd> as rectangle commands prefix (<kbd>C-x r)
+
+    (define-module ctl-comma
+      (define-key my-minor-mode-map (kbd "C-,") ctl-x-r-map))
+
+<a name="sec-7-10"></a>
+## multiple-cursors
+
+    (define-module multiple-cursors
+      (require-package 'multiple-cursors)
+    
+      (define-key ctl-x-r-map (kbd "C-r") 'mc/edit-lines)
+      (define-key ctl-x-r-map (kbd ",") 'mc/edit-lines)
+      (define-key ctl-x-r-map (kbd "C-,") 'mc/edit-lines)
+      (define-key ctl-x-r-map (kbd "a") 'mc/mark-all-like-this)
+      (define-key ctl-x-r-map (kbd "C-n") 'mc/mark-next-like-this)
+      (define-key ctl-x-r-map (kbd "M-f") 'mc/mark-next-word-like-this)
+      (define-key ctl-x-r-map (kbd "M-F") 'mc/mark-next-symbol-like-this)
+      (define-key ctl-x-r-map (kbd "C-p") 'mc/mark-previous-like-this)
+      (define-key ctl-x-r-map (kbd "M-b") 'mc/mark-previous-word-like-this)
+      (define-key ctl-x-r-map (kbd "M-B") 'mc/mark-previous-symbol-like-this)
+      (define-key ctl-x-r-map (kbd "C-a") 'mc/edit-beginnings-of-lines)
+      (define-key ctl-x-r-map (kbd "C-e") 'mc/edit-ends-of-lines)
+      (define-key ctl-x-r-map (kbd "C-SPC") 'mc/mark-all-in-region)
+      (define-key ctl-x-r-map (kbd "C-f") 'mc/mark-sgml-tag-pair)
+    
+      (global-unset-key (kbd "C-<down-mouse-1>"))
+      (global-set-key (kbd "C-<mouse-1>") 'mc/add-cursor-on-click))

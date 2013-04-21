@@ -4,92 +4,96 @@
 
 Use =make= or eval following lisp code. Move to the end of the expression, and press <kbd>Ctrl-X Ctrl-E</kbd>.
 
-#+begin_example
+#+BEGIN_EXAMPLE
   (progn
     (let* ((dir (concat (file-name-directory (buffer-file-name))))
            (outfile (concat dir "init.el"))
-           (generated-autoload-file (concat dir "site-lisp/my-autoloads.el")))
+           (generated-autoload-file (concat dir "site-lisp/my-loaddefs.el")))
       (update-directory-autoloads (concat dir "site-lisp"))
       (org-babel-tangle-file (buffer-file-name) outfile)
       (byte-compile-file outfile)))
-#+end_example
+#+END_EXAMPLE
 
 * Startup
 
 Remove annoying UI
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (setq inhibit-splash-screen t)
-#+end_src
+#+END_SRC
 
 * My Config
 
 ** Dependencies
 
-#+begin_src emacs-lisp
-  (defvar my-site-lisp (expand-file-name "site-lisp/" user-emacs-directory)
-    ".emacs.d/site-lisp")
-  
-  (setq load-path (append (list my-site-lisp) load-path))
-  
-  ;; load autoloads if generated, otherwise load all files in site-lisp
-  (let ((autoloads (concat my-site-lisp "my-autoloads.el")))
-    (if (file-exists-p autoloads)
-        (progn
-          (require 'my-mode)
-          (require 'module)
-          (require 'my-autoloads))
-      (mapc (lambda (file)
-              (require (intern (file-name-sans-extension
-                                (file-name-nondirectory file)))))
-            (file-expand-wildcards (concat my-site-lisp "*.el")))))
-  
-  ;; Require Macros for byte compile
-  (eval-when-compile
-    (progn (require 'module)))
-#+end_src
+#+BEGIN_SRC emacs-lisp
+    (defvar my-site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory)
+      ".emacs.d/site-lisp")
+    (defvar my-vendor-dir (expand-file-name "vendor/" user-emacs-directory)
+      ".emacs.d/vendor")
+    
+    (setq load-path (cons my-site-lisp-dir load-path))
+    
+    ;; load loaddefs if generated, otherwise load all files in site-lisp
+    (let ((loaddefs (concat my-site-lisp-dir "my-loaddefs.el")))
+      (if (file-exists-p loaddefs)
+          (progn
+            (require 'dash)
+            (require 'my-mode)
+            (require 'module)
+            (require 'my-loaddefs))
+        (mapc (lambda (file)
+                (require (intern (file-name-sans-extension
+                                  (file-name-nondirectory it)))))
+              (file-expand-wildcards (concat my-site-lisp-dir "*.el")))))
+    
+    ;; Require Macros for byte compile
+    (eval-when-compile
+      (progn (require 'dash)
+             (require 'module)))
+#+END_SRC
 
 ** Custom/secrets files
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
   (load custom-file t)
   (load my-custom-readonly-file t)
   (load my-secrets-file t)
-#+end_src
+#+END_SRC
 
 ** Basic
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (custom-set-variables
    '(default-major-mode (quote text-mode) t)
   
    '(enable-recursive-minibuffers t)
    '(minibuffer-depth-indicate-mode t))
-#+end_src
+#+END_SRC
 
 ** File system
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (custom-set-variables
    '(delete-by-moving-to-trash t)
    '(tramp-default-method-alist (quote (("\\`localhost\\'" "\\`root\\'" "sudo")))))
-#+end_src
+#+END_SRC
 
 ** Clipboard
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (custom-set-variables
    '(mouse-yank-at-point t)
    '(x-select-enable-clipboard t))
-#+end_src
+#+END_SRC
 
 ** Encoding
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (custom-set-variables
    '(current-language-environment "UTF-8")
    '(locale-coding-system 'utf-8))
@@ -98,30 +102,30 @@ Remove annoying UI
   (set-keyboard-coding-system 'utf-8)
   (set-selection-coding-system 'utf-8)
   (prefer-coding-system 'utf-8)
-#+end_src
+#+END_SRC
 
 ** Enable Commands
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (put 'narrow-to-region 'disabled nil)
 (put 'set-goal-column 'disabled nil)
 (put 'scroll-left 'disabled nil)
 (put 'scroll-right 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
-#+end_src
+#+END_SRC
 
 ** Safe Variables
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (custom-set-variables
    '(safe-local-variable-values '((encoding . utf-8)
                                   (outline-minor-mode . t))))
-#+end_src
+#+END_SRC
 
 ** Aliases
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (fset 'yes-or-no-p 'y-or-n-p)
 (fset 'man 'woman)
 (defalias 'save-pwd 'xsteve-save-current-directory)
@@ -140,13 +144,13 @@ Remove annoying UI
 (defalias 'ack 'agap)
 (defalias 'sudo 'find-alternative-file-with-sudo)
 (defalias 'af 'auto-fill-mode)
-#+end_src
+#+END_SRC
 
 * ELPA
 
 Load package on demand
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   ;; @purcell https://github.com/purcell/emacs.d/blob/master/init-elpa.el
   (defun require-package (package &optional min-version no-refresh)
     "Install given PACKAGE, optionally requiring MIN-VERSION.
@@ -163,22 +167,37 @@ Load package on demand
   (package-initialize)
   
   (setq package-archives
-        '(("org" . "http://orgmode.org/elpa/")
-          ("melpa" . "http://melpa.milkbox.net/packages/")))
-#+end_src
+        '(("melpa" . "http://melpa.milkbox.net/packages/")))
+#+END_SRC
 
 * Modules
 
 Disable module by adding it to =module-black-list=.
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
+;; Example
 ;; (custom-set-variables
-;;   '(module-black-list '(tex r delete-hacks)))
-#+end_src
+;;   '(module-black-list '(tex r delete-keys-hacks)))
+#+END_SRC
+
+** delete-keys-hacks
+
+Use <kbd>M-r</kbd> to delete word backward, <kbd>C-h</kbd> to delete char backword.
+
+To get help, use <kbd>C-H</kbd> or <kbd>F1</kbd> instead.
+
+This is an opinioned config, disable it by adding it to =module-black-list=.
+
+#+BEGIN_SRC emacs-lisp
+(define-module delete-keys-hacks
+  "Translate C-h and M-r to delete char and word backward"
+  (define-key key-translation-map [?\C-h] [?\C-?])
+  (define-key key-translation-map [?\M-r] [?\C-\M-?]))
+#+END_SRC
 
 ** char-motion
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (define-module char-motion
     "Move by char"
 
@@ -213,11 +232,11 @@ Disable module by adding it to =module-black-list=.
     (define-key my-keymap "D" 'zap-back-up-to-char)
   
     (global-set-key "\C-a" 'back-to-indentation))
-#+end_src
+#+END_SRC
 
 ** ido
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (define-module ido
     "Enable ido globally, and use it everywhere"
     
@@ -243,11 +262,11 @@ Disable module by adding it to =module-black-list=.
       (define-key ido-completion-map "\C-c" 'ido-toggle-case))
   
     (add-hook 'ido-setup-hook 'init--ido-setup))
-#+end_src
+#+END_SRC
 
 ** magit
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (define-module magit
     "Git GUI for Emacs"
   
@@ -286,4 +305,24 @@ Disable module by adding it to =module-black-list=.
     (add-hook 'magit-log-edit-mode-hook 'init--magit-log-edit-mode)
   
     (global-set-key [f12] 'magit-status))
-#+end_src
+#+END_SRC
+** org
+
+Install latest org by running =make org=. Othewise system bundled version is used.
+
+#+BEGIN_SRC emacs-lisp
+  (define-module org
+    "Basic orgmode setup"
+  
+    (custom-set-variables
+     '(org-export-backends '(md html icalendar latex beamer)))
+    
+    (let ((org-load-path
+           (car (nreverse (file-expand-wildcards (concat my-vendor-dir "org-*"))))))
+      (when org-load-path
+        ;; remove system org
+        (setq load-path
+              (--remove (string= "org" (file-name-nondirectory it)) load-path))
+        (setq load-path (cons (concat org-load-path "/lisp") load-path))
+        (or (require 'org-loaddefs nil t) (require 'org nil t)))))
+#+END_SRC

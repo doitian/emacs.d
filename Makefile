@@ -10,11 +10,16 @@ BATCH := $(EMACS) -batch -q -no-site-file -L site-lisp
 
 ELC := $(BATCH) -f batch-byte-compile
 
-SITE_ELFILES := $(filter-out site-lisp/my-autoloads.el,$(wildcard site-lisp/*.el))
+SITE_ELFILES := $(filter-out site-lisp/my-loaddefs.el,$(wildcard site-lisp/*.el))
 SITE_ELCFILES := $(SITE_ELFILES:%.el=%.elc)
 
-ELFILES := init.el site-lisp/my-autoloads.el $(SITE_ELFILES)
+ELFILES := init.el site-lisp/my-loaddefs.el $(SITE_ELFILES)
 ELCFILES := init.elc $(SITE_ELCFILES)
+
+ORG_VERSION := 8.0.1
+ORG_PKGNAME := org-$(ORG_VERSION)
+ORG_TARBALL := $(ORG_PKGNAME).tar.gz
+ORG_DOWNLOAD_URL := http://orgmode.org/$(ORG_TARBALL)
 
 all: init.elc
 
@@ -23,9 +28,9 @@ all: init.elc
 .el.elc:
 	$(ELC) $<
 
-init.elc: site-lisp/my-autoloads.el $(SITE_ELCFILES)
+init.elc: site-lisp/my-loaddefs.el $(SITE_ELCFILES)
 
-site-lisp/my-autoloads.el: $(SITE_ELFILES)
+site-lisp/my-loaddefs.el: $(SITE_ELFILES)
 	$(BATCH) -eval "(setq generated-autoload-file (expand-file-name \"$@\"))" \
 		 -f batch-update-autoloads site-lisp
 
@@ -33,6 +38,22 @@ init.el: README.org
 	$(BATCH) -l org -eval "(org-babel-tangle-file \"$<\" \"$@\")"
 
 clean:
-	rm -rf init.el site-lisp/my-autoloads.el $(ELCFILES)
+	rm -rf init.el site-lisp/my-loaddefs.el $(ELCFILES)
 
-.PHONY: all clean
+vendor-clean:
+	rm -rf tmp/org-* vendor/org-*
+
+vendor: org
+
+org: vendor/$(ORG_PKGNAME)/lisp/org-loaddefs.el
+
+vendor/$(ORG_PKGNAME)/lisp/org-loaddefs.el: vendor/$(ORG_PKGNAME)
+	cd $< && make compile
+
+vendor/$(ORG_PKGNAME): tmp/${ORG_TARBALL}
+	tar -xzf $< -C vendor
+
+tmp/${ORG_TARBALL}:
+	curl -o $@ ${ORG_DOWNLOAD_URL}
+
+.PHONY: all clean vendor org

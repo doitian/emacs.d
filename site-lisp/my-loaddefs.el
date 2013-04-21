@@ -1,4 +1,4 @@
-;;; my-autoloads.el --- automatically extracted autoloads
+;;; my-loaddefs.el --- automatically extracted autoloads
 ;;
 ;;; Code:
 
@@ -30,15 +30,15 @@ Define a minor mode for `my-keymap'
 
 ;;;***
 
-;;;### (autoloads nil nil ("autoloads.el") (20851 45964 917720 416000))
+;;;### (autoloads nil nil ("dash.el") (20851 54339 756112 721000))
 
 ;;;***
 
-(provide 'my-autoloads)
+(provide 'my-loaddefs)
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
 ;; coding: utf-8
 ;; End:
-;;; my-autoloads.el ends here
+;;; my-loaddefs.el ends here

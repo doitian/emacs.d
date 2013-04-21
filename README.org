@@ -23,7 +23,7 @@ Some packages are large, and are not stable to install from ELPA. Install them u
 #+END_EXAMPLE
 
 
-* Theme
+* Startup
 
 Remove annoying UI
 
@@ -34,38 +34,88 @@ Remove annoying UI
   (setq inhibit-splash-screen t)
 #+END_SRC
 
-
-
-* My Config
-
-** Dependencies
+* Dependencies
 
 #+BEGIN_SRC emacs-lisp
-    (defvar my-site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory)
-      ".emacs.d/site-lisp")
-    (defvar my-vendor-dir (expand-file-name "vendor/" user-emacs-directory)
-      ".emacs.d/vendor")
-    
-    (setq load-path (cons my-site-lisp-dir load-path))
-    
-    ;; load loaddefs if generated, otherwise load all files in site-lisp
-    (let ((loaddefs (concat my-site-lisp-dir "my-loaddefs.el")))
-      (if (file-exists-p loaddefs)
-          (progn
-            (require 'dash)
-            (require 'my-mode)
-            (require 'module)
-            (require 'my-loaddefs))
-        (mapc (lambda (file)
-                (require (intern (file-name-sans-extension
-                                  (file-name-nondirectory it)))))
-              (file-expand-wildcards (concat my-site-lisp-dir "*.el")))))
-    
-    ;; Require Macros for byte compile
-    (eval-when-compile
-      (progn (require 'dash)
-             (require 'module)))
+  (defvar my-site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory)
+    ".emacs.d/site-lisp")
+  (defvar my-vendor-dir (expand-file-name "vendor/" user-emacs-directory)
+    ".emacs.d/vendor")
+  
+  (setq load-path (cons my-site-lisp-dir load-path))
+  
+  ;; load loaddefs if generated, otherwise load all files in site-lisp
+  (let ((loaddefs (concat my-site-lisp-dir "my-loaddefs.el")))
+    (if (file-exists-p loaddefs)
+        (progn
+          (require 'dash)
+          (require 'my-mode)
+          (require 'module)
+          (require 'my-loaddefs))
+      (mapc (lambda (file)
+              (require (intern (file-name-sans-extension
+                                (file-name-nondirectory it)))))
+            (file-expand-wildcards (concat my-site-lisp-dir "*.el")))))
+  
+  ;; Require Macros for byte compile
+  (eval-when-compile
+    (progn (require 'dash)
+           (require 'module)))
 #+END_SRC
+
+
+* Theme
+
+#+BEGIN_SRC emacs-lisp
+  (setq custom-theme-directory (expand-file-name "themes" user-emacs-directory))
+  (load (concat custom-theme-directory "/zenburn-theme"))
+  (set-frame-font my-frame-font)
+  (set-fontset-font "fontset-default" 'chinese-gbk my-frame-font-chinese)
+  
+  (setq frame-title-format '(buffer-file-name "Emacs: %b (%f)" "Emacs: %b"))
+  
+  ;; prefer fringe
+  (setq next-error-highlight 'fringe-arrow)
+  
+  (add-to-list
+   'default-frame-alist
+   (cons 'font my-frame-font))
+  
+  (defvar after-make-console-frame-hooks '()
+    "Hooks to run after creating a new TTY frame")
+  (defvar after-make-window-system-frame-hooks '()
+    "Hooks to run after creating a new window-system frame")
+  
+  (defun run-after-make-frame-hooks (frame)
+    "Selectively run either `after-make-console-frame-hooks' or
+  `after-make-window-system-frame-hooks'"
+    (select-frame frame)
+    (run-hooks (if window-system
+                   'after-make-window-system-frame-hooks
+                 'after-make-console-frame-hooks)))
+  
+  (add-hook 'after-make-frame-functions 'run-after-make-frame-hooks)
+  
+  (custom-set-variables
+   '(blink-cursor-mode t)
+   '(blink-cursor-delay 2)
+   '(blink-cursor-interval 0.5)
+   '(indicate-empty-lines nil)
+   '(indicate-buffer-boundaries 'right)
+   '(inhibit-startup-echo-area-message t)
+   '(inhibit-startup-screen t)
+   '(show-paren-mode t)
+   '(tool-bar-mode nil)
+   '(visible-bell t)
+   '(menu-bar-mode nil)
+   '(scroll-bar-mode nil)
+   '(use-file-dialog nil)
+   '(use-dialog-box nil))
+  
+  (global-hl-line-mode)
+#+END_SRC
+
+* My Config
 
 ** Custom/secrets files
 
@@ -166,6 +216,7 @@ Remove annoying UI
 (defalias 'sudo 'find-alternative-file-with-sudo)
 (defalias 'af 'auto-fill-mode)
 #+END_SRC
+
 
 * ELPA
 

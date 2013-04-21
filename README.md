@@ -8,31 +8,32 @@
 <li><a href="#sec-1-2">1.2. vendor</a></li>
 </ul>
 </li>
-<li><a href="#sec-2">2. Theme</a></li>
-<li><a href="#sec-3">3. My Config</a>
+<li><a href="#sec-2">2. Startup</a></li>
+<li><a href="#sec-3">3. Dependencies</a></li>
+<li><a href="#sec-4">4. Theme</a></li>
+<li><a href="#sec-5">5. My Config</a>
 <ul>
-<li><a href="#sec-3-1">3.1. Dependencies</a></li>
-<li><a href="#sec-3-2">3.2. Custom/secrets files</a></li>
-<li><a href="#sec-3-3">3.3. Basic</a></li>
-<li><a href="#sec-3-4">3.4. File system</a></li>
-<li><a href="#sec-3-5">3.5. Clipboard</a></li>
-<li><a href="#sec-3-6">3.6. Encoding</a></li>
-<li><a href="#sec-3-7">3.7. Enable Commands</a></li>
-<li><a href="#sec-3-8">3.8. Safe Variables</a></li>
-<li><a href="#sec-3-9">3.9. Aliases</a></li>
+<li><a href="#sec-5-1">5.1. Custom/secrets files</a></li>
+<li><a href="#sec-5-2">5.2. Basic</a></li>
+<li><a href="#sec-5-3">5.3. File system</a></li>
+<li><a href="#sec-5-4">5.4. Clipboard</a></li>
+<li><a href="#sec-5-5">5.5. Encoding</a></li>
+<li><a href="#sec-5-6">5.6. Enable Commands</a></li>
+<li><a href="#sec-5-7">5.7. Safe Variables</a></li>
+<li><a href="#sec-5-8">5.8. Aliases</a></li>
 </ul>
 </li>
-<li><a href="#sec-4">4. ELPA</a></li>
-<li><a href="#sec-5">5. Modules</a>
+<li><a href="#sec-6">6. ELPA</a></li>
+<li><a href="#sec-7">7. Modules</a>
 <ul>
-<li><a href="#sec-5-1">5.1. delete-keys-hacks</a></li>
-<li><a href="#sec-5-2">5.2. char-motion</a></li>
-<li><a href="#sec-5-3">5.3. ido</a></li>
-<li><a href="#sec-5-4">5.4. magit</a></li>
-<li><a href="#sec-5-5">5.5. org</a></li>
-<li><a href="#sec-5-6">5.6. case-dwim</a></li>
-<li><a href="#sec-5-7">5.7. server</a></li>
-<li><a href="#sec-5-8">5.8. backup</a></li>
+<li><a href="#sec-7-1">7.1. delete-keys-hacks</a></li>
+<li><a href="#sec-7-2">7.2. char-motion</a></li>
+<li><a href="#sec-7-3">7.3. ido</a></li>
+<li><a href="#sec-7-4">7.4. magit</a></li>
+<li><a href="#sec-7-5">7.5. org</a></li>
+<li><a href="#sec-7-6">7.6. case-dwim</a></li>
+<li><a href="#sec-7-7">7.7. server</a></li>
+<li><a href="#sec-7-8">7.8. backup</a></li>
 </ul>
 </li>
 </ul>
@@ -62,7 +63,7 @@ Some packages are large, and are not stable to install from ELPA. Install them u
     make vendor
 
 <a name="sec-2"></a>
-# Theme
+# Startup
 
 Remove annoying UI
 
@@ -71,12 +72,8 @@ Remove annoying UI
     (scroll-bar-mode -1)
     (setq inhibit-splash-screen t)
 
-
 <a name="sec-3"></a>
-# My Config
-
-<a name="sec-3-1"></a>
-## Dependencies
+# Dependencies
 
     (defvar my-site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory)
       ".emacs.d/site-lisp")
@@ -103,7 +100,60 @@ Remove annoying UI
       (progn (require 'dash)
              (require 'module)))
 
-<a name="sec-3-2"></a>
+<a name="sec-4"></a>
+# Theme
+
+    (setq custom-theme-directory (expand-file-name "themes" user-emacs-directory))
+    (load (concat custom-theme-directory "/zenburn-theme"))
+    (set-frame-font my-frame-font)
+    (set-fontset-font "fontset-default" 'chinese-gbk my-frame-font-chinese)
+    
+    (setq frame-title-format '(buffer-file-name "Emacs: %b (%f)" "Emacs: %b"))
+    
+    ;; prefer fringe
+    (setq next-error-highlight 'fringe-arrow)
+    
+    (add-to-list
+     'default-frame-alist
+     (cons 'font my-frame-font))
+    
+    (defvar after-make-console-frame-hooks '()
+      "Hooks to run after creating a new TTY frame")
+    (defvar after-make-window-system-frame-hooks '()
+      "Hooks to run after creating a new window-system frame")
+    
+    (defun run-after-make-frame-hooks (frame)
+      "Selectively run either `after-make-console-frame-hooks' or
+    `after-make-window-system-frame-hooks'"
+      (select-frame frame)
+      (run-hooks (if window-system
+                     'after-make-window-system-frame-hooks
+                   'after-make-console-frame-hooks)))
+    
+    (add-hook 'after-make-frame-functions 'run-after-make-frame-hooks)
+    
+    (custom-set-variables
+     '(blink-cursor-mode t)
+     '(blink-cursor-delay 2)
+     '(blink-cursor-interval 0.5)
+     '(indicate-empty-lines nil)
+     '(indicate-buffer-boundaries 'right)
+     '(inhibit-startup-echo-area-message t)
+     '(inhibit-startup-screen t)
+     '(show-paren-mode t)
+     '(tool-bar-mode nil)
+     '(visible-bell t)
+     '(menu-bar-mode nil)
+     '(scroll-bar-mode nil)
+     '(use-file-dialog nil)
+     '(use-dialog-box nil))
+    
+    (global-hl-line-mode)
+
+<a name="sec-5"></a>
+# My Config
+
+<a name="sec-5-1"></a>
 ## Custom/secrets files
 
     (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -111,7 +161,7 @@ Remove annoying UI
     (load my-custom-readonly-file t)
     (load my-secrets-file t)
 
-<a name="sec-3-3"></a>
+<a name="sec-5-2"></a>
 ## Basic
 
     (custom-set-variables
@@ -130,21 +180,21 @@ Remove annoying UI
     
      '(set-mark-command-repeat-pop t))
 
-<a name="sec-3-4"></a>
+<a name="sec-5-3"></a>
 ## File system
 
     (custom-set-variables
      '(delete-by-moving-to-trash t)
      '(tramp-default-method-alist (quote (("\\`localhost\\'" "\\`root\\'" "sudo")))))
 
-<a name="sec-3-5"></a>
+<a name="sec-5-4"></a>
 ## Clipboard
 
     (custom-set-variables
      '(mouse-yank-at-point t)
      '(x-select-enable-clipboard t))
 
-<a name="sec-3-6"></a>
+<a name="sec-5-5"></a>
 ## Encoding
 
     (custom-set-variables
@@ -156,7 +206,7 @@ Remove annoying UI
     (set-selection-coding-system 'utf-8)
     (prefer-coding-system 'utf-8)
 
-<a name="sec-3-7"></a>
+<a name="sec-5-6"></a>
 ## Enable Commands
 
     (put 'narrow-to-region 'disabled nil)
@@ -166,14 +216,14 @@ Remove annoying UI
     (put 'downcase-region 'disabled nil)
     (put 'upcase-region 'disabled nil)
 
-<a name="sec-3-8"></a>
+<a name="sec-5-7"></a>
 ## Safe Variables
 
     (custom-set-variables
      '(safe-local-variable-values '((encoding . utf-8)
                                     (outline-minor-mode . t))))
 
-<a name="sec-3-9"></a>
+<a name="sec-5-8"></a>
 ## Aliases
 
     (fset 'yes-or-no-p 'y-or-n-p)
@@ -195,7 +245,7 @@ Remove annoying UI
     (defalias 'sudo 'find-alternative-file-with-sudo)
     (defalias 'af 'auto-fill-mode)
 
-<a name="sec-4"></a>
+<a name="sec-6"></a>
 # ELPA
 
 Load package on demand
@@ -219,7 +269,7 @@ Load package on demand
           '(("melpa" . "http://melpa.milkbox.net/packages/")
             ("gnu" . "http://elpa.gnu.org/packages/")))
 
-<a name="sec-5"></a>
+<a name="sec-7"></a>
 # Modules
 
 Disable module by adding it to `module-black-list`.
@@ -228,7 +278,7 @@ Disable module by adding it to `module-black-list`.
     ;; (custom-set-variables
     ;;   '(module-black-list '(tex r delete-keys-hacks)))
 
-<a name="sec-5-1"></a>
+<a name="sec-7-1"></a>
 ## delete-keys-hacks
 
 Use <kbd>M-r</kbd> to delete word backward, <kbd>C-h</kbd> to delete char backword.
@@ -242,7 +292,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
       (define-key key-translation-map [?\C-h] [?\C-?])
       (define-key key-translation-map [?\M-r] [?\C-\M-?]))
 
-<a name="sec-5-2"></a>
+<a name="sec-7-2"></a>
 ## char-motion
 
     (define-module char-motion
@@ -280,7 +330,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     
       (global-set-key "\C-a" 'back-to-indentation-or-beginning))
 
-<a name="sec-5-3"></a>
+<a name="sec-7-3"></a>
 ## ido
 
     (define-module ido
@@ -309,7 +359,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     
       (add-hook 'ido-setup-hook 'init--ido-setup))
 
-<a name="sec-5-4"></a>
+<a name="sec-7-4"></a>
 ## magit
 
     (define-module magit
@@ -351,7 +401,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     
       (global-set-key [f12] 'magit-status))
 
-<a name="sec-5-5"></a>
+<a name="sec-7-5"></a>
 ## org
 
 Install latest org by running `make org`. Othewise system bundled version is used.
@@ -371,7 +421,7 @@ Install latest org by running `make org`. Othewise system bundled version is use
           (setq load-path (cons (concat org-load-path "/lisp") load-path))
           (or (require 'org-loaddefs nil t) (require 'org nil t)))))
 
-<a name="sec-5-6"></a>
+<a name="sec-7-6"></a>
 ## case-dwim
 
 Ease inserting dash `-` and undersocre `_`.
@@ -398,7 +448,7 @@ These commands are also `multiple-cursors` compatible.
       (define-key isearch-mode-map (kbd "M-l") 'case-dwim-isearch-dash)
       (define-key isearch-mode-map (kbd "M-u") 'case-dwim-isearch-underscore))
 
-<a name="sec-5-7"></a>
+<a name="sec-7-7"></a>
 ## server
 
 Start emacs server.
@@ -437,7 +487,7 @@ Start emacs server.
     
       (server-start))
 
-<a name="sec-5-8"></a>
+<a name="sec-7-8"></a>
 ## backup
 
 See commands in `site-lisp/pick-backup.el` to diff or restore a backup.

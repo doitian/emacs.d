@@ -1,9 +1,6 @@
 ;;; case-dwim.el --- case transformations functions
 
 (require 'sequential-command)
-(eval-when-compile
-  (progn
-    (defvar mc--this-command nil)))
 
 (defvar case-dwim--last-command-is-case-transformation nil)
 

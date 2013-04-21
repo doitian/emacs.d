@@ -5,8 +5,8 @@
 
 ;;;### (autoloads (case-dwim-capitalize case-dwim-upcase case-dwim-downcase
 ;;;;;;  case-dwim-isearch-underscore case-dwim-isearch-dash case-dwim-underscore
-;;;;;;  case-dwim-dash) "case-dwim" "case-dwim.el" (20852 1222 303265
-;;;;;;  744000))
+;;;;;;  case-dwim-dash) "case-dwim" "case-dwim.el" (20852 16769 586768
+;;;;;;  298000))
 ;;; Generated autoloads from case-dwim.el
 
 (autoload 'case-dwim-dash "case-dwim" "\
@@ -59,7 +59,7 @@ Otherwise capitalize following words.
 ;;;***
 
 ;;;### (autoloads (module-initialize module-load) "module" "module.el"
-;;;;;;  (20851 64168 546570 890000))
+;;;;;;  (20852 17135 153438 943000))
 ;;; Generated autoloads from module.el
 
 (autoload 'module-load "module" "\
@@ -113,7 +113,7 @@ View one of FILE's backups.
 ;;;***
 
 ;;;### (autoloads nil nil ("dash.el" "eproject-plus.el" "sequential-command.el")
-;;;;;;  (20852 16073 202540 51000))
+;;;;;;  (20852 17164 902665 837000))
 
 ;;;***
 

@@ -774,6 +774,134 @@ Auto revert, and helper functions to revert without confirmation.
     (define-key my-keymap "p" eproject-plus-keymap))
 #+END_SRC
 
+** helm
+
+#+BEGIN_SRC emacs-lisp
+  (define-module helm
+    (require-module eproject)
+    (require-package 'helm)
+  
+    (defvar helm-source-eproject-projects nil)
+    (defvar helm-source-eproject-files-in-project nil)
+  
+    (setq helm-source-eproject-projects
+          '((name . "Projects")
+            (candidates . (lambda ()
+                            (mapcar 'cdr (eproject-projects))))
+            (real-to-display . (lambda (e)
+                                 (file-name-nondirectory (directory-file-name e))))
+            (type . file)))
+  
+    (setq helm-source-eproject-files-in-project
+          '((name . "Project Files")
+            ;; (delayed)
+            (candidate-number-limit . 9999)
+            (requires-pattern . 3)
+            (real-to-display . (lambda (e)
+                                 (with-helm-current-buffer
+                                   (file-relative-name e (eproject-root-safe)))))
+            (candidates . (lambda ()
+                            (with-helm-current-buffer
+                              (eproject-plus-list-project-files-with-cache (eproject-root-safe)))))
+            (type . file)))
+  
+    (defun helm-eproject-projects ()
+      (interactive)
+      (helm-other-buffer 'helm-source-eproject-projects "*helm projects*"))
+  
+    (defun helm-eproject-files-in-project ()
+      (interactive)
+      (helm-other-buffer 'helm-source-eproject-files-in-project "*helm files in project*"))
+  
+    (defun helm-insert-buffer-base-name ()
+      "Insert buffer name stub."
+      (interactive)
+      (helm-insert-string
+       (with-current-buffer helm-current-buffer
+         (buffer-stub-name))))
+  
+    (custom-set-variables
+     '(helm-command-prefix-key "M-S")
+     '(helm-input-idle-delay 0)
+     '(helm-idle-delay 0.3)
+     '(helm-quick-update t)
+     '(helm-c-use-standard-keys t)
+     '(helm-quick-update nil)
+     '(helm-enable-shortcuts 'prefix))
+  
+    (eval-after-load "helm"
+      '(progn
+         (require 'helm-mode)
+         (require 'helm-config)
+         (require 'helm-match-plugin)
+         (require 'helm-buffers)
+         (require 'helm-files)
+         (require 'helm-locate)
+         (require 'helm-w3m)
+  
+         ;;; Shortcuts
+         (define-key helm-map (kbd "M-s") 'helm-select-with-prefix-shortcut)
+  
+         (define-key helm-command-map (kbd "g") 'helm-do-grep)
+         (define-key helm-command-map (kbd "o") 'helm-occur)
+         (define-key helm-command-map (kbd "r") 'helm-register)
+         (define-key helm-command-map (kbd "R") 'helm-regexp)
+         (define-key helm-command-map (kbd "b") 'helm-c-pp-bookmarks)
+         (define-key helm-command-map (kbd "p") 'helm-c-eproject-projects)
+         (define-key helm-command-map (kbd "f") 'helm-c-eproject-files-in-project)
+         (define-key helm-command-map (kbd "<SPC>") 'helm-all-mark-rings)))
+  
+    ;;; Sources
+    (defvar my-helm-sources nil)
+    (setq my-helm-sources
+          '(helm-source-files-in-current-dir
+            helm-source-eproject-files-in-project
+            helm-source-eproject-projects
+            helm-source-buffers-list
+            helm-source-file-cache
+            helm-source-recentf
+            helm-source-file-name-history
+            helm-source-bookmarks
+            helm-source-w3m-bookmarks))
+  
+    (defun my-helm-go ()
+      "Preconfigured `helm' to fidn fiels"
+      (interactive)
+      (helm-other-buffer my-helm-sources "*helm go*"))
+  
+    (autoload 'helm-command-prefix "helm-config" nil nil 'keymap)
+  
+    (global-set-key (kbd "M-X") 'my-helm-go)
+    (define-key my-keymap (kbd "M-s") 'my-helm-go)
+    (define-key my-keymap (kbd "s") 'helm-command-prefix)
+  
+    ;; 1. Quote the string
+    ;; 2. If we didn't input any typically regexp characters, convert spaces to .*,
+    ;;    however, it is still order related.
+    (defun helm-pattern-to-regexp (string)
+      (prin1-to-string
+       (if (string-match-p "[][*+$^]" string) string
+         (let ((parts (split-string string "[ \t]+" t)))
+           (if (eq 2 (length parts))
+               ;; for two parts a,b we make a.*b\|b.*a
+               (concat
+                (mapconcat 'regexp-quote parts ".*")
+                "\\|"
+                (mapconcat 'regexp-quote (reverse parts) ".*"))
+             ;; only 1 part or more than 2 parts, fine, just combine them using .*,
+             ;; thus it will slow down locate a lot. This means you have to type in order
+             (mapconcat 'regexp-quote parts ".*"))))))
+  
+    ;; Hack
+    ;; Convert helm pattern to regexp for locate
+    (defadvice helm-c-locate-init (around helm-pattern-to-regexp () activate)
+      (let ((helm-pattern (helm-pattern-to-regexp helm-pattern)))
+        ad-do-it))
+    )
+  
+  
+#+END_SRC
+
 * TODO Backlog
 
 #+BEGIN_EXAMPLE

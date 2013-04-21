@@ -19,22 +19,23 @@
   "Define a module with `name' and `body' is evaluated when the module
   is required using `require-module'. `reload' flag can be used in `body' to handle module reload."
   (let ((flag (intern (concat "module-" (symbol-name name) "-loaded")))
-	(init (intern (concat "module-" (symbol-name name) "-init"))))
+        (init (intern (concat "module-" (symbol-name name) "-init"))))
     `(progn
        (setq module-list (cons ',name module-list))
        (defvar ,flag nil
-	 ,(format "Whether module `module-%s-init' has been loaded" (symbol-name name)))
+         ,(format "Whether module `module-%s-init' has been loaded" (symbol-name name)))
        (defun ,init (&optional reload)
-	 ,(if (stringp docstring) docstring (concat "Init module " (symbol-name name)))
-	 (when (or reload (not ,flag))
-	   ,(unless (stringp docstring) docstring)
-	   ,@body)
-	 (setq ,flag t)))))
+         ,(if (stringp docstring) docstring (concat "Init module " (symbol-name name)))
+         (when (or reload (not ,flag))
+           ,(unless (stringp docstring) docstring)
+           ,@body)
+         (setq ,flag t)))))
 
 (defmacro require-module (name &optional reload)
   "Load a module by name."
   (let ((init (intern (concat "module-" (symbol-name name) "-init"))))
-    `(funcall ',init ,reload)))
+    `(unless (memq ',name module-black-list)
+       (funcall ',init ,reload))))
 
 (defvar module-load-history nil)
 

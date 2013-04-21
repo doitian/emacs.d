@@ -22,7 +22,8 @@ Some packages are large, and are not stable to install from ELPA. Install them u
   make vendor
 #+END_EXAMPLE
 
-* Startup
+
+* Theme
 
 Remove annoying UI
 
@@ -32,6 +33,8 @@ Remove annoying UI
   (scroll-bar-mode -1)
   (setq inhibit-splash-screen t)
 #+END_SRC
+
+
 
 * My Config
 
@@ -414,7 +417,7 @@ Start emacs server.
 #+END_SRC
 ** backup
 
-See commands in [[pick-backup.el]] to diff or restore a backup.
+See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
 
 #+BEGIN_SRC emacs-lisp
   (define-module backup

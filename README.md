@@ -8,7 +8,7 @@
 <li><a href="#sec-1-2">1.2. vendor</a></li>
 </ul>
 </li>
-<li><a href="#sec-2">2. Startup</a></li>
+<li><a href="#sec-2">2. Theme</a></li>
 <li><a href="#sec-3">3. My Config</a>
 <ul>
 <li><a href="#sec-3-1">3.1. Dependencies</a></li>
@@ -38,8 +38,10 @@
 </ul>
 </div>
 </div>
+<a name="sec-1"></a>
 # Usage
 
+<a name="sec-1-1"></a>
 ## Generate init.el
 
 Use `make` or eval following lisp code. Move to the end of the expression, and press <kbd>Ctrl-X Ctrl-E</kbd>.
@@ -52,13 +54,15 @@ Use `make` or eval following lisp code. Move to the end of the expression, and p
         (org-babel-tangle-file (buffer-file-name) outfile)
         (byte-compile-file outfile)))
 
+<a name="sec-1-2"></a>
 ## vendor
 
 Some packages are large, and are not stable to install from ELPA. Install them using `make vendor`.
 
     make vendor
 
-# Startup
+<a name="sec-2"></a>
+# Theme
 
 Remove annoying UI
 
@@ -67,8 +71,11 @@ Remove annoying UI
     (scroll-bar-mode -1)
     (setq inhibit-splash-screen t)
 
+
+<a name="sec-3"></a>
 # My Config
 
+<a name="sec-3-1"></a>
 ## Dependencies
 
     (defvar my-site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory)
@@ -96,6 +103,7 @@ Remove annoying UI
       (progn (require 'dash)
              (require 'module)))
 
+<a name="sec-3-2"></a>
 ## Custom/secrets files
 
     (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -103,6 +111,7 @@ Remove annoying UI
     (load my-custom-readonly-file t)
     (load my-secrets-file t)
 
+<a name="sec-3-3"></a>
 ## Basic
 
     (custom-set-variables
@@ -121,18 +130,21 @@ Remove annoying UI
     
      '(set-mark-command-repeat-pop t))
 
+<a name="sec-3-4"></a>
 ## File system
 
     (custom-set-variables
      '(delete-by-moving-to-trash t)
      '(tramp-default-method-alist (quote (("\\`localhost\\'" "\\`root\\'" "sudo")))))
 
+<a name="sec-3-5"></a>
 ## Clipboard
 
     (custom-set-variables
      '(mouse-yank-at-point t)
      '(x-select-enable-clipboard t))
 
+<a name="sec-3-6"></a>
 ## Encoding
 
     (custom-set-variables
@@ -144,6 +156,7 @@ Remove annoying UI
     (set-selection-coding-system 'utf-8)
     (prefer-coding-system 'utf-8)
 
+<a name="sec-3-7"></a>
 ## Enable Commands
 
     (put 'narrow-to-region 'disabled nil)
@@ -153,12 +166,14 @@ Remove annoying UI
     (put 'downcase-region 'disabled nil)
     (put 'upcase-region 'disabled nil)
 
+<a name="sec-3-8"></a>
 ## Safe Variables
 
     (custom-set-variables
      '(safe-local-variable-values '((encoding . utf-8)
                                     (outline-minor-mode . t))))
 
+<a name="sec-3-9"></a>
 ## Aliases
 
     (fset 'yes-or-no-p 'y-or-n-p)
@@ -180,6 +195,7 @@ Remove annoying UI
     (defalias 'sudo 'find-alternative-file-with-sudo)
     (defalias 'af 'auto-fill-mode)
 
+<a name="sec-4"></a>
 # ELPA
 
 Load package on demand
@@ -203,6 +219,7 @@ Load package on demand
           '(("melpa" . "http://melpa.milkbox.net/packages/")
             ("gnu" . "http://elpa.gnu.org/packages/")))
 
+<a name="sec-5"></a>
 # Modules
 
 Disable module by adding it to `module-black-list`.
@@ -211,6 +228,7 @@ Disable module by adding it to `module-black-list`.
     ;; (custom-set-variables
     ;;   '(module-black-list '(tex r delete-keys-hacks)))
 
+<a name="sec-5-1"></a>
 ## delete-keys-hacks
 
 Use <kbd>M-r</kbd> to delete word backward, <kbd>C-h</kbd> to delete char backword.
@@ -224,6 +242,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
       (define-key key-translation-map [?\C-h] [?\C-?])
       (define-key key-translation-map [?\M-r] [?\C-\M-?]))
 
+<a name="sec-5-2"></a>
 ## char-motion
 
     (define-module char-motion
@@ -261,6 +280,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     
       (global-set-key "\C-a" 'back-to-indentation-or-beginning))
 
+<a name="sec-5-3"></a>
 ## ido
 
     (define-module ido
@@ -289,6 +309,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     
       (add-hook 'ido-setup-hook 'init--ido-setup))
 
+<a name="sec-5-4"></a>
 ## magit
 
     (define-module magit
@@ -330,6 +351,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     
       (global-set-key [f12] 'magit-status))
 
+<a name="sec-5-5"></a>
 ## org
 
 Install latest org by running `make org`. Othewise system bundled version is used.
@@ -349,6 +371,7 @@ Install latest org by running `make org`. Othewise system bundled version is use
           (setq load-path (cons (concat org-load-path "/lisp") load-path))
           (or (require 'org-loaddefs nil t) (require 'org nil t)))))
 
+<a name="sec-5-6"></a>
 ## case-dwim
 
 Ease inserting dash `-` and undersocre `_`.
@@ -375,6 +398,7 @@ These commands are also `multiple-cursors` compatible.
       (define-key isearch-mode-map (kbd "M-l") 'case-dwim-isearch-dash)
       (define-key isearch-mode-map (kbd "M-u") 'case-dwim-isearch-underscore))
 
+<a name="sec-5-7"></a>
 ## server
 
 Start emacs server.
@@ -413,9 +437,10 @@ Start emacs server.
     
       (server-start))
 
+<a name="sec-5-8"></a>
 ## backup
 
-See commands in to diff or restore a backup.
+See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
 
     (define-module backup
       ;; Place all backup files into this directory

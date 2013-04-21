@@ -112,8 +112,8 @@ View one of FILE's backups.
 
 ;;;***
 
-;;;### (autoloads nil nil ("dash.el" "sequential-command.el") (20851
-;;;;;;  64242 702682 66000))
+;;;### (autoloads nil nil ("dash.el" "sequential-command.el") (20852
+;;;;;;  879 755470 290000))
 
 ;;;***
 

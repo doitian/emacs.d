@@ -1,0 +1,15 @@
+# name: describe class do ... end
+# key: desc
+# --
+describe ${1:`(let ((fn
+       (capitalize (replace-regexp-in-string
+                    "_spec$" ""
+                    (file-name-nondirectory
+                     (file-name-sans-extension
+                      (or (buffer-file-name)
+                          (buffer-name (current-buffer)))))))))
+  (cond
+   ((string-match "_" fn) (yas-underscore-to-camel fn))
+   (t fn)))`} do
+  $0
+end

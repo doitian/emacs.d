@@ -1,0 +1,11 @@
+# name: class
+# key: class
+# --
+class ${1:`(let ((fn (capitalize (file-name-nondirectory
+                                 (file-name-sans-extension
+				 (or (buffer-file-name)
+				     (buffer-name (current-buffer))))))))
+           (cond
+             ((string-match "_" fn) (yas-underscore-to-camel fn))
+              (t fn)))`}${2:(${3:`(if (string-match "test.py$" (or (buffer-file-name) (buffer-name (current-buffer)))) "unittest.TestCase" "object")`})}:
+    $0

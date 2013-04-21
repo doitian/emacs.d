@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: require file
+# key: requiref
+# --
+require File.expand_path('../`(replace-regexp-in-string "\\.rb$" "" (file-relative-name (ido-read-file-name "File: ")))`', __FILE__)

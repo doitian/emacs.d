@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: testcase
+# key: testcase
+# expand-env: ((yas-indent-line 'fixed))
+# --
+function test_${1:what}()
+  $0
+endfunction
+%!test test_$1()

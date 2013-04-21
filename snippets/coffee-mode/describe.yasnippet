@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: describe
+# key: describe
+# expand-env: ((yas/indent-line 'fixed))
+# --
+describe "${1:`(yas/underscore-to-camel (yas/buffer-name-stub))`}", ->
+
+  $0

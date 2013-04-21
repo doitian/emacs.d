@@ -106,9 +106,14 @@ Load all defined modules in `module-list' except ones in `module-black-list'
 
 ;;;***
 
-;;;### (autoloads (mf-append-line-delimter-then-next-line-and-open-it-if-not-empty
+;;;### (autoloads (mf-jared/insert-file-or-buffer-name mf-insert-file-name
+;;;;;;  mf-insert-date mf-insert-timestamp mf-insert-time mf-insert-user
+;;;;;;  mf-find-alternative-file-with-sudo mf-xsteve-save-current-directory
+;;;;;;  mf-rename-current-buffer-file mf-switch-to-previous-buffer
+;;;;;;  mf-indirect-region mf-smart-kill-whole-line mf-shrink-whitespaces
+;;;;;;  mf-append-line-delimter-then-next-line-and-open-it-if-not-empty
 ;;;;;;  mf-next-line-and-open-it-if-not-empty) "my-functions" "my-functions.el"
-;;;;;;  (20852 20442 966808 281000))
+;;;;;;  (20852 23829 243511 805000))
 ;;; Generated autoloads from my-functions.el
 
 (autoload 'mf-next-line-and-open-it-if-not-empty "my-functions" "\
@@ -121,6 +126,79 @@ Append new line delimeter at the end of current line and go to next line.
 Open next line if it is not empty.
 
 \(fn)" t nil)
+
+(autoload 'mf-shrink-whitespaces "my-functions" "\
+Remove white spaces around cursor to just one or none.
+If current line does not contain non-white space chars, then remove blank lines to just one.
+If current line contains non-white space chars, then shrink any whitespace char surrounding cursor to just one space.
+If current line is a single space, remove that space.
+
+Calling this command 3 times will always result in no whitespaces around cursor.
+
+\(fn)" t nil)
+
+(autoload 'mf-smart-kill-whole-line "my-functions" "\
+A simple wrapper around `kill-whole-line' that respects indentation.
+
+\(fn &optional ARG)" t nil)
+
+(autoload 'mf-indirect-region "my-functions" "\
+Edit the current region in another buffer.
+    If the buffer-local variable `mf-indirect-mode-name' is not set, prompt
+    for mode name to choose for the indirect buffer interactively.
+    Otherwise, use the value of said variable as argument to a funcall.
+
+\(fn START END)" t nil)
+
+(autoload 'mf-switch-to-previous-buffer "my-functions" "\
+
+
+\(fn)" t nil)
+
+(autoload 'mf-rename-current-buffer-file "my-functions" "\
+Renames current buffer and file it is visiting.
+
+\(fn)" t nil)
+
+(autoload 'mf-xsteve-save-current-directory "my-functions" "\
+Save the current directory to the file ~/.emacs.d/data/pwd
+
+\(fn)" t nil)
+
+(autoload 'mf-find-alternative-file-with-sudo "my-functions" "\
+
+
+\(fn)" t nil)
+
+(autoload 'mf-insert-user "my-functions" "\
+
+
+\(fn)" t nil)
+
+(autoload 'mf-insert-time "my-functions" "\
+
+
+\(fn)" t nil)
+
+(autoload 'mf-insert-timestamp "my-functions" "\
+
+
+\(fn)" t nil)
+
+(autoload 'mf-insert-date "my-functions" "\
+
+
+\(fn)" t nil)
+
+(autoload 'mf-insert-file-name "my-functions" "\
+
+
+\(fn)" t nil)
+
+(autoload 'mf-jared/insert-file-or-buffer-name "my-functions" "\
+
+
+\(fn &optional INITIAL)" t nil)
 
 ;;;***
 
@@ -413,7 +491,7 @@ prompt for the function or variable to find, instead.
 ;;;***
 
 ;;;### (autoloads nil nil ("dash.el" "eproject-plus.el" "sequential-command.el"
-;;;;;;  "smart-compile+.el") (20852 23646 605612 48000))
+;;;;;;  "smart-compile+.el") (20852 23830 964627 160000))
 
 ;;;***
 

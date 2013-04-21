@@ -22,7 +22,7 @@ Open next line if it is not empty."
     (insert mf-new-line-delimeter))
   (mf-next-line-and-open-it-if-not-empty))
 
-;;;##autoload
+;;;###autoload
 (defun mf-shrink-whitespaces ()
   "Remove white spaces around cursor to just one or none.
 If current line does not contain non-white space chars, then remove blank lines to just one.
@@ -84,7 +84,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
   )
 
 ;;http://emacsredux.com/blog/2013/04/09/kill-whole-line/
-;;;##autoload
+;;;###autoload
 (defun mf-smart-kill-whole-line (&optional arg)
   "A simple wrapper around `kill-whole-line' that respects indentation."
   (interactive "p")
@@ -96,7 +96,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
   "Mode to set for indirect buffers.")
 (make-variable-buffer-local 'mf-indirect-mode-name)
 
-;;;##autoload
+;;;###autoload
 (defun mf-indirect-region (start end)
   "Edit the current region in another buffer.
     If the buffer-local variable `mf-indirect-mode-name' is not set, prompt
@@ -121,12 +121,12 @@ Calling this command 3 times will always result in no whitespaces around cursor.
     (goto-char (point-min))
     (shrink-window-if-larger-than-buffer)))
 
-;;;##autoload
+;;;###autoload
 (defun mf-switch-to-previous-buffer ()
   (interactive)
   (switch-to-buffer (other-buffer)))
 
-;;;##autoload
+;;;###autoload
 (defun mf-rename-current-buffer-file ()
   "Renames current buffer and file it is visiting."
   (interactive)
@@ -149,7 +149,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
 
 (put 'mf-rename-current-buffer-file 'ido 'ignore)
 
-;;;##autoload
+;;;###autoload
 (defun mf-xsteve-save-current-directory ()
   "Save the current directory to the file ~/.emacs.d/data/pwd"
   (interactive)
@@ -160,7 +160,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
       (save-buffer)
       (kill-buffer (current-buffer)))))
 
-;;;##autoload
+;;;###autoload
 (defun mf-find-alternative-file-with-sudo ()
   (interactive)
   (when buffer-file-name
@@ -168,27 +168,27 @@ Calling this command 3 times will always result in no whitespaces around cursor.
      (concat "/sudo:root@localhost:"
              buffer-file-name))))
 
-;;;##autoload
+;;;###autoload
 (defun mf-insert-user ()
   (interactive)
   (insert (user-full-name)))
 
-;;;##autoload
+;;;###autoload
 (defun mf-insert-time ()
   (interactive)
   (insert (format-time-string "%Y-%m-%d %H:%M:%S")))
 
-;;;##autoload
+;;;###autoload
 (defun mf-insert-timestamp ()
   (interactive)
   (insert (format-time-string "%s")))
 
-;;;##autoload
+;;;###autoload
 (defun mf-insert-date ()
   (interactive)
   (insert (format-time-string "%Y-%m-%d")))
 
-;;;##autoload
+;;;###autoload
 (defun mf-insert-file-name ()
   (interactive)
   (insert (file-name-nondirectory
@@ -208,7 +208,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
         (when filename (push filename res))))))
 
 
-;;;##autoload
+;;;###autoload
 (defun mf-jared/insert-file-or-buffer-name (&optional initial)
   (interactive)
   (let ((name (ido-completing-read "File/Buffer Name: "

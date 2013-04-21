@@ -1058,7 +1058,7 @@ Misc editing config
       (global-set-key (kbd "M-<return>") 'mf-next-line-and-open-it-if-not-empty)
       (global-set-key (kbd "M-S-<return>") 'mf-append-line-delimter-then-next-line-and-open-it-if-not-empty)
       (global-set-key (kbd "s-<return>") 'mf-next-line-and-open-it-if-not-empty)
-      (global-set-key (kbd "C-x C-o") 'shrink-whitespaces)
+      (global-set-key (kbd "C-x C-o") 'mf-shrink-whitespaces)
       (global-set-key (kbd "C-8") 'pop-tag-mark))
 
 <a name="sec-7-25"></a>

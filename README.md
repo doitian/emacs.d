@@ -43,8 +43,11 @@
 <li><a href="#sec-7-15">7.15. vc</a></li>
 <li><a href="#sec-7-16">7.16. isearch</a></li>
 <li><a href="#sec-7-17">7.17. revert</a></li>
+<li><a href="#sec-7-18">7.18. eshell</a></li>
+<li><a href="#sec-7-19">7.19. eproject</a></li>
 </ul>
 </li>
+<li><a href="#sec-8">8. Backlog</a></li>
 </ul>
 </div>
 </div>
@@ -106,7 +109,8 @@ Remove annoying UI
     
     ;; Require Macros for byte compile
     (eval-when-compile
-      (progn (require 'dash)
+      (progn (require 'cl)
+             (require 'dash)
              (require 'module)))
 
 <a name="sec-4"></a>
@@ -688,9 +692,7 @@ add changes interactively using `ediff`.
     
       (defadvice vc-mode-line (after colorize-vc-mode-line activate)
         (when vc-mode
-          ;; git is default
-          (put-text-property 1 (length vc-mode) 'face 'font-lock-doc-face vc-mode)))
-      )
+          (put-text-property 1 (length vc-mode) 'face 'font-lock-string-face vc-mode))))
 
 <a name="sec-7-16"></a>
 ## isearch
@@ -728,6 +730,7 @@ add changes interactively using `ediff`.
               (add-hook 'isearch-mode-hook 'isearch-set-initial-string)
               (isearch-forward regexp-p no-recursive-edit)))))
     
+      (define-key my-keymap "*" 'isearch-forward-at-point)
       (define-key my-keymap "8" 'isearch-forward-at-point))
 
 <a name="sec-7-17"></a>
@@ -741,8 +744,61 @@ Auto revert, and helper functions to revert without confirmation.
         (interactive) (flet ((yes-or-no-p (prompt) t)) (revert-buffer)))
     
       ;; Auto refresh buffers
-      (global-auto-revert-mode +1)
+      ; (global-auto-revert-mode -1)
     
       ;; Also auto refresh dired, but be quiet about it
-      (setq global-auto-revert-non-file-buffers t)
+      ; (setq global-auto-revert-non-file-buffers t)
       (setq auto-revert-verbose nil))
+
+<a name="sec-7-18"></a>
+## eshell
+
+    (define-module eshell
+      (defun eshell-named (&optional name)
+        "Get or create eshell buffer with specified name"
+        (let ((eshell-buffer-name (or name eshell-buffer-name)))
+          (save-window-excursion (eshell))))
+    
+      (defun eshell-toggle (&optional name)
+        "Toggle eshell buffer with the name.
+    hide -> show -> full screen -> hide
+    inactive -> switch -> full screen -> hide
+    "
+        (interactive)
+        (let* ((eshell-buffer (eshell-named name)))
+          (if (eq (current-buffer) eshell-buffer)
+              (if (eq (length (window-list)) 1)
+                  ;; full screen
+                  (switch-to-buffer (other-buffer))
+                ;; active, go to full screen
+                (delete-other-windows))
+            ;; activate the eshell buffer
+            (switch-to-buffer-other-window eshell-buffer))))
+    
+      (defun eshell-here (&optional name)
+        "Get or create eshell in current directory."
+        (interactive)
+        (let ((dir default-directory)
+              (eshell-buffer (eshell-named name)))
+          (unless (eq (current-buffer) eshell-buffer)
+            (switch-to-buffer-other-window eshell-buffer)
+            (goto-char (point-max))
+            (insert (format "cd '%s'" dir))
+            (eshell-send-input))))
+    
+      (define-key my-keymap (kbd "e") 'eshell-toggle)
+      (define-key my-keymap (kbd "E") 'eshell-here))
+
+<a name="sec-7-19"></a>
+## eproject
+
+    (define-module eproject
+      (require-module eshell)
+      (require-package 'eproject)
+      (require 'eproject-plus)
+      (define-key my-keymap "p" eproject-plus-keymap))
+
+<a name="sec-8"></a>
+# TODO Backlog
+
+    (global-set-key (kbd "<f5>") 'compile)

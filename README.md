@@ -488,6 +488,11 @@ Start emacs server.
       (unless (eq system-type 'darwin)
         (add-hook 'delete-frame-functions 'server--run-delete-frame-functions))
     
+      (defun init--server-visit ()
+        (local-set-key (kbd "C-c C-c") 'server-edit))
+    
+      (add-hook 'server-visit-hook 'init--server-visit)
+    
       (server-start))
 
 <a name="sec-7-8"></a>

@@ -94,6 +94,8 @@
   "Define a minor mode for `my-keymap'"
   t "" my-minor-mode-map)
 
+(define-key my-keymap (kbd "C-g") 'keyboard-quit)
+
 (provide 'my-mode)
 
 ;;; my-mode.el ends here

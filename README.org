@@ -1031,7 +1031,8 @@ Misc editing config
     (global-set-key (kbd "M-<return>") 'mf-next-line-and-open-it-if-not-empty)
     (global-set-key (kbd "M-S-<return>") 'mf-append-line-delimter-then-next-line-and-open-it-if-not-empty)
     (global-set-key (kbd "s-<return>") 'mf-next-line-and-open-it-if-not-empty)
-    (global-set-key (kbd "C-x C-o") 'shrink-whitespaces))
+    (global-set-key (kbd "C-x C-o") 'shrink-whitespaces)
+    (global-set-key (kbd "C-8") 'pop-tag-mark))
 #+END_SRC
 
 ** kill-ring
@@ -1092,6 +1093,43 @@ Misc editing config
     (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
     (add-to-list 'desktop-modes-not-to-save 'fundamental-mode))
 #+END_SRC
+
+** mark
+
+#+BEGIN_SRC emacs-lisp
+  (define-module mark
+    (require-package 'expand-region)
+  
+    (global-set-key (kbd "M-SPC") 'thing-actions-mark-thing)
+    (global-set-key (kbd "C-2") 'er/expand-region)
+    (global-set-key [(meta ?@)] 'mark-word)
+    (global-set-key [(control meta ? )] 'mark-sexp)
+    (global-set-key [(control meta shift ?u)] 'mark-enclosing-sexp)
+  
+    ;; diactivate mark after narrow
+    (defadvice narrow-to-region (after deactivate-mark (start end) activate)
+      (deactivate-mark)))
+#+END_SRC
+
+** whitespace
+
+#+BEGIN_SRC emacs-lisp
+  (define-module whitespace
+    (custom-set-variables
+     '(whitespace-action '(cleanup))
+     '(whitespace-global-modes
+       '(emacs-lisp-mode ruby-mode coffee-mode sass-mode
+                         css-mode haml-mode python-mode
+                         go-mode))
+     '(whitespace-line-column fill-column)
+     '(whitespace-style (quote (face tabs trailing newline indentation space-before-tab tab-mark newline-mark)))
+     '(coffee-cleanup-whitespace nil))
+  
+    (global-whitespace-mode +1))
+  
+  
+#+END_SRC
+
 * TODO Backlog
 
 #+BEGIN_EXAMPLE

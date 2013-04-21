@@ -53,6 +53,8 @@
 <li><a href="#sec-7-25">7.25. kill-ring</a></li>
 <li><a href="#sec-7-26">7.26. recentf</a></li>
 <li><a href="#sec-7-27">7.27. desktop</a></li>
+<li><a href="#sec-7-28">7.28. mark</a></li>
+<li><a href="#sec-7-29">7.29. whitespace</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Backlog</a></li>
@@ -1056,7 +1058,8 @@ Misc editing config
       (global-set-key (kbd "M-<return>") 'mf-next-line-and-open-it-if-not-empty)
       (global-set-key (kbd "M-S-<return>") 'mf-append-line-delimter-then-next-line-and-open-it-if-not-empty)
       (global-set-key (kbd "s-<return>") 'mf-next-line-and-open-it-if-not-empty)
-      (global-set-key (kbd "C-x C-o") 'shrink-whitespaces))
+      (global-set-key (kbd "C-x C-o") 'shrink-whitespaces)
+      (global-set-key (kbd "C-8") 'pop-tag-mark))
 
 <a name="sec-7-25"></a>
 ## kill-ring
@@ -1113,6 +1116,38 @@ Misc editing config
       (add-to-list 'desktop-modes-not-to-save 'Info-mode)
       (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
       (add-to-list 'desktop-modes-not-to-save 'fundamental-mode))
+
+<a name="sec-7-28"></a>
+## mark
+
+    (define-module mark
+      (require-package 'expand-region)
+    
+      (global-set-key (kbd "M-SPC") 'thing-actions-mark-thing)
+      (global-set-key (kbd "C-2") 'er/expand-region)
+      (global-set-key [(meta ?@)] 'mark-word)
+      (global-set-key [(control meta ? )] 'mark-sexp)
+      (global-set-key [(control meta shift ?u)] 'mark-enclosing-sexp)
+    
+      ;; diactivate mark after narrow
+      (defadvice narrow-to-region (after deactivate-mark (start end) activate)
+        (deactivate-mark)))
+
+<a name="sec-7-29"></a>
+## whitespace
+
+    (define-module whitespace
+      (custom-set-variables
+       '(whitespace-action '(cleanup))
+       '(whitespace-global-modes
+         '(emacs-lisp-mode ruby-mode coffee-mode sass-mode
+                           css-mode haml-mode python-mode
+                           go-mode))
+       '(whitespace-line-column fill-column)
+       '(whitespace-style (quote (face tabs trailing newline indentation space-before-tab tab-mark newline-mark)))
+       '(coffee-cleanup-whitespace nil))
+    
+      (global-whitespace-mode +1))
 
 <a name="sec-8"></a>
 # TODO Backlog

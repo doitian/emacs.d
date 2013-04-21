@@ -5,8 +5,8 @@
 
 ;;;### (autoloads (case-dwim-capitalize case-dwim-upcase case-dwim-downcase
 ;;;;;;  case-dwim-isearch-underscore case-dwim-isearch-dash case-dwim-underscore
-;;;;;;  case-dwim-dash) "case-dwim" "case-dwim.el" (20851 59415 749852
-;;;;;;  491000))
+;;;;;;  case-dwim-dash) "case-dwim" "case-dwim.el" (20852 1222 303265
+;;;;;;  744000))
 ;;; Generated autoloads from case-dwim.el
 
 (autoload 'case-dwim-dash "case-dwim" "\
@@ -74,8 +74,8 @@ Load all defined modules in `module-list' except ones in `module-black-list'
 
 ;;;***
 
-;;;### (autoloads (my-minor-mode) "my-mode" "my-mode.el" (20851 55240
-;;;;;;  306473 712000))
+;;;### (autoloads (my-minor-mode) "my-mode" "my-mode.el" (20852 1222
+;;;;;;  303265 744000))
 ;;; Generated autoloads from my-mode.el
 
 (autoload 'my-minor-mode "my-mode" "\
@@ -86,8 +86,8 @@ Define a minor mode for `my-keymap'
 ;;;***
 
 ;;;### (autoloads (pick-backup-and-view pick-backup-and-revert pick-backup-and-diff
-;;;;;;  pick-backup-and-ediff) "pick-backup" "pick-backup.el" (20851
-;;;;;;  63541 603230 732000))
+;;;;;;  pick-backup-and-ediff) "pick-backup" "pick-backup.el" (20852
+;;;;;;  1222 783265 748000))
 ;;; Generated autoloads from pick-backup.el
 
 (autoload 'pick-backup-and-ediff "pick-backup" "\
@@ -112,8 +112,8 @@ View one of FILE's backups.
 
 ;;;***
 
-;;;### (autoloads nil nil ("dash.el" "sequential-command.el") (20852
-;;;;;;  879 755470 290000))
+;;;### (autoloads nil nil ("dash.el" "eproject-plus.el" "sequential-command.el")
+;;;;;;  (20852 12017 582582 118000))
 
 ;;;***
 

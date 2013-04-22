@@ -46,7 +46,7 @@ doc: README.md
 
 README.md: README.org
 	$(BATCH) -L vendor/$(ORG_PKGNAME)/lisp -l ox-md --file $< -eval \
-"(progn (defadvice org-md-headline (after anchor (headline contents info) activate) (setq ad-return-value (concat \"<a name=\\\"sec-\" (mapconcat 'number-to-string (org-export-get-headline-number headline info) \"-\") \"\\\"></a>\\n\" ad-return-value))) (defun org-md-example-block (example-block contents info) (concat \"\`\`\`cl\\n\" (org-remove-indentation (org-element-property :value example-block)) \"\\n\`\`\`\\n\")))"\
+"(progn (defadvice org-md-headline (after anchor (headline contents info) activate) (setq ad-return-value (concat \"<a name=\\\"sec-\" (mapconcat 'number-to-string (org-export-get-headline-number headline info) \"-\") \"\\\"></a>\\n\" ad-return-value))) (defun org-md-example-block (example-block contents info) (concat \"\`\`\`cl\\n\" (org-remove-indentation (org-element-property :value example-block)) \"\`\`\`\\n\")))"\
 	 -f org-md-export-to-markdown
 
 clean:

@@ -91,7 +91,6 @@ Use `make` or eval following lisp code. Move to the end of the expression, and p
     (update-directory-autoloads (concat dir "site-lisp"))
     (org-babel-tangle-file (buffer-file-name) outfile)
     (byte-compile-file outfile)))
-
 ```
 
 <a name="sec-1-2"></a>
@@ -101,7 +100,6 @@ Some packages are large, and are not stable to install from ELPA. Install them u
 
 ```cl
 make vendor
-
 ```
 
 <a name="sec-2"></a>
@@ -114,7 +112,6 @@ Remove annoying UI
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (setq inhibit-splash-screen t)
-
 ```
 
 <a name="sec-3"></a>
@@ -146,7 +143,6 @@ Remove annoying UI
   (progn (require 'cl)
          (require 'dash)
          (require 'module)))
-
 ```
 
 <a name="sec-4"></a>
@@ -199,7 +195,6 @@ Remove annoying UI
  '(use-dialog-box nil))
 
 (global-hl-line-mode)
-
 ```
 
 <a name="sec-5"></a>
@@ -213,7 +208,6 @@ Remove annoying UI
 (load custom-file t)
 (load my-custom-readonly-file t)
 (load my-secrets-file t)
-
 ```
 
 <a name="sec-5-2"></a>
@@ -235,7 +229,6 @@ Remove annoying UI
  ;; '(delete-selection-mode t)
 
  '(set-mark-command-repeat-pop t))
-
 ```
 
 <a name="sec-5-3"></a>
@@ -245,7 +238,6 @@ Remove annoying UI
 (custom-set-variables
  '(delete-by-moving-to-trash t)
  '(tramp-default-method-alist (quote (("\\`localhost\\'" "\\`root\\'" "sudo")))))
-
 ```
 
 <a name="sec-5-4"></a>
@@ -255,7 +247,6 @@ Remove annoying UI
 (custom-set-variables
  '(mouse-yank-at-point t)
  '(x-select-enable-clipboard t))
-
 ```
 
 <a name="sec-5-5"></a>
@@ -270,7 +261,6 @@ Remove annoying UI
 (set-keyboard-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
-
 ```
 
 <a name="sec-5-6"></a>
@@ -283,7 +273,6 @@ Remove annoying UI
 (put 'scroll-right 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
-
 ```
 
 <a name="sec-5-7"></a>
@@ -293,7 +282,6 @@ Remove annoying UI
 (custom-set-variables
  '(safe-local-variable-values '((encoding . utf-8)
                                 (outline-minor-mode . t))))
-
 ```
 
 <a name="sec-5-8"></a>
@@ -318,7 +306,6 @@ Remove annoying UI
 (defalias 'ack 'agap)
 (defalias 'sudo 'find-alternative-file-with-sudo)
 (defalias 'af 'auto-fill-mode)
-
 ```
 
 <a name="sec-6"></a>
@@ -345,7 +332,6 @@ re-downloaded in order to locate PACKAGE."
 (setq package-archives
       '(("melpa" . "http://melpa.milkbox.net/packages/")
         ("gnu" . "http://elpa.gnu.org/packages/")))
-
 ```
 
 <a name="sec-7"></a>
@@ -357,7 +343,6 @@ Disable module by adding it to `module-black-list`.
 ;; Example
 ;; (custom-set-variables
 ;;   '(module-black-list '(tex r delete-keys-hacks)))
-
 ```
 
 <a name="sec-7-1"></a>
@@ -367,7 +352,6 @@ Disable module by adding it to `module-black-list`.
 (define-module s
   (require-package 's)
   (require 's nil t))
-
 ```
 
 <a name="sec-7-2"></a>
@@ -384,7 +368,6 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   "Translate C-h and M-r to delete char and word backward"
   (define-key key-translation-map [?\C-h] [?\C-?])
   (define-key key-translation-map [?\M-r] [?\C-\M-?]))
-
 ```
 
 <a name="sec-7-3"></a>
@@ -402,7 +385,6 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   (define-key my-minor-mode-map (kbd "C-,") ctl-x-r-map)
   (define-key my-minor-mode-map (kbd "C-'") 'negative-argument)
   (define-key my-minor-mode-map (kbd "M-'") 'negative-argument))
-
 ```
 
 <a name="sec-7-4"></a>
@@ -427,7 +409,6 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   (global-set-key (kbd "C-<right>") 'scroll-left)
   (global-set-key (kbd "C-<up>") 'scroll-down)
   (global-set-key (kbd "C-<down>") 'scroll-up))
-
 ```
 
 <a name="sec-7-5"></a>
@@ -471,7 +452,6 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   (define-key my-keymap (kbd ":") 'iy-go-to-char-continue-backward)
 
   (global-set-key "\C-a" 'back-to-indentation-or-beginning))
-
 ```
 
 <a name="sec-7-6"></a>
@@ -503,7 +483,6 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     (define-key ido-completion-map "\C-c" 'ido-toggle-case))
 
   (add-hook 'ido-setup-hook 'init--ido-setup))
-
 ```
 
 <a name="sec-7-7"></a>
@@ -549,7 +528,6 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   (add-hook 'magit-log-edit-mode-hook 'init--magit-log-edit-mode)
 
   (global-set-key [f12] 'magit-status))
-
 ```
 
 <a name="sec-7-8"></a>
@@ -637,7 +615,6 @@ Install latest org by running `make org`. Othewise system bundled version is use
   (autoload 'org-footnote-action "org-footnote" nil t)
   (define-key my-keymap (kbd "t") 'org-footnote-action)
   (define-key my-keymap (kbd "<return>") 'org-clock-goto))
-
 ```
 
 <a name="sec-7-9"></a>
@@ -667,7 +644,6 @@ Store org agenda files in dropbox directory
   (defun orgb ()
     (interactive)
     (ido-find-file-in-dir org-directory)))
-
 ```
 
 <a name="sec-7-10"></a>
@@ -706,7 +682,6 @@ Capture template
      ("b" "Default template" entry (file+headline "inbox.org" "Bookmarks")
       "* %:description\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %c\n\n  %i"
       :prepend t :empty-lines 1 :immediate-finish t))))
-
 ```
 
 <a name="sec-7-11"></a>
@@ -746,7 +721,6 @@ Capture template
 
   (when (fboundp 'notify)
     (setq org-show-notification-handler (function my-org-clock-display))))
-
 
 ```
 
@@ -801,7 +775,6 @@ Opinioned GTD config based on org
    '(org-tags-exclude-from-inheritance '("project"))
    '(org-columns-default-format
      "%42ITEM %TODO %3Effort(E){:} %3CLOCKSUM_T(R) %SCHEDULED")))
-
 ```
 
 <a name="sec-7-13"></a>
@@ -926,7 +899,6 @@ this with to-do items than with projects or headings."
 
           ("g" "open dropbox/g" dired-g)))
   )
-
 ```
 
 <a name="sec-7-14"></a>
@@ -951,7 +923,6 @@ this with to-do items than with projects or headings."
              (org-set-tags-to (append tags '("noexport")))))))))
 
   (add-hook 'org-export-before-parsing-hook 'iy-org-ical-verify))
-
 ```
 
 <a name="sec-7-15"></a>
@@ -985,7 +956,6 @@ Creates it at the same level as the previous task, so it's better to use
 this with to-do items than with projects or headings."
     (interactive)
     (org-capture 0)))
-
 ```
 
 <a name="sec-7-16"></a>
@@ -997,7 +967,6 @@ this with to-do items than with projects or headings."
   (define-key my-keymap (kbd "'") 'org-pomodoro-record-interuptions)
   (add-hook 'org-load-hook 'org-pomodoro-on-org-load)
   (add-hook 'org-agenda-mode-hook 'org-pomodoro-on-org-load))
-
 ```
 
 <a name="sec-7-17"></a>
@@ -1021,7 +990,6 @@ this with to-do items than with projects or headings."
    '(appt-message-warning-time 10)
    '(calendar-week-start-day 1)
    '(diary-file (concat my-dropbox-dir "diary"))))
-
 ```
 
 <a name="sec-7-18"></a>
@@ -1038,7 +1006,6 @@ Autoload babel languages.
        (concat "ob-" lang)
        (format "Execute %s src block" lang)))
    '("ruby" "sh" "R" "ditaa" "dot")))
-
 ```
 
 <a name="sec-7-19"></a>
@@ -1058,7 +1025,6 @@ Autoload babel languages.
      (mapcar
       'car
       (dired-map-over-marks (cons (dired-get-filename) (point)) arg)))))
-
 ```
 
 <a name="sec-7-20"></a>
@@ -1088,7 +1054,6 @@ These commands are also `multiple-cursors` compatible.
 
   (define-key isearch-mode-map (kbd "M-l") 'case-dwim-isearch-dash)
   (define-key isearch-mode-map (kbd "M-u") 'case-dwim-isearch-underscore))
-
 ```
 
 <a name="sec-7-21"></a>
@@ -1135,7 +1100,6 @@ Start emacs server.
   (add-hook 'server-visit-hook 'init--server-visit)
 
   (server-start))
-
 ```
 
 <a name="sec-7-22"></a>
@@ -1166,7 +1130,6 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   ;; Make a backup after save whenever the file
   ;; is auto saved. Otherwise Emacs only make one backup after opening the file.
   (add-hook 'auto-save-hook 'init--force-backup))
-
 ```
 
 <a name="sec-7-23"></a>
@@ -1196,7 +1159,6 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
 
   (global-set-key (kbd "C-3") 'mc/mark-all-like-this)
   (define-key ctl-x-r-map [return] 'set-rectangular-region-anchor))
-
 ```
 
 <a name="sec-7-24"></a>
@@ -1274,7 +1236,6 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   (add-hook 'dired-load-hook 'init--dired-load)
   (add-hook 'dired-mode-hook 'init--dired-mode)
 )
-
 ```
 
 <a name="sec-7-25"></a>
@@ -1288,7 +1249,6 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   (define-key my-minor-mode-map (kbd "M-o") 'other-window)
   (define-key my-minor-mode-map (kbd "M-O") 'other-frame)
   )
-
 ```
 
 <a name="sec-7-27"></a>
@@ -1325,7 +1285,6 @@ add changes interactively using `ediff`.
   (defadvice vc-mode-line (after colorize-vc-mode-line activate)
     (when vc-mode
       (put-text-property 1 (length vc-mode) 'face 'font-lock-string-face vc-mode))))
-
 ```
 
 <a name="sec-7-29"></a>
@@ -1367,7 +1326,6 @@ This is useful when followed by an immediate kill."
 
   (define-key my-keymap "*" 'isearch-forward-at-point)
   (define-key my-keymap "8" 'isearch-forward-at-point))
-
 ```
 
 <a name="sec-7-30"></a>
@@ -1387,7 +1345,6 @@ Auto revert, and helper functions to revert without confirmation.
   ;; Also auto refresh dired, but be quiet about it
   ; (setq global-auto-revert-non-file-buffers t)
   (setq auto-revert-verbose nil))
-
 ```
 
 <a name="sec-7-31"></a>
@@ -1429,7 +1386,6 @@ inactive -> switch -> full screen -> hide
 
   (define-key my-keymap (kbd "e") 'eshell-toggle)
   (define-key my-keymap (kbd "E") 'eshell-here))
-
 ```
 
 <a name="sec-7-32"></a>
@@ -1441,7 +1397,6 @@ inactive -> switch -> full screen -> hide
   (require-package 'eproject)
   (require 'eproject-plus)
   (define-key my-keymap "p" eproject-plus-keymap))
-
 ```
 
 <a name="sec-7-33"></a>
@@ -1571,7 +1526,6 @@ inactive -> switch -> full screen -> hide
   )
 
 
-
 ```
 
 <a name="sec-7-34"></a>
@@ -1580,7 +1534,6 @@ inactive -> switch -> full screen -> hide
 ```cl
 (define-module octave-mode
   (add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode)))
-
 ```
 
 <a name="sec-7-35"></a>
@@ -1689,7 +1642,6 @@ inactive -> switch -> full screen -> hide
   (define-key my-keymap (kbd "1") 'run-this)
   (global-set-key (kbd "C-`") 'next-error)
   (global-set-key (kbd "C-~") 'previous-error))
-
 ```
 
 <a name="sec-7-36"></a>
@@ -1721,7 +1673,6 @@ Misc editing config
   (global-set-key (kbd "s-<return>") 'mf-next-line-and-open-it-if-not-empty)
   (global-set-key (kbd "C-x C-o") 'mf-shrink-whitespaces)
   (global-set-key (kbd "C-8") 'pop-tag-mark))
-
 ```
 
 <a name="sec-7-37"></a>
@@ -1744,7 +1695,6 @@ Misc editing config
         (kill-ring-search)
       (barf-if-buffer-read-only)
       ad-do-it)))
-
 ```
 
 <a name="sec-7-38"></a>
@@ -1761,7 +1711,6 @@ Misc editing config
   (recentf-mode +1)
 
   (global-set-key [f2] 'recentf-open-files))
-
 ```
 
 <a name="sec-7-39"></a>
@@ -1786,7 +1735,6 @@ Misc editing config
   (add-to-list 'desktop-modes-not-to-save 'Info-mode)
   (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
   (add-to-list 'desktop-modes-not-to-save 'fundamental-mode))
-
 ```
 
 <a name="sec-7-40"></a>
@@ -1805,7 +1753,6 @@ Misc editing config
   ;; diactivate mark after narrow
   (defadvice narrow-to-region (after deactivate-mark (start end) activate)
     (deactivate-mark)))
-
 ```
 
 <a name="sec-7-41"></a>
@@ -1824,7 +1771,6 @@ Misc editing config
    '(coffee-cleanup-whitespace nil))
 
   (global-whitespace-mode +1))
-
 
 
 ```
@@ -1850,7 +1796,6 @@ Misc editing config
       map))
 
   (temporary-mode-define-keys my-keymap 'bmkp-navigation))
-
 ```
 
 <a name="sec-7-43"></a>
@@ -1869,12 +1814,10 @@ Misc editing config
 
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)
   (add-hook 'ruby-mode-hook 'flyspell-prog-mode))
-
 ```
 
 <a name="sec-8"></a>
 # TODO Backlog
 
 ```cl
-
 ```

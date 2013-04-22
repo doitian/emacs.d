@@ -71,6 +71,8 @@
 <li><a href="#sec-7-43">7.43. yasnippet</a></li>
 <li><a href="#sec-7-44">7.44. ediff-mode</a></li>
 <li><a href="#sec-7-45">7.45. time-stamp</a></li>
+<li><a href="#sec-7-46">7.46. autopair</a></li>
+<li><a href="#sec-7-47">7.47. highlight</a></li>
 </ul>
 </li>
 </ul>
@@ -1771,7 +1773,7 @@ Misc editing config
 
   (require-package 'bookmark+)
 
-  (setq bmkp-navigation-map
+  (defvar bmkp-navigation-map
     (let ((map (make-sparse-keymap)))
       (define-key map "." 'bmkp-next-bookmark-this-buffer)
       (define-key map "," 'bmkp-previous-bookmark-this-buffer)
@@ -1909,4 +1911,47 @@ Misc editing config
         time-stamp-format "%:y-%02m-%02d %02H:%02M:%02S"
         time-stamp-start "[Uu]pdated\\(_at\\)?[ \t]*:?[ \t]+<"
         time-stamp-end ">"))
+```
+
+<a name="sec-7-46"></a>
+## autopair
+
+```cl
+(define-module autopair
+  (require-package 'autopair)
+  (setq autopair-blink nil))
+```
+
+<a name="sec-7-47"></a>
+## highlight
+
+```cl
+(define-module highlight
+  (require-package 'highlight-symbol)
+  (require-package 'highlight-parentheses)
+
+  (custom-set-variables
+   '(highlight-symbol-idle-delay 1)
+   '(highlight-symbol-on-navigation-p t)
+   '(hl-paren-colors (quote ("firebrick1" "IndianRed1" "IndianRed4" "grey")))
+   '(pulse-delay 0.03)
+   '(pulse-flag nil)
+   '(pulse-iterations 5))
+
+  (defvar highlight-symbol-navigation-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map "9" 'highlight-symbol-prev)
+      (define-key map "0" 'highlight-symbol-next)
+      map))
+
+  (temporary-mode-define-keys  my-keymap 'highlight-symbol-navigation)
+
+  (define-key my-keymap (kbd "+") 'highlight-symbol-query-replace)
+  (define-key my-keymap (kbd "=") 'highlight-symbol-at-point)
+  (define-key my-keymap (kbd "-") 'highlight-symbol-remove-all)
+  (define-key my-keymap (kbd "_") 'highlight-symbol-mode)
+
+  (add-hook 'c-mode-common-hook 'highlight-parentheses-mode)
+  (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
+  (add-hook 'ruby-mode-hook 'highlight-parentheses-mode))
 ```

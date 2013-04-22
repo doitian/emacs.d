@@ -51,7 +51,9 @@
 ;;        (ido-mode +1))
 ;;
 ;; By default all modules are auto loaded unless `module-auto-initialize' is
-;; set to `nil'. Module can be loaded manually using `module-load'.
+;; set to `nil'. Module can be loaded manually using `module-load'. To load a
+;; module in black list or not in white list, clear the lists first using
+;; `module-clear-lists'.
 
 ;;; Examples:
 ;;
@@ -183,6 +185,12 @@ Otherwise return the name wrap in a list."
      (split-string (or (getenv "EMACS_MODULE") "") "," t))
     (setq module-white-list (append module-white-list (nreverse white-list)))
     (setq module-black-list (append module-black-list (nreverse black-list)))))
+
+;;;###autoload
+(defun module-clear-lists ()
+  (interactive)
+  (setq module-black-list nil)
+  (setq module-white-list nil))
 
 ;;;###autoload
 (defun module-initialize (&optional reload)

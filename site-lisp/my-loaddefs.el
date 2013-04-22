@@ -115,14 +115,19 @@ it needs `comment-search-forward'.
 
 ;;;***
 
-;;;### (autoloads (module-initialize module-load) "module" "module.el"
-;;;;;;  (20853 35122 286452 461000))
+;;;### (autoloads (module-initialize module-clear-lists module-load)
+;;;;;;  "module" "module.el" (20853 35674 186458 468000))
 ;;; Generated autoloads from module.el
 
 (autoload 'module-load "module" "\
 Load a module by name. Prefix argument force reload the module
 
 \(fn NAME &optional RELOAD)" t nil)
+
+(autoload 'module-clear-lists "module" "\
+
+
+\(fn)" t nil)
 
 (autoload 'module-initialize "module" "\
 Load all defined modules in `module-list' except ones in `module-black-list'
@@ -564,7 +569,7 @@ prompt for the function or variable to find, instead.
 ;;;***
 
 ;;;### (autoloads nil nil ("dash.el" "eproject-plus.el" "sequential-command.el"
-;;;;;;  "smart-compile+.el") (20853 35128 151163 345000))
+;;;;;;  "smart-compile+.el") (20853 35694 728711 772000))
 
 ;;;***
 

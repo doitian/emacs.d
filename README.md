@@ -145,6 +145,11 @@ EMACS_MODULE=none emacs
 EMACS_MODULE="!org" emacs
 </code></code>
 
+By default all modules are auto loaded unless `module-auto-initialize` is
+set to `nil`. Module can be loaded manually using `module-load`. To load a
+module in black list or not in white list, clear the lists first using
+`module-clear-lists`.
+
 <a name="sec-2"></a>
 # Startup
 

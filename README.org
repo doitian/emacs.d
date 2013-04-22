@@ -282,13 +282,11 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
 
 ** my-basic-keybindings
 
-- Disable global <kbd>M-s</kbd>
 - Use <kbd>C-,</kbd> as rectangle commands prefix (<kbd>C-x r)
 - Use <kbd>C-'</kbd> and <kbd>M-'</kbd> as negative argument.
 
 #+BEGIN_SRC emacs-lisp
   (define-module my-basic-keybindings
-    (global-set-key (kbd "M-s") nil)
     (define-key my-minor-mode-map (kbd "C-,") ctl-x-r-map)
     (define-key my-minor-mode-map (kbd "C-'") 'negative-argument)
     (define-key my-minor-mode-map (kbd "M-'") 'negative-argument))

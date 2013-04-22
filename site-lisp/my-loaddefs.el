@@ -3,6 +3,31 @@
 ;;; Code:
 
 
+;;;### (autoloads (alternative-files-create-file alternative-files-find-file)
+;;;;;;  "alternative-files" "alternative-files.el" (20853 17995 0
+;;;;;;  0))
+;;; Generated autoloads from alternative-files.el
+
+(defvar alternative-files-rules nil)
+
+(make-variable-buffer-local 'alternative-files-rules)
+
+(put 'alternative-files-rules 'safe-local-variable 'listp)
+
+(autoload 'alternative-files-find-file "alternative-files" "\
+Find alternative files
+C-u to open in other window, C-u C-u to reload alternative file list
+
+\(fn &optional P)" t nil)
+
+(autoload 'alternative-files-create-file "alternative-files" "\
+Create non-existed alternative files
+C-u to open in other window, C-u C-u to reload alternative file list
+
+\(fn &optional P)" t nil)
+
+;;;***
+
 ;;;### (autoloads (case-dwim-capitalize case-dwim-upcase case-dwim-downcase
 ;;;;;;  case-dwim-isearch-underscore case-dwim-isearch-dash case-dwim-underscore
 ;;;;;;  case-dwim-dash) "case-dwim" "case-dwim.el" (20853 10737 0
@@ -106,14 +131,14 @@ Load all defined modules in `module-list' except ones in `module-black-list'
 
 ;;;***
 
-;;;### (autoloads (mf-jared/insert-file-or-buffer-name mf-insert-file-name
-;;;;;;  mf-insert-date mf-insert-timestamp mf-insert-time mf-insert-user
-;;;;;;  mf-find-alternative-file-with-sudo mf-xsteve-save-current-directory
+;;;### (autoloads (mf-kill-buffer-and-window mf-jared/insert-file-or-buffer-name
+;;;;;;  mf-insert-file-name mf-insert-date mf-insert-timestamp mf-insert-time
+;;;;;;  mf-insert-user mf-find-alternative-file-with-sudo mf-xsteve-save-current-directory
 ;;;;;;  mf-rename-current-buffer-file mf-switch-to-previous-buffer
 ;;;;;;  mf-indirect-region mf-smart-kill-whole-line mf-shrink-whitespaces
 ;;;;;;  mf-append-line-delimter-then-next-line-and-open-it-if-not-empty
 ;;;;;;  mf-next-line-and-open-it-if-not-empty) "my-functions" "my-functions.el"
-;;;;;;  (20853 10737 0 0))
+;;;;;;  (20853 16862 0 0))
 ;;; Generated autoloads from my-functions.el
 
 (autoload 'mf-next-line-and-open-it-if-not-empty "my-functions" "\
@@ -199,6 +224,11 @@ Save the current directory to the file ~/.emacs.d/data/pwd
 
 
 \(fn &optional INITIAL)" t nil)
+
+(autoload 'mf-kill-buffer-and-window "my-functions" "\
+
+
+\(fn)" t nil)
 
 ;;;***
 
@@ -534,7 +564,7 @@ prompt for the function or variable to find, instead.
 ;;;***
 
 ;;;### (autoloads nil nil ("dash.el" "eproject-plus.el" "sequential-command.el"
-;;;;;;  "smart-compile+.el") (20853 13084 84190 0))
+;;;;;;  "smart-compile+.el") (20853 19137 938282 0))
 
 ;;;***
 

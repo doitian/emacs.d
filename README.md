@@ -50,29 +50,35 @@
 <li><a href="#sec-7-22">7.22. backup</a></li>
 <li><a href="#sec-7-23">7.23. multiple-cursors</a></li>
 <li><a href="#sec-7-24">7.24. dired</a></li>
-<li><a href="#sec-7-25">7.25. window-nav</a></li>
-<li><a href="#sec-7-26">7.26. vc</a></li>
-<li><a href="#sec-7-27">7.27. isearch</a></li>
-<li><a href="#sec-7-28">7.28. revert</a></li>
-<li><a href="#sec-7-29">7.29. eshell</a></li>
-<li><a href="#sec-7-30">7.30. eproject</a></li>
-<li><a href="#sec-7-31">7.31. helm</a></li>
-<li><a href="#sec-7-32">7.32. octave-mode</a></li>
-<li><a href="#sec-7-33">7.33. compile-and-run</a></li>
-<li><a href="#sec-7-34">7.34. editing</a></li>
-<li><a href="#sec-7-35">7.35. kill-ring</a></li>
-<li><a href="#sec-7-36">7.36. recentf</a></li>
-<li><a href="#sec-7-37">7.37. desktop</a></li>
-<li><a href="#sec-7-38">7.38. mark</a></li>
-<li><a href="#sec-7-39">7.39. whitespace</a></li>
-<li><a href="#sec-7-40">7.40. bookmark</a></li>
-<li><a href="#sec-7-41">7.41. spell</a></li>
-<li><a href="#sec-7-42">7.42. tab-fix</a></li>
-<li><a href="#sec-7-43">7.43. yasnippet</a></li>
-<li><a href="#sec-7-44">7.44. ediff-mode</a></li>
-<li><a href="#sec-7-45">7.45. time-stamp</a></li>
-<li><a href="#sec-7-46">7.46. autopair</a></li>
-<li><a href="#sec-7-47">7.47. highlight</a></li>
+<li><a href="#sec-7-25">7.25. windows-commands</a></li>
+<li><a href="#sec-7-26">7.26. buffers-commands</a></li>
+<li><a href="#sec-7-27">7.27. files-commands</a></li>
+<li><a href="#sec-7-28">7.28. vc</a></li>
+<li><a href="#sec-7-29">7.29. isearch</a></li>
+<li><a href="#sec-7-30">7.30. revert</a></li>
+<li><a href="#sec-7-31">7.31. eshell</a></li>
+<li><a href="#sec-7-32">7.32. eproject</a></li>
+<li><a href="#sec-7-33">7.33. helm</a></li>
+<li><a href="#sec-7-34">7.34. octave-mode</a></li>
+<li><a href="#sec-7-35">7.35. compile-and-run</a></li>
+<li><a href="#sec-7-36">7.36. editing</a></li>
+<li><a href="#sec-7-37">7.37. kill-ring</a></li>
+<li><a href="#sec-7-38">7.38. recentf</a></li>
+<li><a href="#sec-7-39">7.39. desktop</a></li>
+<li><a href="#sec-7-40">7.40. mark</a></li>
+<li><a href="#sec-7-41">7.41. whitespace</a></li>
+<li><a href="#sec-7-42">7.42. bookmark</a></li>
+<li><a href="#sec-7-43">7.43. spell</a></li>
+<li><a href="#sec-7-44">7.44. tab-fix</a></li>
+<li><a href="#sec-7-45">7.45. yasnippet</a></li>
+<li><a href="#sec-7-46">7.46. ediff-mode</a></li>
+<li><a href="#sec-7-47">7.47. time-stamp</a></li>
+<li><a href="#sec-7-48">7.48. autopair</a></li>
+<li><a href="#sec-7-49">7.49. highlight</a></li>
+<li><a href="#sec-7-50">7.50. hippie-expand</a></li>
+<li><a href="#sec-7-51">7.51. abbrev</a></li>
+<li><a href="#sec-7-52">7.52. search-files</a></li>
+<li><a href="#sec-7-53">7.53. alternative-files</a></li>
 </ul>
 </li>
 </ul>
@@ -227,6 +233,8 @@ Remove annoying UI
  ;; '(delete-active-region 'kill)
  ;; '(delete-selection-mode t)
 
+ '(tags-add-tables nil)
+
  '(set-mark-command-repeat-pop t))
 ```
 
@@ -380,7 +388,10 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
 (define-module my-basic-keybindings
   (define-key my-minor-mode-map (kbd "C-,") ctl-x-r-map)
   (define-key my-minor-mode-map (kbd "C-'") 'negative-argument)
-  (define-key my-minor-mode-map (kbd "M-'") 'negative-argument))
+  (define-key my-minor-mode-map (kbd "M-'") 'negative-argument)
+  (global-set-key (kbd "C-x SPC") 'point-to-register)
+  (global-set-key (kbd "C-.") 'repeat)
+  (setq repeat-on-final-keystroke "z"))
 ```
 
 <a name="sec-7-4"></a>
@@ -1235,16 +1246,38 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
 ```
 
 <a name="sec-7-25"></a>
-## window-nav
+## windows-commands
 
 ```cl
-(define-module window-nav
+(define-module windows-commands
   (define-key my-minor-mode-map (kbd "M-o") 'other-window)
   (define-key my-minor-mode-map (kbd "M-O") 'other-frame)
   )
 ```
 
 <a name="sec-7-26"></a>
+## buffers-commands
+
+```cl
+(define-module buffers-commands
+  (global-set-key (kbd "C-M-l") 'mf-switch-to-previous-buffer)
+  (global-set-key (kbd "C-<next>") 'next-buffer)
+  (global-set-key (kbd "C-<prior>") 'previous-buffer)
+  (global-set-key (kbd "C-x K") 'my-kill-buffer-and-window)
+  )
+```
+
+<a name="sec-7-27"></a>
+## files-commands
+
+```cl
+(define-module files-commands
+  (global-set-key (kbd "C-x C-r") 'mf-rename-current-buffer-file)
+  (global-set-key (kbd "C-x M-f") 'mf-find-alternative-file-with-sudo)
+  )
+```
+
+<a name="sec-7-28"></a>
 ## vc
 
 Version Control backends.
@@ -1274,10 +1307,13 @@ add changes interactively using `ediff`.
 
   (defadvice vc-mode-line (after colorize-vc-mode-line activate)
     (when vc-mode
-      (put-text-property 1 (length vc-mode) 'face 'font-lock-string-face vc-mode))))
+      (put-text-property 1 (length vc-mode) 'face 'font-lock-string-face vc-mode)))
+
+  (global-set-key (kbd "C-<f12>") 'git-status)
+  (global-set-key (kbd "<ESC> <f12>") 'git-status))
 ```
 
-<a name="sec-7-27"></a>
+<a name="sec-7-29"></a>
 ## isearch
 
 ```cl
@@ -1318,7 +1354,7 @@ This is useful when followed by an immediate kill."
   (define-key my-keymap "8" 'isearch-forward-at-point))
 ```
 
-<a name="sec-7-28"></a>
+<a name="sec-7-30"></a>
 ## revert
 
 Auto revert, and helper functions to revert without confirmation.
@@ -1337,7 +1373,7 @@ Auto revert, and helper functions to revert without confirmation.
   (setq auto-revert-verbose nil))
 ```
 
-<a name="sec-7-29"></a>
+<a name="sec-7-31"></a>
 ## eshell
 
 ```cl
@@ -1378,7 +1414,7 @@ inactive -> switch -> full screen -> hide
   (define-key my-keymap (kbd "E") 'eshell-here))
 ```
 
-<a name="sec-7-30"></a>
+<a name="sec-7-32"></a>
 ## eproject
 
 ```cl
@@ -1389,7 +1425,7 @@ inactive -> switch -> full screen -> hide
   (define-key my-keymap "p" eproject-plus-keymap))
 ```
 
-<a name="sec-7-31"></a>
+<a name="sec-7-33"></a>
 ## helm
 
 ```cl
@@ -1518,7 +1554,7 @@ inactive -> switch -> full screen -> hide
 
 ```
 
-<a name="sec-7-32"></a>
+<a name="sec-7-34"></a>
 ## octave-mode
 
 ```cl
@@ -1526,7 +1562,7 @@ inactive -> switch -> full screen -> hide
   (add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode)))
 ```
 
-<a name="sec-7-33"></a>
+<a name="sec-7-35"></a>
 ## compile-and-run
 
 ```cl
@@ -1634,7 +1670,7 @@ inactive -> switch -> full screen -> hide
   (global-set-key (kbd "C-~") 'previous-error))
 ```
 
-<a name="sec-7-34"></a>
+<a name="sec-7-36"></a>
 ## editing
 
 Misc editing config
@@ -1665,7 +1701,7 @@ Misc editing config
   (global-set-key (kbd "C-8") 'pop-tag-mark))
 ```
 
-<a name="sec-7-35"></a>
+<a name="sec-7-37"></a>
 ## kill-ring
 
 ```cl
@@ -1687,7 +1723,7 @@ Misc editing config
       ad-do-it)))
 ```
 
-<a name="sec-7-36"></a>
+<a name="sec-7-38"></a>
 ## recentf
 
 ```cl
@@ -1703,7 +1739,7 @@ Misc editing config
   (global-set-key [f2] 'recentf-open-files))
 ```
 
-<a name="sec-7-37"></a>
+<a name="sec-7-39"></a>
 ## desktop
 
 ```cl
@@ -1727,7 +1763,7 @@ Misc editing config
   (add-to-list 'desktop-modes-not-to-save 'fundamental-mode))
 ```
 
-<a name="sec-7-38"></a>
+<a name="sec-7-40"></a>
 ## mark
 
 ```cl
@@ -1745,7 +1781,7 @@ Misc editing config
     (deactivate-mark)))
 ```
 
-<a name="sec-7-39"></a>
+<a name="sec-7-41"></a>
 ## whitespace
 
 ```cl
@@ -1763,7 +1799,7 @@ Misc editing config
   (global-whitespace-mode +1))
 ```
 
-<a name="sec-7-40"></a>
+<a name="sec-7-42"></a>
 ## bookmark
 
 ```cl
@@ -1783,10 +1819,11 @@ Misc editing config
       (define-key map (kbd ">") 'bmkp-next-bookmark)
       map))
 
-  (temporary-mode-define-keys my-keymap 'bmkp-navigation))
+  (temporary-mode-define-keys my-keymap 'bmkp-navigation)
+  (global-set-key (kbd "C-x j SPC") 'jump-to-register))
 ```
 
-<a name="sec-7-41"></a>
+<a name="sec-7-43"></a>
 ## spell
 
 ```cl
@@ -1801,10 +1838,12 @@ Misc editing config
   (add-hook 'flyspell-mode-hook 'init--flyspell-mode)
 
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-  (add-hook 'ruby-mode-hook 'flyspell-prog-mode))
+  (add-hook 'ruby-mode-hook 'flyspell-prog-mode)
+
+  (global-set-key (kbd "C-4") 'ispell-word))
 ```
 
-<a name="sec-7-42"></a>
+<a name="sec-7-44"></a>
 ## tab-fix
 
 ```cl
@@ -1820,7 +1859,7 @@ Misc editing config
     '(progn (tab-fix-keymap markdown-mode-map))))
 ```
 
-<a name="sec-7-43"></a>
+<a name="sec-7-45"></a>
 ## yasnippet
 
 ```cl
@@ -1885,7 +1924,7 @@ Misc editing config
     (define-key my-keymap (kbd "M-/") map)))
 ```
 
-<a name="sec-7-44"></a>
+<a name="sec-7-46"></a>
 ## ediff-mode
 
 ```cl
@@ -1901,7 +1940,7 @@ Misc editing config
       (ediff-show-registry))))
 ```
 
-<a name="sec-7-45"></a>
+<a name="sec-7-47"></a>
 ## time-stamp
 
 ```cl
@@ -1913,7 +1952,7 @@ Misc editing config
         time-stamp-end ">"))
 ```
 
-<a name="sec-7-46"></a>
+<a name="sec-7-48"></a>
 ## autopair
 
 ```cl
@@ -1922,7 +1961,7 @@ Misc editing config
   (setq autopair-blink nil))
 ```
 
-<a name="sec-7-47"></a>
+<a name="sec-7-49"></a>
 ## highlight
 
 ```cl
@@ -1954,4 +1993,134 @@ Misc editing config
   (add-hook 'c-mode-common-hook 'highlight-parentheses-mode)
   (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
   (add-hook 'ruby-mode-hook 'highlight-parentheses-mode))
+```
+
+<a name="sec-7-50"></a>
+## hippie-expand
+
+```cl
+(define-module hippie-expand
+  ;; Exclude very large buffers from dabbrev
+  (defun sanityinc/dabbrev-friend-buffer (other-buffer)
+    (< (buffer-size other-buffer) (* 1 1024 1024)))
+
+  (setq dabbrev-friend-buffer-function 'sanityinc/dabbrev-friend-buffer)
+
+  (setq hippie-expand-try-functions-list
+        '(
+          try-expand-dabbrev
+          try-expand-dabbrev-visible
+          try-expand-dabbrev-all-buffers
+          try-expand-dabbrev-from-kill
+          try-complete-file-name-partially
+          try-complete-file-name
+          try-complete-lisp-symbol-partially
+          try-complete-lisp-symbol
+          try-expand-list))
+
+  (global-set-key (kbd "M-/") 'hippie-expand))  
+```
+
+<a name="sec-7-51"></a>
+## abbrev
+
+```cl
+(define-module abbrev
+  (custom-set-variables
+   '(abbrev-mode t)
+   '(mail-abbrevs-mode t)))
+```
+
+<a name="sec-7-52"></a>
+## search-files
+
+```cl
+(define-module search-files
+  (require-package 'ag)
+
+  (defun ag/dwim-at-point--no-properties ()
+    "If there's an active selection, return that. Otherwise, get
+the symbol at point."
+    (if (use-region-p)
+        (buffer-substring-no-properties (region-beginning) (region-end))
+      (if (symbol-at-point)
+          (let ((symbol (symbol-name (symbol-at-point))))
+            (set-text-properties 0 (length symbol) nil symbol)
+            symbol))))
+
+  (defun agap (string dir is-regexp)
+    "Search string at point inside current directory. Use prefix arg to search by regexp."
+    (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point--no-properties))
+                       (ido-read-directory-name "in: ")
+                       current-prefix-arg))
+    (ag/search string dir is-regexp))
+
+  (defun agap-regexp (string dir)
+    "Search string at point inside current directory."
+    (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point--no-properties))
+                       (ido-read-directory-name default-directory)))
+    (ag/search string dir t))
+
+  (fset 'ag (function agap))
+  (eval-after-load 'ag
+    '(progn
+       (fset 'ag (function agap))
+       (fset 'ag-regexp (function agap-regexp))))
+
+  (define-key my-keymap (kbd "o") 'occur)
+  (define-key my-keymap (kbd "O") 'multi-occur)
+  (define-key my-keymap (kbd "C-o") 'multi-occur-in-matching-buffers)
+  (global-set-key (kbd "<f11>") 'occur)
+
+  (global-set-key (kbd "<f9>") 'agap)
+  (global-set-key (kbd "<f10>") 'rgrep))
+```
+
+<a name="sec-7-53"></a>
+## alternative-files
+
+```cl
+(define-module alternative-files
+  (defun alternative-files-factories-finder (&optional file)
+    (let ((file (or file (alternative-files--detect-file-name))))
+      (cond
+       ((string-match "^\\(.*\\)/app/models/\\(.+\\)\\.rb$" file)
+        (let ((root (match-string 1 file))
+              (name (match-string 2 file)))
+          (list
+           (concat root "/spec/factories/" (alternative-files--pluralize-string name) ".rb"))))
+
+       ((string-match "^\\(.*\\)/spec/factories/\\(.+\\).rb$" file)
+        (let* ((root (match-string 1 file))
+               (name (match-string 2 file))
+               (singular-name (alternative-files--singularize-string name)))
+          (list
+           (concat root "/app/models/" singular-name ".rb")
+           (concat root "/spec/models/" singular-name "_spec.rb")
+           (concat root "/app/controllers/" name "_controller.rb")
+           (concat root "/spec/controllers/" name "_controller.rb")
+           (concat root "/app/helpers/" name "_helper.rb")
+           (concat root "/spec/helpers/" name "_helper.rb")
+           (concat root "/app/views/" name "/")))))))
+
+  (defun alternative-files-go-finder (&optional file)
+    (let ((file (or file (alternative-files--detect-file-name))))
+      (cond
+       ((string-match "^\\(.+\\)_test\\.go$" file)
+        (let ((base (match-string 1 file)))
+          (list
+           (concat base ".go"))))
+
+       ((string-match "^\\(.*\\)\\.go$" file)
+        (let* ((base (match-string 1 file)))
+          (list
+           (concat base "_test.go")))))))
+
+  (setq alternative-files-user-functions
+        '(alternative-files-factories-finder
+          alternative-files-go-finder))
+
+  (define-key my-keymap "a" 'alternative-files-find-file)
+  (define-key my-keymap (kbd "M-a") 'alternative-files-find-file)
+  (define-key my-keymap (kbd "A") 'alternative-files-create-file))
 ```

@@ -141,6 +141,8 @@ Remove annoying UI
    
    ;; '(delete-active-region 'kill)
    ;; '(delete-selection-mode t)
+
+   '(tags-add-tables nil)
    
    '(set-mark-command-repeat-pop t))
 #+END_SRC
@@ -285,7 +287,10 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
   (define-module my-basic-keybindings
     (define-key my-minor-mode-map (kbd "C-,") ctl-x-r-map)
     (define-key my-minor-mode-map (kbd "C-'") 'negative-argument)
-    (define-key my-minor-mode-map (kbd "M-'") 'negative-argument))
+    (define-key my-minor-mode-map (kbd "M-'") 'negative-argument)
+    (global-set-key (kbd "C-x SPC") 'point-to-register)
+    (global-set-key (kbd "C-.") 'repeat)
+    (setq repeat-on-final-keystroke "z"))
 #+END_SRC
 
 ** movement-keybindings
@@ -1113,11 +1118,27 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
   )
 #+END_SRC
 
-** window-nav
+** windows-commands
 #+BEGIN_SRC emacs-lisp
-  (define-module window-nav
+  (define-module windows-commands
     (define-key my-minor-mode-map (kbd "M-o") 'other-window)
     (define-key my-minor-mode-map (kbd "M-O") 'other-frame)
+    )
+#+END_SRC
+** buffers-commands
+#+BEGIN_SRC emacs-lisp
+  (define-module buffers-commands
+    (global-set-key (kbd "C-M-l") 'mf-switch-to-previous-buffer)
+    (global-set-key (kbd "C-<next>") 'next-buffer)
+    (global-set-key (kbd "C-<prior>") 'previous-buffer)
+    (global-set-key (kbd "C-x K") 'my-kill-buffer-and-window)
+    )
+#+END_SRC
+** files-commands
+#+BEGIN_SRC emacs-lisp
+  (define-module files-commands
+    (global-set-key (kbd "C-x C-r") 'mf-rename-current-buffer-file)
+    (global-set-key (kbd "C-x M-f") 'mf-find-alternative-file-with-sudo)
     )
 #+END_SRC
 ** vc
@@ -1149,7 +1170,10 @@ add changes interactively using =ediff=.
   
     (defadvice vc-mode-line (after colorize-vc-mode-line activate)
       (when vc-mode
-        (put-text-property 1 (length vc-mode) 'face 'font-lock-string-face vc-mode))))
+        (put-text-property 1 (length vc-mode) 'face 'font-lock-string-face vc-mode)))
+
+    (global-set-key (kbd "C-<f12>") 'git-status)
+    (global-set-key (kbd "<ESC> <f12>") 'git-status))
 #+END_SRC
 
 ** isearch
@@ -1644,7 +1668,8 @@ Misc editing config
         (define-key map (kbd ">") 'bmkp-next-bookmark)
         map))
 
-    (temporary-mode-define-keys my-keymap 'bmkp-navigation))
+    (temporary-mode-define-keys my-keymap 'bmkp-navigation)
+    (global-set-key (kbd "C-x j SPC") 'jump-to-register))
 #+END_SRC
 
 ** spell
@@ -1661,7 +1686,9 @@ Misc editing config
     (add-hook 'flyspell-mode-hook 'init--flyspell-mode)
     
     (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-    (add-hook 'ruby-mode-hook 'flyspell-prog-mode))
+    (add-hook 'ruby-mode-hook 'flyspell-prog-mode)
+
+    (global-set-key (kbd "C-4") 'ispell-word))
 #+END_SRC
 
 ** tab-fix
@@ -1801,4 +1828,130 @@ Misc editing config
     (add-hook 'c-mode-common-hook 'highlight-parentheses-mode)
     (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
     (add-hook 'ruby-mode-hook 'highlight-parentheses-mode))
+#+END_SRC
+
+** hippie-expand
+
+#+BEGIN_SRC emacs-lisp
+  (define-module hippie-expand
+    ;; Exclude very large buffers from dabbrev
+    (defun sanityinc/dabbrev-friend-buffer (other-buffer)
+      (< (buffer-size other-buffer) (* 1 1024 1024)))
+  
+    (setq dabbrev-friend-buffer-function 'sanityinc/dabbrev-friend-buffer)
+  
+    (setq hippie-expand-try-functions-list
+          '(
+            try-expand-dabbrev
+            try-expand-dabbrev-visible
+            try-expand-dabbrev-all-buffers
+            try-expand-dabbrev-from-kill
+            try-complete-file-name-partially
+            try-complete-file-name
+            try-complete-lisp-symbol-partially
+            try-complete-lisp-symbol
+            try-expand-list))
+  
+    (global-set-key (kbd "M-/") 'hippie-expand))  
+#+END_SRC
+
+** abbrev
+
+#+BEGIN_SRC emacs-lisp
+  (define-module abbrev
+    (custom-set-variables
+     '(abbrev-mode t)
+     '(mail-abbrevs-mode t)))
+#+END_SRC
+
+** search-files
+
+#+BEGIN_SRC emacs-lisp
+  (define-module search-files
+    (require-package 'ag)
+  
+    (defun ag/dwim-at-point--no-properties ()
+      "If there's an active selection, return that. Otherwise, get
+  the symbol at point."
+      (if (use-region-p)
+          (buffer-substring-no-properties (region-beginning) (region-end))
+        (if (symbol-at-point)
+            (let ((symbol (symbol-name (symbol-at-point))))
+              (set-text-properties 0 (length symbol) nil symbol)
+              symbol))))
+  
+    (defun agap (string dir is-regexp)
+      "Search string at point inside current directory. Use prefix arg to search by regexp."
+      (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point--no-properties))
+                         (ido-read-directory-name "in: ")
+                         current-prefix-arg))
+      (ag/search string dir is-regexp))
+  
+    (defun agap-regexp (string dir)
+      "Search string at point inside current directory."
+      (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point--no-properties))
+                         (ido-read-directory-name default-directory)))
+      (ag/search string dir t))
+  
+    (fset 'ag (function agap))
+    (eval-after-load 'ag
+      '(progn
+         (fset 'ag (function agap))
+         (fset 'ag-regexp (function agap-regexp))))
+  
+    (define-key my-keymap (kbd "o") 'occur)
+    (define-key my-keymap (kbd "O") 'multi-occur)
+    (define-key my-keymap (kbd "C-o") 'multi-occur-in-matching-buffers)
+    (global-set-key (kbd "<f11>") 'occur)
+  
+    (global-set-key (kbd "<f9>") 'agap)
+    (global-set-key (kbd "<f10>") 'rgrep))
+#+END_SRC
+
+** alternative-files
+
+#+BEGIN_SRC emacs-lisp
+  (define-module alternative-files
+    (defun alternative-files-factories-finder (&optional file)
+      (let ((file (or file (alternative-files--detect-file-name))))
+        (cond
+         ((string-match "^\\(.*\\)/app/models/\\(.+\\)\\.rb$" file)
+          (let ((root (match-string 1 file))
+                (name (match-string 2 file)))
+            (list
+             (concat root "/spec/factories/" (alternative-files--pluralize-string name) ".rb"))))
+  
+         ((string-match "^\\(.*\\)/spec/factories/\\(.+\\).rb$" file)
+          (let* ((root (match-string 1 file))
+                 (name (match-string 2 file))
+                 (singular-name (alternative-files--singularize-string name)))
+            (list
+             (concat root "/app/models/" singular-name ".rb")
+             (concat root "/spec/models/" singular-name "_spec.rb")
+             (concat root "/app/controllers/" name "_controller.rb")
+             (concat root "/spec/controllers/" name "_controller.rb")
+             (concat root "/app/helpers/" name "_helper.rb")
+             (concat root "/spec/helpers/" name "_helper.rb")
+             (concat root "/app/views/" name "/")))))))
+  
+    (defun alternative-files-go-finder (&optional file)
+      (let ((file (or file (alternative-files--detect-file-name))))
+        (cond
+         ((string-match "^\\(.+\\)_test\\.go$" file)
+          (let ((base (match-string 1 file)))
+            (list
+             (concat base ".go"))))
+  
+         ((string-match "^\\(.*\\)\\.go$" file)
+          (let* ((base (match-string 1 file)))
+            (list
+             (concat base "_test.go")))))))
+  
+    (setq alternative-files-user-functions
+          '(alternative-files-factories-finder
+            alternative-files-go-finder))
+  
+    (define-key my-keymap "a" 'alternative-files-find-file)
+    (define-key my-keymap (kbd "M-a") 'alternative-files-find-file)
+    (define-key my-keymap (kbd "A") 'alternative-files-create-file))
 #+END_SRC

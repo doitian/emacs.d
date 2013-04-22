@@ -216,7 +216,13 @@ Calling this command 3 times will always result in no whitespaces around cursor.
                                    nil nil initial)))
     (when (and (stringp name) (> (length name) 0))
       (insert name))))
-;;}}}
+
+;;;###autoload
+(defun mf-kill-buffer-and-window ()
+  (interactive)
+  (if (< (length (window-list)) 2)
+      (kill-buffer)
+    (kill-buffer-and-window)))
 
 (provide 'my-functions)
 ;;; my-functions.el ends here

@@ -6,7 +6,6 @@
 
 !/.mc-lists.el
 
-/init.el
 /elpa
 /tmp/*
 /vendor/*
@@ -18,5 +17,7 @@
 /abbrev_defs
 /bookmarks
 
+/init.el
+/custom.el
 /custom.readonly.el
 /secrets.el

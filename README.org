@@ -852,7 +852,7 @@ Opinioned GTD config based on org
   (require-module org)
   (define-key my-keymap (kbd "'") 'org-pomodoro-record-interuptions)
   (add-hook 'org-load-hook 'org-pomodoro-on-org-load)
-  (add-hook 'org-agenda-mode-hook 'org-pomodoro-on-org-agenda-load-load))
+  (add-hook 'org-agenda-mode-hook 'org-pomodoro-on-org-agenda-load))
 #+END_SRC
 
 ** org-appt
@@ -909,7 +909,6 @@ Autoload babel languages.
         'car
         (dired-map-over-marks (cons (dired-get-filename) (point)) arg)))))
 #+END_SRC
-
 
 ** case-dwim
 
@@ -1114,19 +1113,13 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
   )
 #+END_SRC
 
-** buffer-explore
-
 ** window-nav
-
 #+BEGIN_SRC emacs-lisp
   (define-module window-nav
     (define-key my-minor-mode-map (kbd "M-o") 'other-window)
     (define-key my-minor-mode-map (kbd "M-O") 'other-frame)
     )
 #+END_SRC
-
-** window-manager
-
 ** vc
 
 Version Control backends.
@@ -1670,7 +1663,6 @@ Misc editing config
     (add-hook 'prog-mode-hook 'flyspell-prog-mode)
     (add-hook 'ruby-mode-hook 'flyspell-prog-mode))
 #+END_SRC
-
 
 ** tab-fix
 

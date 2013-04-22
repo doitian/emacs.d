@@ -1743,7 +1743,16 @@ Misc editing config
       (define-key my-keymap (kbd "M-/") map)))
 #+END_SRC
 
-* TODO Backlog
-
-#+BEGIN_EXAMPLE
-#+END_EXAMPLE
+** ediff-mode
+#+BEGIN_SRC emacs-lisp
+  (define-module ediff-mode
+    (custom-set-variables
+     '(ediff-split-window-function (quote split-window-horizontally))
+     '(ediff-window-setup-function (quote ediff-setup-windows-plain)))
+  
+    (defun ediff-main ()
+      "Show ediff registry"
+      (interactive)
+      (let ((ediff-window-display-p (lambda () nil)))
+        (ediff-show-registry))))
+#+END_SRC

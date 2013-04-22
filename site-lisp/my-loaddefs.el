@@ -4,8 +4,8 @@
 
 
 ;;;### (autoloads (alternative-files-create-file alternative-files-find-file)
-;;;;;;  "alternative-files" "alternative-files.el" (20853 17995 0
-;;;;;;  0))
+;;;;;;  "alternative-files" "alternative-files.el" (20853 25165 929677
+;;;;;;  425000))
 ;;; Generated autoloads from alternative-files.el
 
 (defvar alternative-files-rules nil)
@@ -30,8 +30,8 @@ C-u to open in other window, C-u C-u to reload alternative file list
 
 ;;;### (autoloads (case-dwim-capitalize case-dwim-upcase case-dwim-downcase
 ;;;;;;  case-dwim-isearch-underscore case-dwim-isearch-dash case-dwim-underscore
-;;;;;;  case-dwim-dash) "case-dwim" "case-dwim.el" (20853 10737 0
-;;;;;;  0))
+;;;;;;  case-dwim-dash) "case-dwim" "case-dwim.el" (20853 28763 39716
+;;;;;;  578000))
 ;;; Generated autoloads from case-dwim.el
 
 (autoload 'case-dwim-dash "case-dwim" "\
@@ -116,7 +116,7 @@ it needs `comment-search-forward'.
 ;;;***
 
 ;;;### (autoloads (module-initialize module-load) "module" "module.el"
-;;;;;;  (20853 10737 0 0))
+;;;;;;  (20853 35122 286452 461000))
 ;;; Generated autoloads from module.el
 
 (autoload 'module-load "module" "\
@@ -138,7 +138,7 @@ Load all defined modules in `module-list' except ones in `module-black-list'
 ;;;;;;  mf-indirect-region mf-smart-kill-whole-line mf-shrink-whitespaces
 ;;;;;;  mf-append-line-delimter-then-next-line-and-open-it-if-not-empty
 ;;;;;;  mf-next-line-and-open-it-if-not-empty) "my-functions" "my-functions.el"
-;;;;;;  (20853 16862 0 0))
+;;;;;;  (20853 25165 929677 425000))
 ;;; Generated autoloads from my-functions.el
 
 (autoload 'mf-next-line-and-open-it-if-not-empty "my-functions" "\
@@ -564,7 +564,7 @@ prompt for the function or variable to find, instead.
 ;;;***
 
 ;;;### (autoloads nil nil ("dash.el" "eproject-plus.el" "sequential-command.el"
-;;;;;;  "smart-compile+.el") (20853 19137 938282 0))
+;;;;;;  "smart-compile+.el") (20853 35128 151163 345000))
 
 ;;;***
 

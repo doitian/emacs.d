@@ -18,10 +18,40 @@ Use =make= or eval following lisp code. Move to the end of the expression, and p
 
 Some packages are large, and are not stable to install from ELPA. Install them using =make vendor=.
 
-#+BEGIN_EXAMPLE
-  make vendor
-#+END_EXAMPLE
+<pre><code>make vendor</code></pre>
 
+** Modules
+
+Module is defined as function, and is only loaded when:
+
+-   =module-white-list= is empty, or it is in =module-white-list=.
+-   and it is not in =module-black-list=.
+
+=module-white-list=, and =module-black-list= also can include group names
+defined in =module-group-alist=. If so, the group name is expanded recursively
+to all the modules belong to it.
+
+#+BEGIN_SRC emacs-lisp
+;; (custom-set-variables
+;;   '(module-white-list nil)
+;;   '(module-black-list '(delete-keys-hacks)))
+#+END_SRC
+
+=module-white-list= and =module-black-list= also can be set through
+environment variable =EMACS_MODULE=, which is a comma separated list of module
+or group names. Name starting with =!= are added to black list, and others are
+added to white list.
+
+Examples:
+
+#+BEGIN_HTML
+<pre><code># Start emacs without loading any module.
+# Because white list is not empty, and there is no module with name "none"
+EMACS_MODULE=none emacs
+# Do not load org related modules. ! must be quoted in SHELL
+EMACS_MODULE="!org" emacs
+</code></code>
+#+END_HTML
 
 * Startup
 
@@ -247,14 +277,6 @@ Load package on demand
 
 * Modules
 
-Disable module by adding it to =module-black-list=.
-
-#+BEGIN_SRC emacs-lisp
-;; Example
-;; (custom-set-variables
-;;   '(module-black-list '(tex r delete-keys-hacks)))
-#+END_SRC
-
 ** s
 
 #+BEGIN_SRC emacs-lisp
@@ -295,7 +317,7 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
 
 ** movement-keybindings
 #+BEGIN_SRC emacs-lisp
-  (define-module move-keybindings
+  (define-module movement-keybindings
     (global-set-key (kbd "M-g") 'goto-line)
     (global-set-key (kbd "M-C-g") 'move-to-window-line-top-bottom)
   
@@ -358,10 +380,17 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
 #+END_SRC
 
 ** ido
-
 #+BEGIN_SRC emacs-lisp
   (define-module ido
+    (ido-mode +1)
+    (ido-load-history))
+#+END_SRC
+** ido-plus
+#+BEGIN_SRC emacs-lisp
+  (define-module ido-plus
     "Enable ido globally, and use it everywhere"
+
+    (require-module ido)
     
     (custom-set-variables
      '(ido-enable-regexp nil)
@@ -372,9 +401,6 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
   
     (require-package 'ido-hacks)
     (require-package 'ido-complete-space-or-hyphen)
-  
-    (ido-mode +1)
-    (ido-load-history)
   
     (ido-complete-space-or-hyphen-enable)
     (require 'ido-hacks)
@@ -430,12 +456,12 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
   
     (global-set-key [f12] 'magit-status))
 #+END_SRC
-** org
+** org-basic
 
 Install latest org by running =make org=. Othewise system bundled version is used.
 
 #+BEGIN_SRC emacs-lisp
-    (define-module org
+    (define-module org-basic
       "Basic orgmode setup"
     
       (custom-set-variables
@@ -522,7 +548,7 @@ Store org agenda files in dropbox directory
 
 #+BEGIN_SRC emacs-lisp
   (define-module org-files
-    (require-module org)
+    (require-module org-basic)
     (make-directory (concat my-dropbox-dir "g/org/projects") t)
     (setq org-directory (concat my-dropbox-dir "g/org"))
     (setq org-agenda-files (list (concat my-dropbox-dir "g/org") (concat my-dropbox-dir "g/org/projects")))
@@ -550,7 +576,7 @@ Capture template
 
 #+BEGIN_SRC emacs-lisp
   (define-module org-capture
-    (require-module org)
+    (require-module org-basic)
     (setq
      org-capture-templates
      '(("r" "Notes" entry (file+headline (concat org-directory "/inbox.org") "Notes")
@@ -585,6 +611,8 @@ Capture template
 
 #+BEGIN_SRC emacs-lisp
   (define-module org-clock
+    (require-module org-basic)
+
     (defun my-org-clock-display (msg)
       (notify "Org Notification" msg :icon "appointment-reminder"))
   
@@ -626,7 +654,7 @@ Opinioned GTD config based on org
 
 #+BEGIN_SRC emacs-lisp
   (define-module org-gtd
-    (require-module org)
+    (require-module org-basic)
   
     (custom-set-variables
      '(org-extend-today-until 2)
@@ -676,7 +704,7 @@ Opinioned GTD config based on org
 
 #+BEGIN_SRC emacs-lisp
   (define-module org-agenda
-    (require-module org)
+    (require-module org-basic)
     (require-module org-files)
   
     (defun sacha/org-agenda-done (&optional arg)
@@ -799,6 +827,8 @@ Opinioned GTD config based on org
 
 #+BEGIN_SRC emacs-lisp
   (define-module org-export
+    (require-module org-basic)
+
     (custom-set-variables
      '(org-export-backends '(md html icalendar latex beamer))
      '(org-icalendar-use-scheduled '(todo-start event-if-todo))
@@ -822,6 +852,8 @@ Opinioned GTD config based on org
 
 #+BEGIN_SRC emacs-lisp
   (define-module org-speed
+    (require-module org-basic)
+
     (setq org-speed-commands-user
           '(
             ("x" . org-speed-done)
@@ -854,7 +886,8 @@ Opinioned GTD config based on org
 
 #+BEGIN_SRC emacs-lisp
 (define-module org-pomodoro
-  (require-module org)
+  (require-module org-basic)
+
   (define-key my-keymap (kbd "'") 'org-pomodoro-record-interuptions)
   (add-hook 'org-load-hook 'org-pomodoro-on-org-load)
   (add-hook 'org-agenda-mode-hook 'org-pomodoro-on-org-agenda-load))
@@ -864,7 +897,7 @@ Opinioned GTD config based on org
 
 #+BEGIN_SRC emacs-lisp
   (define-module org-appt
-    (require-module org)
+    (require-module org-basic)
   
     (appt-activate 1)
     (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
@@ -888,6 +921,8 @@ Autoload babel languages.
 
 #+BEGIN_SRC emacs-lisp
   (define-module org-babel
+    (require-module org-basic)
+
     (mapc
      (lambda (lang)
        (autoload
@@ -901,6 +936,8 @@ Autoload babel languages.
 
 #+BEGIN_SRC emacs-lisp
   (define-module org-drill
+    (require-module org-basic)
+
     (defun init--org-drill-on-dired-load ()
       (define-key dired-mode-map (kbd "C-c SPC") 'my-dired-do-drill))
   
@@ -1954,4 +1991,24 @@ Misc editing config
     (define-key my-keymap "a" 'alternative-files-find-file)
     (define-key my-keymap (kbd "M-a") 'alternative-files-find-file)
     (define-key my-keymap (kbd "A") 'alternative-files-create-file))
+#+END_SRC
+
+* Module Groups
+
+#+BEGIN_SRC emacs-lisp
+  (setq
+   module-group-alist
+   '(
+     ;; minimal: just some basic keybindings
+     (minimal s ido my-basic-keybindings movement-keybindings
+              windows-commands buffers-commands files-commands)
+     ;; basic: only necessary modules make me comfortable
+     (basic minimal delete-keys-hacks char-motion
+            ido-plus magit case-dwim server backup
+            multiple-cursors isearch)
+  
+     ;; org-group: org modules
+     (org org-basic org-files org-capture org-clock org-gtd
+          org-agenda org-export org-speed org-pomodoro
+          org-appt org-babel org-drill)))
 #+END_SRC

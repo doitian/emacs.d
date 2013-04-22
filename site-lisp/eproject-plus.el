@@ -44,10 +44,37 @@
 ROOT defaults to the current buffer's project-root."
   (cdr (assoc root eproject-attributes-alist)))
 
+(defun* eproject-plus-pp-attributes (&optional (root (eproject-root)))
+  "Print attributes for the eproject ROOT
+ROOT defaults to the current buffer's project-root."
+  (interactive)
+  (pp-display-expression (eproject-plus-attributes root) "*eproject attributes*"))
+
+(defun eproject-plus-plist-keys (plist)
+  "Get all keys in plist"
+  (let (result)
+    (while plist
+      (setq result (cons (car plist) result))
+      (setq plist (cdr (cdr plist))))
+    result))
+
+(defvar eproject-plus--set-attribute-history nil)
 (defun* eproject-plus-set-attribute (key value &optional (root (eproject-root)))
+  (interactive (let ((key-name (completing-read
+                                "attribute: "
+                                (mapcar (lambda (name) (substring (symbol-name name) 1))
+                                        (eproject-plus-plist-keys (eproject-plus-attributes root)))
+                                nil nil nil 'eproject-plus--set-attribute-history)))
+                 (list
+                  (intern (concat ":" key-name))
+                  (read-from-minibuffer
+                   (concat key-name ": ")
+                   (prin1-to-string (eproject-attribute (intern (concat ":" key-name)) root))
+                   nil t))))
   "Set attribute KEY to VALUE for the eproject ROOT
 ROOT defaults to the current buffer's project-root."
-  (setf (getf (cdr (assoc root eproject-attributes-alist)) key) value))
+  (setf (getf (cdr (assoc root eproject-attributes-alist)) key) value)
+  value)
 
 (defun eproject-plus-guess-compile-command (root)
   (let ((default-directory root))
@@ -89,6 +116,7 @@ ROOT defaults to the current buffer's project-root."
         (eproject-plus-set-attribute :project-files-cache (eproject-list-project-files) root)))))
 
 (defun* eproject-plus-invalidate-project-files-cache (&optional (root (eproject-root-safe)))
+  (interactive)
   (when root
     (eproject-plus-set-attribute :project-files-cache nil root)))
 
@@ -223,27 +251,30 @@ to select from, open file when selected."
 (add-hook 'eshell-mode-hook 'eproject-maybe-turn-on)
 
 (defvar eproject-plus-keymap nil)
-(setq eproject-plus-keymap
-      (let ((map (make-sparse-keymap)))
-        (define-key map "P" 'eproject-plus-open-project)
-        (define-key map "p" 'eproject-revisit-project)
-        (define-key map "s" 'eproject-plus-open-session)
-        (define-key map "c" 'eproject-plus-compile)
-        (define-key map "b" 'eproject-ibuffer)
-        (define-key map "\C-f" 'ido-find-file-in-project-root)
-        (define-key map "f" 'eproject-plus-find-file-with-cache)
-        (define-key map "o" 'eproject-plus-find-file-with-cache)
-        (define-key map "e" 'eproject-plus-eshell-toggle)
-        (define-key map "E" 'eproject-plus-eshell-here)
-        (define-key map "r" 'rgrep-in-project-root)
-        (define-key map "a" 'ag-project-at-point)
-        (define-key map "A" 'ag-regexp-project-at-point)
-        (define-key map "g" 'git-grep-in-project-root)
-        (define-key map "!" 'shell-command-in-project-root)
+(let ((map (or eproject-plus-keymap (make-sparse-keymap))))
+  (define-key map "i" 'eproject-plus-invalidate-project-files-cache)
+  (define-key map "P" 'eproject-plus-open-project)
+  (define-key map "p" 'eproject-revisit-project)
+  (define-key map "s" 'eproject-plus-open-session)
+  (define-key map "c" 'eproject-plus-compile)
+  (define-key map "b" 'eproject-ibuffer)
+  (define-key map "\C-f" 'ido-find-file-in-project-root)
+  (define-key map "f" 'eproject-plus-find-file-with-cache)
+  (define-key map "o" 'eproject-plus-find-file-with-cache)
+  (define-key map "e" 'eproject-plus-eshell-toggle)
+  (define-key map "E" 'eproject-plus-eshell-here)
+  (define-key map "r" 'rgrep-in-project-root)
+  (define-key map "a" 'ag-project-at-point)
+  (define-key map "A" 'ag-regexp-project-at-point)
+  (define-key map "g" 'git-grep-in-project-root)
+  (define-key map "!" 'shell-command-in-project-root)
+  (define-key map "?" 'eproject-plus-pp-attributes)
+  (define-key map "=" 'eproject-plus-set-attribute)
 
-        ;; generate  C-update
-        (define-key map "'" 'eproject-plus-visit-tags-table)
-        map))
+  ;; generate  C-update
+  (define-key map "'" 'eproject-plus-visit-tags-table)
+
+  (setq eproject-plus-keymap map))
 
 (provide 'eproject-plus)
 ;;; eproject-plus.el ends here

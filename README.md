@@ -161,10 +161,6 @@ Remove annoying UI
 ;; prefer fringe
 (setq next-error-highlight 'fringe-arrow)
 
-(add-to-list
- 'default-frame-alist
- (cons 'font my-frame-font))
-
 (defvar after-make-console-frame-hooks '()
   "Hooks to run after creating a new TTY frame")
 (defvar after-make-window-system-frame-hooks '()

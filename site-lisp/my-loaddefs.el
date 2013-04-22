@@ -5,8 +5,8 @@
 
 ;;;### (autoloads (case-dwim-capitalize case-dwim-upcase case-dwim-downcase
 ;;;;;;  case-dwim-isearch-underscore case-dwim-isearch-dash case-dwim-underscore
-;;;;;;  case-dwim-dash) "case-dwim" "case-dwim.el" (20852 61410 136481
-;;;;;;  398000))
+;;;;;;  case-dwim-dash) "case-dwim" "case-dwim.el" (20853 10737 0
+;;;;;;  0))
 ;;; Generated autoloads from case-dwim.el
 
 (autoload 'case-dwim-dash "case-dwim" "\
@@ -59,7 +59,7 @@ Otherwise capitalize following words.
 ;;;***
 
 ;;;### (autoloads (hide/show-comments ignore-comments-flag) "hide-comnt"
-;;;;;;  "hide-comnt.el" (20702 3844 0 0))
+;;;;;;  "hide-comnt.el" (20853 10737 0 0))
 ;;; Generated autoloads from hide-comnt.el
 
 (defvar ignore-comments-flag t "\
@@ -91,7 +91,7 @@ it needs `comment-search-forward'.
 ;;;***
 
 ;;;### (autoloads (module-initialize module-load) "module" "module.el"
-;;;;;;  (20852 17135 153438 943000))
+;;;;;;  (20853 10737 0 0))
 ;;; Generated autoloads from module.el
 
 (autoload 'module-load "module" "\
@@ -113,7 +113,7 @@ Load all defined modules in `module-list' except ones in `module-black-list'
 ;;;;;;  mf-indirect-region mf-smart-kill-whole-line mf-shrink-whitespaces
 ;;;;;;  mf-append-line-delimter-then-next-line-and-open-it-if-not-empty
 ;;;;;;  mf-next-line-and-open-it-if-not-empty) "my-functions" "my-functions.el"
-;;;;;;  (20852 23829 243511 805000))
+;;;;;;  (20853 10737 0 0))
 ;;; Generated autoloads from my-functions.el
 
 (autoload 'mf-next-line-and-open-it-if-not-empty "my-functions" "\
@@ -202,8 +202,8 @@ Save the current directory to the file ~/.emacs.d/data/pwd
 
 ;;;***
 
-;;;### (autoloads (my-minor-mode) "my-mode" "my-mode.el" (20852 62124
-;;;;;;  433155 837000))
+;;;### (autoloads (my-minor-mode) "my-mode" "my-mode.el" (20853 13078
+;;;;;;  0 0))
 ;;; Generated autoloads from my-mode.el
 
 (defvar my-minor-mode t "\
@@ -219,8 +219,7 @@ Define a minor mode for `my-keymap'
 
 ;;;***
 
-;;;### (autoloads (notify) "notify" "notify.el" (20852 19297 530129
-;;;;;;  146000))
+;;;### (autoloads (notify) "notify" "notify.el" (20853 10737 0 0))
 ;;; Generated autoloads from notify.el
 
 (autoload 'notify "notify" "\
@@ -233,7 +232,7 @@ ARGS may be amongst :timeout, :icon, :urgency, :app and :category.
 
 ;;;### (autoloads (org-pomodoro-record-interuptions org-pomodoro-on-org-agenda-load
 ;;;;;;  org-pomodoro-on-org-load) "org-pomodoro" "org-pomodoro.el"
-;;;;;;  (20852 54893 819743 808000))
+;;;;;;  (20853 10737 0 0))
 ;;; Generated autoloads from org-pomodoro.el
 
 (autoload 'org-pomodoro-on-org-load "org-pomodoro" "\
@@ -254,8 +253,8 @@ ARGS may be amongst :timeout, :icon, :urgency, :app and :category.
 ;;;***
 
 ;;;### (autoloads (pick-backup-and-view pick-backup-and-revert pick-backup-and-diff
-;;;;;;  pick-backup-and-ediff) "pick-backup" "pick-backup.el" (20852
-;;;;;;  1222 783265 748000))
+;;;;;;  pick-backup-and-ediff) "pick-backup" "pick-backup.el" (20853
+;;;;;;  10737 0 0))
 ;;; Generated autoloads from pick-backup.el
 
 (autoload 'pick-backup-and-ediff "pick-backup" "\
@@ -281,8 +280,7 @@ View one of FILE's backups.
 ;;;***
 
 ;;;### (autoloads (temporary-mode-define-keys temporary-mode-start)
-;;;;;;  "temporary-mode" "temporary-mode.el" (20852 62539 383160
-;;;;;;  356000))
+;;;;;;  "temporary-mode" "temporary-mode.el" (20853 10737 0 0))
 ;;; Generated autoloads from temporary-mode.el
 
 (autoload 'temporary-mode-start "temporary-mode" "\
@@ -298,7 +296,7 @@ View one of FILE's backups.
 ;;;***
 
 ;;;### (autoloads (thing-actions-mark-thing) "thing-actions" "thing-actions.el"
-;;;;;;  (20852 22782 720167 82000))
+;;;;;;  (20853 10737 0 0))
 ;;; Generated autoloads from thing-actions.el
 
 (autoload 'thing-actions-mark-thing "thing-actions" "\
@@ -312,7 +310,7 @@ View one of FILE's backups.
 ;;;;;;  next-visible-thing-repeat next-visible-thing previous-visible-thing
 ;;;;;;  mark-enclosing-sexp-backward mark-enclosing-sexp-forward
 ;;;;;;  mark-enclosing-sexp mark-thing cycle-thing-region thing-region)
-;;;;;;  "thing-cmds" "thing-cmds.el" (20701 61917 0 0))
+;;;;;;  "thing-cmds" "thing-cmds.el" (20853 10737 0 0))
 ;;; Generated autoloads from thing-cmds.el
 
 (autoload 'thing-region "thing-cmds" "\
@@ -472,8 +470,8 @@ navigation are `C-x down' and `C-x up'.
 
 ;;;### (autoloads (find-fn-or-var-nearest-point tap-redefine-std-fns
 ;;;;;;  tap-put-thing-at-point-props tap-near-point-y-distance tap-near-point-x-distance
-;;;;;;  thing-at-point-plus) "thingatpt+" "thingatpt+.el" (20814
-;;;;;;  27051 0 0))
+;;;;;;  thing-at-point-plus) "thingatpt+" "thingatpt+.el" (20853
+;;;;;;  10737 0 0))
 ;;; Generated autoloads from thingatpt+.el
 
 (let ((loads (get 'thing-at-point-plus 'custom-loads))) (if (member '"thingatpt+" loads) nil (put 'thing-at-point-plus 'custom-loads (cons '"thingatpt+" loads))))
@@ -536,7 +534,7 @@ prompt for the function or variable to find, instead.
 ;;;***
 
 ;;;### (autoloads nil nil ("dash.el" "eproject-plus.el" "sequential-command.el"
-;;;;;;  "smart-compile+.el") (20853 6601 285568 942000))
+;;;;;;  "smart-compile+.el") (20853 13084 84190 0))
 
 ;;;***
 

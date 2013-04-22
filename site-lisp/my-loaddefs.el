@@ -5,8 +5,8 @@
 
 ;;;### (autoloads (case-dwim-capitalize case-dwim-upcase case-dwim-downcase
 ;;;;;;  case-dwim-isearch-underscore case-dwim-isearch-dash case-dwim-underscore
-;;;;;;  case-dwim-dash) "case-dwim" "case-dwim.el" (20852 16769 586768
-;;;;;;  298000))
+;;;;;;  case-dwim-dash) "case-dwim" "case-dwim.el" (20852 61410 136481
+;;;;;;  398000))
 ;;; Generated autoloads from case-dwim.el
 
 (autoload 'case-dwim-dash "case-dwim" "\
@@ -202,9 +202,15 @@ Save the current directory to the file ~/.emacs.d/data/pwd
 
 ;;;***
 
-;;;### (autoloads (my-minor-mode) "my-mode" "my-mode.el" (20852 23266
-;;;;;;  900172 350000))
+;;;### (autoloads (my-minor-mode) "my-mode" "my-mode.el" (20852 62124
+;;;;;;  433155 837000))
 ;;; Generated autoloads from my-mode.el
+
+(defvar my-minor-mode t "\
+Non-nil if My minor mode is enabled.
+See the command `my-minor-mode' for a description of this minor mode.")
+
+(custom-autoload 'my-minor-mode "my-mode" nil)
 
 (autoload 'my-minor-mode "my-mode" "\
 Define a minor mode for `my-keymap'
@@ -222,6 +228,28 @@ Notify TITLE, BODY via `notify-method'.
 ARGS may be amongst :timeout, :icon, :urgency, :app and :category.
 
 \(fn TITLE BODY &rest ARGS)" nil nil)
+
+;;;***
+
+;;;### (autoloads (org-pomodoro-record-interuptions org-pomodoro-on-org-agenda-load
+;;;;;;  org-pomodoro-on-org-load) "org-pomodoro" "org-pomodoro.el"
+;;;;;;  (20852 54893 819743 808000))
+;;; Generated autoloads from org-pomodoro.el
+
+(autoload 'org-pomodoro-on-org-load "org-pomodoro" "\
+
+
+\(fn)" nil nil)
+
+(autoload 'org-pomodoro-on-org-agenda-load "org-pomodoro" "\
+
+
+\(fn)" nil nil)
+
+(autoload 'org-pomodoro-record-interuptions "org-pomodoro" "\
+
+
+\(fn CHAR)" t nil)
 
 ;;;***
 
@@ -249,6 +277,23 @@ Replace FILE with one of its backups.
 View one of FILE's backups.
 
 \(fn)" t nil)
+
+;;;***
+
+;;;### (autoloads (temporary-mode-define-keys temporary-mode-start)
+;;;;;;  "temporary-mode" "temporary-mode.el" (20852 62539 383160
+;;;;;;  356000))
+;;; Generated autoloads from temporary-mode.el
+
+(autoload 'temporary-mode-start "temporary-mode" "\
+
+
+\(fn MODE-NAME KEYMAP)" nil nil)
+
+(autoload 'temporary-mode-define-keys "temporary-mode" "\
+
+
+\(fn KEYMAP MODE-NAME &optional TEMPORARY-KEYMAP)" nil nil)
 
 ;;;***
 
@@ -491,7 +536,7 @@ prompt for the function or variable to find, instead.
 ;;;***
 
 ;;;### (autoloads nil nil ("dash.el" "eproject-plus.el" "sequential-command.el"
-;;;;;;  "smart-compile+.el") (20852 23830 964627 160000))
+;;;;;;  "smart-compile+.el") (20852 62602 224056 398000))
 
 ;;;***
 

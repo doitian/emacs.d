@@ -16,6 +16,7 @@
 !/eshell/alias
 
 /abbrev_defs
+/bookmarks
 
 /custom.readonly.el
 /secrets.el

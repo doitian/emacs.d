@@ -1,0 +1,88 @@
+#!/usr/bin/env zsh
+
+FG='#8b0000'
+BG='#cccccc'
+LENGTH=25
+SOUND=1
+MPLAYER=
+START_TIME=$(date +"%s")
+
+trap finish INT
+trap finish TERM
+
+zmodload zsh/zselect
+
+while [ -n "$1" ]; do
+  case "$1" in
+    --length|-l)
+      shift
+      LENGTH="$1"
+      shift
+      ;;
+    --length=*)
+      LENGTH="${1#*=}"
+      shift
+      ;;
+    --quiet|-q)
+      SOUND=
+      shift
+      ;;
+    *)
+      echo "Usage: $0 [--length|l MINUTES] [--quiet|q]"
+  esac
+done
+
+LENGTH_SECONDS=$((LENGTH * 60))
+
+refresh () {
+  local NOW=$(date +"%s")
+  local ELAPSE=$((NOW - START_TIME))
+  local REMAIN=$((LENGTH_SECONDS - ELAPSE))
+  if ((REMAIN > 0)); then
+    REMAIN_M=$((REMAIN / 60))
+    REMAIN_S=$((REMAIN % 60))
+    PERCENT=$((ELAPSE * 100 / LENGTH_SECONDS))
+    if ((PERCENT < 33)); then
+      FG="#008b00"
+    elif ((PERCENT < 66)); then
+      FG="#8b8b00"
+    else
+      FG="#8b0000"
+    fi
+    printf "^pa(4)^fg($FG)%d:%02d^fg($BG)^r(4x28)^fg()" "$REMAIN_M" "$REMAIN_S"
+    echo $PERCENT | gdbar -w 120 -h 26 -fg "$BG" -bg "$FG"
+  else
+    finish
+  fi
+}
+
+FINISHED=
+finish () {
+  if [ -z "$FINISHED" ]; then
+    FINISHED=1
+    if [ -n "$MPLAYER" ]; then
+      kill "$MPLAYER"
+    fi
+    if [ -n "$SOUND" ]; then
+      mplayer ~/Dropbox/resources/audio/ring.mp3 &> /dev/null &
+    fi
+  fi
+  exit 0
+}
+
+[ -z "$DEBUG" ] && exec > >(dzen2 -x -201 -y 1 -fn "WenQuanYi Micro Hei-20" -w 200 -h 30 -fg "$FG" -bg "$BG")
+
+if [ -n "$SOUND" ]; then
+  mplayer -loop 0 ~/Dropbox/resources/audio/dita.mp3 &> /dev/null &
+  MPLAYER=$!
+fi
+
+while true; do
+  refresh
+  if zselect -t 100 -r 0; then
+    if ! read -t 0; then
+      finish
+      exit
+    fi
+  fi
+done

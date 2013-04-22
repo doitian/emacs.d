@@ -92,7 +92,8 @@
 ;;;###autoload
 (define-minor-mode my-minor-mode
   "Define a minor mode for `my-keymap'"
-  t "" my-minor-mode-map)
+  t "" my-minor-mode-map
+  :global t)
 
 (define-key my-keymap (kbd "C-g") 'keyboard-quit)
 

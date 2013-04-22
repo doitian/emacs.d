@@ -21,23 +21,22 @@
 
 (defun case-dwim--mc-active-p ()
   "Multiple cursors is active"
-  (and (boundp 'multiple-cursors-mode) multiple-cursors-mode)
-  t)
+  (and (boundp 'multiple-cursors-mode) multiple-cursors-mode))
 
 (defun case-dwim--funcall (func &rest body)
   "Call command and remember the command for mc if it is active"
   (apply func body)
   (when (case-dwim--mc-active-p)
     (setq mc--this-command `(lambda ()
-			      (interactive)
-			      (,func ,@body)
-			      (setq this-command ,this-command)))))
+                              (interactive)
+                              (,func ,@body)
+                              (setq this-command ,this-command)))))
 
 (defun case-dwim--insert-or-case-transform (char case-word case-region arg)
   "Insert string unless prefix is negative or last command is a case transformation"
   (if (or (< arg 0)
-	  (region-active-p) 
-	  (case-dwim--last-command-case-transformation-p))
+          (region-active-p) 
+          (case-dwim--last-command-case-transformation-p))
       (case-dwim--case-transform case-word case-region arg)
     (setq case-dwim--last-command-is-case-transformation nil)
     (setq seq-store-count 0)
@@ -58,7 +57,7 @@ Otherwise do case transformation on following words.
    ((region-active-p)
     (case-dwim--funcall case-region))
    (t (case-dwim--funcall case-word
-			  (case-dwim--seq-count arg)))))
+                          (case-dwim--seq-count arg)))))
 
 ;;;###autoload
 (defun case-dwim-dash (arg)

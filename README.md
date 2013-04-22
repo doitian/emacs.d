@@ -29,32 +29,46 @@
 <li><a href="#sec-7-1">7.1. s</a></li>
 <li><a href="#sec-7-2">7.2. delete-keys-hacks</a></li>
 <li><a href="#sec-7-3">7.3. my-basic-keybindings</a></li>
-<li><a href="#sec-7-4">7.4. char-motion</a></li>
-<li><a href="#sec-7-5">7.5. ido</a></li>
-<li><a href="#sec-7-6">7.6. magit</a></li>
-<li><a href="#sec-7-7">7.7. org</a></li>
-<li><a href="#sec-7-8">7.8. case-dwim</a></li>
-<li><a href="#sec-7-9">7.9. server</a></li>
-<li><a href="#sec-7-10">7.10. backup</a></li>
-<li><a href="#sec-7-11">7.11. multiple-cursors</a></li>
-<li><a href="#sec-7-12">7.12. dired</a></li>
-<li><a href="#sec-7-13">7.13. buffer-explore</a></li>
-<li><a href="#sec-7-14">7.14. window-nav</a></li>
-<li><a href="#sec-7-15">7.15. window-manager</a></li>
-<li><a href="#sec-7-16">7.16. vc</a></li>
-<li><a href="#sec-7-17">7.17. isearch</a></li>
-<li><a href="#sec-7-18">7.18. revert</a></li>
-<li><a href="#sec-7-19">7.19. eshell</a></li>
-<li><a href="#sec-7-20">7.20. eproject</a></li>
-<li><a href="#sec-7-21">7.21. helm</a></li>
-<li><a href="#sec-7-22">7.22. octave-mode</a></li>
-<li><a href="#sec-7-23">7.23. compile-and-run</a></li>
-<li><a href="#sec-7-24">7.24. editing</a></li>
-<li><a href="#sec-7-25">7.25. kill-ring</a></li>
-<li><a href="#sec-7-26">7.26. recentf</a></li>
-<li><a href="#sec-7-27">7.27. desktop</a></li>
-<li><a href="#sec-7-28">7.28. mark</a></li>
-<li><a href="#sec-7-29">7.29. whitespace</a></li>
+<li><a href="#sec-7-4">7.4. movement-keybindings</a></li>
+<li><a href="#sec-7-5">7.5. char-motion</a></li>
+<li><a href="#sec-7-6">7.6. ido</a></li>
+<li><a href="#sec-7-7">7.7. magit</a></li>
+<li><a href="#sec-7-8">7.8. org</a></li>
+<li><a href="#sec-7-9">7.9. org-files</a></li>
+<li><a href="#sec-7-10">7.10. org-capture</a></li>
+<li><a href="#sec-7-11">7.11. org-clock</a></li>
+<li><a href="#sec-7-12">7.12. org-gtd</a></li>
+<li><a href="#sec-7-13">7.13. org-agenda</a></li>
+<li><a href="#sec-7-14">7.14. org-export</a></li>
+<li><a href="#sec-7-15">7.15. org-speed</a></li>
+<li><a href="#sec-7-16">7.16. org-pomodoro</a></li>
+<li><a href="#sec-7-17">7.17. org-appt</a></li>
+<li><a href="#sec-7-18">7.18. org-babel</a></li>
+<li><a href="#sec-7-19">7.19. org-drill</a></li>
+<li><a href="#sec-7-20">7.20. case-dwim</a></li>
+<li><a href="#sec-7-21">7.21. server</a></li>
+<li><a href="#sec-7-22">7.22. backup</a></li>
+<li><a href="#sec-7-23">7.23. multiple-cursors</a></li>
+<li><a href="#sec-7-24">7.24. dired</a></li>
+<li><a href="#sec-7-25">7.25. buffer-explore</a></li>
+<li><a href="#sec-7-26">7.26. window-nav</a></li>
+<li><a href="#sec-7-27">7.27. window-manager</a></li>
+<li><a href="#sec-7-28">7.28. vc</a></li>
+<li><a href="#sec-7-29">7.29. isearch</a></li>
+<li><a href="#sec-7-30">7.30. revert</a></li>
+<li><a href="#sec-7-31">7.31. eshell</a></li>
+<li><a href="#sec-7-32">7.32. eproject</a></li>
+<li><a href="#sec-7-33">7.33. helm</a></li>
+<li><a href="#sec-7-34">7.34. octave-mode</a></li>
+<li><a href="#sec-7-35">7.35. compile-and-run</a></li>
+<li><a href="#sec-7-36">7.36. editing</a></li>
+<li><a href="#sec-7-37">7.37. kill-ring</a></li>
+<li><a href="#sec-7-38">7.38. recentf</a></li>
+<li><a href="#sec-7-39">7.39. desktop</a></li>
+<li><a href="#sec-7-40">7.40. mark</a></li>
+<li><a href="#sec-7-41">7.41. whitespace</a></li>
+<li><a href="#sec-7-42">7.42. bookmark</a></li>
+<li><a href="#sec-7-43">7.43. spell</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Backlog</a></li>
@@ -325,16 +339,41 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
 <a name="sec-7-3"></a>
 ## my-basic-keybindings
 
+-   Disable global <kbd>M-s</kbd>
+
 -   Use <kbd>C-,</kbd> as rectangle commands prefix (<kbd>C-x r)
 
 -   Use <kbd>C-'</kbd> and <kbd>M-'</kbd> as negative argument.
 
     (define-module my-basic-keybindings
+      (global-set-key (kbd "M-s") nil)
       (define-key my-minor-mode-map (kbd "C-,") ctl-x-r-map)
       (define-key my-minor-mode-map (kbd "C-'") 'negative-argument)
       (define-key my-minor-mode-map (kbd "M-'") 'negative-argument))
 
 <a name="sec-7-4"></a>
+## movement-keybindings
+
+    (define-module move-keybindings
+      (global-set-key (kbd "M-g") 'goto-line)
+      (global-set-key (kbd "M-C-g") 'move-to-window-line-top-bottom)
+    
+      (global-set-key (kbd "M-F") 'forward-symbol)
+      (global-set-key (kbd "M-B") (lambda (arg)
+                                    (interactive "p")
+                                    (forward-symbol (- arg))))
+    
+      (global-set-key (kbd "C->") 'scroll-left)
+      (global-set-key (kbd "C-<") 'scroll-right)
+      (global-set-key (kbd "C-x >") 'scroll-left)
+      (global-set-key (kbd "C-x <") 'scroll-right)
+    
+      (global-set-key (kbd "C-<left>") 'scroll-right)
+      (global-set-key (kbd "C-<right>") 'scroll-left)
+      (global-set-key (kbd "C-<up>") 'scroll-down)
+      (global-set-key (kbd "C-<down>") 'scroll-up))
+
+<a name="sec-7-5"></a>
 ## char-motion
 
     (define-module char-motion
@@ -375,7 +414,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     
       (global-set-key "\C-a" 'back-to-indentation-or-beginning))
 
-<a name="sec-7-5"></a>
+<a name="sec-7-6"></a>
 ## ido
 
     (define-module ido
@@ -404,7 +443,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     
       (add-hook 'ido-setup-hook 'init--ido-setup))
 
-<a name="sec-7-6"></a>
+<a name="sec-7-7"></a>
 ## magit
 
     (define-module magit
@@ -447,7 +486,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     
       (global-set-key [f12] 'magit-status))
 
-<a name="sec-7-7"></a>
+<a name="sec-7-8"></a>
 ## org
 
 Install latest org by running `make org`. Othewise system bundled version is used.
@@ -456,7 +495,43 @@ Install latest org by running `make org`. Othewise system bundled version is use
       "Basic orgmode setup"
     
       (custom-set-variables
-       '(org-export-backends '(md html icalendar latex beamer)))
+       '(org-modules '(org-bibtex org-bookmark org-expiry org-habit org-id org-info
+                                  org-inlinetask org-man org-w3m org-clock org-timer
+                                  org-protocol org-drill org-mu4e))
+       '(org-global-properties '(("STYLE_ALL" . "habit")))
+       '(org-read-date-prefer-future 'time)
+       '(org-completion-use-ido t)
+       '(org-refile-targets '((org-agenda-files :maxlevel . 3)
+                              '(:maxlevel . 3)))
+       '(org-refile-use-outline-path 'file)
+       '(org-outline-path-complete-in-steps nil)
+       '(org-clock-history-length 35)
+       '(org-clock-idle-time 30)
+       '(org-drawers '("PROPERTIES" "LOGBOOK" "CLOCK"))
+       '(org-clock-into-drawer "CLOCK")
+       '(org-clock-persist (quote history))
+       '(org-agenda-todo-ignore-with-date t)
+       '(org-agenda-skip-deadline-if-done t)
+       '(org-agenda-skip-scheduled-if-done t)
+       '(org-agenda-skip-timestamp-if-done t)
+       '(org-agenda-span 7)
+       '(org-tags-column -80)
+       '(org-agenda-tags-column -80)
+       '(org-enforce-todo-checkbox-dependencies t)
+       '(org-enforce-todo-dependencies t)
+       '(org-cycle-separator-lines 2)
+       '(org-agenda-todo-list-sublevels t)
+       '(org-show-following-heading t)
+       '(org-show-hierarchy-above t)
+       '(org-show-siblings nil)
+       '(org-log-into-drawer t)
+       '(org-special-ctrl-a/e t)
+       '(org-special-ctrl-k t)
+       '(org-yank-adjusted-subtrees nil)
+       '(org-use-fast-todo-selection t)
+       '(org-file-apps '((t . emacs)
+                         (system . "open %s")))
+       '(org-fontify-done-headline t))
     
       (let ((org-load-path
              (car (nreverse (file-expand-wildcards (concat my-vendor-dir "org-*"))))))
@@ -464,10 +539,426 @@ Install latest org by running `make org`. Othewise system bundled version is use
           ;; remove system org
           (setq load-path
                 (--remove (string= "org" (file-name-nondirectory it)) load-path))
-          (setq load-path (cons (concat org-load-path "/lisp") load-path))
-          (or (require 'org-loaddefs nil t) (require 'org nil t)))))
+          (setq load-path 
+                (cons (concat org-load-path "/lisp")
+                      (cons (concat org-load-path "/contrib/lisp")
+                            load-path)))
+          (or (require 'org-loaddefs nil t) (require 'org nil t))))
+    
+      (defun wl-org-column-view-uses-fixed-width-face ()
+        ;; copy from org-faces.el
+        (when (fboundp 'set-face-attribute)
+          ;; Make sure that a fixed-width face is used when we have a column table.
+          (set-face-attribute 'org-column nil
+                              :height (face-attribute 'default :height)
+                              :family (face-attribute 'default :family))))
+    
+      (defun init--org-mode ()
+        (when (server-running-p) (wl-org-column-view-uses-fixed-width-face))
+        (define-key org-mode-map (kbd "C-,") nil)
+        (define-key org-mode-map (kbd "C-c ,") 'org-cycle-agenda-files)
+        (flyspell-mode +1))
+    
+      (add-hook 'org-mode-hook 'init--org-mode)
+    
+      (global-set-key (kbd "C-c l") 'org-store-link)
+      (global-set-key (kbd "C-c L") 'org-insert-link-global)
+      (global-set-key (kbd "C-c o") 'org-open-at-point-global)
+      (global-set-key (kbd "C-c a") 'org-agenda)
+      (define-key my-keymap (kbd "r") 'org-capture)
+      (define-key my-keymap (kbd "M-r") 'org-capture)
+      (autoload 'org-footnote-action "org-footnote" nil t)
+      (define-key my-keymap (kbd "t") 'org-footnote-action)
+      (define-key my-keymap (kbd "<return>") 'org-clock-goto))
 
-<a name="sec-7-8"></a>
+<a name="sec-7-9"></a>
+## org-files
+
+Store org agenda files in dropbox directory
+
+    (define-module org-files
+      (require-module org)
+      (make-directory (concat my-dropbox-dir "g/org/projects") t)
+      (setq org-directory (concat my-dropbox-dir "g/org"))
+      (setq org-agenda-files (list (concat my-dropbox-dir "g/org") (concat my-dropbox-dir "g/org/projects")))
+      (setq org-mobile-directory (concat my-dropbox-dir "MobileOrg"))
+      (setq org-default-notes-file (concat org-directory "/inbox.org"))
+      (setq org-mobile-inbox-for-pull (concat my-dropbox-dir "g/org/from_mobile.org"))
+    
+      (defun org ()
+        (interactive)
+        (ido-find-file-in-dir org-directory))
+      (defun snippets ()
+        (interactive)
+        (ido-find-file-in-dir (concat my-dropbox-dir "g/snippets")))
+      (defun dired-g (&rest arguments)
+        (interactive)
+        (dired (concat my-dropbox-dir "g")))
+      (defun orgb ()
+        (interactive)
+        (ido-find-file-in-dir org-directory)))
+
+<a name="sec-7-10"></a>
+## org-capture
+
+Capture template
+
+    (define-module org-capture
+      (require-module org)
+      (setq
+       org-capture-templates
+       '(("r" "Notes" entry (file+headline (concat org-directory "/inbox.org") "Notes")
+          "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i"
+          :prepend t)
+         ("t" "TODO" entry (file+headline (concat org-directory "/inbox.org") "Tasks")
+          "* TODO %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i")
+         ("j" "Journal" plain (file+datetree (concat org-directory "/journal.org"))
+          "\n%?\n" :empty-lines 1)
+         ("p" "Pomodoro" plain (file+datetree (concat org-directory "/pomodoro.org"))
+          "\n%?\n" :empty-lines 1)
+         ("d" "Dump" plain (file+olp (concat org-directory "/inbox.org") "Quick Notes" "Plain")
+          "\n--%U--------------------------------------------------\n%?\n" :empty-lines 1)
+         ("l" "List" item (file+olp (concat org-directory "/inbox.org") "Quick Notes" "List") "%?\n" :empty-lines 1)
+         ("s" "SOMEDAY" entry (file+headline (concat org-directory "/inbox.org") "Someday")
+          "* SOMEDAY %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i")
+         ("x" "Clipboard" entry (file+headline (concat org-directory "/inbox.org") "Notes")
+          "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %x"
+          :prepend t :empty-lines 1)
+         ("i" "Idea" entry (file (concat org-directory "/spark.org") "")
+          "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i")
+    
+         ("c" "Code snippet" entry (file (concat my-dropbox-dir "g/snippets/inbox.org"))
+          "* %^{title} %^g\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n\n#+BEGIN_SRC %^{lang}\n  %i%?\n#+END_SRC\n")
+    
+         ("b" "Default template" entry (file+headline "inbox.org" "Bookmarks")
+          "* %:description\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %c\n\n  %i"
+          :prepend t :empty-lines 1 :immediate-finish t))))
+
+<a name="sec-7-11"></a>
+## org-clock
+
+    (define-module org-clock
+      (defun my-org-clock-display (msg)
+        (notify "Org Notification" msg :icon "appointment-reminder"))
+    
+      (defun org-gtd-clock-out-if-pause ()
+        "Clock out when the task is marked PAUSE."
+        (when (and (string= org-state "PAUSE")
+                   (not (string= org-last-state org-state))
+                   (org-clock-is-active))
+          (org-clock-out t)))
+      (defun org-gtd-clock-out-switch-to-pause-if-going (state)
+        "Switch to PAUSE if clock out a task marked GOING"
+        (if (string= state "GOING") "PAUSE" state))
+      (defun org-gtd-clock-in-if-starting ()
+        "Clock in when the task is marked GOING."
+        (when (and (string= org-state "GOING")
+                   (not (string= org-last-state org-state))
+                   (not org-clock-current-task))
+          (org-clock-in)))
+      (add-hook 'org-after-todo-state-change-hook
+                'org-gtd-clock-in-if-starting)
+      (add-hook 'org-after-todo-state-change-hook
+                'org-gtd-clock-out-if-pause)
+    
+      (custom-set-variables
+       '(org-clock-in-resume nil)
+       '(org-clock-in-switch-to-state "GOING")
+       '(org-clock-out-switch-to-state
+         (function org-gtd-clock-out-switch-to-pause-if-going))
+       '(org-clock-out-when-done t))
+    
+      (when (fboundp 'notify)
+        (setq org-show-notification-handler (function my-org-clock-display))))
+
+<a name="sec-7-12"></a>
+## org-gtd
+
+Opinioned GTD config based on org
+
+    (define-module org-gtd
+      (require-module org)
+    
+      (custom-set-variables
+       '(org-extend-today-until 2)
+       '(org-agenda-time-grid
+         '((daily today require-timed remove-match)
+           "----------------"
+           (930 1000 1200 1400 1600 1800 2000 2200 2400 2500)))
+       '(org-todo-keywords
+         '((sequence "TODO(t)" "GOING(g)" "PAUSE(p)" "WAITING(w@)" "LATER(l)"
+                     "|" "DONE(d!/@)" "SOMEDAY(s)" "CANCELED(c@)")))
+       '(org-todo-keyword-faces
+         '(("TODO" :foreground "coral3" :weight bold)
+           ("GOING" :foreground "green" :weight bold)
+           ("PAUSE" :foreground "yellow" :weight bold)))
+       '(org-priority-faces
+         '((?A :foreground "red" :weight bold)
+           (?B :foreground "#94bff3" :weight bold)
+           (?C :foreground "#6f6f6f")))
+       '(org-tag-alist '((:startgroup . nil)
+                         ("@home" . ?h)
+                         ("@errands" . ?e)
+                         ("@computer" . ?c)
+                         ("@reading" . ?r)
+                         ("@phone" . ?p)
+                         ("@message" . ?m)
+                         (:endgroup . nil)
+                         ("project" . ?x)
+                         ("event" . ?v)
+                         ("idea" . ?i)
+                         ("next" . ?n)))
+       '(org-todo-state-tags-triggers
+         '(("WAITING" ("next"))
+           ("LATER" ("next"))
+           ("DONE" ("next"))
+           ("SOMEDAY" ("next"))
+           ("CANCELED" ("next"))
+           ("GOING" ("next" . t))))
+       '(org-stuck-projects
+         '("project/-DONE-CANCELED"
+           ("GOING") ("next") ""))
+       '(org-tags-exclude-from-inheritance '("project"))
+       '(org-columns-default-format
+         "%42ITEM %TODO %3Effort(E){:} %3CLOCKSUM_T(R) %SCHEDULED")))
+
+<a name="sec-7-13"></a>
+## org-agenda
+
+    (define-module org-agenda
+      (require-module org)
+      (require-module org-files)
+    
+      (defun sacha/org-agenda-done (&optional arg)
+        "Mark current TODO as done.
+    This changes the line at point, all other lines in the agenda referring to
+    the same tree node, and the headline of the tree node in the Org-mode file."
+        (interactive "P")
+        (org-agenda-todo "DONE"))
+    
+      (defun sacha/org-agenda-mark-done-and-add-followup ()
+        "Mark the current TODO as done and add another task after it.
+    Creates it at the same level as the previous task, so it's better to use
+    this with to-do items than with projects or headings."
+        (interactive)
+        (org-agenda-todo "DONE")
+        (org-agenda-switch-to)
+        (org-capture 0 "t"))
+    
+      (defun sacha/org-agenda-new ()
+        "Create a new note or task at the current agenda item.
+    Creates it at the same level as the previous task, so it's better to use
+    this with to-do items than with projects or headings."
+        (interactive)
+        (org-agenda-switch-to)
+        (org-capture 0))
+    
+      (defun org-agenda-3-days-view (&optional day-of-year)
+        "Switch to 3-days (yesterday, today, tomorrow) view for agenda."
+        (interactive "P")
+        (org-agenda-check-type t 'agenda)
+        (if (and (not day-of-year) (equal org-agenda-current-span 3))
+            (error "Viewing span is already \"%s\"" 3))
+        (let* ((sd (or day-of-year 
+                       (org-get-at-bol 'day)
+                       (time-to-days (current-time))))
+               (sd (and sd (1- sd)))
+               (org-agenda-overriding-arguments
+                (or org-agenda-overriding-arguments
+                    (list (car (get-text-property (point) 'org-last-args)) sd 3 t))))
+          (org-agenda-redo)
+          (org-agenda-find-same-or-today-or-agenda))
+        (org-agenda-set-mode-name)
+        (message "Switched to %s view" 3))  
+    
+      (defun init--org-agenda-mode ()
+        (define-key org-agenda-mode-map "D" 'org-agenda-3-days-view)
+        (define-key org-agenda-mode-map "M" 'org-agenda-month-view)
+        (define-key org-agenda-mode-map "x" 'sacha/org-agenda-done)
+        (define-key org-agenda-mode-map "X" 'sacha/org-agenda-mark-done-and-add-followup)
+        (define-key org-agenda-mode-map "N" 'sacha/org-agenda-new))
+      (add-hook 'org-agenda-mode-hook 'init--org-agenda-mode)
+    
+      (setq org-agenda-custom-commands
+            '(("l" . "Context List")
+              ("lh" "Home"
+               ((tags-todo "@home/GOING|PAUSE|TODO")))
+              ("le" "Errands"
+               ((tags-todo "@errands/GOING|PAUSE|TODO")))
+              ("lc" "Computer"
+               ((tags-todo "@computer/GOING|PAUSE|TODO")))
+              ("lp" "Phone"
+               ((tags-todo "@phone/GOING|PAUSE|TODO")))
+              ("lm" "Message"
+               ((tags-todo "@message/GOING|PAUSE|TODO")))
+              ("lr" "Reading"
+               ((tags-todo "@reading/GOING|PAUSE|TODO")))
+              ("L" "Combined Context List"
+               ((tags-todo "@home/GOING|PAUSE|TODO")
+                (tags-todo "@errands/GOING|PAUSE|TODO")
+                (tags-todo "@computer/GOING|PAUSE|TODO")
+                (tags-todo "@phone/GOING|PAUSE|TODO")
+                (tags-todo "@message/GOING|PAUSE|TODO")
+                (tags-todo "@reading/GOING|PAUSE|TODO")))
+              ("T" "TODO List"
+               ((todo "GOING|PAUSE|TODO"))
+               ((org-agenda-todo-ignore-with-date nil)))
+              ("M" "Maybe"
+               ((todo "WAITING|LATER")
+                (todo "SOMEDAY"))
+               ((org-agenda-todo-ignore-with-date nil)))
+              ("i" "Inbox" tags "inbox-CONTAINER=\"true\"")
+    
+              ("d" "Daily Action List"
+               ((agenda "" ((org-agenda-span 'day)
+                            (org-agenda-sorting-strategy
+                             (quote ((agenda time-up priority-down tag-up) )))
+                            (org-deadline-warning-days 0)))
+                (todo "GOING|PAUSE|TODO"))
+               ((org-agenda-todo-ignore-with-date t)))
+    
+              ("r" "Review"
+               ((agenda "" ((org-agenda-span 'day)
+                            (org-agenda-sorting-strategy
+                             (quote ((agenda time-up priority-down tag-up) )))
+                            (org-deadline-warning-days 0)
+                            (org-agenda-skip-deadline-if-done nil)
+                            (org-agenda-skip-timestamp-if-done nil)
+                            (org-agenda-skip-scheduled-if-done nil)))
+                (todo "GOING|PAUSE|TODO")))
+    
+              ("p" "Projects" ((tags "project/-DONE-CANCELED") (stuck "")))
+    
+              ("x" "Archive tags search" tags "" 
+               ((org-agenda-files (file-expand-wildcards (concat org-directory "/*.org_archive" )))))
+              ("X" "Archive search" search ""
+               ((org-agenda-files (file-expand-wildcards (concat org-directory "/*.org_archive" )))))
+    
+              ("c" "Code snippets tags search" tags ""
+               ((org-agenda-files (append (file-expand-wildcards (concat my-dropbox-dir "g/snippets/*.org" ))
+                                          (file-expand-wildcards (concat my-dropbox-dir "g/snippets/*/*.org"))))))
+              ("C" "Code snippets search" search ""
+               ((org-agenda-files (append (file-expand-wildcards (concat my-dropbox-dir "g/snippets/*.org" ))
+                                          (file-expand-wildcards (concat my-dropbox-dir "g/snippets/*/*.org"))))))
+    
+              ("g" "open dropbox/g" dired-g)))
+      )
+
+<a name="sec-7-14"></a>
+## org-export
+
+    (define-module org-export
+      (custom-set-variables
+       '(org-export-backends '(md html icalendar latex beamer))
+       '(org-icalendar-use-scheduled '(todo-start event-if-todo))
+       '(org-icalendar-store-UID t)
+       '(org-combined-agenda-icalendar-file (concat my-dropbox-dir "g/ical/org.ics")))
+    
+      (defun iy-org-ical-verify (backend)
+        "Select tasks by adding export tag."
+        (when (eq backend 'icalendar)
+          (org-map-entries
+           (lambda ()
+             (let ((tags (org-get-tags)))
+               (if (and (member "@errands" tags) (not (member "noexport" tags)))
+                   (org-set-tags-to (append tags '("export")))
+                 (org-set-tags-to (append tags '("noexport")))))))))
+    
+      (add-hook 'org-export-before-parsing-hook 'iy-org-ical-verify))
+
+<a name="sec-7-15"></a>
+## org-speed
+
+    (define-module org-speed
+      (setq org-speed-commands-user
+            '(
+              ("x" . org-speed-done)
+              ("X" . org-speed-mark-done-and-add-followup)
+              ("N" . org-speed-new)))
+      (setq org-use-speed-commands t) ; press ? at beginning of header
+    
+      (defun org-speed-done (&optional arg)
+        "Mark current TODO as done."
+        (interactive "P")
+        (org-todo "DONE"))
+    
+      (defun org-speed-mark-done-and-add-followup ()
+        "Mark the current TODO as done and add another task after it.
+    Creates it at the same level as the previous task, so it's better to use
+    this with to-do items than with projects or headings."
+        (interactive)
+        (org-todo "DONE")
+        (org-capture 0 "t"))
+    
+      (defun org-speed-new ()
+        "Create a new note or task at the current agenda item.
+    Creates it at the same level as the previous task, so it's better to use
+    this with to-do items than with projects or headings."
+        (interactive)
+        (org-capture 0)))
+
+<a name="sec-7-16"></a>
+## org-pomodoro
+
+    (define-module org-pomodoro
+      (require-module org)
+      (define-key my-keymap (kbd "'") 'org-pomodoro-record-interuptions)
+      (add-hook 'org-load-hook 'org-pomodoro-on-org-load)
+      (add-hook 'org-agenda-mode-hook 'org-pomodoro-on-org-load))
+
+<a name="sec-7-17"></a>
+## org-appt
+
+    (define-module org-appt
+      (require-module org)
+    
+      (appt-activate 1)
+      (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
+    
+      (defun my-appt-display (min-to-app new-time msg)
+        (let ((title (format "Appointment in %d minute(s)" min-to-app)))
+          (notify title msg :icon "appointment-reminder")))
+      (when (fboundp 'notify)
+        (setq appt-disp-window-function (function my-appt-display)))
+    
+      (custom-set-variables
+       '(appt-display-format (quote window))
+       '(appt-message-warning-time 10)
+       '(calendar-week-start-day 1)
+       '(diary-file (concat my-dropbox-dir "diary"))))
+
+<a name="sec-7-18"></a>
+## org-babel
+
+Autoload babel languages.
+
+    (define-module org-babel
+      (mapc
+       (lambda (lang)
+         (autoload
+           (intern (concat "org-babel-execute:" lang))
+           (concat "ob-" lang)
+           (format "Execute %s src block" lang)))
+       '("ruby" "sh" "R" "ditaa" "dot")))
+
+<a name="sec-7-19"></a>
+## org-drill
+
+    (define-module org-drill
+      (defun init--org-drill-on-dired-load ()
+        (define-key dired-mode-map (kbd "C-c SPC") 'my-dired-do-drill))
+    
+      (add-hook 'dired-load-hook 'init--org-drill-on-dired-load)
+    
+      (defun my-dired-do-drill (&optional arg)
+        (interactive "P")
+        (org-drill
+         ;; This can move point if ARG is an integer.
+         (mapcar
+          'car
+          (dired-map-over-marks (cons (dired-get-filename) (point)) arg)))))
+
+<a name="sec-7-20"></a>
 ## case-dwim
 
 Ease inserting dash `-` and undersocre `_`.
@@ -494,7 +985,7 @@ These commands are also `multiple-cursors` compatible.
       (define-key isearch-mode-map (kbd "M-l") 'case-dwim-isearch-dash)
       (define-key isearch-mode-map (kbd "M-u") 'case-dwim-isearch-underscore))
 
-<a name="sec-7-9"></a>
+<a name="sec-7-21"></a>
 ## server
 
 Start emacs server.
@@ -538,7 +1029,7 @@ Start emacs server.
     
       (server-start))
 
-<a name="sec-7-10"></a>
+<a name="sec-7-22"></a>
 ## backup
 
 See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
@@ -566,7 +1057,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
       ;; is auto saved. Otherwise Emacs only make one backup after opening the file.
       (add-hook 'auto-save-hook 'init--force-backup))
 
-<a name="sec-7-11"></a>
+<a name="sec-7-23"></a>
 ## multiple-cursors
 
     (define-module multiple-cursors
@@ -593,7 +1084,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
       (global-set-key (kbd "C-3") 'mc/mark-all-like-this)
       (define-key ctl-x-r-map [return] 'set-rectangular-region-anchor))
 
-<a name="sec-7-12"></a>
+<a name="sec-7-24"></a>
 ## dired
 
     (define-module dired
@@ -661,15 +1152,17 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
       (defun init--dired-mode ()
         (dired-omit-mode +1))
     
+      (autoload 'dired-jump "dired-x" "Jump to dired buffer corresponding to current buffer." t)
+    
       (global-set-key (kbd "C-x C-j") 'dired-jump)
       (add-hook 'dired-load-hook 'init--dired-load)
       (add-hook 'dired-mode-hook 'init--dired-mode)
     )
 
-<a name="sec-7-13"></a>
+<a name="sec-7-25"></a>
 ## buffer-explore
 
-<a name="sec-7-14"></a>
+<a name="sec-7-26"></a>
 ## window-nav
 
     (define-module window-nav
@@ -677,10 +1170,10 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
       (define-key my-minor-mode-map (kbd "M-O") 'other-frame)
       )
 
-<a name="sec-7-15"></a>
+<a name="sec-7-27"></a>
 ## window-manager
 
-<a name="sec-7-16"></a>
+<a name="sec-7-28"></a>
 ## vc
 
 Version Control backends.
@@ -711,7 +1204,7 @@ add changes interactively using `ediff`.
         (when vc-mode
           (put-text-property 1 (length vc-mode) 'face 'font-lock-string-face vc-mode))))
 
-<a name="sec-7-17"></a>
+<a name="sec-7-29"></a>
 ## isearch
 
     (define-module isearch
@@ -750,7 +1243,7 @@ add changes interactively using `ediff`.
       (define-key my-keymap "*" 'isearch-forward-at-point)
       (define-key my-keymap "8" 'isearch-forward-at-point))
 
-<a name="sec-7-18"></a>
+<a name="sec-7-30"></a>
 ## revert
 
 Auto revert, and helper functions to revert without confirmation.
@@ -767,7 +1260,7 @@ Auto revert, and helper functions to revert without confirmation.
       ; (setq global-auto-revert-non-file-buffers t)
       (setq auto-revert-verbose nil))
 
-<a name="sec-7-19"></a>
+<a name="sec-7-31"></a>
 ## eshell
 
     (define-module eshell
@@ -806,7 +1299,7 @@ Auto revert, and helper functions to revert without confirmation.
       (define-key my-keymap (kbd "e") 'eshell-toggle)
       (define-key my-keymap (kbd "E") 'eshell-here))
 
-<a name="sec-7-20"></a>
+<a name="sec-7-32"></a>
 ## eproject
 
     (define-module eproject
@@ -815,7 +1308,7 @@ Auto revert, and helper functions to revert without confirmation.
       (require 'eproject-plus)
       (define-key my-keymap "p" eproject-plus-keymap))
 
-<a name="sec-7-21"></a>
+<a name="sec-7-33"></a>
 ## helm
 
     (define-module helm
@@ -940,13 +1433,13 @@ Auto revert, and helper functions to revert without confirmation.
           ad-do-it))
       )
 
-<a name="sec-7-22"></a>
+<a name="sec-7-34"></a>
 ## octave-mode
 
     (define-module octave-mode
       (add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode)))
 
-<a name="sec-7-23"></a>
+<a name="sec-7-35"></a>
 ## compile-and-run
 
     (define-module compile-and-run
@@ -960,7 +1453,9 @@ Auto revert, and helper functions to revert without confirmation.
         '(progn
            (add-to-list 'compilation-error-regexp-alist-alist
                         '(maven "^\\[\\w+\\] \\(.*\\):\\[\\([0-9]+\\),\\([0-9]+\\)\\] \\(.*\\)$" 1 2 3 (4)))
-           (add-to-list 'compilation-error-regexp-alist 'maven)))
+           (add-to-list 'compilation-error-regexp-alist 'maven)
+    
+           (define-key compilation-mode-map "l" 'compilation-restore-mode-line)))
     
       (require 'ansi-color)
       (defun colorize-compilation-buffer ()
@@ -969,9 +1464,26 @@ Auto revert, and helper functions to revert without confirmation.
         (toggle-read-only))
       (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
     
+      (defcustom compilation-defualt-mode-line-background "#2b2b2b"
+        "Default mode line background"
+        :group 'compilation)
+      (defcustom compilation-error-mode-line-background "#310602"
+        "Error mode line background"
+        :group 'compilation)
+    
       (defun compilation-notify-result (buffer message)
-        (with-current-buffer buffer
-          (notify mode-name message)))
+        (setq message (s-trim message))
+        (let ((pass (string= message "finished")))
+          (notify mode-name message
+                  :icon (if pass "dialog-ok" "dialog-error"))
+          (if pass
+              (set-face-attribute 'mode-line nil :background compilation-defualt-mode-line-background)
+            (set-face-attribute 'mode-line nil :background compilation-error-mode-line-background))))
+    
+      (defun compilation-restore-mode-line ()
+        (interactive)
+        (setq compilation-in-progress nil)
+        (set-face-attribute 'mode-line nil :background compilation-defualt-mode-line-background))
     
       (when (fboundp 'notify)
         (add-hook 'compilation-finish-functions 'compilation-notify-result))
@@ -1018,7 +1530,8 @@ Auto revert, and helper functions to revert without confirmation.
             (let ((map (make-sparse-keymap))
                   (dir default-directory))
               (define-key map (kbd "r") (eval `(lambda () (interactive)
-                                                 (iy-go-compile ,command ,dir))))
+                                                 (let ((default-directory ,dir))
+                                                   (compile ,command)))))
               (global-set-key (kbd "M-s v") map)))
           (compile command)))
     
@@ -1032,7 +1545,7 @@ Auto revert, and helper functions to revert without confirmation.
       (global-set-key (kbd "C-`") 'next-error)
       (global-set-key (kbd "C-~") 'previous-error))
 
-<a name="sec-7-24"></a>
+<a name="sec-7-36"></a>
 ## editing
 
 Misc editing config
@@ -1061,7 +1574,7 @@ Misc editing config
       (global-set-key (kbd "C-x C-o") 'mf-shrink-whitespaces)
       (global-set-key (kbd "C-8") 'pop-tag-mark))
 
-<a name="sec-7-25"></a>
+<a name="sec-7-37"></a>
 ## kill-ring
 
     (define-module kill-ring
@@ -1081,7 +1594,7 @@ Misc editing config
           (barf-if-buffer-read-only)
           ad-do-it)))
 
-<a name="sec-7-26"></a>
+<a name="sec-7-38"></a>
 ## recentf
 
     (define-module recentf
@@ -1095,7 +1608,7 @@ Misc editing config
     
       (global-set-key [f2] 'recentf-open-files))
 
-<a name="sec-7-27"></a>
+<a name="sec-7-39"></a>
 ## desktop
 
     (define-module desktop
@@ -1117,7 +1630,7 @@ Misc editing config
       (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
       (add-to-list 'desktop-modes-not-to-save 'fundamental-mode))
 
-<a name="sec-7-28"></a>
+<a name="sec-7-40"></a>
 ## mark
 
     (define-module mark
@@ -1133,7 +1646,7 @@ Misc editing config
       (defadvice narrow-to-region (after deactivate-mark (start end) activate)
         (deactivate-mark)))
 
-<a name="sec-7-29"></a>
+<a name="sec-7-41"></a>
 ## whitespace
 
     (define-module whitespace
@@ -1148,6 +1661,43 @@ Misc editing config
        '(coffee-cleanup-whitespace nil))
     
       (global-whitespace-mode +1))
+
+<a name="sec-7-42"></a>
+## bookmark
+
+    (define-module bookmark
+      (custom-set-variables
+       '(bookmark-use-annotations nil))
+    
+      (require-package 'bookmark+)
+    
+      (setq bmkp-navigation-map
+        (let ((map (make-sparse-keymap)))
+          (define-key map "." 'bmkp-next-bookmark-this-buffer)
+          (define-key map "," 'bmkp-previous-bookmark-this-buffer)
+          (define-key map (kbd "M-.") 'bmkp-next-bookmark-this-buffer)
+          (define-key map (kbd "M-,") 'bmkp-previous-bookmark-this-buffer)
+          (define-key map (kbd "<") 'bmkp-previous-bookmark)
+          (define-key map (kbd ">") 'bmkp-next-bookmark)
+          map))
+    
+      (temporary-mode-define-keys my-keymap 'bmkp-navigation))
+
+<a name="sec-7-43"></a>
+## spell
+
+    (define-module spell
+      (custom-set-variables
+       '(flyspell-use-meta-tab nil))
+    
+      (defun init--flyspell-mode ()
+        (define-key flyspell-mode-map [(control ?\,)] nil)
+        (define-key flyspell-mode-map [(control ?\.)] nil))
+    
+      (add-hook 'flyspell-mode-hook 'init--flyspell-mode)
+    
+      (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+      (add-hook 'ruby-mode-hook 'flyspell-prog-mode))
 
 <a name="sec-8"></a>
 # TODO Backlog

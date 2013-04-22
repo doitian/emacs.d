@@ -69,6 +69,8 @@
 <li><a href="#sec-7-41">7.41. whitespace</a></li>
 <li><a href="#sec-7-42">7.42. bookmark</a></li>
 <li><a href="#sec-7-43">7.43. spell</a></li>
+<li><a href="#sec-7-44">7.44. tab-fix</a></li>
+<li><a href="#sec-7-45">7.45. yasnippet</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Backlog</a></li>
@@ -963,7 +965,7 @@ this with to-do items than with projects or headings."
   (require-module org)
   (define-key my-keymap (kbd "'") 'org-pomodoro-record-interuptions)
   (add-hook 'org-load-hook 'org-pomodoro-on-org-load)
-  (add-hook 'org-agenda-mode-hook 'org-pomodoro-on-org-agenda-load))
+  (add-hook 'org-agenda-mode-hook 'org-pomodoro-on-org-agenda-load-load))
 ```
 
 <a name="sec-7-17"></a>
@@ -1768,8 +1770,6 @@ Misc editing config
    '(coffee-cleanup-whitespace nil))
 
   (global-whitespace-mode +1))
-
-
 ```
 
 <a name="sec-7-42"></a>
@@ -1811,6 +1811,87 @@ Misc editing config
 
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)
   (add-hook 'ruby-mode-hook 'flyspell-prog-mode))
+```
+
+<a name="sec-7-44"></a>
+## tab-fix
+
+```cl
+(define-module tab-fix
+  (defun tab-fix-keymap (map)
+    (let ((binding (assoc 'tab map)))
+      (when binding
+        (setcar binding 9))))
+
+  (eval-after-load 'org
+    '(progn (tab-fix-keymap org-mode-map)))
+  (eval-after-load 'markdown-mode
+    '(progn (tab-fix-keymap markdown-mode-map))))
+```
+
+<a name="sec-7-45"></a>
+## yasnippet
+
+```cl
+(define-module yasnippet
+  (require-package 'yasnippet)
+  (require-package 'popup)
+  (require 'dropdown-list nil t)
+
+  (custom-set-variables
+   '(yas-trigger-key "TAB")
+   '(yas-choose-keys-first nil)
+   '(yas-prompt-functions (quote (yas-popup-isearch-prompt
+                                  yas-ido-prompt
+                                  yas-x-prompt
+                                  yas-no-prompt)))
+   '(yas-wrap-around-region nil)
+   '(yas-use-menu nil)
+   '(yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
+   '(yas-use-menu nil)
+   '(yas-global-mode 1))
+
+  (defun yas-buffer-name-stub ()
+    (let ((name (or (buffer-file-name)
+                    (buffer-name))))
+      (replace-regexp-in-string
+       "^t_\\|_?\\(test\\|spec\\)$" ""
+       (file-name-sans-extension (file-name-nondirectory name)))))
+
+  (defun yas-safer-expand ()
+    (let ((yas-fallback-behavior 'return-nil))
+      (call-interactively 'yas-expand)))
+
+  (defun yas-ido-insert-snippets (&optional no-condition)
+    (interactive "P")
+    (let ((yas-prompt-functions '(yas-ido-prompt)))
+      (yas-insert-snippet)))
+
+  (defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
+    (when (featurep 'popup)
+      (popup-menu*
+       (mapcar
+        (lambda (choice)
+          (popup-make-item
+           (or (and display-fn (funcall display-fn choice))
+               choice)
+           :value choice))
+        choices)
+       :prompt prompt
+       :isearch t
+       )))
+
+  (defadvice yas--menu-keymap-get-create (around ignore (mode) activate))
+
+  (define-key my-keymap (kbd "<tab>") 'yas-insert-snippet)
+
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "M-/") 'yas-ido-insert-snippets)
+    (define-key map (kbd "/") 'yas-ido-insert-snippets)
+    (define-key map (kbd "n") 'yas-new-snippet)
+    (define-key map (kbd "o") 'yas-visit-snippet-file)
+    (define-key map (kbd "i") 'auto-insert)
+    (define-key my-keymap (kbd "M-/") map)))
 ```
 
 <a name="sec-8"></a>

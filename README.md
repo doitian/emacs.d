@@ -50,30 +50,29 @@
 <li><a href="#sec-7-22">7.22. backup</a></li>
 <li><a href="#sec-7-23">7.23. multiple-cursors</a></li>
 <li><a href="#sec-7-24">7.24. dired</a></li>
-<li><a href="#sec-7-25">7.25. buffer-explore</a></li>
-<li><a href="#sec-7-26">7.26. window-nav</a></li>
-<li><a href="#sec-7-27">7.27. window-manager</a></li>
-<li><a href="#sec-7-28">7.28. vc</a></li>
-<li><a href="#sec-7-29">7.29. isearch</a></li>
-<li><a href="#sec-7-30">7.30. revert</a></li>
-<li><a href="#sec-7-31">7.31. eshell</a></li>
-<li><a href="#sec-7-32">7.32. eproject</a></li>
-<li><a href="#sec-7-33">7.33. helm</a></li>
-<li><a href="#sec-7-34">7.34. octave-mode</a></li>
-<li><a href="#sec-7-35">7.35. compile-and-run</a></li>
-<li><a href="#sec-7-36">7.36. editing</a></li>
-<li><a href="#sec-7-37">7.37. kill-ring</a></li>
-<li><a href="#sec-7-38">7.38. recentf</a></li>
-<li><a href="#sec-7-39">7.39. desktop</a></li>
-<li><a href="#sec-7-40">7.40. mark</a></li>
-<li><a href="#sec-7-41">7.41. whitespace</a></li>
-<li><a href="#sec-7-42">7.42. bookmark</a></li>
-<li><a href="#sec-7-43">7.43. spell</a></li>
-<li><a href="#sec-7-44">7.44. tab-fix</a></li>
-<li><a href="#sec-7-45">7.45. yasnippet</a></li>
+<li><a href="#sec-7-25">7.25. window-nav</a></li>
+<li><a href="#sec-7-26">7.26. vc</a></li>
+<li><a href="#sec-7-27">7.27. isearch</a></li>
+<li><a href="#sec-7-28">7.28. revert</a></li>
+<li><a href="#sec-7-29">7.29. eshell</a></li>
+<li><a href="#sec-7-30">7.30. eproject</a></li>
+<li><a href="#sec-7-31">7.31. helm</a></li>
+<li><a href="#sec-7-32">7.32. octave-mode</a></li>
+<li><a href="#sec-7-33">7.33. compile-and-run</a></li>
+<li><a href="#sec-7-34">7.34. editing</a></li>
+<li><a href="#sec-7-35">7.35. kill-ring</a></li>
+<li><a href="#sec-7-36">7.36. recentf</a></li>
+<li><a href="#sec-7-37">7.37. desktop</a></li>
+<li><a href="#sec-7-38">7.38. mark</a></li>
+<li><a href="#sec-7-39">7.39. whitespace</a></li>
+<li><a href="#sec-7-40">7.40. bookmark</a></li>
+<li><a href="#sec-7-41">7.41. spell</a></li>
+<li><a href="#sec-7-42">7.42. tab-fix</a></li>
+<li><a href="#sec-7-43">7.43. yasnippet</a></li>
+<li><a href="#sec-7-44">7.44. ediff-mode</a></li>
+<li><a href="#sec-7-45">7.45. time-stamp</a></li>
 </ul>
 </li>
-<li><a href="#sec-8">8. Backlog</a></li>
 </ul>
 </div>
 </div>
@@ -961,7 +960,7 @@ this with to-do items than with projects or headings."
   (require-module org)
   (define-key my-keymap (kbd "'") 'org-pomodoro-record-interuptions)
   (add-hook 'org-load-hook 'org-pomodoro-on-org-load)
-  (add-hook 'org-agenda-mode-hook 'org-pomodoro-on-org-agenda-load-load))
+  (add-hook 'org-agenda-mode-hook 'org-pomodoro-on-org-agenda-load))
 ```
 
 <a name="sec-7-17"></a>
@@ -1234,9 +1233,6 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
 ```
 
 <a name="sec-7-25"></a>
-## buffer-explore
-
-<a name="sec-7-26"></a>
 ## window-nav
 
 ```cl
@@ -1246,10 +1242,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   )
 ```
 
-<a name="sec-7-27"></a>
-## window-manager
-
-<a name="sec-7-28"></a>
+<a name="sec-7-26"></a>
 ## vc
 
 Version Control backends.
@@ -1282,7 +1275,7 @@ add changes interactively using `ediff`.
       (put-text-property 1 (length vc-mode) 'face 'font-lock-string-face vc-mode))))
 ```
 
-<a name="sec-7-29"></a>
+<a name="sec-7-27"></a>
 ## isearch
 
 ```cl
@@ -1323,7 +1316,7 @@ This is useful when followed by an immediate kill."
   (define-key my-keymap "8" 'isearch-forward-at-point))
 ```
 
-<a name="sec-7-30"></a>
+<a name="sec-7-28"></a>
 ## revert
 
 Auto revert, and helper functions to revert without confirmation.
@@ -1342,7 +1335,7 @@ Auto revert, and helper functions to revert without confirmation.
   (setq auto-revert-verbose nil))
 ```
 
-<a name="sec-7-31"></a>
+<a name="sec-7-29"></a>
 ## eshell
 
 ```cl
@@ -1383,7 +1376,7 @@ inactive -> switch -> full screen -> hide
   (define-key my-keymap (kbd "E") 'eshell-here))
 ```
 
-<a name="sec-7-32"></a>
+<a name="sec-7-30"></a>
 ## eproject
 
 ```cl
@@ -1394,7 +1387,7 @@ inactive -> switch -> full screen -> hide
   (define-key my-keymap "p" eproject-plus-keymap))
 ```
 
-<a name="sec-7-33"></a>
+<a name="sec-7-31"></a>
 ## helm
 
 ```cl
@@ -1523,7 +1516,7 @@ inactive -> switch -> full screen -> hide
 
 ```
 
-<a name="sec-7-34"></a>
+<a name="sec-7-32"></a>
 ## octave-mode
 
 ```cl
@@ -1531,7 +1524,7 @@ inactive -> switch -> full screen -> hide
   (add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode)))
 ```
 
-<a name="sec-7-35"></a>
+<a name="sec-7-33"></a>
 ## compile-and-run
 
 ```cl
@@ -1639,7 +1632,7 @@ inactive -> switch -> full screen -> hide
   (global-set-key (kbd "C-~") 'previous-error))
 ```
 
-<a name="sec-7-36"></a>
+<a name="sec-7-34"></a>
 ## editing
 
 Misc editing config
@@ -1670,7 +1663,7 @@ Misc editing config
   (global-set-key (kbd "C-8") 'pop-tag-mark))
 ```
 
-<a name="sec-7-37"></a>
+<a name="sec-7-35"></a>
 ## kill-ring
 
 ```cl
@@ -1692,7 +1685,7 @@ Misc editing config
       ad-do-it)))
 ```
 
-<a name="sec-7-38"></a>
+<a name="sec-7-36"></a>
 ## recentf
 
 ```cl
@@ -1708,7 +1701,7 @@ Misc editing config
   (global-set-key [f2] 'recentf-open-files))
 ```
 
-<a name="sec-7-39"></a>
+<a name="sec-7-37"></a>
 ## desktop
 
 ```cl
@@ -1732,7 +1725,7 @@ Misc editing config
   (add-to-list 'desktop-modes-not-to-save 'fundamental-mode))
 ```
 
-<a name="sec-7-40"></a>
+<a name="sec-7-38"></a>
 ## mark
 
 ```cl
@@ -1750,7 +1743,7 @@ Misc editing config
     (deactivate-mark)))
 ```
 
-<a name="sec-7-41"></a>
+<a name="sec-7-39"></a>
 ## whitespace
 
 ```cl
@@ -1768,7 +1761,7 @@ Misc editing config
   (global-whitespace-mode +1))
 ```
 
-<a name="sec-7-42"></a>
+<a name="sec-7-40"></a>
 ## bookmark
 
 ```cl
@@ -1791,7 +1784,7 @@ Misc editing config
   (temporary-mode-define-keys my-keymap 'bmkp-navigation))
 ```
 
-<a name="sec-7-43"></a>
+<a name="sec-7-41"></a>
 ## spell
 
 ```cl
@@ -1809,7 +1802,7 @@ Misc editing config
   (add-hook 'ruby-mode-hook 'flyspell-prog-mode))
 ```
 
-<a name="sec-7-44"></a>
+<a name="sec-7-42"></a>
 ## tab-fix
 
 ```cl
@@ -1825,7 +1818,7 @@ Misc editing config
     '(progn (tab-fix-keymap markdown-mode-map))))
 ```
 
-<a name="sec-7-45"></a>
+<a name="sec-7-43"></a>
 ## yasnippet
 
 ```cl
@@ -1890,8 +1883,30 @@ Misc editing config
     (define-key my-keymap (kbd "M-/") map)))
 ```
 
-<a name="sec-8"></a>
-# TODO Backlog
+<a name="sec-7-44"></a>
+## ediff-mode
 
 ```cl
+(define-module ediff-mode
+  (custom-set-variables
+   '(ediff-split-window-function (quote split-window-horizontally))
+   '(ediff-window-setup-function (quote ediff-setup-windows-plain)))
+
+  (defun ediff-main ()
+    "Show ediff registry"
+    (interactive)
+    (let ((ediff-window-display-p (lambda () nil)))
+      (ediff-show-registry))))
+```
+
+<a name="sec-7-45"></a>
+## time-stamp
+
+```cl
+(define-module time-stamp
+  (add-hook 'before-save-hook 'time-stamp)
+  (setq time-stamp-active t
+        time-stamp-format "%:y-%02m-%02d %02H:%02M:%02S"
+        time-stamp-start "[Uu]pdated\\(_at\\)?[ \t]*:?[ \t]+<"
+        time-stamp-end ">"))
 ```

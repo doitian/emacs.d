@@ -963,7 +963,7 @@ this with to-do items than with projects or headings."
   (require-module org)
   (define-key my-keymap (kbd "'") 'org-pomodoro-record-interuptions)
   (add-hook 'org-load-hook 'org-pomodoro-on-org-load)
-  (add-hook 'org-agenda-mode-hook 'org-pomodoro-on-org-load))
+  (add-hook 'org-agenda-mode-hook 'org-pomodoro-on-org-agenda-load))
 ```
 
 <a name="sec-7-17"></a>

@@ -1173,7 +1173,7 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
     (global-set-key (kbd "C-M-l") 'mf-switch-to-previous-buffer)
     (global-set-key (kbd "C-<next>") 'next-buffer)
     (global-set-key (kbd "C-<prior>") 'previous-buffer)
-    (global-set-key (kbd "C-x K") 'my-kill-buffer-and-window)
+    (global-set-key (kbd "C-x K") 'mf-kill-buffer-and-window)
     )
 #+END_SRC
 ** files-commands
@@ -1381,27 +1381,30 @@ Auto revert, and helper functions to revert without confirmation.
      '(helm-quick-update nil)
      '(helm-enable-shortcuts 'prefix))
   
-    (eval-after-load 'helm
-      '(progn
-         (require 'helm-mode)
-         (require 'helm-config)
-         (require 'helm-match-plugin)
-         (require 'helm-buffers)
-         (require 'helm-files)
-         (require 'helm-locate)
-         (require 'helm-w3m)
+    (defun init--helm-load ()
+      (require 'helm-mode)
+      (require 'helm-config)
+      (require 'helm-match-plugin)
+      (require 'helm-buffers)
+      (require 'helm-files)
+      (require 'helm-locate)
+      (require 'helm-w3m)
   
          ;;; Shortcuts
-         (define-key helm-map (kbd "M-s") 'helm-select-with-prefix-shortcut)
+      (define-key helm-map (kbd "M-s") 'helm-select-with-prefix-shortcut)
   
-         (define-key helm-command-map (kbd "g") 'helm-do-grep)
-         (define-key helm-command-map (kbd "o") 'helm-occur)
-         (define-key helm-command-map (kbd "r") 'helm-register)
-         (define-key helm-command-map (kbd "R") 'helm-regexp)
-         (define-key helm-command-map (kbd "b") 'helm-c-pp-bookmarks)
-         (define-key helm-command-map (kbd "p") 'helm-c-eproject-projects)
-         (define-key helm-command-map (kbd "f") 'helm-c-eproject-files-in-project)
-         (define-key helm-command-map (kbd "<SPC>") 'helm-all-mark-rings)))
+      (define-key helm-command-map (kbd "g") 'helm-do-grep)
+      (define-key helm-command-map (kbd "o") 'helm-occur)
+      (define-key helm-command-map (kbd "r") 'helm-register)
+      (define-key helm-command-map (kbd "R") 'helm-regexp)
+      (define-key helm-command-map (kbd "b") 'helm-c-pp-bookmarks)
+      (define-key helm-command-map (kbd "p") 'helm-c-eproject-projects)
+      (define-key helm-command-map (kbd "f") 'helm-c-eproject-files-in-project)
+      (define-key helm-command-map (kbd "<SPC>") 'helm-all-mark-rings)
+  
+      (remove-hook 'helm-before-initialize-hook 'init--helm-load))
+  
+    (add-hook 'helm-before-initialize-hook 'init--helm-load)
   
     ;;; Sources
     (defvar my-helm-sources nil)
@@ -1471,15 +1474,12 @@ Auto revert, and helper functions to revert without confirmation.
      '(compilation-context-lines 5)
      '(compilation-scroll-output (quote first-error)))
   
-    (eval-after-load 'compile
-      '(progn
-         (add-to-list 'compilation-error-regexp-alist-alist
-                      '(maven "^\\[\\w+\\] \\(.*\\):\\[\\([0-9]+\\),\\([0-9]+\\)\\] \\(.*\\)$" 1 2 3 (4)))
-         (add-to-list 'compilation-error-regexp-alist 'maven)
+    (defun init--compile-load (&rest ignore)
+      (require 'ansi-color)
+      (define-key compilation-mode-map "l" 'compilation-restore-mode-line)
+      (remove-hook 'compilation-start-hook 'init--compile-load))
+    (add-hook 'compilation-start-hook 'init--compile-load)
   
-         (define-key compilation-mode-map "l" 'compilation-restore-mode-line)))
-  
-    (require 'ansi-color)
     (defun colorize-compilation-buffer ()
       (toggle-read-only)
       (ansi-color-apply-on-region (point-min) (point-max))
@@ -1514,23 +1514,24 @@ Auto revert, and helper functions to revert without confirmation.
     (autoload 'smart-run "smart-compile+" nil t)
     (autoload 'smart-compile-replace "smart-compile+" nil t)
   
-    (eval-after-load 'smart-compile+
-      '(progn
-         (setq smart-run-alist
-               (append
-                (list
-                 (cons "_spec\\.rb\\'" '(compile (concat "cd " (eproject-root) "; rr rspec --no-color " (file-relative-name (buffer-file-name) (eproject-root)))))
-                 (cons "\\.rb\\'" "rr ruby %F")
-                 (cons "\\.go\\'" "go run %F")
-                 (cons "\\.py\\'" "python %F"))
-                smart-run-alist))
-         (setq smart-compile-alist
-               (append
-                (list
-                 (cons "\\.coffee$" "coffee -c %f"))
-                smart-compile-alist))
-         (setq smart-executable-alist
-               (append '("%n.rb" "%n.go" "%n.py") smart-executable-alist))))
+    (defun init--smart-compile+-load ()
+      (setq smart-run-alist
+            (append
+             (list
+              (cons "_spec\\.rb\\'" '(compile (concat "cd " (eproject-root) "; rr rspec --no-color " (file-relative-name (buffer-file-name) (eproject-root)))))
+              (cons "\\.rb\\'" "rr ruby %F")
+              (cons "\\.go\\'" "go run %F")
+              (cons "\\.py\\'" "python %F"))
+             smart-run-alist))
+      (setq smart-compile-alist
+            (append
+             (list
+              (cons "\\.coffee$" "coffee -c %f"))
+             smart-compile-alist))
+      (setq smart-executable-alist
+            (append '("%n.rb" "%n.go" "%n.py") smart-executable-alist)))
+  
+    (eval-after-load "smart-compile+" '(init--smart-compile+-load))
   
     (defvar run-this--hist nil "History for `run-this'")
   
@@ -1742,10 +1743,15 @@ Misc editing config
         (when binding
           (setcar binding 9))))
   
-    (eval-after-load 'org
-      '(progn (tab-fix-keymap org-mode-map)))
-    (eval-after-load 'markdown-mode
-      '(progn (tab-fix-keymap markdown-mode-map))))
+    (defun tab-fix-org-mode ()
+      (tab-fix-keymap org-mode-map)
+      (remove-hook 'org-mode-hook 'tab-fix-org-mode))
+    (add-hook 'org-mode-hook 'tab-fix-org-mode)
+  
+    (defun tab-fix-markdown-mode ()
+      (tab-fix-keymap markdown-mode-map)
+      (remove-hook 'markdown-mode-hook 'tab-fix-org-mode))
+    (add-hook 'markdown-mode-hook 'tab-fix-org-mode))
 #+END_SRC
 
 ** yasnippet
@@ -1764,10 +1770,7 @@ Misc editing config
                                     yas-x-prompt
                                     yas-no-prompt)))
      '(yas-wrap-around-region nil)
-     '(yas-use-menu nil)
-     '(yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
-     '(yas-use-menu nil)
-     '(yas-global-mode 1))
+     '(yas-use-menu nil))
   
     (defun yas-buffer-name-stub ()
       (let ((name (or (buffer-file-name)
@@ -1802,14 +1805,17 @@ Misc editing config
     (defadvice yas--menu-keymap-get-create (around ignore (mode) activate))
   
     (define-key my-keymap (kbd "<tab>") 'yas-insert-snippet)
-
+  
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "M-/") 'yas-ido-insert-snippets)
       (define-key map (kbd "/") 'yas-ido-insert-snippets)
       (define-key map (kbd "n") 'yas-new-snippet)
       (define-key map (kbd "o") 'yas-visit-snippet-file)
       (define-key map (kbd "i") 'auto-insert)
-      (define-key my-keymap (kbd "M-/") map)))
+      (define-key my-keymap (kbd "M-/") map))
+  
+    (setq yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
+    (yas-global-mode +1))
 #+END_SRC
 
 ** ediff-mode
@@ -1936,7 +1942,7 @@ Misc editing config
       (ag/search string dir t))
   
     (fset 'ag (function agap))
-    (eval-after-load 'ag
+    (eval-after-load "ag"
       '(progn
          (fset 'ag (function agap))
          (fset 'ag-regexp (function agap-regexp))))
@@ -1998,6 +2004,103 @@ Misc editing config
     (define-key my-keymap (kbd "A") 'alternative-files-create-file))
 #+END_SRC
 
+** ibuffer-mode
+#+BEGIN_SRC emacs-lisp
+  (define-module ibuffer-mode
+    (global-set-key (kbd "C-x C-b") 'ibuffer)
+  
+    (custom-set-variables
+     '(ibuffer-always-show-last-buffer :nomini)
+     '(ibuffer-default-shrink-to-minimum-size t)
+     '(ibuffer-jump-offer-only-visible-buffers nil)
+     '(ibuffer-show-empty-filter-groups nil))
+  
+    (defun init--ibuffer-load ()
+      (define-ibuffer-sorter filename-or-dired
+        "Sort the buffers by their pathname."
+        (:description "filenames plus dired")
+        (string-lessp
+         (with-current-buffer (car a)
+  
+           (or buffer-file-name
+               (if (eq major-mode 'dired-mode)
+                   (expand-file-name dired-directory))
+               ;; so that all non pathnames are at the end
+               "~"))
+         (with-current-buffer (car b)
+           (or buffer-file-name
+               (if (eq major-mode 'dired-mode)
+                   (expand-file-name dired-directory))
+               ;; so that all non pathnames are at the end
+               "~"))))
+  
+      ;; add another sorting method for ibuffer (allow the grouping of
+      ;; filenames and dired buffers
+      (define-key ibuffer-mode-map (kbd "s p") 'ibuffer-do-sort-by-filename-or-dired)
+  
+      (defun ibuffer-filter-by-extname (qualifier)
+        (interactive "sFilter by extname: ")
+        (ibuffer-filter-by-filename (concat "\\." qualifier "$")))
+  
+      (define-key ibuffer-mode-map (kbd "/ .") 'ibuffer-filter-by-extname)
+  
+      (setq ibuffer-saved-filter-groups
+            '(("default"
+               ("dired" (mode . dired-mode))
+               ("source" (or
+                          (mode . c-mode)
+                          (mode . c++-mode)
+                          (mode . objc-mode)
+                          (mode . cperl-mode)
+                          (mode . perl-mode)
+                          (mode . java-mode)
+                          (filename . "\\.rb\\'")))
+               ("web" (or
+                       (filename . "\\.js\\'")
+                       (filename . "\\.erb\\'")
+                       (mode . html-mode)
+                       (mode . nxml-mode)
+                       (mode . nxhtml-mode)
+                       (mode . haml-mode)
+                       (mode . css-mode)
+                       (mode . sass-mode)
+                       (mode . coffee-mode)))
+               ("doc" (or
+                       (mode   . latex-mode)
+                       (mode   . metapost-mode)
+                       (mode   . doc-view-mode)
+                       (mode   . markdown-mode)))
+               ("build" (or
+                         (mode . cmake-mode)
+                         (mode . makefile-mode)
+                         (mode . makefile-gmake-mode)
+                         (filename . "Gemfile\\'")
+                         (filename . "Gemfile\\.lock\\'")
+                         (filename . "[Rr]akefile\\'")))
+               ("pim" (or
+                       (name    . "^\\*Calendar\\*$")
+                       (name    . "^diary$")
+                       (mode    . org-mode)))
+               ("system" (or
+                          (mode       . help-mode)
+                          (mode       . completion-list-mode)
+                          (mode       . apropos-mode)
+                          (name      . "^\\*.*\\*$")
+                          (filename . "\.emacs\.d")
+                          (mode     . custom-mode))))))
+  
+      (remove-hook 'ibuffer-mode-hook 'init--ibuffer-load))
+  
+    (defun init--ibuffer-mode ()
+      (ibuffer-switch-to-saved-filter-groups "default"))
+  
+    (add-hook 'ibuffer-mode-hook 'init--ibuffer-mode)
+    ;; ibuffer is a autoloads file, ibufer-load-hook is already ran.  So use
+    ;; run-once trick. It must ran before 'init--buffer-mode, so it is added
+    ;; after that.
+    (add-hook 'ibuffer-mode-hook 'init--ibuffer-load))
+  
+#+END_SRC
 * Module Groups
 
 #+BEGIN_SRC emacs-lisp

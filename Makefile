@@ -10,7 +10,7 @@ BATCH := $(EMACS) -batch -q -no-site-file -L site-lisp
 
 ELC := $(BATCH) -f batch-byte-compile
 
-SITE_ELFILES := $(filter-out site-lisp/my-loaddefs.el,$(wildcard site-lisp/*.el))
+SITE_ELFILES := $(filter-out site-lisp/readme-md-export.el site-lisp/my-loaddefs.el,$(wildcard site-lisp/*.el))
 SITE_ELCFILES := $(SITE_ELFILES:%.el=%.elc)
 
 ELFILES := init.el site-lisp/my-loaddefs.el $(SITE_ELFILES)
@@ -45,9 +45,7 @@ init.el: README.org
 doc: README.md
 
 README.md: README.org
-	$(BATCH) -L vendor/$(ORG_PKGNAME)/lisp -l ox-md --file $< -eval \
-"(progn (defadvice org-md-headline (after anchor (headline contents info) activate) (setq ad-return-value (concat \"<a name=\\\"sec-\" (mapconcat 'number-to-string (org-export-get-headline-number headline info) \"-\") \"\\\"></a>\\n\" ad-return-value))) (defun org-md-example-block (example-block contents info) (concat \"\`\`\`cl\\n\" (org-remove-indentation (org-element-property :value example-block)) \"\`\`\`\\n\")))"\
-	 -f org-md-export-to-markdown
+	$(BATCH) -L vendor/$(ORG_PKGNAME)/lisp -l ox-md --file $< -l site-lisp/readme-md-export.el -f org-md-export-to-markdown
 
 clean:
 	rm -rf init.el site-lisp/my-loaddefs.el $(ELCFILES)

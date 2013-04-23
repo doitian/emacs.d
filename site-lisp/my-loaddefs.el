@@ -568,8 +568,9 @@ prompt for the function or variable to find, instead.
 
 ;;;***
 
-;;;### (autoloads nil nil ("dash.el" "eproject-plus.el" "sequential-command.el"
-;;;;;;  "smart-compile+.el") (20853 35694 728711 772000))
+;;;### (autoloads nil nil ("dash.el" "eproject-plus.el" "readme-md-export.el"
+;;;;;;  "sequential-command.el" "smart-compile+.el") (20855 7779
+;;;;;;  48251 58000))
 
 ;;;***
 

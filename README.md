@@ -526,6 +526,9 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   (require 'ido-hacks)
   (ido-hacks-mode +1)
 
+  (mapc (lambda (s) (put s 'ido-hacks-fix-default t))
+        '(bookmark-set))
+
   (defun init--ido-setup ()
     (define-key ido-completion-map (kbd "M-m") 'ido-merge-work-directories)
     (define-key ido-completion-map "\C-c" 'ido-toggle-case))
@@ -1808,9 +1811,15 @@ Misc editing config
    ;; Quietly load safe variables, otherwise it hang up Emacs when starting as daemon.
    '(enable-local-variables :safe))
 
+  (defadvice desktop-clear (around init--bookmark-save-around-desktop-clear activate)
+    (and (fboundp 'bookmark-save) (bookmark-save))
+    ad-do-it
+    (and (fboundp 'bookmark-load) (bookmark-load bookmark-default-file)))
+
   (desktop-save-mode +1)
   (setq history-length 250)
   (add-to-list 'desktop-globals-to-save 'file-name-history)
+  (add-to-list 'desktop-globals-to-clear 'bookmark-alist)
   (add-to-list 'desktop-modes-not-to-save 'Info-mode)
   (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
   (add-to-list 'desktop-modes-not-to-save 'fundamental-mode))

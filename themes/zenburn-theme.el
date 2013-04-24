@@ -438,6 +438,9 @@
  `(diredp-file-suffix ((t (:foreground ,zenburn-orange))))
  `(diredp-symlink ((t (:foreground ,zenburn-blue-1))))
 
+ ;;bmkp
+ '(bmkp-local-directory ((t (:inherit 'diredp-dir-priv))))
+
  ;; Anything / Anything config
  '(anything-ff-directory ((t (:inherit 'diredp-dir-priv))))
  '(anything-visible-mark ((t (:inherit ,region))))

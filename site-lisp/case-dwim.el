@@ -32,6 +32,15 @@
                               (,func ,@body)
                               (setq this-command ,this-command)))))
 
+(defun case-dwim--call-interactively (func)
+  "Call command interactively"
+  (call-interactively func)
+  (when (case-dwim--mc-active-p)
+    (setq mc--this-command `(lambda ()
+                              (interactive)
+                              (call-interactively ,func)
+                              (setq this-command ,this-command)))))
+
 (defun case-dwim--insert-or-case-transform (char case-word case-region arg)
   "Insert string unless prefix is negative or last command is a case transformation"
   (if (or (< arg 0)
@@ -55,7 +64,7 @@ Otherwise do case transformation on following words.
     (setq seq-store-count arg)
     (case-dwim--funcall case-word arg))
    ((region-active-p)
-    (case-dwim--funcall case-region))
+    (case-dwim--call-interactively case-region))
    (t (case-dwim--funcall case-word
                           (case-dwim--seq-count arg)))))
 

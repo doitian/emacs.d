@@ -81,7 +81,7 @@ emacs-rails: vendor/emacs-rails/rails.elc
 emacs-rails-clean:
 	rm -f vendor/emacs-rails/*.elc
 
-EMACS_RAILS_LIBS := -L vendor/emacs-rails -l cl -l vendor/emacs-rails/inflections.el -l vendor/emacs-rails/rails-lib.el -l vendor/emacs-rails/rails-refactoring.el
+EMACS_RAILS_LIBS := -L vendor/emacs-rails -l cl -l vendor/emacs-rails/inflections.el -l vendor/emacs-rails/rails-lib.el -l vendor/emacs-rails/rails-refactoring.el -l vendor/emacs-rails/rails-project.el
 EMACS_RAILS_IGNORE := vendor/emacs-rails/behave-rails.el
 
 vendor/emacs-rails/rails.elc: vendor/emacs-rails/rails.el

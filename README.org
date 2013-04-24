@@ -1336,8 +1336,7 @@ Auto revert, and helper functions to revert without confirmation.
   (define-module eproject
     (require-module eshell)
     (require-package 'eproject)
-    (require 'eproject-plus)
-    (define-key my-keymap "p" eproject-plus-keymap))
+    (require 'eproject-plus))
 #+END_SRC
 
 ** helm
@@ -2282,7 +2281,6 @@ css, sass, scss
     (add-hook 'emacs-lisp-mode-hook 'init--emacs-lisp-load))
 #+END_SRC
 
-
 ** ruby-mode
 
 #+BEGIN_SRC emacs-lisp
@@ -2336,6 +2334,23 @@ css, sass, scss
   
     (add-hook 'ruby-mode-hook 'init--ruby-mode))
 #+END_SRC
+
+** rails
+
+Install =emacs-rails= using =make vendor=
+
+#+BEGIN_SRC emacs-lisp
+  (define-module rails
+    (setq load-path (cons (concat my-vendor-dir "emacs-rails") load-path))
+  
+    (custom-set-variables
+     '(rails-always-use-text-menus t)
+     '(rails-browse-api-with-w3m t)
+     '(rails-ui:show-mode-line nil))
+  
+    (require 'emacs-rails-hacks))
+#+END_SRC
+
 
 * Module Groups
 

@@ -91,6 +91,7 @@
 <li><a href="#sec-7-62">7.62. markdown-mode</a></li>
 <li><a href="#sec-7-63">7.63. lisp-mode</a></li>
 <li><a href="#sec-7-64">7.64. ruby-mode</a></li>
+<li><a href="#sec-7-65">7.65. rails</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -1496,8 +1497,7 @@ inactive -> switch -> full screen -> hide
 (define-module eproject
   (require-module eshell)
   (require-package 'eproject)
-  (require 'eproject-plus)
-  (define-key my-keymap "p" eproject-plus-keymap))
+  (require 'eproject-plus))
 ```
 
 <a name="sec-7-34"></a>
@@ -2534,6 +2534,23 @@ css, sass, scss
   (add-to-list 'auto-mode-alist '("\\.jbuilder\\'" . ruby-mode))
 
   (add-hook 'ruby-mode-hook 'init--ruby-mode))
+```
+
+<a name="sec-7-65"></a>
+## rails
+
+Install `emacs-rails` using `make vendor`
+
+```cl
+(define-module rails
+  (setq load-path (cons (concat my-vendor-dir "emacs-rails") load-path))
+
+  (custom-set-variables
+   '(rails-always-use-text-menus t)
+   '(rails-browse-api-with-w3m t)
+   '(rails-ui:show-mode-line nil))
+
+  (require 'emacs-rails-hacks))
 ```
 
 <a name="sec-8"></a>

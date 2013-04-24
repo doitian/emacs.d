@@ -50,12 +50,14 @@ README.md: README.org
 clean:
 	rm -rf init.el site-lisp/my-loaddefs.el $(ELCFILES)
 
-vendor-clean:
-	rm -rf tmp/org-* vendor/org-*
+vendor-clean: org-clean git-emacs-clean emacs-rails-clean
 
-vendor: org git-emacs
+vendor: org git-emacs emacs-rails
 
 org: vendor/$(ORG_PKGNAME)/lisp/org-loaddefs.el
+
+org-clean:
+	rm -rf tmp/org-* vendor/org-*
 
 vendor/$(ORG_PKGNAME)/lisp/org-loaddefs.el: vendor/$(ORG_PKGNAME)
 	cd $< && make compile
@@ -68,14 +70,29 @@ tmp/${ORG_TARBALL}:
 
 git-emacs: vendor/git-emacs/git-emacs.elc
 
+git-emacs-clean:
+	rm -f vendor/git-emacs/*.elc
+
 vendor/git-emacs/git-emacs.elc: vendor/git-emacs/git-emacs.el
 	cd vendor/git-emacs && make
 
-vendor/git-emacs/git-emacs.el:
+emacs-rails: vendor/emacs-rails/rails.elc
+
+emacs-rails-clean:
+	rm -f vendor/emacs-rails/*.elc
+
+EMACS_RAILS_LIBS := -L vendor/emacs-rails -l cl -l vendor/emacs-rails/inflections.el -l vendor/emacs-rails/rails-lib.el -l vendor/emacs-rails/rails-refactoring.el
+EMACS_RAILS_IGNORE := vendor/emacs-rails/behave-rails.el
+
+vendor/emacs-rails/rails.elc: vendor/emacs-rails/rails.el
+	$(BATCH) $(EMACS_RAILS_LIBS) -f batch-byte-compile \
+		$(filter-out $(EMACS_RAILS_IGNORE),$(wildcard vendor/emacs-rails/*.el))
+
+vendor/git-emacs/git-emacs.el vendor/emacs-rails/rails.el:
 	git submodule init
 	git submodule update
 
 verify:
 	$(EMACS) --debug-init -q -eval "(setq module-black-list '(server))" -l ./init.elc -f module-initialize
 
-.PHONY: all doc verify clean vendor org git-emacs git-submodule-update
+.PHONY: all doc verify clean vendor vendor-clean org git-emacs emacs-rails org-cleanup git-emacs-cleanup emacs-rails-cleanup

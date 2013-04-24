@@ -5,8 +5,10 @@
       '(
         back-to-indentation-or-beginning
         iy-go-to-char--command
+        iy-go-to-char-quit
         org-beginning-of-line
         org-end-of-line
+        ruby-end-space
         ))
 
 (setq mc/cmds-to-run-once

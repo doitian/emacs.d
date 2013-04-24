@@ -92,6 +92,14 @@
 <li><a href="#sec-7-63">7.63. lisp-mode</a></li>
 <li><a href="#sec-7-64">7.64. ruby-mode</a></li>
 <li><a href="#sec-7-65">7.65. rails</a></li>
+<li><a href="#sec-7-66">7.66. rspec-mode</a></li>
+<li><a href="#sec-7-67">7.67. mmm-mode</a></li>
+<li><a href="#sec-7-68">7.68. flycheck</a></li>
+<li><a href="#sec-7-69">7.69. tmux-send</a></li>
+<li><a href="#sec-7-70">7.70. speedbar</a></li>
+<li><a href="#sec-7-71">7.71. woman</a></li>
+<li><a href="#sec-7-72">7.72. clean-buffer</a></li>
+<li><a href="#sec-7-73">7.73. uniquify-buffer</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -347,22 +355,21 @@ Remove annoying UI
 
 ```cl
 (fset 'yes-or-no-p 'y-or-n-p)
-(fset 'man 'woman)
-(defalias 'save-pwd 'xsteve-save-current-directory)
+(defalias 'save-pwd 'mf-xsteve-save-current-directory)
 (defalias 'qrr 'query-replace-regexp)
 (defalias 'rr 'replace-regexp)
 (defalias 'rb 'revert-buffer-no-confirm)
 (defalias 'occ 'occur)
 (defalias 'mocc 'multi-occur)
 (defalias 'moccr 'multi-occur-in-matching-buffers)
-(defalias 'aa 'anything-apropos)
+(defalias 'aa 'helm-apropos)
 (defalias 'wc 'whitespace-cleanup)
 (defalias 'flb 'add-file-local-variable)
 (defalias 'fll 'add-file-local-variable-prop-line)
 (defalias 'fl 'add-file-local-variable-prop-line)
 (defalias 'dl 'add-dir-local-variable)
 (defalias 'ack 'agap)
-(defalias 'sudo 'find-alternative-file-with-sudo)
+(defalias 'sudo 'mf-find-alternative-file-with-sudo)
 (defalias 'af 'auto-fill-mode)
 ```
 
@@ -1222,6 +1229,11 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
 (define-module multiple-cursors
   (require-package 'multiple-cursors)
 
+  (defadvice set-rectangular-region-anchor (around edit-lines-when-region-is-active activate)
+    (if (region-active-p)
+        (call-interactively 'mc/edit-lines)
+      ad-do-it))
+
   (define-key ctl-x-r-map (kbd "C-r") 'mc/edit-lines)
   (define-key ctl-x-r-map (kbd ",") 'mc/edit-lines)
   (define-key ctl-x-r-map (kbd "C-,") 'mc/edit-lines)
@@ -1497,7 +1509,10 @@ inactive -> switch -> full screen -> hide
 (define-module eproject
   (require-module eshell)
   (require-package 'eproject)
-  (require 'eproject-plus))
+  (require 'eproject-plus)
+
+  (define-key my-keymap (kbd "p P") 'eproject-plus-open-project)
+  (define-key my-keymap (kbd "p p") 'eproject-revisit-project))
 ```
 
 <a name="sec-7-34"></a>
@@ -2051,7 +2066,9 @@ Misc editing config
   (require-package 'autopair)
   (setq autopair-blink nil)
 
-  (add-hook 'scss-mode-hook 'autopair-mode))
+  (add-hook 'scss-mode-hook 'autopair-mode)
+  (add-hook 'ruby-mode-hook 'autopair-mode)
+  (add-hook 'sh-mode-hook 'autopair-mode))
 ```
 
 <a name="sec-7-50"></a>
@@ -2499,7 +2516,6 @@ css, sass, scss
 
     (ruby-end-mode +1)
     (hs-minor-mode +1)
-    (autopair-mode +1)
     (subword-mode +1)
     (turn-on-auto-fill)
 
@@ -2553,6 +2569,157 @@ Install `emacs-rails` using `make vendor`
   (require 'emacs-rails-hacks))
 ```
 
+<a name="sec-7-66"></a>
+## rspec-mode
+
+```cl
+(define-module rspec-mode
+  (require-package 'rspec-mode)
+
+  (custom-set-variables
+   ;; already handled by ~/bin/rspec
+   '(rspec-use-bundler-when-possible nil)
+   '(rspec-use-zeus-when-possible nil)
+   '(rspec-use-rake-flag nil)
+   '(rspec-key-command-prefix (kbd "M-s v"))))
+```
+
+<a name="sec-7-67"></a>
+## mmm-mode
+
+```cl
+(define-module mmm-mode
+  (require-package 'mmm-mode)
+
+  ;; fix font lock when started as daemon
+  (add-hook 'after-make-window-system-frame-hooks
+            '(lambda ()
+               (setq mmm-font-lock-available-p t)))
+
+  (defvar mmm-fenced-code-block-mode-alist nil)
+  (setq mmm-fenced-code-block-mode-alist
+        '(("javascript" . js-mode)))
+
+  (defun mmm-fenced-code-block-get-mode (string)
+    (string-match "[a-zA-Z_-]+" string)
+    (setq string (match-string 0 string))
+    (or
+     (mmm-ensure-modename (or (cdr (assoc string mmm-fenced-code-block-mode-alist))
+                              (intern (concat string "-mode"))))
+     (signal 'mmm-no-matching-submode nil)))
+
+  (setq mmm-global-mode 'maybe)
+  (setq mmm-submode-decoration-level 2)
+  (setq mmm-parse-when-idle t)
+  (require 'mmm-auto)
+
+  (mmm-add-classes
+   '((yaml-header-matters
+      :submode yaml-mode
+      :face mmm-code-submode-face
+      :front "\\`---$"
+      :back "^---$")))
+
+  (mmm-add-classes
+   '((fenced-code-block
+      :front "^\\(```\\)\\(\\w+\\)$"
+      :front-offset (end-of-line 1)
+      :face mmm-code-submode-face
+      :back "^```$"
+      :delimiter-mode nil
+      :match-submode mmm-fenced-code-block-get-mode
+      :insert ((?s fenced-code-block "Code Type: " @ "```" str "\n" _
+                   @ "\n" @ "```\n" @)))))
+
+  (mmm-add-mode-ext-class 'html-erb-mode "\\.html\\.erb\\'" 'erb)
+  (mmm-add-mode-ext-class 'html-erb-mode "\\.rhtml\\'" 'erb)
+  (mmm-add-mode-ext-class 'html-erb-mode "\\.jst\\.ejs\\'" 'ejs)
+  (mmm-add-mode-ext-class 'html-erb-mode nil 'html-js)
+  (mmm-add-mode-ext-class 'html-erb-mode nil 'html-css)
+  (mmm-add-mode-ext-class 'markdown-mode nil 'yaml-header-matters)
+  (mmm-add-mode-ext-class 'markdown-mode nil 'fenced-code-block)
+  (mmm-add-mode-ext-class 'gfm-mode nil 'yaml-header-matters)
+  (mmm-add-mode-ext-class 'gfm-mode nil 'fenced-code-block)
+
+  (add-to-list 'auto-mode-alist '("\\.html\\.erb\\'" . html-erb-mode))
+  (add-to-list 'auto-mode-alist '("\\.rhtml\\'" . html-erb-mode))
+  (add-to-list 'auto-mode-alist '("\\.jst\\.ejs\\'"  . html-erb-mode)))
+```
+
+<a name="sec-7-68"></a>
+## flycheck
+
+```cl
+(define-module flycheck
+  (require-package 'flycheck)
+  (global-flycheck-mode)
+
+  (defun init--disable-emacs-lisp-checkdoc-in-org-src-mode ()
+    (make-local-variable 'flycheck-checkers)
+    (setq flycheck-checkers (delq 'emacs-lisp-checkdoc flycheck-checkers)))
+
+  (add-hook 'org-src-mode-hook 'init--disable-emacs-lisp-checkdoc-in-org-src-mode)
+
+  (define-key flycheck-next-error &optional N RESET)
+
+  (define-key my-keymap (kbd "`") 'flycheck-next-error)
+  (define-key my-keymap (kbd "~") 'flycheck-previous-error)
+  (define-key my-keymap (kbd "M-`") 'flycheck-next-error)
+  (global-set-key (kbd "M-`") 'flycheck-next-error)
+  (global-set-key (kbd "M-~") 'flycheck-previous-error))
+```
+
+<a name="sec-7-69"></a>
+## tmux-send
+
+```cl
+(define-module tmux-send
+  (global-set-key (kbd "<f6>") 'tmux-send)
+  (global-set-key (kbd "C-<f6>") 'tmux-select))
+```
+
+<a name="sec-7-70"></a>
+## speedbar
+
+```cl
+(define-module speedbar
+  (global-set-key (kbd "C-<f7>") 'speedbar-get-focus)
+  (global-set-key (kbd "<ESC> <f7>") 'speedbar-get-focus))
+```
+
+<a name="sec-7-71"></a>
+## woman
+
+```cl
+(define-module woman
+  (custom-set-variables
+   '(woman-fontify t)
+   '(woman-use-topic-at-point-default t))
+  (fset 'man 'woman))
+```
+
+<a name="sec-7-72"></a>
+## clean-buffer
+
+```cl
+(define-module clean-buffer
+  (custom-set-variables
+   '(clean-buffer-list-delay-special 3600)
+   '(clean-buffer-list-kill-buffer-names (quote ("*Help*" "*Apropos*" "*Buffer List*" "*Compile-Log*" "*info*" "*vc*" "*vc-diff*" "*diff*" "bbdb" "*RE-Builder*" "*Shell Command Output*" "*ESS*" "*WoMan-Log*" "*magit-process*" "*Dired log*" "*anything*" "*CEDET Global*" "*Pp Eval Output*" "*Completions*")))
+   '(clean-buffer-list-kill-regexps (quote ("\\`\\*Customize Group:" "\\`\\*Man " "\\`\\*magit" "\\`\\*RNC Input")))
+   '(midnight-mode t nil (midnight))))
+```
+
+<a name="sec-7-73"></a>
+## uniquify-buffer
+
+```cl
+(define-module clean-buffer
+  (custom-set-variables
+   '(uniquify-buffer-name-style (quote post-forward-angle-brackets) nil (uniquify))
+   '(uniquify-strip-common-suffix nil)))
+```
+
 <a name="sec-8"></a>
 # Module Groups
 
@@ -2578,5 +2745,50 @@ Install `emacs-rails` using `make vendor`
 # Backlog
 
 ```cl
+(push 'visual-regexp el-get-packages)
+(autoload 'vr/query-replace "visual-regexp" nil t)
+(define-key iy-map (kbd "4") 'vr/replace)
+(define-key iy-map (kbd "5") 'vr/query-replace)
+(push 'fringe-helper el-get-packages)
 
+(push 'ace-jump-mode el-get-packages)
+
+(push 'tumbl el-get-packages)
+
+(push 'cheat el-get-packages)
+
+(unless (eq system-type 'darwin)
+  (push 'haskell-mode el-get-packages)
+  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation))
+
+(push 'erlware-mode el-get-packages)
+
+(push 'sml-modeline el-get-packages)
+(defun iy-el-get-after-sml-modeline ()
+  (sml-modeline-mode))
+
+(push 'pos-tip el-get-packages)
+
+(push 'undo-tree el-get-packages)
+(defun iy-el-get-after-undo-tree ()
+  (global-undo-tree-mode)
+  (define-key undo-tree-map (kbd "C-x r u") nil)
+  (define-key undo-tree-map (kbd "C-x r U") nil)
+  (define-key undo-tree-map (kbd "C-x r") nil))
+
+(push 'highlight-indentation el-get-packages)
+(autoload 'highlight-indentation-mode "highlight-indentation" nil t)
+(autoload 'highlight-indentation-current-column-mode "highlight-indentation" nil t)
+
+(defun ||()
+  (interactive)
+  (if (and (boundp 'highlight-indentation-mode) highlight-indentation-mode)
+      (progn
+        (call-interactively 'highlight-indentation-mode 1)
+        (call-interactively 'highlight-indentation-current-column-mode 1))
+    (call-interactively 'highlight-indentation-mode 0)
+    (call-interactively 'highlight-indentation-current-column-mode 0)))
+
+(push 'switch-window el-get-packages)
+(setq switch-window-shortcut-style 'qwerty)
 ```

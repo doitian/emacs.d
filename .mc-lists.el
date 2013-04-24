@@ -8,6 +8,7 @@
         iy-go-to-char-quit
         org-beginning-of-line
         org-end-of-line
+        paredit-forward-kill-word
         ruby-end-space
         ))
 

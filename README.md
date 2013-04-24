@@ -566,6 +566,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
    '(magit-repo-dirs-depth 1))
 
   (require-package 'magit)
+  (autoload 'magit-log-edit-mode "magit")
 
   (defun magit-toggle-whitespace ()
     (interactive)
@@ -1173,7 +1174,10 @@ Start emacs server.
 
   (defun server--run-delete-frame-functions (frame)
     (when (server--last-frontend-frame-p)
-      (run-hooks 'server-delete-frame-functions)))
+      (mapc (lambda (f)
+              (when (fboundp f)
+                (funcall f)))
+            server-delete-frame-functions)))
 
   ;; Buggy to run the functions in MacOS X
   (unless (eq system-type 'darwin)
@@ -2659,8 +2663,6 @@ Install `emacs-rails` using `make vendor`
     (setq flycheck-checkers (delq 'emacs-lisp-checkdoc flycheck-checkers)))
 
   (add-hook 'org-src-mode-hook 'init--disable-emacs-lisp-checkdoc-in-org-src-mode)
-
-  (define-key flycheck-next-error &optional N RESET)
 
   (define-key my-keymap (kbd "`") 'flycheck-next-error)
   (define-key my-keymap (kbd "~") 'flycheck-previous-error)

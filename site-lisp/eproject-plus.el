@@ -1,12 +1,22 @@
 ;;; eproject-plus.el --- Extend eproject
 
 (require 'eproject nil t)
-(require 'eproject-extras nil t)
+(require 'eproject-extra nil t)
 
 (eval-when-compile (require 'cl))
 
 (custom-set-variables
- '(eproject-completing-read-function (quote eproject--ido-completing-read)))
+ '(eproject-completing-read-function (quote eproject-plus-completing-read-function)))
+
+(defun eproject-plus-completing-read-buffer (prompt buffers)
+  (let ((name (completing-read prompt (mapcar 'buffer-name buffers) nil t)))
+    (when (and name (not (zerop (length name)))) (get-buffer name))))
+
+(defun eproject-plus-completing-read-function (prompt choices)
+  "Rewrite `eproject--completing-read' to handle buffers completing read"
+  (if (bufferp (car choices))
+      (eproject-plus-completing-read-buffer prompt buffers)
+    (completing-read prompt choices nil t)))
 
 (defface eproject-plus-mode-line-project-name-face
   '((t (:inherit font-lock-string-face :bold t)))
@@ -250,14 +260,17 @@ to select from, open file when selected."
 (add-hook 'term-mode-hook 'eproject-maybe-turn-on)
 (add-hook 'eshell-mode-hook 'eproject-maybe-turn-on)
 
-(defvar eproject-plus-keymap nil)
-(let ((map (or eproject-plus-keymap (make-sparse-keymap))))
+(defcustom eproject-plus-keymap-prefix "M-s p"
+  "Prefix for eproject plus commands")
+
+(let ((map (make-sparse-keymap)))
   (define-key map "i" 'eproject-plus-invalidate-project-files-cache)
   (define-key map "P" 'eproject-plus-open-project)
   (define-key map "p" 'eproject-revisit-project)
   (define-key map "s" 'eproject-plus-open-session)
   (define-key map "c" 'eproject-plus-compile)
-  (define-key map "b" 'eproject-ibuffer)
+  (define-key map "b" 'eproject-switch-to-buffer)
+  (define-key map "\C-b" 'eproject-ibuffer)
   (define-key map "\C-f" 'ido-find-file-in-project-root)
   (define-key map "f" 'eproject-plus-find-file-with-cache)
   (define-key map "o" 'eproject-plus-find-file-with-cache)
@@ -274,7 +287,9 @@ to select from, open file when selected."
   ;; generate  C-update
   (define-key map "'" 'eproject-plus-visit-tags-table)
 
-  (setq eproject-plus-keymap map))
+  (define-key eproject-mode-map (kbd eproject-plus-keymap-prefix) map))
+
+(define-key eproject-mode-map "\C-c" nil)
 
 (provide 'eproject-plus)
 ;;; eproject-plus.el ends here

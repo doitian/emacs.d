@@ -2101,6 +2101,35 @@ Misc editing config
     (add-hook 'ibuffer-mode-hook 'init--ibuffer-load))
   
 #+END_SRC
+** deft
+
+#+BEGIN_SRC emacs-lisp
+  (define-module deft
+    (require-package 'deft)
+    (custom-set-variables
+     '(deft-extension "org")
+     '(deft-directory (concat my-dropbox-dir "g/cards"))
+     '(deft-use-filename-as-title t)
+     '(deft-text-mode 'org-mode))
+  
+    (defun init--deft-mode ()
+      (define-key deft-mode-map (kbd "C-c SPC") 'org-drill-deft)
+      (remove-hook 'deft-mode-hook 'init--deft-mode))
+    (remove-hook 'deft-mode-hook 'init--deft-mode)
+  
+    (defun org-drill-deft ()
+      "Run org-drill in deft-directory"
+      (interactive)
+      (with-current-buffer (find-file-noselect deft-directory)
+        (org-drill 'directory)))
+  
+    (define-key my-keymap "n" 'deft))
+  
+  
+  
+  
+#+END_SRC
+
 * Module Groups
 
 #+BEGIN_SRC emacs-lisp

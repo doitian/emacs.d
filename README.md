@@ -82,6 +82,7 @@
 <li><a href="#sec-7-53">7.53. search-files</a></li>
 <li><a href="#sec-7-54">7.54. alternative-files</a></li>
 <li><a href="#sec-7-55">7.55. ibuffer-mode</a></li>
+<li><a href="#sec-7-56">7.56. deft</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -2279,6 +2280,36 @@ the symbol at point."
   ;; run-once trick. It must ran before 'init--buffer-mode, so it is added
   ;; after that.
   (add-hook 'ibuffer-mode-hook 'init--ibuffer-load))
+
+```
+
+<a name="sec-7-56"></a>
+## deft
+
+```cl
+(define-module deft
+  (require-package 'deft)
+  (custom-set-variables
+   '(deft-extension "org")
+   '(deft-directory (concat my-dropbox-dir "g/cards"))
+   '(deft-use-filename-as-title t)
+   '(deft-text-mode 'org-mode))
+
+  (defun init--deft-mode ()
+    (define-key deft-mode-map (kbd "C-c SPC") 'org-drill-deft)
+    (remove-hook 'deft-mode-hook 'init--deft-mode))
+  (remove-hook 'deft-mode-hook 'init--deft-mode)
+
+  (defun org-drill-deft ()
+    "Run org-drill in deft-directory"
+    (interactive)
+    (with-current-buffer (find-file-noselect deft-directory)
+      (org-drill 'directory)))
+
+  (define-key my-keymap "n" 'deft))
+
+
+
 
 ```
 

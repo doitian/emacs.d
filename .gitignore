@@ -21,3 +21,4 @@
 /custom.el
 /custom.readonly.el
 /secrets.el
+/site-lisp/my-loaddefs.el

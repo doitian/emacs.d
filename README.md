@@ -589,7 +589,6 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     (local-set-key [f12] 'magit-quit-window))
 
   (defun init--magit-log-edit-mode ()
-    (local-set-key (kbd "C-c C-c") 'magit-log-edit-commit)
     (auto-fill-mode +1)
     (setq fill-column 72))
 
@@ -1164,9 +1163,9 @@ Start emacs server.
       w3m-arrived-shutdown
       w3m-cookie-shutdown
       tramp-dump-connection-properties)
-  "List of functions that should be called when a OS window is closed"
-  :group 'server
-  :type '(repeat symbol))
+    "List of functions that should be called when a OS window is closed"
+    :group 'server
+    :type '(repeat symbol))
 
   (defun server--last-frontend-frame-p ()
     (and (server-running-p)
@@ -1193,7 +1192,8 @@ Start emacs server.
   (defun init--server-visit ()
     (server-edit-minor-mode +1))
 
-  (add-hook 'server-visit-hook 'init--server-visit)
+  ;; run last to run on the minor mode for any enabled major modes
+  (add-hook 'server-visit-hook 'init--server-visit t)
 
   (server-start))
 ```

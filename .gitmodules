@@ -1,3 +1,6 @@
 [submodule "vendor/git-emacs"]
 	path = vendor/git-emacs
 	url = git://github.com/tsgates/git-emacs.git
+[submodule "vendor/emacs-rails"]
+	path = vendor/emacs-rails
+	url = git://github.com/remvee/emacs-rails.git

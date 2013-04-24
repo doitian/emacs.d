@@ -573,11 +573,18 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     (local-set-key [f12] 'magit-quit-window))
 
   (defun init--magit-log-edit-mode ()
-    (auto-fill-mode t)
+    (auto-fill-mode +1)
     (setq fill-column 72))
+
+  (defun init--server-visit-setup-magit-log-edit-mode ()
+    (when (and (buffer-file-name)
+               (member (file-name-nondirectory (or (buffer-file-name) default-directory))
+                       '("MERGE_MSG" "COMMIT_EDITMSG")))
+      (magit-log-edit-mode)))
 
   (add-hook 'magit-mode-hook 'init--magit-mode)
   (add-hook 'magit-log-edit-mode-hook 'init--magit-log-edit-mode)
+  (add-hook 'server-visit-hook 'init--server-visit-setup-magit-log-edit-mode)
 
   (global-set-key [f12] 'magit-status))
 ```
@@ -1345,10 +1352,10 @@ add changes interactively using `ediff`.
    '(git-state-modeline-decoration (quote git-state-decoration-large-dot))
    '(vc-follow-symlinks t))
 
-  (setq revert-without-query
-        (append 
-         '("COMMIT_EDITMSG\\'" "git-rebase-todo")
-         revert-without-query))
+  (mapc (lambda (pattern)
+          (unless (member pattern revert-without-query)
+            (setq revert-without-query (cons pattern revert-without-query))))
+        '("COMMIT_EDITMSG\\'" "MERGE_MSG\\'" "git-rebase-todo"))
 
   (let ((git-emacs-dir (concat my-vendor-dir "git-emacs")))
     (when (file-exists-p (concat git-emacs-dir "/git-emacs.el"))
@@ -2361,12 +2368,5 @@ the symbol at point."
 # Backlog
 
 ```cl
-(defun iy-server-visit-setup ()
-  (let ((base (file-name-nondirectory (or (buffer-file-name) default-directory))))
-    (cond ((member base '("MERGE_MSG" "COMMIT_EDITMSG"))
-           (auto-fill-mode t)
-           (setq fill-column 72)
-           (when (fboundp 'rails-minor-mode)
-             (rails-minor-mode 0))
-           (local-set-key (kbd "C-c C-c") 'server-edit)))))
+
 ```

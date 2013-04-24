@@ -1355,6 +1355,7 @@ Auto revert, and helper functions to revert without confirmation.
   (define-module helm
     (require-module eproject)
     (require-package 'helm)
+    (require 'helm-config)
   
     (defvar helm-source-eproject-projects nil)
     (defvar helm-source-eproject-files-in-project nil)
@@ -1416,15 +1417,6 @@ Auto revert, and helper functions to revert without confirmation.
          ;;; Shortcuts
       (define-key helm-map (kbd "M-s") 'helm-select-with-prefix-shortcut)
   
-      (define-key helm-command-map (kbd "g") 'helm-do-grep)
-      (define-key helm-command-map (kbd "o") 'helm-occur)
-      (define-key helm-command-map (kbd "r") 'helm-register)
-      (define-key helm-command-map (kbd "R") 'helm-regexp)
-      (define-key helm-command-map (kbd "b") 'helm-c-pp-bookmarks)
-      (define-key helm-command-map (kbd "p") 'helm-c-eproject-projects)
-      (define-key helm-command-map (kbd "f") 'helm-c-eproject-files-in-project)
-      (define-key helm-command-map (kbd "<SPC>") 'helm-all-mark-rings)
-  
       (remove-hook 'helm-before-initialize-hook 'init--helm-load))
   
     (add-hook 'helm-before-initialize-hook 'init--helm-load)
@@ -1448,6 +1440,15 @@ Auto revert, and helper functions to revert without confirmation.
       (helm-other-buffer my-helm-sources "*helm go*"))
   
     (autoload 'helm-command-prefix "helm-config" nil nil 'keymap)
+  
+    (define-key helm-command-map (kbd "g") 'helm-do-grep)
+    (define-key helm-command-map (kbd "o") 'helm-occur)
+    (define-key helm-command-map (kbd "r") 'helm-register)
+    (define-key helm-command-map (kbd "R") 'helm-regexp)
+    (define-key helm-command-map (kbd "b") 'helm-c-pp-bookmarks)
+    (define-key helm-command-map (kbd "p") 'helm-c-eproject-projects)
+    (define-key helm-command-map (kbd "f") 'helm-c-eproject-files-in-project)
+    (define-key helm-command-map (kbd "<SPC>") 'helm-all-mark-rings)
   
     (global-set-key (kbd "M-X") 'my-helm-go)
     (define-key my-keymap (kbd "M-s") 'my-helm-go)
@@ -1789,12 +1790,17 @@ Misc editing config
 
 ** yasnippet
 
+Compile all snippets into =snippets.el= and load it. After change or and any snippets, must
+
+-   execute =yas-reload-all= in Emacs,
+-   run =make snippets= in shell
+
 #+BEGIN_SRC emacs-lisp
   (define-module yasnippet
     (require-package 'yasnippet)
     (require-package 'popup)
     (require 'dropdown-list nil t)
-  
+    
     (custom-set-variables
      '(yas-trigger-key "TAB")
      '(yas-choose-keys-first nil)
@@ -1804,14 +1810,14 @@ Misc editing config
                                     yas-no-prompt)))
      '(yas-wrap-around-region nil)
      '(yas-use-menu nil))
-  
+    
     (defun yas-buffer-name-stub ()
       (let ((name (or (buffer-file-name)
                       (buffer-name))))
         (replace-regexp-in-string
          "^t_\\|_?\\(test\\|spec\\)$" ""
          (file-name-sans-extension (file-name-nondirectory name)))))
-  
+    
     (defun yas-safer-expand ()
       (let ((yas-fallback-behavior 'return-nil))
         (call-interactively 'yas-expand)))
@@ -1820,7 +1826,7 @@ Misc editing config
       (interactive "P")
       (let ((yas-prompt-functions '(yas-ido-prompt)))
         (yas-insert-snippet)))
-  
+    
     (defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
       (when (featurep 'popup)
         (popup-menu*
@@ -1834,11 +1840,11 @@ Misc editing config
          :prompt prompt
          :isearch t
          )))
-  
+    
     (defadvice yas--menu-keymap-get-create (around ignore (mode) activate))
-  
+    
     (define-key my-keymap (kbd "<tab>") 'yas-insert-snippet)
-  
+    
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "M-/") 'yas-ido-insert-snippets)
       (define-key map (kbd "/") 'yas-ido-insert-snippets)
@@ -1846,9 +1852,12 @@ Misc editing config
       (define-key map (kbd "o") 'yas-visit-snippet-file)
       (define-key map (kbd "i") 'auto-insert)
       (define-key my-keymap (kbd "M-/") map))
-  
+    
     (setq yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
-    (yas-global-mode +1))
+    (yas-global-mode +1)
+    (defadvice yas-reload-all (before yas-recompile-all-before-reload activate)
+      (yas-recompile-all)))
+  
 #+END_SRC
 
 ** ediff-mode

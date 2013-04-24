@@ -20,12 +20,19 @@ ORG_VERSION := 8.0.1
 ORG_PKGNAME := org-$(ORG_VERSION)
 ORG_TARBALL := $(ORG_PKGNAME).tar.gz
 ORG_DOWNLOAD_URL := http://orgmode.org/$(ORG_TARBALL)
-ORG_INSTALLED := 
+
+YAS_DIR := $(firstword $(wildcard elpa/yasnippet-*))
+YAS_SUBDIRS = $(wildcard snippets/*)
+YAS_COMPILED = $(YAS_SUBDIRS:%=%/.yas-compiled-snippets.el)
 
 all: init.elc
 
 ifneq (,$(wildcard vendor/$(ORG_PKGNAME)/lisp))
 all: doc
+endif
+
+ifneq (,$(YAS_DIR))
+all: $(YAS_COMPILED)
 endif
 
 .SUFFIXES: .el .elc
@@ -46,6 +53,14 @@ doc: README.md
 
 README.md: README.org
 	$(BATCH) -L vendor/$(ORG_PKGNAME)/lisp -l ox-md --file $< -l site-lisp/readme-md-export.el -f org-md-export-to-markdown
+
+$(YAS_COMPILED):
+	$(BATCH) -L $(YAS_DIR) -l yasnippet -eval "(let ((yas-snippet-dirs (list \"snippets\"))) (yas-recompile-all))"
+
+snippets: snippets-clean $(YAS_COMPILED)
+
+snippets-clean:
+	rm -f $(YAS_COMPILED)
 
 clean:
 	rm -rf init.el site-lisp/my-loaddefs.el $(ELCFILES)
@@ -95,4 +110,6 @@ vendor/git-emacs/git-emacs.el vendor/emacs-rails/rails.el:
 verify:
 	$(EMACS) --debug-init -q -eval "(setq module-black-list '(server))" -l ./init.elc -f module-initialize
 
-.PHONY: all doc verify clean vendor vendor-clean org git-emacs emacs-rails org-cleanup git-emacs-cleanup emacs-rails-cleanup
+.PHONY: all doc verify clean vendor vendor-clean org git-emacs emacs-rails
+.PHONY: org-cleanup git-emacs-cleanup emacs-rails-cleanup
+.PHONY: snippets snippets-clean

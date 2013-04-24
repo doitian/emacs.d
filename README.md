@@ -1526,6 +1526,7 @@ inactive -> switch -> full screen -> hide
 (define-module helm
   (require-module eproject)
   (require-package 'helm)
+  (require 'helm-config)
 
   (defvar helm-source-eproject-projects nil)
   (defvar helm-source-eproject-files-in-project nil)
@@ -1587,15 +1588,6 @@ inactive -> switch -> full screen -> hide
        ;;; Shortcuts
     (define-key helm-map (kbd "M-s") 'helm-select-with-prefix-shortcut)
 
-    (define-key helm-command-map (kbd "g") 'helm-do-grep)
-    (define-key helm-command-map (kbd "o") 'helm-occur)
-    (define-key helm-command-map (kbd "r") 'helm-register)
-    (define-key helm-command-map (kbd "R") 'helm-regexp)
-    (define-key helm-command-map (kbd "b") 'helm-c-pp-bookmarks)
-    (define-key helm-command-map (kbd "p") 'helm-c-eproject-projects)
-    (define-key helm-command-map (kbd "f") 'helm-c-eproject-files-in-project)
-    (define-key helm-command-map (kbd "<SPC>") 'helm-all-mark-rings)
-
     (remove-hook 'helm-before-initialize-hook 'init--helm-load))
 
   (add-hook 'helm-before-initialize-hook 'init--helm-load)
@@ -1619,6 +1611,15 @@ inactive -> switch -> full screen -> hide
     (helm-other-buffer my-helm-sources "*helm go*"))
 
   (autoload 'helm-command-prefix "helm-config" nil nil 'keymap)
+
+  (define-key helm-command-map (kbd "g") 'helm-do-grep)
+  (define-key helm-command-map (kbd "o") 'helm-occur)
+  (define-key helm-command-map (kbd "r") 'helm-register)
+  (define-key helm-command-map (kbd "R") 'helm-regexp)
+  (define-key helm-command-map (kbd "b") 'helm-c-pp-bookmarks)
+  (define-key helm-command-map (kbd "p") 'helm-c-eproject-projects)
+  (define-key helm-command-map (kbd "f") 'helm-c-eproject-files-in-project)
+  (define-key helm-command-map (kbd "<SPC>") 'helm-all-mark-rings)
 
   (global-set-key (kbd "M-X") 'my-helm-go)
   (define-key my-keymap (kbd "M-s") 'my-helm-go)
@@ -1972,6 +1973,12 @@ Misc editing config
 <a name="sec-7-46"></a>
 ## yasnippet
 
+Compile all snippets into `snippets.el` and load it. After change or and any snippets, must
+
+-   execute `yas-reload-all` in Emacs,
+
+-   run `make snippets` in shell
+
 ```cl
 (define-module yasnippet
   (require-package 'yasnippet)
@@ -2031,7 +2038,10 @@ Misc editing config
     (define-key my-keymap (kbd "M-/") map))
 
   (setq yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
-  (yas-global-mode +1))
+  (yas-global-mode +1)
+  (defadvice yas-reload-all (before yas-recompile-all-before-reload activate)
+    (yas-recompile-all)))
+
 ```
 
 <a name="sec-7-47"></a>

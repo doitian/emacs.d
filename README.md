@@ -84,6 +84,13 @@
 <li><a href="#sec-7-55">7.55. ibuffer-mode</a></li>
 <li><a href="#sec-7-56">7.56. deft</a></li>
 <li><a href="#sec-7-57">7.57. mail</a></li>
+<li><a href="#sec-7-58">7.58. css</a></li>
+<li><a href="#sec-7-59">7.59. haml-mode</a></li>
+<li><a href="#sec-7-60">7.60. yaml-mode</a></li>
+<li><a href="#sec-7-61">7.61. rainbow-mode</a></li>
+<li><a href="#sec-7-62">7.62. markdown-mode</a></li>
+<li><a href="#sec-7-63">7.63. lisp-mode</a></li>
+<li><a href="#sec-7-64">7.64. ruby-mode</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -573,6 +580,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     (local-set-key [f12] 'magit-quit-window))
 
   (defun init--magit-log-edit-mode ()
+    (local-set-key (kbd "C-c C-c") 'magit-log-edit-commit)
     (auto-fill-mode +1)
     (setq fill-column 72))
 
@@ -1163,8 +1171,15 @@ Start emacs server.
   (unless (eq system-type 'darwin)
     (add-hook 'delete-frame-functions 'server--run-delete-frame-functions))
 
+  (define-minor-mode server-edit-minor-mode
+    "Allow C-c C-c to run server-edit without change major modes keymap"
+    nil ""
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "C-c C-c") 'server-edit)
+      map))
+
   (defun init--server-visit ()
-    (local-set-key (kbd "C-c C-c") 'server-edit))
+    (server-edit-minor-mode +1))
 
   (add-hook 'server-visit-hook 'init--server-visit)
 
@@ -1909,6 +1924,7 @@ Misc editing config
   (add-hook 'mail-mode-hook 'flyspell-mode)
   (add-hook 'org-mode-hook 'flyspell-mode)
   (add-hook 'magit-log-edit-mode-hook 'flyspell-mode)
+  (add-hook 'markdown-mode-hook 'flyspell-mode)
 
   (global-set-key (kbd "C-4") 'ispell-word))
 ```
@@ -2033,7 +2049,9 @@ Misc editing config
 ```cl
 (define-module autopair
   (require-package 'autopair)
-  (setq autopair-blink nil))
+  (setq autopair-blink nil)
+
+  (add-hook 'scss-mode-hook 'autopair-mode))
 ```
 
 <a name="sec-7-50"></a>
@@ -2341,6 +2359,181 @@ the symbol at point."
       (mail-text)))
 
   (add-hook 'server-visit-hook 'init--mutt-compose))
+```
+
+<a name="sec-7-58"></a>
+## css
+
+css, sass, scss
+
+```cl
+(define-module css
+  (require-module haml-mode)
+  (require-package 'scss-mode)
+  (require-package 'sass-mode)
+
+  (custom-set-variables
+   '(scss-compile-at-save nil))
+
+  (defun init--sass-load ()
+    ;; do not indent after CSS attribute
+    (setq sass-non-block-openers
+          (cons
+           "^ *[-a-zA-Z0-9]+: "
+           sass-non-block-openers))
+    (remove-hook 'sass-mode-hook 'init--sass-load))
+
+  (add-hook 'sass-mode-hook 'init--sass-load))
+```
+
+<a name="sec-7-59"></a>
+## haml-mode
+
+```cl
+(define-module haml-mode
+  (require-package 'haml-mode))
+```
+
+<a name="sec-7-60"></a>
+## yaml-mode
+
+```cl
+(define-module yaml-mode
+  (require-package 'yaml-mode))
+```
+
+<a name="sec-7-61"></a>
+## rainbow-mode
+
+```cl
+(define-module rainbow-mode
+  (require-package 'rainbow-mode)
+
+  (add-hook 'css-mode-hook 'rainbow-mode)
+  (add-hook 'sass-mode-hook 'rainbow-mode)
+  (add-hook 'scss-mode-hook 'rainbow-mode))
+```
+
+<a name="sec-7-62"></a>
+## markdown-mode
+
+```cl
+(define-module markdown-mode
+  (require-package 'markdown-mode)
+
+  (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+  (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+
+  (add-hook 'markdown-mode-hook 'auto-fill-mode))
+```
+
+<a name="sec-7-63"></a>
+## lisp-mode
+
+```cl
+(define-module lisp-mode
+  (require-package 'paredit)
+
+  (defun paredit-wrap-round-from-behind ()
+    (interactive)
+
+    (forward-sexp -1)
+    (paredit-wrap-round)
+    (insert " ")
+    (forward-char -1))
+
+  (defun conditionally-enable-paredit-mode ()
+    "Enable `paredit-mode' in the minibuffer, during `eval-expression'."
+    (when (eq this-command 'eval-expression)
+      (paredit-mode +1)))
+
+  (defun init--emacs-lisp-load ()
+    (define-key emacs-lisp-mode-map (kbd "M-s /") 'describe-function)
+    (remove-hook 'emacs-lisp-mode-hook 'init--emacs-lisp-load))
+
+  (defun init--paredit-load ()
+    (define-key paredit-mode-map (kbd "M-)") 'paredit-wrap-round-from-behind)
+    (define-key paredit-mode-map (kbd "M-s") nil)
+    (define-key paredit-mode-map (kbd "M-S") nil)
+    (define-key paredit-mode-map [C-left] nil)
+    (define-key paredit-mode-map [C-right] nil)
+    (define-key paredit-mode-map [C-up] nil)
+    (define-key paredit-mode-map [C-down] nil)
+    (define-key paredit-mode-map (kbd "M-N") 'paredit-split-sexp)
+    (remove-hook 'paredit-mode-hook 'init--paredit-load))
+
+  (defun init--lisp-mode ()
+    (paredit-mode +1))
+
+  (defun init--paredit-mode ()
+    (if (minibufferp)
+        (progn
+          (local-set-key (kbd "M-p") 'previous-history-element)
+          (local-set-key (kbd "M-n") 'next-history-element))
+      (local-set-key (kbd "M-p") 'paredit-raise-sexp)
+      (local-set-key (kbd "M-n") 'paredit-splice-sexp)))
+
+  (add-hook 'paredit-mode-hook 'init--paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook 'init--lisp-mode)
+  (add-hook 'minibuffer-setup-hook 'conditionally-enable-paredit-mode)
+
+  (add-hook 'paredit-mode-hook 'init--paredit-load)
+  (add-hook 'emacs-lisp-mode-hook 'init--emacs-lisp-load))
+```
+
+<a name="sec-7-64"></a>
+## ruby-mode
+
+```cl
+(define-module ruby-mode
+  (custom-set-variables
+   '(ruby-deep-indent-paren nil))
+
+  (require-package 'ruby-end)
+  (require-package 'yari)
+
+  (defalias 'ri 'yari)
+
+  (defun init--ruby-mode ()
+    (local-set-key (kbd "M-s /") 'yari)
+
+    (ruby-end-mode +1)
+    (hs-minor-mode +1)
+    (autopair-mode +1)
+    (subword-mode +1)
+    (turn-on-auto-fill)
+
+    (setq autopair-extra-pairs '(:code ((?` . ?`)))))
+
+  ;;https://gist.github.com/dgutov/1274520
+  (defadvice ruby-indent-line (after unindent-closing-paren activate)
+    (let ((column (current-column))
+          indent offset)
+      (save-excursion
+        (back-to-indentation)
+        (let ((state (syntax-ppss)))
+          (setq offset (- column (current-column)))
+          (when (and (eq (char-after) ?\))
+                     (not (zerop (car state))))
+            (goto-char (cadr state))
+            (setq indent (current-indentation)))))
+      (when indent
+        (indent-line-to indent)
+        (when (> offset 0) (forward-char offset)))))
+
+  (add-to-list 'auto-mode-alist '("Rakefile\\'" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("Gemfile\\'" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("\\.rake\\'" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("\\.thor\\'" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("\\.ru\\'" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("Capfile\\'" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("Vagrantfile\\'" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("Guardfile\\'" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("\\.gemspec\\'" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("\\.rabl\\'" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("\\.jbuilder\\'" . ruby-mode))
+
+  (add-hook 'ruby-mode-hook 'init--ruby-mode))
 ```
 
 <a name="sec-8"></a>

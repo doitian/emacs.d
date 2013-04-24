@@ -1062,7 +1062,7 @@ Autoload babel languages.
        (intern (concat "org-babel-execute:" lang))
        (concat "ob-" lang)
        (format "Execute %s src block" lang)))
-   '("ruby" "sh" "R" "ditaa" "dot")))
+   '("ruby" "sh" "awk" "R" "ditaa" "dot")))
 ```
 
 <a name="sec-7-20"></a>

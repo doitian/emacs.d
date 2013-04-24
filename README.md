@@ -83,9 +83,11 @@
 <li><a href="#sec-7-54">7.54. alternative-files</a></li>
 <li><a href="#sec-7-55">7.55. ibuffer-mode</a></li>
 <li><a href="#sec-7-56">7.56. deft</a></li>
+<li><a href="#sec-7-57">7.57. mail</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
+<li><a href="#sec-9">9. Backlog</a></li>
 </ul>
 </div>
 </div>
@@ -571,7 +573,6 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     (local-set-key [f12] 'magit-quit-window))
 
   (defun init--magit-log-edit-mode ()
-    (flyspell-mode 1)
     (auto-fill-mode t)
     (setq fill-column 72))
 
@@ -652,8 +653,7 @@ Install latest org by running `make org`. Othewise system bundled version is use
   (defun init--org-mode ()
     (when (server-running-p) (wl-org-column-view-uses-fixed-width-face))
     (define-key org-mode-map (kbd "C-,") nil)
-    (define-key org-mode-map (kbd "C-c ,") 'org-cycle-agenda-files)
-    (flyspell-mode +1))
+    (define-key org-mode-map (kbd "C-c ,") 'org-cycle-agenda-files))
 
   (add-hook 'org-mode-hook 'init--org-mode)
 
@@ -1172,8 +1172,6 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
 ```cl
 (define-module backup
   ;; Place all backup files into this directory
-  (make-directory (expand-file-name "backup" user-emacs-directory) t)
-
   (custom-set-variables
    '(auto-save-interval 300)
    '(auto-save-timeout 10)
@@ -1901,6 +1899,9 @@ Misc editing config
 
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)
   (add-hook 'ruby-mode-hook 'flyspell-prog-mode)
+  (add-hook 'mail-mode-hook 'flyspell-mode)
+  (add-hook 'org-mode-hook 'flyspell-mode)
+  (add-hook 'magit-log-edit-mode-hook 'flyspell-mode)
 
   (global-set-key (kbd "C-4") 'ispell-word))
 ```
@@ -2316,10 +2317,23 @@ the symbol at point."
       (org-drill 'directory)))
 
   (define-key my-keymap "n" 'deft))
+```
 
+<a name="sec-7-57"></a>
+## mail
 
+```cl
+(define-module mail
+  (defun init--mutt-compose ()
+    (when (and
+           (buffer-file-name)
+           (string-match-p
+            "^mutt-"
+            (file-name-nondirectory (buffer-file-name))))
+      (mail-mode)
+      (mail-text)))
 
-
+  (add-hook 'server-visit-hook 'init--mutt-compose))
 ```
 
 <a name="sec-8"></a>
@@ -2341,4 +2355,18 @@ the symbol at point."
    (org org-basic org-files org-capture org-clock org-gtd
         org-agenda org-export org-speed org-pomodoro
         org-appt org-babel org-drill)))
+```
+
+<a name="sec-9"></a>
+# Backlog
+
+```cl
+(defun iy-server-visit-setup ()
+  (let ((base (file-name-nondirectory (or (buffer-file-name) default-directory))))
+    (cond ((member base '("MERGE_MSG" "COMMIT_EDITMSG"))
+           (auto-fill-mode t)
+           (setq fill-column 72)
+           (when (fboundp 'rails-minor-mode)
+             (rails-minor-mode 0))
+           (local-set-key (kbd "C-c C-c") 'server-edit)))))
 ```

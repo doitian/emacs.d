@@ -36,7 +36,7 @@
 
 (defgroup my-config nil "Customizations for init.el" :group 'emacs)
 
-(defcustom my-frame-font "Mono:pixelsize=21"
+(defcustom my-frame-font "Monospace:pixelsize=21"
   "Default font"
   :type 'string
   :group 'my-config
@@ -44,7 +44,7 @@
          (set-default symbol value)
          (set-frame-font value)))
 
-(defcustom my-frame-font-chinese "Mono:pixelsize=22"
+(defcustom my-frame-font-chinese "Monospace:pixelsize=22"
   "Chinese font"
   :type 'string
   :group 'my-config

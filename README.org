@@ -6,10 +6,12 @@ Use =make= or eval following lisp code. Move to the end of the expression, and p
 
 #+BEGIN_EXAMPLE
   (progn
-    (let* ((dir (concat (file-name-directory (buffer-file-name))))
+    (let* ((dir (file-name-directory (buffer-file-name)))
+           (site-lisp (concat dir "site-lisp"))
            (outfile (concat dir "init.el"))
-           (generated-autoload-file (concat dir "site-lisp/my-loaddefs.el")))
-      (update-directory-autoloads (concat dir "site-lisp"))
+           (generated-autoload-file (concat site-lisp "/my-loaddefs.el"))
+           (load-path (cons site-lisp load-path)))
+      (update-directory-autoloads site-lisp)
       (org-babel-tangle-file (buffer-file-name) outfile)
       (byte-compile-file outfile)))
 #+END_EXAMPLE
@@ -98,8 +100,12 @@ Remove annoying UI
     (progn (require 'cl)
            (require 'dash)
            (require 'module)))
-#+END_SRC
 
+  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (load custom-file t)
+  (load my-custom-readonly-file t)
+  (load my-secrets-file t)
+#+END_SRC
 
 * Theme
 
@@ -150,15 +156,6 @@ Remove annoying UI
 
 
 * My Config
-
-** Custom/secrets files
-
-#+BEGIN_SRC emacs-lisp
-  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-  (load custom-file t)
-  (load my-custom-readonly-file t)
-  (load my-secrets-file t)
-#+END_SRC
 
 ** Basic
 

@@ -4,6 +4,7 @@
 (setq mc/cmds-to-run-for-all
       '(
         back-to-indentation-or-beginning
+        delete-horizontal-space
         forward-symbol
         indent-region
         iy-go-to-char--command

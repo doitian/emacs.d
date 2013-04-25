@@ -18,6 +18,7 @@
 /bookmarks
 
 /init.el
+/init.elc*
 /custom.el
 /custom.readonly.el
 /secrets.el

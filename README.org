@@ -71,7 +71,6 @@ Remove annoying UI
   (setq inhibit-splash-screen t)
 #+END_SRC
 
-
 * Dependencies
 
 #+BEGIN_SRC emacs-lisp
@@ -100,9 +99,15 @@ Remove annoying UI
     (progn (require 'cl)
            (require 'dash)
            (require 'module)))
+#+END_SRC
 
+
+I don't have any settings through customization widgets. Uncomment lines below to load
+custom.el if you prefer it.
+
+#+BEGIN_SRC emacs-lisp
   (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-  (load custom-file t)
+  ;; (load custom-file t)
   (load my-custom-readonly-file t)
   (load my-secrets-file t)
 #+END_SRC

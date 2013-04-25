@@ -14,14 +14,13 @@
 <li><a href="#sec-4">4. Theme</a></li>
 <li><a href="#sec-5">5. My Config</a>
 <ul>
-<li><a href="#sec-5-1">5.1. Custom/secrets files</a></li>
-<li><a href="#sec-5-2">5.2. Basic</a></li>
-<li><a href="#sec-5-3">5.3. File system</a></li>
-<li><a href="#sec-5-4">5.4. Clipboard</a></li>
-<li><a href="#sec-5-5">5.5. Encoding</a></li>
-<li><a href="#sec-5-6">5.6. Enable Commands</a></li>
-<li><a href="#sec-5-7">5.7. Safe Variables</a></li>
-<li><a href="#sec-5-8">5.8. Aliases</a></li>
+<li><a href="#sec-5-1">5.1. Basic</a></li>
+<li><a href="#sec-5-2">5.2. File system</a></li>
+<li><a href="#sec-5-3">5.3. Clipboard</a></li>
+<li><a href="#sec-5-4">5.4. Encoding</a></li>
+<li><a href="#sec-5-5">5.5. Enable Commands</a></li>
+<li><a href="#sec-5-6">5.6. Safe Variables</a></li>
+<li><a href="#sec-5-7">5.7. Aliases</a></li>
 </ul>
 </li>
 <li><a href="#sec-6">6. ELPA</a></li>
@@ -119,10 +118,12 @@ Use `make` or eval following lisp code. Move to the end of the expression, and p
 
 ```cl
 (progn
-  (let* ((dir (concat (file-name-directory (buffer-file-name))))
+  (let* ((dir (file-name-directory (buffer-file-name)))
+         (site-lisp (concat dir "site-lisp"))
          (outfile (concat dir "init.el"))
-         (generated-autoload-file (concat dir "site-lisp/my-loaddefs.el")))
-    (update-directory-autoloads (concat dir "site-lisp"))
+         (generated-autoload-file (concat site-lisp "/my-loaddefs.el"))
+         (load-path (cons site-lisp load-path)))
+    (update-directory-autoloads site-lisp)
     (org-babel-tangle-file (buffer-file-name) outfile)
     (byte-compile-file outfile)))
 ```
@@ -215,6 +216,17 @@ Remove annoying UI
          (require 'module)))
 ```
 
+
+I don't have any settings through customization widgets. Uncomment lines below to load
+custom.el if you prefer it.
+
+```cl
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+;; (load custom-file t)
+(load my-custom-readonly-file t)
+(load my-secrets-file t)
+```
+
 <a name="sec-4"></a>
 # Theme
 
@@ -267,16 +279,6 @@ Remove annoying UI
 # My Config
 
 <a name="sec-5-1"></a>
-## Custom/secrets files
-
-```cl
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(load custom-file t)
-(load my-custom-readonly-file t)
-(load my-secrets-file t)
-```
-
-<a name="sec-5-2"></a>
 ## Basic
 
 ```cl
@@ -299,7 +301,7 @@ Remove annoying UI
  '(set-mark-command-repeat-pop t))
 ```
 
-<a name="sec-5-3"></a>
+<a name="sec-5-2"></a>
 ## File system
 
 ```cl
@@ -308,7 +310,7 @@ Remove annoying UI
  '(tramp-default-method-alist (quote (("\\`localhost\\'" "\\`root\\'" "sudo")))))
 ```
 
-<a name="sec-5-4"></a>
+<a name="sec-5-3"></a>
 ## Clipboard
 
 ```cl
@@ -317,7 +319,7 @@ Remove annoying UI
  '(x-select-enable-clipboard t))
 ```
 
-<a name="sec-5-5"></a>
+<a name="sec-5-4"></a>
 ## Encoding
 
 ```cl
@@ -331,7 +333,7 @@ Remove annoying UI
 (prefer-coding-system 'utf-8)
 ```
 
-<a name="sec-5-6"></a>
+<a name="sec-5-5"></a>
 ## Enable Commands
 
 ```cl
@@ -343,7 +345,7 @@ Remove annoying UI
 (put 'upcase-region 'disabled nil)
 ```
 
-<a name="sec-5-7"></a>
+<a name="sec-5-6"></a>
 ## Safe Variables
 
 ```cl
@@ -352,7 +354,7 @@ Remove annoying UI
                                 (outline-minor-mode . t))))
 ```
 
-<a name="sec-5-8"></a>
+<a name="sec-5-7"></a>
 ## Aliases
 
 ```cl

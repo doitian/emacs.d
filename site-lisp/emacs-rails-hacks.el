@@ -48,7 +48,8 @@
   (when (rails-project:root)
     (rails-hacks-rails-load)
     (rails-minor-mode t)
-    (rails-apply-for-buffer-type)))
+    (when (buffer-file-name)
+      (rails-apply-for-buffer-type))))
 
 ;;;###autoload
 (defun rails-hacks-maybe-turn-on-only-minor-mode ()

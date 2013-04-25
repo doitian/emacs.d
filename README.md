@@ -100,6 +100,7 @@
 <li><a href="#sec-7-71">7.71. woman</a></li>
 <li><a href="#sec-7-72">7.72. clean-buffer</a></li>
 <li><a href="#sec-7-73">7.73. uniquify-buffer</a></li>
+<li><a href="#sec-7-74">7.74. diminish</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -2730,6 +2731,45 @@ Install `emacs-rails` using `make vendor`
   (custom-set-variables
    '(uniquify-buffer-name-style (quote post-forward-angle-brackets) nil (uniquify))
    '(uniquify-strip-common-suffix nil)))
+```
+
+<a name="sec-7-74"></a>
+## diminish
+
+```cl
+(defmacro diminish-on-load (hook mode &optional to-what)
+  (let ((func (intern (concat "diminish-" (symbol-name mode)))))
+    `(if (and (boundp ',mode) ,mode)
+         (diminish ',mode ,to-what)
+       (defun ,func ()
+         (diminish ',mode ,to-what)
+         (remove-hook ',hook ',func))
+       (add-hook ',hook ',func))))
+
+(define-module diminish
+  (require-package 'diminish)
+
+  (diminish-on-load eproject-mode-hook eproject-mode)
+  (diminish-on-load highlight-parentheses-mode-hook highlight-parentheses-mode)
+  (diminish-on-load yas-minor-mode-hook yas-minor-mode)
+  (diminish-on-load whitespace-mode-hook global-whitespace-mode)
+  (diminish-on-load whitespace-mode-hook whitespace-mode)
+  (diminish-on-load whole-line-or-region-on-hook whole-line-or-region-mode)
+  (diminish-on-load hs-minor-mode-hook hs-minor-mode)
+  (diminish-on-load flyspell-mode-hook flyspell-mode " fS")
+  (diminish-on-load flycheck-mode-hook flycheck-mode " fC")
+  (diminish-on-load paredit-mode-hook paredit-mode)
+  (diminish-on-load undo-tree-mode-hook undo-tree-mode)
+  (diminish-on-load outline-minor-mode-hook outline-minor-mode)
+  (diminish-on-load highlight-indentation-mode-hook highlight-indentation-mode)
+  (diminish-on-load highlight-indentation-current-column-mode-hook highlight-indentation-current-column-mode)
+  (diminish-on-load rspec-mode-hook rspec-mode)
+  (diminish-on-load rails-rspec-model-minor-mode-hook rails-rspec-model-minor-mode)
+  (diminish-on-load rails-model-minor-mode-hook rails-model-minor-mode)
+  (diminish-on-load rails-controller-minor-mode-hook rails-controller-minor-mode)
+  (diminish-on-load ruby-end-mode-hook ruby-end-mode)
+  (diminish 'abbrev-mode)
+  (diminish 'auto-fill-function " F"))
 ```
 
 <a name="sec-8"></a>

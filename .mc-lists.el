@@ -4,12 +4,16 @@
 (setq mc/cmds-to-run-for-all
       '(
         back-to-indentation-or-beginning
+        forward-symbol
+        indent-region
         iy-go-to-char--command
         iy-go-to-char-quit
         org-beginning-of-line
         org-end-of-line
         paredit-forward-kill-word
         ruby-end-space
+        whole-line-or-region-kill-ring-save
+        whole-line-or-region-yank
         ))
 
 (setq mc/cmds-to-run-once

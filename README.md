@@ -41,66 +41,67 @@
 <li><a href="#sec-7-12">7.12. org-clock</a></li>
 <li><a href="#sec-7-13">7.13. org-gtd</a></li>
 <li><a href="#sec-7-14">7.14. org-agenda</a></li>
-<li><a href="#sec-7-15">7.15. org-export</a></li>
-<li><a href="#sec-7-16">7.16. org-speed</a></li>
-<li><a href="#sec-7-17">7.17. org-pomodoro</a></li>
-<li><a href="#sec-7-18">7.18. org-appt</a></li>
-<li><a href="#sec-7-19">7.19. org-babel</a></li>
-<li><a href="#sec-7-20">7.20. org-drill</a></li>
-<li><a href="#sec-7-21">7.21. case-dwim</a></li>
-<li><a href="#sec-7-22">7.22. server</a></li>
-<li><a href="#sec-7-23">7.23. backup</a></li>
-<li><a href="#sec-7-24">7.24. multiple-cursors</a></li>
-<li><a href="#sec-7-25">7.25. dired</a></li>
-<li><a href="#sec-7-26">7.26. windows-commands</a></li>
-<li><a href="#sec-7-27">7.27. buffers-commands</a></li>
-<li><a href="#sec-7-28">7.28. files-commands</a></li>
-<li><a href="#sec-7-29">7.29. vc</a></li>
-<li><a href="#sec-7-30">7.30. isearch</a></li>
-<li><a href="#sec-7-31">7.31. revert</a></li>
-<li><a href="#sec-7-32">7.32. eshell</a></li>
-<li><a href="#sec-7-33">7.33. eproject</a></li>
-<li><a href="#sec-7-34">7.34. helm</a></li>
-<li><a href="#sec-7-35">7.35. octave-mode</a></li>
-<li><a href="#sec-7-36">7.36. compile-and-run</a></li>
-<li><a href="#sec-7-37">7.37. editing</a></li>
-<li><a href="#sec-7-38">7.38. kill-ring</a></li>
-<li><a href="#sec-7-39">7.39. recentf</a></li>
-<li><a href="#sec-7-40">7.40. desktop</a></li>
-<li><a href="#sec-7-41">7.41. mark</a></li>
-<li><a href="#sec-7-42">7.42. whitespace</a></li>
-<li><a href="#sec-7-43">7.43. bookmark</a></li>
-<li><a href="#sec-7-44">7.44. spell</a></li>
-<li><a href="#sec-7-45">7.45. tab-fix</a></li>
-<li><a href="#sec-7-46">7.46. yasnippet</a></li>
-<li><a href="#sec-7-47">7.47. ediff-mode</a></li>
-<li><a href="#sec-7-48">7.48. time-stamp</a></li>
-<li><a href="#sec-7-49">7.49. autopair</a></li>
-<li><a href="#sec-7-50">7.50. highlight</a></li>
-<li><a href="#sec-7-51">7.51. hippie-expand</a></li>
-<li><a href="#sec-7-52">7.52. abbrev</a></li>
-<li><a href="#sec-7-53">7.53. search-files</a></li>
-<li><a href="#sec-7-54">7.54. alternative-files</a></li>
-<li><a href="#sec-7-55">7.55. ibuffer-mode</a></li>
-<li><a href="#sec-7-56">7.56. deft</a></li>
-<li><a href="#sec-7-57">7.57. mail</a></li>
-<li><a href="#sec-7-58">7.58. css</a></li>
-<li><a href="#sec-7-59">7.59. haml-mode</a></li>
-<li><a href="#sec-7-60">7.60. yaml-mode</a></li>
-<li><a href="#sec-7-61">7.61. rainbow-mode</a></li>
-<li><a href="#sec-7-62">7.62. markdown-mode</a></li>
-<li><a href="#sec-7-63">7.63. lisp-mode</a></li>
-<li><a href="#sec-7-64">7.64. ruby-mode</a></li>
-<li><a href="#sec-7-65">7.65. rails</a></li>
-<li><a href="#sec-7-66">7.66. rspec-mode</a></li>
-<li><a href="#sec-7-67">7.67. mmm-mode</a></li>
-<li><a href="#sec-7-68">7.68. flycheck</a></li>
-<li><a href="#sec-7-69">7.69. tmux-send</a></li>
-<li><a href="#sec-7-70">7.70. speedbar</a></li>
-<li><a href="#sec-7-71">7.71. woman</a></li>
-<li><a href="#sec-7-72">7.72. clean-buffer</a></li>
-<li><a href="#sec-7-73">7.73. uniquify-buffer</a></li>
-<li><a href="#sec-7-74">7.74. diminish</a></li>
+<li><a href="#sec-7-15">7.15. org-agenda-splash</a></li>
+<li><a href="#sec-7-16">7.16. org-export</a></li>
+<li><a href="#sec-7-17">7.17. org-speed</a></li>
+<li><a href="#sec-7-18">7.18. org-pomodoro</a></li>
+<li><a href="#sec-7-19">7.19. org-appt</a></li>
+<li><a href="#sec-7-20">7.20. org-babel</a></li>
+<li><a href="#sec-7-21">7.21. org-drill</a></li>
+<li><a href="#sec-7-22">7.22. case-dwim</a></li>
+<li><a href="#sec-7-23">7.23. server</a></li>
+<li><a href="#sec-7-24">7.24. backup</a></li>
+<li><a href="#sec-7-25">7.25. multiple-cursors</a></li>
+<li><a href="#sec-7-26">7.26. dired</a></li>
+<li><a href="#sec-7-27">7.27. windows-commands</a></li>
+<li><a href="#sec-7-28">7.28. buffers-commands</a></li>
+<li><a href="#sec-7-29">7.29. files-commands</a></li>
+<li><a href="#sec-7-30">7.30. vc</a></li>
+<li><a href="#sec-7-31">7.31. isearch</a></li>
+<li><a href="#sec-7-32">7.32. revert</a></li>
+<li><a href="#sec-7-33">7.33. eshell</a></li>
+<li><a href="#sec-7-34">7.34. eproject</a></li>
+<li><a href="#sec-7-35">7.35. helm</a></li>
+<li><a href="#sec-7-36">7.36. octave-mode</a></li>
+<li><a href="#sec-7-37">7.37. compile-and-run</a></li>
+<li><a href="#sec-7-38">7.38. editing</a></li>
+<li><a href="#sec-7-39">7.39. kill-ring</a></li>
+<li><a href="#sec-7-40">7.40. recentf</a></li>
+<li><a href="#sec-7-41">7.41. desktop</a></li>
+<li><a href="#sec-7-42">7.42. mark</a></li>
+<li><a href="#sec-7-43">7.43. whitespace</a></li>
+<li><a href="#sec-7-44">7.44. bookmark</a></li>
+<li><a href="#sec-7-45">7.45. spell</a></li>
+<li><a href="#sec-7-46">7.46. tab-fix</a></li>
+<li><a href="#sec-7-47">7.47. yasnippet</a></li>
+<li><a href="#sec-7-48">7.48. ediff-mode</a></li>
+<li><a href="#sec-7-49">7.49. time-stamp</a></li>
+<li><a href="#sec-7-50">7.50. autopair</a></li>
+<li><a href="#sec-7-51">7.51. highlight</a></li>
+<li><a href="#sec-7-52">7.52. hippie-expand</a></li>
+<li><a href="#sec-7-53">7.53. abbrev</a></li>
+<li><a href="#sec-7-54">7.54. search-files</a></li>
+<li><a href="#sec-7-55">7.55. alternative-files</a></li>
+<li><a href="#sec-7-56">7.56. ibuffer-mode</a></li>
+<li><a href="#sec-7-57">7.57. deft</a></li>
+<li><a href="#sec-7-58">7.58. mail</a></li>
+<li><a href="#sec-7-59">7.59. css</a></li>
+<li><a href="#sec-7-60">7.60. haml-mode</a></li>
+<li><a href="#sec-7-61">7.61. yaml-mode</a></li>
+<li><a href="#sec-7-62">7.62. rainbow-mode</a></li>
+<li><a href="#sec-7-63">7.63. markdown-mode</a></li>
+<li><a href="#sec-7-64">7.64. lisp-mode</a></li>
+<li><a href="#sec-7-65">7.65. ruby-mode</a></li>
+<li><a href="#sec-7-66">7.66. rails</a></li>
+<li><a href="#sec-7-67">7.67. rspec-mode</a></li>
+<li><a href="#sec-7-68">7.68. mmm-mode</a></li>
+<li><a href="#sec-7-69">7.69. flycheck</a></li>
+<li><a href="#sec-7-70">7.70. tmux-send</a></li>
+<li><a href="#sec-7-71">7.71. speedbar</a></li>
+<li><a href="#sec-7-72">7.72. woman</a></li>
+<li><a href="#sec-7-73">7.73. clean-buffer</a></li>
+<li><a href="#sec-7-74">7.74. uniquify-buffer</a></li>
+<li><a href="#sec-7-75">7.75. diminish</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -979,6 +980,15 @@ this with to-do items than with projects or headings."
 ```
 
 <a name="sec-7-15"></a>
+## org-agenda-splash
+
+```cl
+(define-module org-agenda-splash
+  (require-module org-agenda)
+  (org-agenda nil "d"))
+```
+
+<a name="sec-7-16"></a>
 ## org-export
 
 ```cl
@@ -1004,7 +1014,7 @@ this with to-do items than with projects or headings."
   (add-hook 'org-export-before-parsing-hook 'iy-org-ical-verify))
 ```
 
-<a name="sec-7-16"></a>
+<a name="sec-7-17"></a>
 ## org-speed
 
 ```cl
@@ -1039,7 +1049,7 @@ this with to-do items than with projects or headings."
     (org-capture 0)))
 ```
 
-<a name="sec-7-17"></a>
+<a name="sec-7-18"></a>
 ## org-pomodoro
 
 ```cl
@@ -1051,7 +1061,7 @@ this with to-do items than with projects or headings."
   (add-hook 'org-agenda-mode-hook 'org-pomodoro-on-org-agenda-load))
 ```
 
-<a name="sec-7-18"></a>
+<a name="sec-7-19"></a>
 ## org-appt
 
 ```cl
@@ -1074,7 +1084,7 @@ this with to-do items than with projects or headings."
    '(diary-file (concat my-dropbox-dir "diary"))))
 ```
 
-<a name="sec-7-19"></a>
+<a name="sec-7-20"></a>
 ## org-babel
 
 Autoload babel languages.
@@ -1092,7 +1102,7 @@ Autoload babel languages.
    '("ruby" "sh" "awk" "R" "ditaa" "dot")))
 ```
 
-<a name="sec-7-20"></a>
+<a name="sec-7-21"></a>
 ## org-drill
 
 ```cl
@@ -1113,7 +1123,7 @@ Autoload babel languages.
       (dired-map-over-marks (cons (dired-get-filename) (point)) arg)))))
 ```
 
-<a name="sec-7-21"></a>
+<a name="sec-7-22"></a>
 ## case-dwim
 
 Ease inserting dash `-` and undersocre `_`.
@@ -1142,7 +1152,7 @@ These commands are also `multiple-cursors` compatible.
   (define-key isearch-mode-map (kbd "M-u") 'case-dwim-isearch-underscore))
 ```
 
-<a name="sec-7-22"></a>
+<a name="sec-7-23"></a>
 ## server
 
 Start emacs server.
@@ -1199,7 +1209,7 @@ Start emacs server.
   (server-start))
 ```
 
-<a name="sec-7-23"></a>
+<a name="sec-7-24"></a>
 ## backup
 
 See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
@@ -1227,7 +1237,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   (add-hook 'auto-save-hook 'init--force-backup))
 ```
 
-<a name="sec-7-24"></a>
+<a name="sec-7-25"></a>
 ## multiple-cursors
 
 ```cl
@@ -1261,7 +1271,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   (define-key ctl-x-r-map [return] 'set-rectangular-region-anchor))
 ```
 
-<a name="sec-7-25"></a>
+<a name="sec-7-26"></a>
 ## dired
 
 ```cl
@@ -1338,7 +1348,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
 )
 ```
 
-<a name="sec-7-26"></a>
+<a name="sec-7-27"></a>
 ## windows-commands
 
 ```cl
@@ -1348,7 +1358,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   )
 ```
 
-<a name="sec-7-27"></a>
+<a name="sec-7-28"></a>
 ## buffers-commands
 
 ```cl
@@ -1360,7 +1370,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   )
 ```
 
-<a name="sec-7-28"></a>
+<a name="sec-7-29"></a>
 ## files-commands
 
 ```cl
@@ -1370,7 +1380,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   )
 ```
 
-<a name="sec-7-29"></a>
+<a name="sec-7-30"></a>
 ## vc
 
 Version Control backends.
@@ -1406,7 +1416,7 @@ add changes interactively using `ediff`.
   (global-set-key (kbd "<ESC> <f12>") 'git-status))
 ```
 
-<a name="sec-7-30"></a>
+<a name="sec-7-31"></a>
 ## isearch
 
 ```cl
@@ -1447,7 +1457,7 @@ This is useful when followed by an immediate kill."
   (define-key my-keymap "8" 'isearch-forward-at-point))
 ```
 
-<a name="sec-7-31"></a>
+<a name="sec-7-32"></a>
 ## revert
 
 Auto revert, and helper functions to revert without confirmation.
@@ -1466,7 +1476,7 @@ Auto revert, and helper functions to revert without confirmation.
   (setq auto-revert-verbose nil))
 ```
 
-<a name="sec-7-32"></a>
+<a name="sec-7-33"></a>
 ## eshell
 
 ```cl
@@ -1507,7 +1517,7 @@ inactive -> switch -> full screen -> hide
   (define-key my-keymap (kbd "E") 'eshell-here))
 ```
 
-<a name="sec-7-33"></a>
+<a name="sec-7-34"></a>
 ## eproject
 
 ```cl
@@ -1520,7 +1530,7 @@ inactive -> switch -> full screen -> hide
   (define-key my-keymap (kbd "p p") 'eproject-revisit-project))
 ```
 
-<a name="sec-7-34"></a>
+<a name="sec-7-35"></a>
 ## helm
 
 ```cl
@@ -1653,7 +1663,7 @@ inactive -> switch -> full screen -> hide
 
 ```
 
-<a name="sec-7-35"></a>
+<a name="sec-7-36"></a>
 ## octave-mode
 
 ```cl
@@ -1661,7 +1671,7 @@ inactive -> switch -> full screen -> hide
   (add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode)))
 ```
 
-<a name="sec-7-36"></a>
+<a name="sec-7-37"></a>
 ## compile-and-run
 
 ```cl
@@ -1767,7 +1777,7 @@ inactive -> switch -> full screen -> hide
   (global-set-key (kbd "C-~") 'previous-error))
 ```
 
-<a name="sec-7-37"></a>
+<a name="sec-7-38"></a>
 ## editing
 
 Misc editing config
@@ -1799,7 +1809,7 @@ Misc editing config
   (global-set-key (kbd "C-8") 'pop-tag-mark))
 ```
 
-<a name="sec-7-38"></a>
+<a name="sec-7-39"></a>
 ## kill-ring
 
 ```cl
@@ -1821,7 +1831,7 @@ Misc editing config
       ad-do-it)))
 ```
 
-<a name="sec-7-39"></a>
+<a name="sec-7-40"></a>
 ## recentf
 
 ```cl
@@ -1837,7 +1847,7 @@ Misc editing config
   (global-set-key [f2] 'recentf-open-files))
 ```
 
-<a name="sec-7-40"></a>
+<a name="sec-7-41"></a>
 ## desktop
 
 ```cl
@@ -1867,7 +1877,7 @@ Misc editing config
   (add-to-list 'desktop-modes-not-to-save 'fundamental-mode))
 ```
 
-<a name="sec-7-41"></a>
+<a name="sec-7-42"></a>
 ## mark
 
 ```cl
@@ -1885,7 +1895,7 @@ Misc editing config
     (deactivate-mark)))
 ```
 
-<a name="sec-7-42"></a>
+<a name="sec-7-43"></a>
 ## whitespace
 
 ```cl
@@ -1903,7 +1913,7 @@ Misc editing config
   (global-whitespace-mode +1))
 ```
 
-<a name="sec-7-43"></a>
+<a name="sec-7-44"></a>
 ## bookmark
 
 ```cl
@@ -1927,7 +1937,7 @@ Misc editing config
   (global-set-key (kbd "C-x j SPC") 'jump-to-register))
 ```
 
-<a name="sec-7-44"></a>
+<a name="sec-7-45"></a>
 ## spell
 
 ```cl
@@ -1951,7 +1961,7 @@ Misc editing config
   (global-set-key (kbd "C-4") 'ispell-word))
 ```
 
-<a name="sec-7-45"></a>
+<a name="sec-7-46"></a>
 ## tab-fix
 
 ```cl
@@ -1972,7 +1982,7 @@ Misc editing config
   (add-hook 'markdown-mode-hook 'tab-fix-org-mode))
 ```
 
-<a name="sec-7-46"></a>
+<a name="sec-7-47"></a>
 ## yasnippet
 
 Compile all snippets into `snippets.el` and load it. After change or and any snippets, must
@@ -1985,7 +1995,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
 (define-module yasnippet
   (require-package 'yasnippet)
   (require-package 'popup)
-  (require 'dropdown-list nil t)
+  (require 'popup nil t)
 
   (custom-set-variables
    '(yas-trigger-key "TAB")
@@ -2046,7 +2056,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
 
 ```
 
-<a name="sec-7-47"></a>
+<a name="sec-7-48"></a>
 ## ediff-mode
 
 ```cl
@@ -2062,7 +2072,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
       (ediff-show-registry))))
 ```
 
-<a name="sec-7-48"></a>
+<a name="sec-7-49"></a>
 ## time-stamp
 
 ```cl
@@ -2074,7 +2084,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
         time-stamp-end ">"))
 ```
 
-<a name="sec-7-49"></a>
+<a name="sec-7-50"></a>
 ## autopair
 
 ```cl
@@ -2088,7 +2098,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (add-hook 'java-mode-hook 'autopair-mode))
 ```
 
-<a name="sec-7-50"></a>
+<a name="sec-7-51"></a>
 ## highlight
 
 ```cl
@@ -2122,7 +2132,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (add-hook 'ruby-mode-hook 'highlight-parentheses-mode))
 ```
 
-<a name="sec-7-51"></a>
+<a name="sec-7-52"></a>
 ## hippie-expand
 
 ```cl
@@ -2148,7 +2158,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (global-set-key (kbd "M-/") 'hippie-expand))  
 ```
 
-<a name="sec-7-52"></a>
+<a name="sec-7-53"></a>
 ## abbrev
 
 ```cl
@@ -2158,7 +2168,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
    '(mail-abbrevs-mode t)))
 ```
 
-<a name="sec-7-53"></a>
+<a name="sec-7-54"></a>
 ## search-files
 
 ```cl
@@ -2173,7 +2183,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (global-set-key (kbd "<f11>") 'find-grep-dired))
 ```
 
-<a name="sec-7-54"></a>
+<a name="sec-7-55"></a>
 ## alternative-files
 
 ```cl
@@ -2222,7 +2232,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (define-key my-keymap (kbd "A") 'alternative-files-create-file))
 ```
 
-<a name="sec-7-55"></a>
+<a name="sec-7-56"></a>
 ## ibuffer-mode
 
 ```cl
@@ -2322,7 +2332,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
 
 ```
 
-<a name="sec-7-56"></a>
+<a name="sec-7-57"></a>
 ## deft
 
 ```cl
@@ -2348,7 +2358,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (define-key my-keymap "n" 'deft))
 ```
 
-<a name="sec-7-57"></a>
+<a name="sec-7-58"></a>
 ## mail
 
 ```cl
@@ -2365,7 +2375,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (add-hook 'server-visit-hook 'init--mutt-compose))
 ```
 
-<a name="sec-7-58"></a>
+<a name="sec-7-59"></a>
 ## css
 
 css, sass, scss
@@ -2390,7 +2400,7 @@ css, sass, scss
   (add-hook 'sass-mode-hook 'init--sass-load))
 ```
 
-<a name="sec-7-59"></a>
+<a name="sec-7-60"></a>
 ## haml-mode
 
 ```cl
@@ -2398,7 +2408,7 @@ css, sass, scss
   (require-package 'haml-mode))
 ```
 
-<a name="sec-7-60"></a>
+<a name="sec-7-61"></a>
 ## yaml-mode
 
 ```cl
@@ -2406,7 +2416,7 @@ css, sass, scss
   (require-package 'yaml-mode))
 ```
 
-<a name="sec-7-61"></a>
+<a name="sec-7-62"></a>
 ## rainbow-mode
 
 ```cl
@@ -2418,7 +2428,7 @@ css, sass, scss
   (add-hook 'scss-mode-hook 'rainbow-mode))
 ```
 
-<a name="sec-7-62"></a>
+<a name="sec-7-63"></a>
 ## markdown-mode
 
 ```cl
@@ -2431,7 +2441,7 @@ css, sass, scss
   (add-hook 'markdown-mode-hook 'auto-fill-mode))
 ```
 
-<a name="sec-7-63"></a>
+<a name="sec-7-64"></a>
 ## lisp-mode
 
 ```cl
@@ -2485,7 +2495,7 @@ css, sass, scss
   (add-hook 'emacs-lisp-mode-hook 'init--emacs-lisp-load))
 ```
 
-<a name="sec-7-64"></a>
+<a name="sec-7-65"></a>
 ## ruby-mode
 
 ```cl
@@ -2539,7 +2549,7 @@ css, sass, scss
   (add-hook 'ruby-mode-hook 'init--ruby-mode))
 ```
 
-<a name="sec-7-65"></a>
+<a name="sec-7-66"></a>
 ## rails
 
 Install `emacs-rails` using `make vendor`
@@ -2556,7 +2566,7 @@ Install `emacs-rails` using `make vendor`
   (require 'emacs-rails-hacks))
 ```
 
-<a name="sec-7-66"></a>
+<a name="sec-7-67"></a>
 ## rspec-mode
 
 ```cl
@@ -2582,7 +2592,7 @@ Install `emacs-rails` using `make vendor`
    '(rspec-key-command-prefix (kbd "M-s v"))))
 ```
 
-<a name="sec-7-67"></a>
+<a name="sec-7-68"></a>
 ## mmm-mode
 
 ```cl
@@ -2644,7 +2654,7 @@ Install `emacs-rails` using `make vendor`
   (add-to-list 'auto-mode-alist '("\\.jst\\.ejs\\'"  . html-erb-mode)))
 ```
 
-<a name="sec-7-68"></a>
+<a name="sec-7-69"></a>
 ## flycheck
 
 ```cl
@@ -2665,7 +2675,7 @@ Install `emacs-rails` using `make vendor`
   (global-set-key (kbd "M-~") 'flycheck-previous-error))
 ```
 
-<a name="sec-7-69"></a>
+<a name="sec-7-70"></a>
 ## tmux-send
 
 ```cl
@@ -2674,7 +2684,7 @@ Install `emacs-rails` using `make vendor`
   (global-set-key (kbd "C-<f6>") 'tmux-select))
 ```
 
-<a name="sec-7-70"></a>
+<a name="sec-7-71"></a>
 ## speedbar
 
 ```cl
@@ -2683,7 +2693,7 @@ Install `emacs-rails` using `make vendor`
   (global-set-key (kbd "<ESC> <f7>") 'speedbar-get-focus))
 ```
 
-<a name="sec-7-71"></a>
+<a name="sec-7-72"></a>
 ## woman
 
 ```cl
@@ -2694,7 +2704,7 @@ Install `emacs-rails` using `make vendor`
   (fset 'man 'woman))
 ```
 
-<a name="sec-7-72"></a>
+<a name="sec-7-73"></a>
 ## clean-buffer
 
 ```cl
@@ -2706,7 +2716,7 @@ Install `emacs-rails` using `make vendor`
    '(midnight-mode t nil (midnight))))
 ```
 
-<a name="sec-7-73"></a>
+<a name="sec-7-74"></a>
 ## uniquify-buffer
 
 ```cl
@@ -2716,7 +2726,7 @@ Install `emacs-rails` using `make vendor`
    '(uniquify-strip-common-suffix nil)))
 ```
 
-<a name="sec-7-74"></a>
+<a name="sec-7-75"></a>
 ## diminish
 
 ```cl
@@ -2772,7 +2782,7 @@ Install `emacs-rails` using `make vendor`
 
    ;; org-group: org modules
    (org org-basic org-files org-capture org-clock org-gtd
-        org-agenda org-export org-speed org-pomodoro
+        org-agenda org-agenda-splash org-export org-speed org-pomodoro
         org-appt org-babel org-drill)))
 ```
 

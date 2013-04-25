@@ -832,6 +832,12 @@ Opinioned GTD config based on org
     )
 #+END_SRC
 
+** org-agenda-splash
+#+BEGIN_SRC emacs-lisp
+  (define-module org-agenda-splash
+    (require-module org-agenda)
+    (org-agenda nil "d"))
+#+END_SRC
 ** org-export
 
 #+BEGIN_SRC emacs-lisp
@@ -1797,7 +1803,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
   (define-module yasnippet
     (require-package 'yasnippet)
     (require-package 'popup)
-    (require 'dropdown-list nil t)
+    (require 'popup nil t)
     
     (custom-set-variables
      '(yas-trigger-key "TAB")
@@ -2546,7 +2552,7 @@ Install =emacs-rails= using =make vendor=
   
      ;; org-group: org modules
      (org org-basic org-files org-capture org-clock org-gtd
-          org-agenda org-export org-speed org-pomodoro
+          org-agenda org-agenda-splash org-export org-speed org-pomodoro
           org-appt org-babel org-drill)))
 #+END_SRC
 

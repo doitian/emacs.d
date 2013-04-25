@@ -1792,7 +1792,8 @@ Misc editing config
   (define-key global-map "\C-j" 'newline)
   (define-key global-map "\C-m" 'newline-and-indent)
   (global-set-key (kbd "M-<return>") 'mf-next-line-and-open-it-if-not-empty)
-  (global-set-key (kbd "M-S-<return>") 'mf-append-line-delimter-then-next-line-and-open-it-if-not-empty)
+  (global-set-key (kbd "C-M-<return>") 'mf-append-line-delimter-then-next-line-and-open-it-if-not-empty)
+  (global-set-key (kbd "C-M-;") 'mf-append-line-delimter-then-next-line-and-open-it-if-not-empty)
   (global-set-key (kbd "s-<return>") 'mf-next-line-and-open-it-if-not-empty)
   (global-set-key (kbd "C-x C-o") 'mf-shrink-whitespaces)
   (global-set-key (kbd "C-8") 'pop-tag-mark))
@@ -2083,7 +2084,8 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
 
   (add-hook 'scss-mode-hook 'autopair-mode)
   (add-hook 'ruby-mode-hook 'autopair-mode)
-  (add-hook 'sh-mode-hook 'autopair-mode))
+  (add-hook 'sh-mode-hook 'autopair-mode)
+  (add-hook 'java-mode-hook 'autopair-mode))
 ```
 
 <a name="sec-7-50"></a>

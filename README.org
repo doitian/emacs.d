@@ -1966,42 +1966,12 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
   (define-module search-files
     (require-package 'ag)
   
-    (defun ag/dwim-at-point--no-properties ()
-      "If there's an active selection, return that. Otherwise, get
-  the symbol at point."
-      (if (use-region-p)
-          (buffer-substring-no-properties (region-beginning) (region-end))
-        (if (symbol-at-point)
-            (let ((symbol (symbol-name (symbol-at-point))))
-              (set-text-properties 0 (length symbol) nil symbol)
-              symbol))))
-  
-    (defun agap (string dir is-regexp)
-      "Search string at point inside current directory. Use prefix arg to search by regexp."
-      (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point--no-properties))
-                         (ido-read-directory-name "in: ")
-                         current-prefix-arg))
-      (ag/search string dir is-regexp))
-  
-    (defun agap-regexp (string dir)
-      "Search string at point inside current directory."
-      (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point--no-properties))
-                         (ido-read-directory-name default-directory)))
-      (ag/search string dir t))
-  
-    (fset 'ag (function agap))
-    (eval-after-load "ag"
-      '(progn
-         (fset 'ag (function agap))
-         (fset 'ag-regexp (function agap-regexp))))
-  
     (define-key my-keymap (kbd "o") 'occur)
     (define-key my-keymap (kbd "O") 'multi-occur)
     (define-key my-keymap (kbd "C-o") 'multi-occur-in-matching-buffers)
-    (global-set-key (kbd "<f11>") 'occur)
-  
-    (global-set-key (kbd "<f9>") 'agap)
-    (global-set-key (kbd "<f10>") 'rgrep))
+    (global-set-key (kbd "<f9>") 'rgrep)
+    (global-set-key (kbd "<f10>") 'find-dired)
+    (global-set-key (kbd "<f11>") 'find-grep-dired))
 #+END_SRC
 
 ** alternative-files

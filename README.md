@@ -2591,6 +2591,7 @@ Install `emacs-rails` using `make vendor`
 
 ```cl
 (define-module rspec-mode
+  ;; require the two macros to compile rspec-mode correctly.
   (defmacro rspec-from-directory (directory body-form)
     "Peform body-form from the specified directory"
     `(let ((default-directory ,directory))

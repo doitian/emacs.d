@@ -4,17 +4,23 @@
 (setq mc/cmds-to-run-for-all
       '(
         back-to-indentation-or-beginning
+        c-electric-delete-forward
+        c-electric-semi&comma
         delete-horizontal-space
         forward-symbol
         indent-region
         iy-go-to-char--command
+        iy-go-to-char-kill-region
         iy-go-to-char-quit
         org-beginning-of-line
         org-end-of-line
         paredit-forward-kill-word
         ruby-end-space
+        whole-line-or-region-kill-region
         whole-line-or-region-kill-ring-save
         whole-line-or-region-yank
+        yas-expand
+        zap-up-to-char
         ))
 
 (setq mc/cmds-to-run-once

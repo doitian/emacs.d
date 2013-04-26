@@ -375,8 +375,9 @@ custom.el if you prefer it.
 (defalias 'fl 'add-file-local-variable-prop-line)
 (defalias 'dl 'add-dir-local-variable)
 (defalias 'ack 'agap)
-(defalias 'sudo 'mf-find-alternative-file-with-sudo)
+(defalias 'sudo 'mf-find-alternativefooe-with-sudo)
 (defalias 'af 'auto-fill-mode)
+(defalias 'vi 'toggle-viper-mode)
 ```
 
 <a name="sec-6"></a>
@@ -1541,11 +1542,13 @@ inactive -> switch -> full screen -> hide
 ```cl
 (define-module helm
   (require-module eproject)
+  (require-module alternative-files)
   (require-package 'helm)
   (require 'helm-config)
 
   (defvar helm-source-eproject-projects nil)
   (defvar helm-source-eproject-files-in-project nil)
+  (defvar helm-source-alternative-files nil)
 
   (setq helm-source-eproject-projects
         '((name . "Projects")
@@ -1566,6 +1569,15 @@ inactive -> switch -> full screen -> hide
           (candidates . (lambda ()
                           (with-helm-current-buffer
                             (eproject-plus-list-project-files-with-cache (eproject-root-safe)))))
+          (type . file)))
+
+  (setq helm-source-alternative-files
+        '((name . "Alternative Files")
+          (candidates . (lambda ()
+                          (with-helm-current-buffer (alternative-files-existing))))
+          (real-to-display . (lambda (e)
+                               (with-helm-current-buffer
+                                (file-relative-name e (eproject-root-safe)))))
           (type . file)))
 
   (defun helm-eproject-projects ()
@@ -1611,7 +1623,8 @@ inactive -> switch -> full screen -> hide
   ;;; Sources
   (defvar my-helm-sources nil)
   (setq my-helm-sources
-        '(helm-source-files-in-current-dir
+        '(helm-source-alternative-files
+          helm-source-files-in-current-dir
           helm-source-eproject-files-in-project
           helm-source-eproject-projects
           helm-source-buffers-list

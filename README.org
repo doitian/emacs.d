@@ -235,23 +235,24 @@ custom.el if you prefer it.
 ** Aliases
 
 #+BEGIN_SRC emacs-lisp
-(fset 'yes-or-no-p 'y-or-n-p)
-(defalias 'save-pwd 'mf-xsteve-save-current-directory)
-(defalias 'qrr 'query-replace-regexp)
-(defalias 'rr 'replace-regexp)
-(defalias 'rb 'revert-buffer-no-confirm)
-(defalias 'occ 'occur)
-(defalias 'mocc 'multi-occur)
-(defalias 'moccr 'multi-occur-in-matching-buffers)
-(defalias 'aa 'helm-apropos)
-(defalias 'wc 'whitespace-cleanup)
-(defalias 'flb 'add-file-local-variable)
-(defalias 'fll 'add-file-local-variable-prop-line)
-(defalias 'fl 'add-file-local-variable-prop-line)
-(defalias 'dl 'add-dir-local-variable)
-(defalias 'ack 'agap)
-(defalias 'sudo 'mf-find-alternative-file-with-sudo)
-(defalias 'af 'auto-fill-mode)
+  (fset 'yes-or-no-p 'y-or-n-p)
+  (defalias 'save-pwd 'mf-xsteve-save-current-directory)
+  (defalias 'qrr 'query-replace-regexp)
+  (defalias 'rr 'replace-regexp)
+  (defalias 'rb 'revert-buffer-no-confirm)
+  (defalias 'occ 'occur)
+  (defalias 'mocc 'multi-occur)
+  (defalias 'moccr 'multi-occur-in-matching-buffers)
+  (defalias 'aa 'helm-apropos)
+  (defalias 'wc 'whitespace-cleanup)
+  (defalias 'flb 'add-file-local-variable)
+  (defalias 'fll 'add-file-local-variable-prop-line)
+  (defalias 'fl 'add-file-local-variable-prop-line)
+  (defalias 'dl 'add-dir-local-variable)
+  (defalias 'ack 'agap)
+  (defalias 'sudo 'mf-find-alternativefooe-with-sudo)
+  (defalias 'af 'auto-fill-mode)
+  (defalias 'vi 'toggle-viper-mode)
 #+END_SRC
 
 * ELPA
@@ -1363,11 +1364,13 @@ Auto revert, and helper functions to revert without confirmation.
 #+BEGIN_SRC emacs-lisp
   (define-module helm
     (require-module eproject)
+    (require-module alternative-files)
     (require-package 'helm)
     (require 'helm-config)
   
     (defvar helm-source-eproject-projects nil)
     (defvar helm-source-eproject-files-in-project nil)
+    (defvar helm-source-alternative-files nil)
   
     (setq helm-source-eproject-projects
           '((name . "Projects")
@@ -1388,6 +1391,15 @@ Auto revert, and helper functions to revert without confirmation.
             (candidates . (lambda ()
                             (with-helm-current-buffer
                               (eproject-plus-list-project-files-with-cache (eproject-root-safe)))))
+            (type . file)))
+  
+    (setq helm-source-alternative-files
+          '((name . "Alternative Files")
+            (candidates . (lambda ()
+                            (with-helm-current-buffer (alternative-files-existing))))
+            (real-to-display . (lambda (e)
+                                 (with-helm-current-buffer
+                                  (file-relative-name e (eproject-root-safe)))))
             (type . file)))
   
     (defun helm-eproject-projects ()
@@ -1433,7 +1445,8 @@ Auto revert, and helper functions to revert without confirmation.
     ;;; Sources
     (defvar my-helm-sources nil)
     (setq my-helm-sources
-          '(helm-source-files-in-current-dir
+          '(helm-source-alternative-files
+            helm-source-files-in-current-dir
             helm-source-eproject-files-in-project
             helm-source-eproject-projects
             helm-source-buffers-list

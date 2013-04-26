@@ -33,8 +33,6 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'cl))
-
 ;; Customization
 (defgroup alternative-files nil "Find alternative files"
   :group 'files)
@@ -249,20 +247,20 @@ Use `pluralize-string' in `inflections.el' or just append trailing s."
 
 (defvar alternative-files nil
   "Cache for alternative files.")
-(defvar alternative-files-executed nil
+(defvar alternative-files-cached nil
   "Cache for alternative files execution flag.")
 (make-variable-buffer-local 'alternative-files)
 (put 'alternative-files 'safe-local-variable 'listp)
 (put 'alternative-files 'permanent-local t)
-(make-variable-buffer-local 'alternative-files-executed)
-(put 'alternative-files-executed 'permanent-local t)
+(make-variable-buffer-local 'alternative-files-cached)
+(put 'alternative-files-cached 'permanent-local t)
 
 (defun alternative-files (&optional force)
   "Find alternative files.
 If FORCE is t, do not use the cache."
   (interactive "P")
-  (when (or force (not alternative-files-executed))
-    (setq alternative-files-executed t)
+  (when (or force (not alternative-files-cached))
+    (setq alternative-files-cached t)
     (setq alternative-files (delete-dups
                              (apply
                               'append
@@ -272,21 +270,31 @@ If FORCE is t, do not use the cache."
   alternative-files)
 
 ;;;###autoload
+(defun alternative-files-existing (&optional force)
+  "List of existing alternative files"
+  (apply
+   'append
+   (mapcar
+    (lambda (f)
+      (when (file-exists-p f)
+        (if (file-directory-p f)
+            (file-expand-wildcards (concat f "*") t)
+          (list f))))
+    (alternative-files force))))
+
+;;;###autoload
+(defun alternative-files-missing (&optional force)
+  "List of missing alternative files."
+  (delq nil (mapc (lambda (f) (when (file-exists-p f) f)) (alternative-files force))))
+
+;;;###autoload
 (defun alternative-files-find-file (&optional p)
   "Find alternative files.
 
 With a \\[universal-argument] prefix argument P to open in other window, \\[universal-argument] \\[universal-argument] to reload alternative file list"
   (interactive "p")
   (let* ((root (ignore-errors (funcall alternative-files-root-dir-function)))
-         (files (apply
-                 'append
-                 (mapcar
-                  (lambda (f)
-                    (when (file-exists-p f)
-                      (if (file-directory-p f)
-                          (file-expand-wildcards (concat f "*") t)
-                        (list f))))
-                  (alternative-files (= p 16)))))
+         (files (alternative-files-existing (= p 16)))
          (file-names (if root
                          (mapcar (lambda (f) (alternative-files--relative-name f root)) files)
                        files))
@@ -308,7 +316,7 @@ With a \\[universal-argument] prefix argument P to open in other window, \\[univ
 With a \\[universal-argument] prefix argument P to open in other window, \\[universal-argument] \\[universal-argument] to reload alternative file list."
   (interactive "p")
   (let* ((root (ignore-errors (funcall alternative-files-root-dir-function)))
-         (files (delq nil (mapc (lambda (f) (when (file-exists-p f) f)) (alternative-files (= p 16)))))
+         (files (alternative-files-missing (= p 16)))
          (file-names (if root
                          (mapcar (lambda (f) (alternative-files--relative-name f root)) files)
                        files))

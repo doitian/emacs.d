@@ -101,6 +101,8 @@
 <li><a href="#sec-7-73">7.73. clean-buffer</a></li>
 <li><a href="#sec-7-74">7.74. uniquify-buffer</a></li>
 <li><a href="#sec-7-75">7.75. diminish</a></li>
+<li><a href="#sec-7-76">7.76. dtrt-indent</a></li>
+<li><a href="#sec-7-77">7.77. undo-tree</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -987,7 +989,9 @@ this with to-do items than with projects or headings."
 ```cl
 (define-module org-agenda-splash
   (require-module org-agenda)
-  (org-agenda nil "d"))
+  (save-excursion
+    (save-window-excursion
+      (org-agenda nil "d"))))
 ```
 
 <a name="sec-7-16"></a>
@@ -1181,8 +1185,7 @@ Start emacs server.
     :type '(repeat symbol))
 
   (defun server--last-frontend-frame-p ()
-    (and (server-running-p)
-         (= 2 (length (frame-list)))))
+    (= 2 (length (frame-list))))
 
   (defun server--run-delete-frame-functions (frame)
     (when (server--last-frontend-frame-p)
@@ -1192,7 +1195,7 @@ Start emacs server.
             server-delete-frame-functions)))
 
   ;; Buggy to run the functions in MacOS X
-  (unless (eq system-type 'darwin)
+  (when (and (daemonp) (not (eq system-type 'darwin)))
     (add-hook 'delete-frame-functions 'server--run-delete-frame-functions))
 
   (define-minor-mode server-edit-minor-mode
@@ -2767,6 +2770,27 @@ Install `emacs-rails` using `make vendor`
   (diminish 'auto-fill-function " F"))
 ```
 
+<a name="sec-7-76"></a>
+## dtrt-indent
+
+```cl
+(define-module dtrt-indent
+  (require 'dtrt-indent)
+  (dtrt-indent-mode 1))
+```
+
+<a name="sec-7-77"></a>
+## undo-tree
+
+```cl
+(define-module undo-tree
+  (require-package 'undo-tree)
+  (global-undo-tree-mode)
+  (define-key undo-tree-map (kbd "C-x r") nil)
+  (define-key ctl-x-r-map "u" 'undo-tree-save-state-to-register)
+  (define-key ctl-x-r-map "U" 'undo-tree-restore-state-from-register))
+```
+
 <a name="sec-8"></a>
 # Module Groups
 
@@ -2815,13 +2839,6 @@ Install `emacs-rails` using `make vendor`
   (sml-modeline-mode))
 
 (push 'pos-tip el-get-packages)
-
-(push 'undo-tree el-get-packages)
-(defun iy-el-get-after-undo-tree ()
-  (global-undo-tree-mode)
-  (define-key undo-tree-map (kbd "C-x r u") nil)
-  (define-key undo-tree-map (kbd "C-x r U") nil)
-  (define-key undo-tree-map (kbd "C-x r") nil))
 
 (push 'highlight-indentation el-get-packages)
 (autoload 'highlight-indentation-mode "highlight-indentation" nil t)

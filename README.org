@@ -422,6 +422,15 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
     (add-hook 'ido-setup-hook 'init--ido-setup))
 #+END_SRC
 
+** ido-vertical-mode
+
+#+BEGIN_SRC emacs-lisp
+  (define-module ido-vertical-mode
+    (require-module ido)
+    (require-package 'ido-vertical-mode)
+    (ido-vertical-mode +1))
+#+END_SRC
+
 ** magit
 
 #+BEGIN_SRC emacs-lisp

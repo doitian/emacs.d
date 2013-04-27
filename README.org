@@ -1477,8 +1477,8 @@ Auto revert, and helper functions to revert without confirmation.
     (define-key helm-command-map (kbd "r") 'helm-register)
     (define-key helm-command-map (kbd "R") 'helm-regexp)
     (define-key helm-command-map (kbd "b") 'helm-c-pp-bookmarks)
-    (define-key helm-command-map (kbd "p") 'helm-c-eproject-projects)
-    (define-key helm-command-map (kbd "f") 'helm-c-eproject-files-in-project)
+    (define-key helm-command-map (kbd "p") 'helm-eproject-projects)
+    (define-key helm-command-map (kbd "f") 'helm-eproject-files-in-project)
     (define-key helm-command-map (kbd "<SPC>") 'helm-all-mark-rings)
   
     (global-set-key (kbd "M-X") 'my-helm-go)
@@ -1508,8 +1508,6 @@ Auto revert, and helper functions to revert without confirmation.
       (let ((helm-pattern (helm-pattern-to-regexp helm-pattern)))
         ad-do-it))
     )
-  
-  
 #+END_SRC
 
 ** octave-mode
@@ -2311,22 +2309,22 @@ css, sass, scss
   (define-module ruby-mode
     (custom-set-variables
      '(ruby-deep-indent-paren nil))
-  
+    
     (require-package 'ruby-end)
     (require-package 'yari)
-  
+    
     (defalias 'ri 'yari)
-  
+    
     (defun init--ruby-mode ()
       (local-set-key (kbd "M-s /") 'yari)
-  
+      
       (ruby-end-mode +1)
       (hs-minor-mode +1)
       (subword-mode +1)
       (turn-on-auto-fill)
-  
+      
       (setq autopair-extra-pairs '(:code ((?` . ?`)))))
-  
+    
     ;;https://gist.github.com/dgutov/1274520
     (defadvice ruby-indent-line (after unindent-closing-paren activate)
       (let ((column (current-column))
@@ -2343,6 +2341,14 @@ css, sass, scss
           (indent-line-to indent)
           (when (> offset 0) (forward-char offset)))))
   
+    ;; do not insert end if there is already an aligned empty block
+    (defadvice ruby-end-expand-p (after no-duplicate-end activate)
+      (setq ad-return-value
+            (and ad-return-value (not (looking-at-p
+                                       (concat "[\s\n]*\n"
+                                               (make-string (ruby-current-indentation) ? )
+                                               "end"))))))
+  
     (add-to-list 'auto-mode-alist '("Rakefile\\'" . ruby-mode))
     (add-to-list 'auto-mode-alist '("Gemfile\\'" . ruby-mode))
     (add-to-list 'auto-mode-alist '("\\.rake\\'" . ruby-mode))
@@ -2354,7 +2360,7 @@ css, sass, scss
     (add-to-list 'auto-mode-alist '("\\.gemspec\\'" . ruby-mode))
     (add-to-list 'auto-mode-alist '("\\.rabl\\'" . ruby-mode))
     (add-to-list 'auto-mode-alist '("\\.jbuilder\\'" . ruby-mode))
-  
+    
     (add-hook 'ruby-mode-hook 'init--ruby-mode))
 #+END_SRC
 

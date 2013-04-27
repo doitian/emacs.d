@@ -1657,8 +1657,8 @@ inactive -> switch -> full screen -> hide
   (define-key helm-command-map (kbd "r") 'helm-register)
   (define-key helm-command-map (kbd "R") 'helm-regexp)
   (define-key helm-command-map (kbd "b") 'helm-c-pp-bookmarks)
-  (define-key helm-command-map (kbd "p") 'helm-c-eproject-projects)
-  (define-key helm-command-map (kbd "f") 'helm-c-eproject-files-in-project)
+  (define-key helm-command-map (kbd "p") 'helm-eproject-projects)
+  (define-key helm-command-map (kbd "f") 'helm-eproject-files-in-project)
   (define-key helm-command-map (kbd "<SPC>") 'helm-all-mark-rings)
 
   (global-set-key (kbd "M-X") 'my-helm-go)
@@ -1688,8 +1688,6 @@ inactive -> switch -> full screen -> hide
     (let ((helm-pattern (helm-pattern-to-regexp helm-pattern)))
       ad-do-it))
   )
-
-
 ```
 
 <a name="sec-7-37"></a>
@@ -2562,6 +2560,14 @@ css, sass, scss
       (when indent
         (indent-line-to indent)
         (when (> offset 0) (forward-char offset)))))
+
+  ;; do not insert end if there is already an aligned empty block
+  (defadvice ruby-end-expand-p (after no-duplicate-end activate)
+    (setq ad-return-value
+          (and ad-return-value (not (looking-at-p
+                                     (concat "[\s\n]*\n"
+                                             (make-string (ruby-current-indentation) ? )
+                                             "end"))))))
 
   (add-to-list 'auto-mode-alist '("Rakefile\\'" . ruby-mode))
   (add-to-list 'auto-mode-alist '("Gemfile\\'" . ruby-mode))

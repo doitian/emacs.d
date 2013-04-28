@@ -1276,6 +1276,8 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
 ```cl
 (define-module multiple-cursors
   (require-package 'multiple-cursors)
+  (setq mc/cursor-specific-vars
+        '(iy-go-to-char-start-pos autopair-action autopair-wrap-action transient-mark-mode er/history))
 
   (defadvice set-rectangular-region-anchor (around edit-lines-when-region-is-active activate)
     (if (region-active-p)

@@ -13,6 +13,7 @@
         iy-go-to-char-kill-region
         iy-go-to-char-kill-ring-save
         iy-go-to-char-quit
+        kill-region
         org-beginning-of-line
         org-end-of-line
         paredit-forward-kill-word

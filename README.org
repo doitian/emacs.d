@@ -1108,34 +1108,36 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
 ** multiple-cursors
 
 #+BEGIN_SRC emacs-lisp
-    (define-module multiple-cursors
-      (require-package 'multiple-cursors)
+  (define-module multiple-cursors
+    (require-package 'multiple-cursors)
+    (setq mc/cursor-specific-vars
+          '(iy-go-to-char-start-pos autopair-action autopair-wrap-action transient-mark-mode er/history))
   
-      (defadvice set-rectangular-region-anchor (around edit-lines-when-region-is-active activate)
-        (if (region-active-p)
-            (call-interactively 'mc/edit-lines)
-          ad-do-it))
-  
-      (define-key ctl-x-r-map (kbd "C-r") 'mc/edit-lines)
-      (define-key ctl-x-r-map (kbd ",") 'mc/edit-lines)
-      (define-key ctl-x-r-map (kbd "C-,") 'mc/edit-lines)
-      (define-key ctl-x-r-map (kbd "a") 'mc/mark-all-like-this)
-      (define-key ctl-x-r-map (kbd "C-n") 'mc/mark-next-like-this)
-      (define-key ctl-x-r-map (kbd "M-f") 'mc/mark-next-word-like-this)
-      (define-key ctl-x-r-map (kbd "M-F") 'mc/mark-next-symbol-like-this)
-      (define-key ctl-x-r-map (kbd "C-p") 'mc/mark-previous-like-this)
-      (define-key ctl-x-r-map (kbd "M-b") 'mc/mark-previous-word-like-this)
-      (define-key ctl-x-r-map (kbd "M-B") 'mc/mark-previous-symbol-like-this)
-      (define-key ctl-x-r-map (kbd "C-a") 'mc/edit-beginnings-of-lines)
-      (define-key ctl-x-r-map (kbd "C-e") 'mc/edit-ends-of-lines)
-      (define-key ctl-x-r-map (kbd "C-SPC") 'mc/mark-all-in-region)
-      (define-key ctl-x-r-map (kbd "C-f") 'mc/mark-sgml-tag-pair)
-      
-      (global-unset-key (kbd "C-<down-mouse-1>"))
-      (global-set-key (kbd "C-<mouse-1>") 'mc/add-cursor-on-click)
-  
-      (global-set-key (kbd "C-3") 'mc/mark-all-like-this)
-      (define-key ctl-x-r-map [return] 'set-rectangular-region-anchor))
+    (defadvice set-rectangular-region-anchor (around edit-lines-when-region-is-active activate)
+      (if (region-active-p)
+          (call-interactively 'mc/edit-lines)
+        ad-do-it))
+    
+    (define-key ctl-x-r-map (kbd "C-r") 'mc/edit-lines)
+    (define-key ctl-x-r-map (kbd ",") 'mc/edit-lines)
+    (define-key ctl-x-r-map (kbd "C-,") 'mc/edit-lines)
+    (define-key ctl-x-r-map (kbd "a") 'mc/mark-all-like-this)
+    (define-key ctl-x-r-map (kbd "C-n") 'mc/mark-next-like-this)
+    (define-key ctl-x-r-map (kbd "M-f") 'mc/mark-next-word-like-this)
+    (define-key ctl-x-r-map (kbd "M-F") 'mc/mark-next-symbol-like-this)
+    (define-key ctl-x-r-map (kbd "C-p") 'mc/mark-previous-like-this)
+    (define-key ctl-x-r-map (kbd "M-b") 'mc/mark-previous-word-like-this)
+    (define-key ctl-x-r-map (kbd "M-B") 'mc/mark-previous-symbol-like-this)
+    (define-key ctl-x-r-map (kbd "C-a") 'mc/edit-beginnings-of-lines)
+    (define-key ctl-x-r-map (kbd "C-e") 'mc/edit-ends-of-lines)
+    (define-key ctl-x-r-map (kbd "C-SPC") 'mc/mark-all-in-region)
+    (define-key ctl-x-r-map (kbd "C-f") 'mc/mark-sgml-tag-pair)
+    
+    (global-unset-key (kbd "C-<down-mouse-1>"))
+    (global-set-key (kbd "C-<mouse-1>") 'mc/add-cursor-on-click)
+    
+    (global-set-key (kbd "C-3") 'mc/mark-all-like-this)
+    (define-key ctl-x-r-map [return] 'set-rectangular-region-anchor))
 #+END_SRC
 
 ** dired

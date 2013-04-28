@@ -29,7 +29,7 @@
 
 (defun eproject-plus-maybe-create-tags-table ()
   (let* ((root (eproject-root))
-         (ctags (eproject-ctags-command root))
+         (ctags (eproject-plus-ctags-command root))
          (default-directory root))
     (when (and root ctags (eproject-attribute :ctags-first root))
       (ignore-errors
@@ -39,7 +39,7 @@
 (defun eproject-plus-visit-tags-table (&optional create)
   (interactive "P")
   (let* ((root (eproject-root))
-         (ctags (eproject-ctags-command root))
+         (ctags (eproject-plus-ctags-command root))
          (file (concat root "TAGS")))
     (when root
       (when (and create ctags)

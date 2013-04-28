@@ -104,6 +104,8 @@
 <li><a href="#sec-7-76">7.76. diminish</a></li>
 <li><a href="#sec-7-77">7.77. dtrt-indent</a></li>
 <li><a href="#sec-7-78">7.78. undo-tree</a></li>
+<li><a href="#sec-7-79">7.79. coffee-mode</a></li>
+<li><a href="#sec-7-80">7.80. c-mode</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -1486,10 +1488,10 @@ Auto revert, and helper functions to revert without confirmation.
     (interactive) (flet ((yes-or-no-p (prompt) t)) (revert-buffer)))
 
   ;; Auto refresh buffers
-  ; (global-auto-revert-mode -1)
+  (global-auto-revert-mode +1)
 
   ;; Also auto refresh dired, but be quiet about it
-  ; (setq global-auto-revert-non-file-buffers t)
+  (setq global-auto-revert-non-file-buffers t)
   (setq auto-revert-verbose nil))
 ```
 
@@ -1937,7 +1939,8 @@ Misc editing config
    '(whitespace-style (quote (face tabs trailing newline indentation space-before-tab tab-mark newline-mark)))
    '(coffee-cleanup-whitespace nil))
 
-  (global-whitespace-mode +1))
+  (global-whitespace-mode +1)
+  (define-key my-keymap (kbd "SPC") 'whitespace-cleanup))
 ```
 
 <a name="sec-7-45"></a>
@@ -2119,10 +2122,9 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (require-package 'autopair)
   (setq autopair-blink nil)
 
-  (add-hook 'scss-mode-hook 'autopair-mode)
   (add-hook 'ruby-mode-hook 'autopair-mode)
   (add-hook 'sh-mode-hook 'autopair-mode)
-  (add-hook 'java-mode-hook 'autopair-mode))
+  (add-hook 'c-mode-common-hook 'autopair-mode))
 ```
 
 <a name="sec-7-52"></a>
@@ -2561,13 +2563,11 @@ css, sass, scss
         (indent-line-to indent)
         (when (> offset 0) (forward-char offset)))))
 
-  ;; do not insert end if there is already an aligned empty block
-  (defadvice ruby-end-expand-p (after no-duplicate-end activate)
-    (setq ad-return-value
-          (and ad-return-value (not (looking-at-p
-                                     (concat "[\s\n]*\n"
-                                             (make-string (ruby-current-indentation) ? )
-                                             "end"))))))
+  ;; Only expand when last command is self-insert
+  (defadvice ruby-end-expand-p (around no-duplicate-end activate)
+    (if (eq last-command 'self-insert-command)
+        ad-do-it
+      (setq ad-return-value nil)))
 
   (add-to-list 'auto-mode-alist '("Rakefile\\'" . ruby-mode))
   (add-to-list 'auto-mode-alist '("Gemfile\\'" . ruby-mode))
@@ -2819,6 +2819,128 @@ Install `emacs-rails` using `make vendor`
   (define-key undo-tree-map (kbd "C-x r") nil)
   (define-key ctl-x-r-map "u" 'undo-tree-save-state-to-register)
   (define-key ctl-x-r-map "U" 'undo-tree-restore-state-from-register))
+```
+
+<a name="sec-7-79"></a>
+## coffee-mode
+
+```cl
+(define-module coffee-mode
+  (require-package 'coffee-mode))
+```
+
+<a name="sec-7-80"></a>
+## c-mode
+
+```cl
+(define-module c-mode
+  ;; see http://ann77.stu.cdut.edu.cn/EmacsAutoNewLineImpv.html
+  ;; auto-newline refinement
+  (defvar wcy-cancel-auto-new-line-command-list
+    '(next-line previous-line)
+    "a list of command which will trigger the cancel.")
+
+  (defun wcy-cancel-auto-new-line ()
+    (interactive)
+    (save-excursion
+      (if (and (eq last-command 'c-electric-semi&comma)
+               (memq this-command wcy-cancel-auto-new-line-command-list))
+          (progn
+            (if (and (boundp c-auto-newline) c-auto-newline)
+                (progn
+                  (delete-blank-lines)))))))
+
+  (defun init--autopair-open-braces (action pair pos-before)
+    (when (and (eq 'opening action)
+               (eq ?\} pair)
+               (looking-back "^[  ]*"))
+      (save-excursion
+        (newline)
+        (indent-according-to-mode))))
+
+  (defconst my-c-style
+    '((c-basic-offset             . 2)
+      (c-comment-only-line-offset . (0 . 0))
+      (c-ignore-auto-fill         . nil)
+      (c-tab-always-indent        . t)
+      (c-hanging-braces-alist     . ((defun-open after)
+                                     (defun-close before)
+                                     (class-open after)
+                                     (class-close before)
+                                     (block-open after)
+                                     ;; (block-close . c-snug-do-while)
+                                     (block-close before)
+                                     (topmost-intro)
+                                     (brace-list-open)
+                                     (brace-list-close)
+                                     (do-while-closure after)
+                                     (substatement-open after)
+                                     (else-clause after)
+                                     (access-label after)
+                                     (catch-clause  after)
+                                     (inline-open after)
+                                     (namespace-open)))
+      (c-hanging-colons-alist     . ((inher-intro)
+                                     (case-label after)
+                                     (label after)
+                                     (access-label after)
+                                     (member-init-intro before)))
+      (c-cleanup-list             . (scope-operator
+                                     defun-close-semi
+                                     list-close-comma
+                                     comment-close-slash))
+      (c-offsets-alist            . ((block-open . 0)
+                                     (block-close . 0)
+                                     (statement-block-intro . +)
+                                     (substatement . +)
+                                     (substatement-open . 0)
+                                     (substatement-label . 0)
+                                     (label . 0)
+                                     (statement-cont c-lineup-string-cont c-lineup-assignments +)
+                                     ;; (template-args-cont iy-c-lineup-template-args-cont c-lineup-template-args +)
+                                     (case-label . 0)
+                                     (do-while-closure . 0)
+                                     (else-clause . 0)
+                                     (catch-clause . 0)
+                                     (case-label . 0)
+                                     (access-label . -)
+                                     (arglist-close . c-lineup-close-paren)
+                                     (namespace-open . 0)
+                                     (class-open . 0)
+                                     (class-close . 0)
+                                     (innamespace . 0)
+                                     (inline-open . 0)
+                                     (member-init-intro . 0)
+                                     (inher-intro . 0)
+                                     )))
+    "My C/C++ Programming Style")
+
+  ;; Customizations for all modes in CC Mode.
+  (defun init--c-mode-common ()
+    (c-add-style "cust" my-c-style t)
+
+    (c-set-style "cust")
+
+    (setq tab-width 2
+          indent-tabs-mode nil)
+    (c-toggle-auto-hungry-state 1)
+
+    (hs-minor-mode t)
+    (if (fboundp 'c-subword-mode)
+        (c-subword-mode t)
+      (subword-mode t))
+    (set (make-local-variable 'comment-auto-fill-only-comments) t)
+    (turn-on-auto-fill)
+    (setq autopair-handle-action-fns '(autopair-default-handle-action
+                                       init--autopair-open-braces))
+    (add-hook 'pre-command-hook 'wcy-cancel-auto-new-line nil t)
+
+    (local-set-key (kbd "C-M-a") 'c-beginning-of-defun)
+    (local-set-key (kbd "C-M-e") 'c-end-of-defun))
+
+  (add-hook 'c-mode-common-hook 'init--c-mode-common))
+
+
 ```
 
 <a name="sec-8"></a>

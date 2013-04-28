@@ -71,6 +71,12 @@ Otherwise do case transformation on following words.
    (t (case-dwim--funcall case-word
                           (case-dwim--seq-count arg)))))
 
+(defun case-dwim--case-word-function (operation)
+  "Get case-word function for string OPERATION, which can be upcase downcase or capitalize"
+  (intern (if (and (boundp 'subword-mode) subword-mode)
+              (concat "subword-" operation)
+            (concat operation "-word"))))
+
 ;;;###autoload
 (defun case-dwim-dash (arg)
   "Negative arg activate backward downcase, repeat to downcase more words bacward.
@@ -78,7 +84,7 @@ When region is action, downcase the region.
 When last command is case transformation, continue case transformation.
 Otherwise insert dash."
   (interactive "p")
-  (case-dwim--insert-or-case-transform ?- 'downcase-word 'downcase-region arg))
+  (case-dwim--insert-or-case-transform ?- (case-dwim--case-word-function "downcase") 'downcase-region arg))
 
 ;;;###autoload
 (defun case-dwim-underscore (arg)
@@ -87,7 +93,7 @@ When region is action, upcase the region.
 When last command is case transformation, continue case transformation.
 Otherwise insert undersocre."
   (interactive "p")
-  (case-dwim--insert-or-case-transform ?_ 'upcase-word 'upcase-region arg))
+  (case-dwim--insert-or-case-transform ?_ (case-dwim--case-word-function "upcase") 'upcase-region arg))
 
 ;;;###autoload
 (defun case-dwim-isearch-dash ()
@@ -105,7 +111,7 @@ Otherwise insert undersocre."
 When region is action, downcase the region.
 Otherwise downcase following words."
   (interactive "p")
-  (case-dwim--case-transform 'downcase-word 'downcase-region arg))
+  (case-dwim--case-transform (case-dwim--case-word-function "downcase") 'downcase-region arg))
 
 ;;;###autoload
 (defun case-dwim-upcase (arg)
@@ -113,7 +119,7 @@ Otherwise downcase following words."
 When region is action, upcase the region.
 Otherwise upcase following words."
   (interactive "p")
-  (case-dwim--case-transform 'upcase-word 'upcase-region arg))
+  (case-dwim--case-transform (case-dwim--case-word-function "upcase") 'upcase-region arg))
 
 ;;;###autoload
 (defun case-dwim-capitalize (arg)
@@ -121,6 +127,6 @@ Otherwise upcase following words."
 When region is action, capitalize the region.
 Otherwise capitalize following words."
   (interactive "p")
-  (case-dwim--case-transform 'capitalize-word 'capitalize-region arg))
+  (case-dwim--case-transform (case-dwim--case-word-function "capitalize") 'capitalize-region arg))
 
 ;;; case-dwim.el ends here

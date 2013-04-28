@@ -508,7 +508,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
 
   (global-set-key "\C-z" 'iy-go-to-char)
   (global-set-key (kbd "M-m") 'iy-go-to-char)
-  (global-set-key (kbd "M-S-m") 'iy-go-to-char-backward)
+  (global-set-key (kbd "M-M") 'iy-go-to-char-backward)
   (global-set-key (kbd "C-S-z") 'iy-go-to-char-backward)
 
   (global-set-key (kbd "M-S-z") 'zap-back-up-to-char)
@@ -2926,9 +2926,7 @@ Install `emacs-rails` using `make vendor`
     (c-toggle-auto-hungry-state 1)
 
     (hs-minor-mode t)
-    (if (fboundp 'c-subword-mode)
-        (c-subword-mode t)
-      (subword-mode t))
+    (subword-mode t)
     (set (make-local-variable 'comment-auto-fill-only-comments) t)
     (turn-on-auto-fill)
     (setq autopair-handle-action-fns '(autopair-default-handle-action

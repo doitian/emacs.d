@@ -4,9 +4,10 @@
 <ul>
 <li><a href="#sec-1">1. Usage</a>
 <ul>
-<li><a href="#sec-1-1">1.1. Generate init.el</a></li>
-<li><a href="#sec-1-2">1.2. vendor</a></li>
-<li><a href="#sec-1-3">1.3. Modules</a></li>
+<li><a href="#sec-1-1">1.1. Quick Start</a></li>
+<li><a href="#sec-1-2">1.2. Generate init.el</a></li>
+<li><a href="#sec-1-3">1.3. vendor and elpa</a></li>
+<li><a href="#sec-1-4">1.4. Modules</a></li>
 </ul>
 </li>
 <li><a href="#sec-2">2. Startup</a></li>
@@ -117,6 +118,15 @@
 # Usage
 
 <a name="sec-1-1"></a>
+## Quick Start
+
+cd ~
+git clone git://github.com/doitian/emacs.d.git .emacs.d
+cd .emacs.d
+make vendor all elpa
+emacs --debug-init
+
+<a name="sec-1-2"></a>
 ## Generate init.el
 
 Use `make` or eval following lisp code. Move to the end of the expression, and press <kbd>Ctrl-X Ctrl-E</kbd>.
@@ -133,14 +143,18 @@ Use `make` or eval following lisp code. Move to the end of the expression, and p
     (byte-compile-file outfile)))
 ```
 
-<a name="sec-1-2"></a>
-## vendor
+<a name="sec-1-3"></a>
+## vendor and elpa
 
 Some packages are large, and are not stable to install from ELPA. Install them using `make vendor`.
 
 <pre><code>make vendor</code></pre>
 
-<a name="sec-1-3"></a>
+Missing elpa packages will be installed when Emacs is started. They also can be pre-installed using `make elpa`:
+
+<pre><code>make elpa</code></pre>
+
+<a name="sec-1-4"></a>
 ## Modules
 
 Module is defined as function, and is only loaded when:
@@ -2937,8 +2951,6 @@ Install `emacs-rails` using `make vendor`
     (local-set-key (kbd "C-M-e") 'c-end-of-defun))
 
   (add-hook 'c-mode-common-hook 'init--c-mode-common))
-
-
 ```
 
 <a name="sec-8"></a>

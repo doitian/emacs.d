@@ -1,5 +1,15 @@
 * Usage
 
+** Quick Start
+
+#+BEGIN_HTML
+cd ~
+git clone git://github.com/doitian/emacs.d.git .emacs.d
+cd .emacs.d
+make vendor all elpa
+emacs --debug-init
+#+END_HTML
+
 ** Generate init.el
 
 Use =make= or eval following lisp code. Move to the end of the expression, and press <kbd>Ctrl-X Ctrl-E</kbd>.
@@ -16,11 +26,15 @@ Use =make= or eval following lisp code. Move to the end of the expression, and p
       (byte-compile-file outfile)))
 #+END_EXAMPLE
 
-** vendor
+** vendor and elpa
 
 Some packages are large, and are not stable to install from ELPA. Install them using =make vendor=.
 
 <pre><code>make vendor</code></pre>
+
+Missing elpa packages will be installed when Emacs is started. They also can be pre-installed using =make elpa=:
+
+<pre><code>make elpa</code></pre>
 
 ** Modules
 
@@ -2699,8 +2713,6 @@ Install =emacs-rails= using =make vendor=
       (local-set-key (kbd "C-M-e") 'c-end-of-defun))
   
     (add-hook 'c-mode-common-hook 'init--c-mode-common))
-    
-  
 #+END_SRC
 
 * Module Groups

@@ -107,9 +107,41 @@ vendor/git-emacs/git-emacs.el vendor/emacs-rails/rails.el:
 	git submodule init
 	git submodule update
 
-verify:
+verify: init.elc
 	$(EMACS) --debug-init -q -eval "(setq module-black-list '(server))" -l ./init.elc -f module-initialize
+
+cartonize: init.elc
+	$(BATCH) -l ./init.elc -l pallet -f pallet-repack
+
+cartonize-update: init.elc
+	$(BATCH) -l ./init.elc -l pallet -f pallet-repack
+
+elpa: init.elc
+	$(BATCH) -l ./init.elc -l dash -f module-initialize
+
+elpa-update: init.elc
+	CARTON_PROJECT_PATH=$(pwd) CARTON_COMMAND="update" $(BATCH) -l ./init.elc -l dash -l carton -f module-initialize -f carton-handle-commandline
+
+site-lisp-update:
+	curl -k -L -o site-lisp/alternative-files.el https://github.com/doitian/alternative-files-el/raw/master/alternative-files.el
+	curl -k -L -o site-lisp/carton.el https://github.com/rejeep/carton/raw/master/carton.el
+	curl -k -L -o site-lisp/dash.el https://github.com/magnars/dash.el/raw/master/dash.el
+	curl -k -L -o site-lisp/dtrt-indent.el http://git.savannah.gnu.org/gitweb/\?p\=dtrt-indent.git\;a\=blob_plain\;f\=dtrt-indent.el\;hb\=HEAD
+	curl -k -L -o site-lisp/hide-comnt.el http://www.emacswiki.org/emacs-en/download/hide-comnt.el
+	curl -k -L -o site-lisp/inf-ruby.el https://raw.github.com/nonsequitur/inf-ruby/master/inf-ruby.el
+	curl -k -L -o site-lisp/notify.el http://www.emacswiki.org/emacs/download/notify.el
+	curl -k -L -o site-lisp/pallet.el https://raw.github.com/rdallasgray/pallet/master/src/pallet.el
+	curl -k -L -o site-lisp/pick-backup.el https://raw.github.com/emacsmirror/pick-backup/master/pick-backup.el
+	curl -k -L -o site-lisp/sequential-command.el http://www.emacswiki.org/emacs/download/sequential-command.el
+	curl -k -L -o site-lisp/thing-actions.el https://github.com/doitian/thing-actions.el/raw/master/thing-actions.el
+	curl -k -L -o "site-lisp/thingatpt+.el" http://www.emacswiki.org/emacs-en/download/thingatpt%2b.el
+	curl -k -L -o site-lisp/thing-cmds.el http://www.emacswiki.org/emacs-en/download/thing-cmds.el
+	$(MAKE)
+
+update: elpa-update site-lisp-update
 
 .PHONY: all doc verify clean vendor vendor-clean org git-emacs emacs-rails
 .PHONY: org-cleanup git-emacs-cleanup emacs-rails-cleanup
 .PHONY: snippets snippets-clean
+.PHONY: cartonize
+.PHONY: elpa elpa-update site-lisp-update update

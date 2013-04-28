@@ -180,12 +180,14 @@ added to white list.
 
 Examples:
 
-<pre><code># Start emacs without loading any module.
-# Because white list is not empty, and there is no module with name "none"
-EMACS_MODULE=none emacs
-# Do not load org related modules. ! must be quoted in SHELL
-EMACS_MODULE="!org" emacs
-</code></code>
+-   Start emacs without loading any module. Because white list is not empty,
+    and there is no module with name "none"
+    
+    <pre><code>EMACS_MODULE=none emacs</code></pre>
+
+-   Do not load org related modules. `!` must be quoted in SHELL
+    
+    <pre><code>EMACS_MODULE="!org" emacs</code></pre>
 
 By default all modules are auto loaded unless `module-auto-initialize` is
 set to `nil`. Module can be loaded manually using `module-load`. To load a
@@ -454,7 +456,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
 <a name="sec-7-3"></a>
 ## my-basic-keybindings
 
--   Use <kbd>C-,</kbd> as rectangle commands prefix (<kbd>C-x r)
+-   Use <kbd>C-,</kbd> as rectangle commands prefix (<kbd>C-x r</kbd>)
 
 -   Use <kbd>C-'</kbd> and <kbd>M-'</kbd> as negative argument.
 

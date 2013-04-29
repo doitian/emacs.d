@@ -1723,6 +1723,8 @@ inactive -> switch -> full screen -> hide
 
 ```cl
 (define-module compile-and-run
+  (require-package 'quickrun)
+
   (custom-set-variables
    '(compilation-window-height 11)
    '(compilation-auto-jump-to-first-error nil)
@@ -1765,45 +1767,36 @@ inactive -> switch -> full screen -> hide
   (when (fboundp 'notify)
     (add-hook 'compilation-finish-functions 'compilation-notify-result))
 
-  (autoload 'smart-compile "smart-compile+" nil t)
-  (autoload 'smart-run "smart-compile+" nil t)
-  (autoload 'smart-compile-replace "smart-compile+" nil t)
+  (defvar run-or-replace-template-history nil "History for `run-or-replace-template'")
+  (defun run-or-replace-template-fill (command &optional src)
+    (let* ((case-fold-search  nil)
+           (path (expand-file-name (or src (buffer-file-name) default-directory)))
+           (info `(("%f" . ,(file-name-nondirectory path))
+                   ("%F" . ,path)
+                   ("%p" . ,path)
+                   ("%n" . ,(file-name-sans-extension (file-name-nondirectory path)))
+                   ("%d" . ,(file-name-directory path))
+                   ("%e" . ,(file-name-extension path))))
+           (str command))
+      (mapc (lambda (holder)
+              (setq str (replace-regexp-in-string (car holder) (cdr holder) str t)))
+            info)
+      str))
 
-  (defun init--smart-compile+-load ()
-    (setq smart-run-alist
-          (append
-           (list
-            (cons "_spec\\.rb\\'" '(compile (concat "cd " (eproject-root) "; rr rspec --no-color " (file-relative-name (buffer-file-name) (eproject-root)))))
-            (cons "\\.rb\\'" "rr ruby %F")
-            (cons "\\.go\\'" "go run %F")
-            (cons "\\.py\\'" "python %F"))
-           smart-run-alist))
-    (setq smart-compile-alist
-          (append
-           (list
-            (cons "\\.coffee$" "coffee -c %f"))
-           smart-compile-alist))
-    (setq smart-executable-alist
-          (append '("%n.rb" "%n.go" "%n.py") smart-executable-alist)))
-
-  (eval-after-load "smart-compile+" '(init--smart-compile+-load))
-
-  (defvar run-this--hist nil "History for `run-this'")
-
-  (defun run-this (command &optional remember)
+  (defun run-or-replace-template (command &optional remember)
     (interactive (list (if (minibufferp)
                            (buffer-substring (minibuffer-prompt-end) (point-max))
                          (read-from-minibuffer "Shell command: "
-                                               (car run-this--hist) nil nil
-                                               '(run-this--hist . 1)))
+                                               (car run-or-replace-template-history) nil nil
+                                               '(run-or-replace-template-history . 1)))
                        current-prefix-arg))
     (if (minibufferp)
         (progn
           (delete-minibuffer-contents)
           (goto-char (minibuffer-prompt-end))
           (insert (with-current-buffer (window-buffer (minibuffer-selected-window))
-                    (smart-compile-replace command))))
-      (setq command (smart-compile-replace command))
+                    (run-or-replace-template-fill command))))
+      (setq command (run-or-replace-template-fill command))
       (when remember
         (let ((map (make-sparse-keymap))
               (dir default-directory))
@@ -1816,10 +1809,10 @@ inactive -> switch -> full screen -> hide
   (global-set-key [f5] 'compile)
   (define-key my-keymap (kbd "M-c") 'recompile)
 
-  (define-key my-keymap (kbd "c") 'smart-compile)
-  (define-key my-keymap (kbd "x") 'smart-run)
-  (global-set-key (kbd "C-1") 'run-this)
-  (define-key my-keymap (kbd "1") 'run-this)
+  (define-key my-keymap (kbd "c") 'quickrun-compile-only)
+  (define-key my-keymap (kbd "x") 'quickrun)
+  (global-set-key (kbd "C-1") 'run-or-replace-template)
+  (define-key my-keymap (kbd "1") 'run-or-replace-template)
   (global-set-key (kbd "C-`") 'next-error)
   (global-set-key (kbd "C-~") 'previous-error))
 ```

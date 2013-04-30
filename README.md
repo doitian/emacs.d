@@ -2254,14 +2254,14 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
     (interactive
     (winring-jump-or-create "*ediff*")
     (when (get-register 'ediff)
-      (jump-to-register 'ediff)))
+      (jump-to-register 'ediff))))
 
   (add-hook 'ediff-before-setup-hook 'init--ediff-before-setup-winring-jump)
   (add-hook 'ediff-after-setup-windows-hook 'init--ediff-after-setup-save-register
             'append)
   (add-hook 'ediff-quit-hook 'init--ediff-quit-winring-delete)
 
-  (define-key init--windows-keymap "e" 'ediff-last-window-configuration)))
+  (define-key init--windows-keymap "e" 'ediff-last-window-configuration))
 ```
 
 <a name="sec-7-54"></a>

@@ -248,5 +248,22 @@ Calling this command 3 times will always result in no whitespaces around cursor.
       (kill-buffer)
     (kill-buffer-and-window)))
 
+;;;###autoload
+(defun mf-join-following-line (n)
+  (interactive "p")
+  (if (>= n 0)
+      (while (> n 0)
+        (join-line t)
+        (setq n (1- n)))
+    (while (< n 0)
+      (join-line)
+      (setq n (1+ n))))
+  (indent-according-to-mode))
+
+;;;###autoload
+(defun mf-join-previous-line (n)
+  (interactive "p")
+  (mf-join-following-line (- n)))
+
 (provide 'my-functions)
 ;;; my-functions.el ends here

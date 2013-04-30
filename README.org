@@ -334,6 +334,8 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
     (define-key my-minor-mode-map (kbd "M-'") 'negative-argument)
     (global-set-key (kbd "C-x SPC") 'point-to-register)
     (global-set-key (kbd "C-.") 'repeat)
+    (global-set-key (kbd "C-M-j") 'mf-join-following-line)
+    (global-set-key (kbd "M-J") 'mf-join-previous-line)
     (setq repeat-on-final-keystroke "z"))
 #+END_SRC
 
@@ -1261,7 +1263,7 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
     (define-key my-keymap "n" popwin:keymap)
   
     (add-to-list 'popwin:special-display-config 'rspec-compilation-mode)
-    (add-to-list 'popwin:special-display-config "*eclim: problems*")
+    (add-to-list 'popwin:special-display-config "*quickrun*")
   
     (import-popwin:add :mode 'java-mode
                        :regexp "import\\s-+")
@@ -1852,7 +1854,6 @@ Misc editing config
     (add-hook 'flyspell-mode-hook 'init--flyspell-mode)
     
     (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-    (add-hook 'ruby-mode-hook 'flyspell-prog-mode)
     (add-hook 'mail-mode-hook 'flyspell-mode)
     (add-hook 'org-mode-hook 'flyspell-mode)
     (add-hook 'magit-log-edit-mode-hook 'flyspell-mode)
@@ -2005,7 +2006,6 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
     (define-key ac-complete-mode-map [tab] 'ac-update-greedy-command)
     
     (add-hook 'prog-mode-hook 'auto-complete-mode)
-    (add-hook 'ruby-mode-hook 'auto-complete-mode)
     
     (setq-default
      ac-sources '(ac-source-yasnippet
@@ -2031,6 +2031,11 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
               ac-source-words-in-buffer
               ac-source-words-in-same-mode-buffers)))
     (add-hook 'emacs-lisp-mode-hook 'init--ac-emacs-lisp-mode))
+#+END_SRC
+** subword-mode
+#+BEGIN_SRC emacs-lisp
+  (define-module subword-mode
+    (add-hook 'prog-mode-hook 'subword-mode))
 #+END_SRC
 ** auto-insert
 #+BEGIN_SRC emacs-lisp
@@ -2104,9 +2109,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
     (require-package 'autopair)
     (setq autopair-blink nil)
     
-    (add-hook 'ruby-mode-hook 'autopair-mode)
-    (add-hook 'sh-mode-hook 'autopair-mode)
-    (add-hook 'c-mode-common-hook 'autopair-mode))
+    (add-hook 'prog-mode-hook 'autopair-mode))
 #+END_SRC
 ** highlight
 #+BEGIN_SRC emacs-lisp
@@ -2505,7 +2508,6 @@ css, sass, scss
       
       (ruby-end-mode +1)
       (hs-minor-mode +1)
-      (subword-mode +1)
       (turn-on-auto-fill)
       
       (setq autopair-extra-pairs '(:code ((?` . ?`)))))
@@ -2655,6 +2657,7 @@ Install =emacs-rails= using =make vendor=
   (define-module flycheck
     (require-package 'flycheck)
     (global-flycheck-mode)
+    (setq flycheck-mode-line-lighter " fC")
   
     (defun init--disable-emacs-lisp-checkdoc-in-org-src-mode ()
       (make-local-variable 'flycheck-checkers)
@@ -2738,7 +2741,6 @@ Install =emacs-rails= using =make vendor=
       (diminish-on-load whole-line-or-region-on-hook whole-line-or-region-mode)
       (diminish-on-load hs-minor-mode-hook hs-minor-mode)
       (diminish-on-load flyspell-mode-hook flyspell-mode " fS")
-      (diminish-on-load flycheck-mode-hook flycheck-mode " fC")
       (diminish-on-load paredit-mode-hook paredit-mode)
       (diminish-on-load undo-tree-mode-hook undo-tree-mode)
       (diminish-on-load outline-minor-mode-hook outline-minor-mode)
@@ -2873,7 +2875,6 @@ Install =emacs-rails= using =make vendor=
       (c-toggle-auto-hungry-state 1)
   
       (hs-minor-mode t)
-      (subword-mode t)
       (set (make-local-variable 'comment-auto-fill-only-comments) t)
       (turn-on-auto-fill)
       (setq autopair-handle-action-fns '(autopair-default-handle-action
@@ -2922,6 +2923,11 @@ Install =emacs-rails= using =make vendor=
     (temporary-mode-define-keys my-keymap 'win-move-resize))
 #+END_SRC
 
+** scala-mode
+#+BEGIN_SRC emacs-lisp
+  (define-module scala-mode
+    (require-package 'scala-mode2))
+#+END_SRC
 ** eclim
 
 #+BEGIN_SRC emacs-lisp

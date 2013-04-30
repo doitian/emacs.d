@@ -36,12 +36,12 @@
 <li><a href="#sec-7-7">7.7. ido-plus</a></li>
 <li><a href="#sec-7-8">7.8. ido-vertical-mode</a></li>
 <li><a href="#sec-7-9">7.9. magit</a></li>
-<li><a href="#sec-7-10">7.10. org-files</a></li>
-<li><a href="#sec-7-11">7.11. org-capture</a></li>
-<li><a href="#sec-7-12">7.12. org-clock</a></li>
-<li><a href="#sec-7-13">7.13. org-gtd</a></li>
-<li><a href="#sec-7-14">7.14. org-agenda</a></li>
-<li><a href="#sec-7-15">7.15. org-agenda-splash</a></li>
+<li><a href="#sec-7-10">7.10. org-basic</a></li>
+<li><a href="#sec-7-11">7.11. org-files</a></li>
+<li><a href="#sec-7-12">7.12. org-capture</a></li>
+<li><a href="#sec-7-13">7.13. org-clock</a></li>
+<li><a href="#sec-7-14">7.14. org-gtd</a></li>
+<li><a href="#sec-7-15">7.15. org-agenda</a></li>
 <li><a href="#sec-7-16">7.16. org-export</a></li>
 <li><a href="#sec-7-17">7.17. org-speed</a></li>
 <li><a href="#sec-7-18">7.18. org-pomodoro</a></li>
@@ -49,35 +49,35 @@
 <li><a href="#sec-7-20">7.20. org-babel</a></li>
 <li><a href="#sec-7-21">7.21. org-drill</a></li>
 <li><a href="#sec-7-22">7.22. case-dwim</a></li>
-<li><a href="#sec-7-23">7.23. server</a></li>
-<li><a href="#sec-7-24">7.24. backup</a></li>
-<li><a href="#sec-7-25">7.25. multiple-cursors</a></li>
-<li><a href="#sec-7-26">7.26. dired</a></li>
-<li><a href="#sec-7-27">7.27. windows-commands</a></li>
-<li><a href="#sec-7-28">7.28. winring</a></li>
-<li><a href="#sec-7-29">7.29. pointback</a></li>
-<li><a href="#sec-7-30">7.30. popwin</a></li>
-<li><a href="#sec-7-31">7.31. buffers-commands</a></li>
-<li><a href="#sec-7-32">7.32. files-commands</a></li>
-<li><a href="#sec-7-33">7.33. vc</a></li>
-<li><a href="#sec-7-34">7.34. isearch</a></li>
-<li><a href="#sec-7-35">7.35. revert</a></li>
-<li><a href="#sec-7-36">7.36. eshell</a></li>
-<li><a href="#sec-7-37">7.37. eproject</a></li>
-<li><a href="#sec-7-38">7.38. helm</a></li>
-<li><a href="#sec-7-39">7.39. octave-mode</a></li>
-<li><a href="#sec-7-40">7.40. compile-and-run</a></li>
-<li><a href="#sec-7-41">7.41. editing</a></li>
-<li><a href="#sec-7-42">7.42. kill-ring</a></li>
-<li><a href="#sec-7-43">7.43. recentf</a></li>
-<li><a href="#sec-7-44">7.44. desktop</a></li>
-<li><a href="#sec-7-45">7.45. mark</a></li>
-<li><a href="#sec-7-46">7.46. whitespace</a></li>
-<li><a href="#sec-7-47">7.47. bookmark</a></li>
-<li><a href="#sec-7-48">7.48. spell</a></li>
-<li><a href="#sec-7-49">7.49. tab-fix</a></li>
-<li><a href="#sec-7-50">7.50. yasnippet</a></li>
-<li><a href="#sec-7-51">7.51. auto-complete</a></li>
+<li><a href="#sec-7-23">7.23. backup</a></li>
+<li><a href="#sec-7-24">7.24. multiple-cursors</a></li>
+<li><a href="#sec-7-25">7.25. dired</a></li>
+<li><a href="#sec-7-26">7.26. windows-commands</a></li>
+<li><a href="#sec-7-27">7.27. winring</a></li>
+<li><a href="#sec-7-28">7.28. pointback</a></li>
+<li><a href="#sec-7-29">7.29. popwin</a></li>
+<li><a href="#sec-7-30">7.30. buffers-commands</a></li>
+<li><a href="#sec-7-31">7.31. files-commands</a></li>
+<li><a href="#sec-7-32">7.32. vc</a></li>
+<li><a href="#sec-7-33">7.33. isearch</a></li>
+<li><a href="#sec-7-34">7.34. revert</a></li>
+<li><a href="#sec-7-35">7.35. eshell</a></li>
+<li><a href="#sec-7-36">7.36. eproject</a></li>
+<li><a href="#sec-7-37">7.37. helm</a></li>
+<li><a href="#sec-7-38">7.38. octave-mode</a></li>
+<li><a href="#sec-7-39">7.39. compile-and-run</a></li>
+<li><a href="#sec-7-40">7.40. editing</a></li>
+<li><a href="#sec-7-41">7.41. kill-ring</a></li>
+<li><a href="#sec-7-42">7.42. recentf</a></li>
+<li><a href="#sec-7-43">7.43. desktop</a></li>
+<li><a href="#sec-7-44">7.44. mark</a></li>
+<li><a href="#sec-7-45">7.45. whitespace</a></li>
+<li><a href="#sec-7-46">7.46. bookmark</a></li>
+<li><a href="#sec-7-47">7.47. spell</a></li>
+<li><a href="#sec-7-48">7.48. tab-fix</a></li>
+<li><a href="#sec-7-49">7.49. yasnippet</a></li>
+<li><a href="#sec-7-50">7.50. auto-complete</a></li>
+<li><a href="#sec-7-51">7.51. auto-insert</a></li>
 <li><a href="#sec-7-52">7.52. ediff-mode</a></li>
 <li><a href="#sec-7-53">7.53. ediff-winring</a></li>
 <li><a href="#sec-7-54">7.54. time-stamp</a></li>
@@ -112,6 +112,8 @@
 <li><a href="#sec-7-83">7.83. coffee-mode</a></li>
 <li><a href="#sec-7-84">7.84. c-mode</a></li>
 <li><a href="#sec-7-85">7.85. win-move-resize</a></li>
+<li><a href="#sec-7-86">7.86. eclim</a></li>
+<li><a href="#sec-7-87">7.87. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -646,6 +648,100 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
 ```
 
 <a name="sec-7-10"></a>
+## org-basic
+
+Install latest org by running `make org`. Othewise system bundled version is used.
+
+```cl
+(define-module org-basic
+  "Basic orgmode setup"
+
+  (custom-set-variables
+   '(org-modules '(org-bibtex org-bookmark org-expiry org-habit org-id org-info
+                              org-inlinetask org-man org-w3m org-clock org-timer
+                              org-protocol org-drill org-mu4e))
+   '(org-global-properties '(("STYLE_ALL" . "habit")))
+   '(org-read-date-prefer-future 'time)
+   '(org-completion-use-ido t)
+   '(org-refile-targets '((org-agenda-files :maxlevel . 3)
+                          '(:maxlevel . 3)))
+   '(org-refile-use-outline-path 'file)
+   '(org-outline-path-complete-in-steps nil)
+   '(org-clock-history-length 35)
+   '(org-clock-idle-time 30)
+   '(org-drawers '("PROPERTIES" "LOGBOOK" "CLOCK"))
+   '(org-clock-into-drawer "CLOCK")
+   '(org-clock-persist (quote history))
+   '(org-agenda-todo-ignore-with-date t)
+   '(org-agenda-skip-deadline-if-done t)
+   '(org-agenda-skip-scheduled-if-done t)
+   '(org-agenda-skip-timestamp-if-done t)
+   '(org-agenda-span 7)
+   '(org-tags-column -80)
+   '(org-agenda-tags-column -80)
+   '(org-enforce-todo-checkbox-dependencies t)
+   '(org-enforce-todo-dependencies t)
+   '(org-cycle-separator-lines 2)
+   '(org-agenda-todo-list-sublevels t)
+   '(org-show-following-heading t)
+   '(org-show-hierarchy-above t)
+   '(org-show-siblings nil)
+   '(org-log-into-drawer t)
+   '(org-special-ctrl-a/e t)
+   '(org-special-ctrl-k t)
+   '(org-yank-adjusted-subtrees nil)
+   '(org-use-fast-todo-selection t)
+   '(org-file-apps '((t . emacs)
+                     (system . "open %s")))
+   '(org-fontify-done-headline t)
+   '(org-src-window-setup 'current-window))
+
+  (let ((org-load-path
+         (car (nreverse (file-expand-wildcards (concat my-vendor-dir "org-*"))))))
+    (when org-load-path
+      ;; remove system org
+      (setq load-path
+            (--remove (string= "org" (file-name-nondirectory it)) load-path))
+      (setq load-path 
+            (cons (concat org-load-path "/lisp")
+                  (cons (concat org-load-path "/contrib/lisp")
+                        load-path)))
+      (or (require 'org-loaddefs nil t) (require 'org nil t))))
+
+  (defun wl-org-column-view-uses-fixed-width-face ()
+    ;; copy from org-faces.el
+    (when (or t (fboundp 'set-face-attribute))
+      ;; Make sure that a fixed-width face is used when we have a column table.
+      (set-face-attribute 'org-column nil
+                          :height (face-attribute 'default :height)
+                          :family (face-attribute 'default :family))))
+
+  (defun init--org-load ()
+    (wl-org-column-view-uses-fixed-width-face)
+    (remove-hook 'org-mode-hook 'init--org-load))
+  (add-hook 'org-mode-hook 'init--org-load)
+
+  (defun init--org-mode ()
+    (when (daemonp)
+      (wl-org-column-view-uses-fixed-width-face))
+
+    (define-key org-mode-map (kbd "C-,") nil)
+    (define-key org-mode-map (kbd "C-c ,") 'org-cycle-agenda-files))
+
+  (add-hook 'org-mode-hook 'init--org-mode)
+
+  (global-set-key (kbd "C-c l") 'org-store-link)
+  (global-set-key (kbd "C-c L") 'org-insert-link-global)
+  (global-set-key (kbd "C-c o") 'org-open-at-point-global)
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  (define-key my-keymap (kbd "r") 'org-capture)
+  (define-key my-keymap (kbd "M-r") 'org-capture)
+  (autoload 'org-footnote-action "org-footnote" nil t)
+  (define-key my-keymap (kbd "t") 'org-footnote-action)
+  (define-key my-keymap (kbd "<return>") 'org-clock-goto))
+```
+
+<a name="sec-7-11"></a>
 ## org-files
 
 Store org agenda files in dropbox directory
@@ -674,7 +770,7 @@ Store org agenda files in dropbox directory
     (ido-find-file-in-dir org-directory)))
 ```
 
-<a name="sec-7-11"></a>
+<a name="sec-7-12"></a>
 ## org-capture
 
 Capture template
@@ -712,7 +808,7 @@ Capture template
       :prepend t :empty-lines 1 :immediate-finish t))))
 ```
 
-<a name="sec-7-12"></a>
+<a name="sec-7-13"></a>
 ## org-clock
 
 ```cl
@@ -754,7 +850,7 @@ Capture template
 
 ```
 
-<a name="sec-7-13"></a>
+<a name="sec-7-14"></a>
 ## org-gtd
 
 Opinioned GTD config based on org
@@ -807,7 +903,7 @@ Opinioned GTD config based on org
      "%42ITEM %TODO %3Effort(E){:} %3CLOCKSUM_T(R) %SCHEDULED")))
 ```
 
-<a name="sec-7-14"></a>
+<a name="sec-7-15"></a>
 ## org-agenda
 
 ```cl
@@ -929,17 +1025,6 @@ this with to-do items than with projects or headings."
 
           ("g" "open dropbox/g" dired-g)))
   )
-```
-
-<a name="sec-7-15"></a>
-## org-agenda-splash
-
-```cl
-(define-module org-agenda-splash
-  (require-module org-agenda)
-  (save-excursion
-    (save-window-excursion
-      (org-agenda nil "d"))))
 ```
 
 <a name="sec-7-16"></a>
@@ -1107,62 +1192,6 @@ These commands are also `multiple-cursors` compatible.
 ```
 
 <a name="sec-7-23"></a>
-## server
-
-Start emacs server.
-
-```cl
-(define-module server
-
-  (defcustom server-delete-frame-functions
-    '(anything-c-adaptive-save-history
-      bookmark-exit-hook-internal
-      ac-comphist-save
-      ido-kill-emacs-hook
-      org-clock-save
-      org-id-locations-save
-      org-babel-remove-temporary-directory
-      recentf-save-list
-      semanticdb-kill-emacs-hook
-      session-save-session
-      w3m-arrived-shutdown
-      w3m-cookie-shutdown
-      tramp-dump-connection-properties)
-    "List of functions that should be called when a OS window is closed"
-    :group 'server
-    :type '(repeat symbol))
-
-  (defun server--last-frontend-frame-p ()
-    (= 2 (length (frame-list))))
-
-  (defun server--run-delete-frame-functions (frame)
-    (when (server--last-frontend-frame-p)
-      (mapc (lambda (f)
-              (when (fboundp f)
-                (funcall f)))
-            server-delete-frame-functions)))
-
-  ;; Buggy to run the functions in MacOS X
-  (when (and (daemonp) (not (eq system-type 'darwin)))
-    (add-hook 'delete-frame-functions 'server--run-delete-frame-functions))
-
-  (define-minor-mode server-edit-minor-mode
-    "Allow C-c C-c to run server-edit without change major modes keymap"
-    nil ""
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "C-c C-c") 'server-edit)
-      map))
-
-  (defun init--server-visit ()
-    (server-edit-minor-mode +1))
-
-  ;; run last to run on the minor mode for any enabled major modes
-  (add-hook 'server-visit-hook 'init--server-visit t)
-
-  (server-start))
-```
-
-<a name="sec-7-24"></a>
 ## backup
 
 See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
@@ -1190,7 +1219,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   (add-hook 'auto-save-hook 'init--force-backup))
 ```
 
-<a name="sec-7-25"></a>
+<a name="sec-7-24"></a>
 ## multiple-cursors
 
 ```cl
@@ -1226,7 +1255,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   (define-key ctl-x-r-map [return] 'set-rectangular-region-anchor))
 ```
 
-<a name="sec-7-26"></a>
+<a name="sec-7-25"></a>
 ## dired
 
 ```cl
@@ -1303,7 +1332,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
 )
 ```
 
-<a name="sec-7-27"></a>
+<a name="sec-7-26"></a>
 ## windows-commands
 
 ```cl
@@ -1332,7 +1361,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   (define-key my-keymap "w" init--windows-keymap))
 ```
 
-<a name="sec-7-28"></a>
+<a name="sec-7-27"></a>
 ## winring
 
 ```cl
@@ -1386,7 +1415,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   (define-key init--windows-keymap (kbd "C-p") 'winring-prev-configuration))
 ```
 
-<a name="sec-7-29"></a>
+<a name="sec-7-28"></a>
 ## pointback
 
 ```cl
@@ -1395,7 +1424,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   (global-pointback-mode +1))
 ```
 
-<a name="sec-7-30"></a>
+<a name="sec-7-29"></a>
 ## popwin
 
 ```cl
@@ -1412,6 +1441,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   (define-key my-keymap "n" popwin:keymap)
 
   (add-to-list 'popwin:special-display-config 'rspec-compilation-mode)
+  (add-to-list 'popwin:special-display-config "*eclim: problems*")
 
   (import-popwin:add :mode 'java-mode
                      :regexp "import\\s-+")
@@ -1431,7 +1461,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   (define-key init--windows-keymap "i" 'import-popwin))
 ```
 
-<a name="sec-7-31"></a>
+<a name="sec-7-30"></a>
 ## buffers-commands
 
 ```cl
@@ -1443,7 +1473,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   )
 ```
 
-<a name="sec-7-32"></a>
+<a name="sec-7-31"></a>
 ## files-commands
 
 ```cl
@@ -1453,7 +1483,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   )
 ```
 
-<a name="sec-7-33"></a>
+<a name="sec-7-32"></a>
 ## vc
 
 Version Control backends.
@@ -1489,7 +1519,7 @@ add changes interactively using `ediff`.
   (global-set-key (kbd "<ESC> <f12>") 'git-status))
 ```
 
-<a name="sec-7-34"></a>
+<a name="sec-7-33"></a>
 ## isearch
 
 ```cl
@@ -1530,7 +1560,7 @@ This is useful when followed by an immediate kill."
   (define-key my-keymap "8" 'isearch-forward-at-point))
 ```
 
-<a name="sec-7-35"></a>
+<a name="sec-7-34"></a>
 ## revert
 
 Auto revert, and helper functions to revert without confirmation.
@@ -1549,7 +1579,7 @@ Auto revert, and helper functions to revert without confirmation.
   (setq auto-revert-verbose nil))
 ```
 
-<a name="sec-7-36"></a>
+<a name="sec-7-35"></a>
 ## eshell
 
 ```cl
@@ -1590,7 +1620,7 @@ inactive -> switch -> full screen -> hide
   (define-key my-keymap (kbd "E") 'eshell-here))
 ```
 
-<a name="sec-7-37"></a>
+<a name="sec-7-36"></a>
 ## eproject
 
 ```cl
@@ -1603,7 +1633,7 @@ inactive -> switch -> full screen -> hide
   (define-key my-keymap (kbd "p p") 'eproject-revisit-project))
 ```
 
-<a name="sec-7-38"></a>
+<a name="sec-7-37"></a>
 ## helm
 
 ```cl
@@ -1743,7 +1773,7 @@ inactive -> switch -> full screen -> hide
   )
 ```
 
-<a name="sec-7-39"></a>
+<a name="sec-7-38"></a>
 ## octave-mode
 
 ```cl
@@ -1751,7 +1781,7 @@ inactive -> switch -> full screen -> hide
   (add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode)))
 ```
 
-<a name="sec-7-40"></a>
+<a name="sec-7-39"></a>
 ## compile-and-run
 
 ```cl
@@ -1849,7 +1879,7 @@ inactive -> switch -> full screen -> hide
   (global-set-key (kbd "C-~") 'previous-error))
 ```
 
-<a name="sec-7-41"></a>
+<a name="sec-7-40"></a>
 ## editing
 
 Misc editing config
@@ -1881,7 +1911,7 @@ Misc editing config
   (global-set-key (kbd "C-8") 'pop-tag-mark))
 ```
 
-<a name="sec-7-42"></a>
+<a name="sec-7-41"></a>
 ## kill-ring
 
 ```cl
@@ -1903,7 +1933,7 @@ Misc editing config
       ad-do-it)))
 ```
 
-<a name="sec-7-43"></a>
+<a name="sec-7-42"></a>
 ## recentf
 
 ```cl
@@ -1919,7 +1949,7 @@ Misc editing config
   (global-set-key [f2] 'recentf-open-files))
 ```
 
-<a name="sec-7-44"></a>
+<a name="sec-7-43"></a>
 ## desktop
 
 ```cl
@@ -1949,7 +1979,7 @@ Misc editing config
   (add-to-list 'desktop-modes-not-to-save 'fundamental-mode))
 ```
 
-<a name="sec-7-45"></a>
+<a name="sec-7-44"></a>
 ## mark
 
 ```cl
@@ -1967,7 +1997,7 @@ Misc editing config
     (deactivate-mark)))
 ```
 
-<a name="sec-7-46"></a>
+<a name="sec-7-45"></a>
 ## whitespace
 
 ```cl
@@ -1986,7 +2016,7 @@ Misc editing config
   (define-key my-keymap (kbd "SPC") 'whitespace-cleanup))
 ```
 
-<a name="sec-7-47"></a>
+<a name="sec-7-46"></a>
 ## bookmark
 
 ```cl
@@ -2010,7 +2040,7 @@ Misc editing config
   (global-set-key (kbd "C-x j SPC") 'jump-to-register))
 ```
 
-<a name="sec-7-48"></a>
+<a name="sec-7-47"></a>
 ## spell
 
 ```cl
@@ -2034,7 +2064,7 @@ Misc editing config
   (global-set-key (kbd "C-4") 'ispell-word))
 ```
 
-<a name="sec-7-49"></a>
+<a name="sec-7-48"></a>
 ## tab-fix
 
 ```cl
@@ -2055,7 +2085,7 @@ Misc editing config
   (add-hook 'markdown-mode-hook 'tab-fix-org-mode))
 ```
 
-<a name="sec-7-50"></a>
+<a name="sec-7-49"></a>
 ## yasnippet
 
 Compile all snippets into `snippets.el` and load it. After change or and any snippets, must
@@ -2078,6 +2108,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
 
   (custom-set-variables
    '(yas-trigger-key "TAB")
+   '(yas-expand-only-for-last-commands '(self-insert-command org-self-insert-command))
    '(yas-choose-keys-first nil)
    '(yas-prompt-functions (quote (yas-popup-isearch-prompt
                                   yas-ido-prompt
@@ -2135,7 +2166,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
 
 ```
 
-<a name="sec-7-51"></a>
+<a name="sec-7-50"></a>
 ## auto-complete
 
 ```cl
@@ -2165,12 +2196,6 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (require 'auto-complete-config)
   (global-auto-complete-mode -1)
 
-  ;; Force always
-  (defun ac-trigger-key-command (&rest ignore)
-    (interactive "P")
-    (unless (auto-complete-1 :triggered 'trigger-key)
-      (ac-fallback-command 'ac-trigger-key-command)))
-
   (defun ac-update-greedy-command ()
     (interactive)
     (if (or (eq last-command 'ac-update-greedy-command)
@@ -2187,7 +2212,6 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (define-key ac-complete-mode-map "\t" 'ac-update-greedy-command)
   (define-key ac-complete-mode-map [tab] 'ac-update-greedy-command)
 
-
   (add-hook 'prog-mode-hook 'auto-complete-mode)
   (add-hook 'ruby-mode-hook 'auto-complete-mode)
 
@@ -2199,7 +2223,35 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
                 ac-source-words-in-buffer
                 ac-source-words-in-same-mode-buffers
                 ;; ac-source-words-in-all-buffer
-                )))
+                ))
+
+  (defun init--ac-emacs-lisp-mode ()
+    (setq ac-sources
+          '(
+            ac-source-yasnippet
+            ac-source-features
+            ac-source-functions
+            ac-source-variables
+            ac-source-symbols
+            ac-source-abbrev
+            ac-source-dictionary
+            ac-source-imenu
+            ac-source-words-in-buffer
+            ac-source-words-in-same-mode-buffers)))
+  (add-hook 'emacs-lisp-mode-hook 'init--ac-emacs-lisp-mode))
+```
+
+<a name="sec-7-51"></a>
+## auto-insert
+
+```cl
+(define-module auto-insert
+  ;; (require 'autoinsert)
+
+  (define-key my-keymap (kbd "C-n") 'auto-insert)
+
+  (custom-set-variables
+   '(auto-insert-directory (expand-file-name "insert/" user-emacs-directory))))
 ```
 
 <a name="sec-7-52"></a>
@@ -3127,6 +3179,113 @@ Install `emacs-rails` using `make vendor`
       map))
 
   (temporary-mode-define-keys my-keymap 'win-move-resize))
+```
+
+<a name="sec-7-86"></a>
+## eclim
+
+```cl
+(define-module eclim
+  (require-module eproject)
+  (require-package 'emacs-eclim)
+
+  (custom-set-variables
+   '(eclim-use-yasnippet nil))
+
+  (autoload 'start-eclimd "eclimd" nil t)
+
+  (defun eproject-maybe-turn-on-eclim ()
+    (when (and buffer-file-name
+               (file-exists-p (concat (eproject-root) ".project"))
+               (eclim--accepted-p buffer-file-name)
+               (eclim--project-dir buffer-file-name))
+      (eclim-mode +1)))
+  (defun init--eclim-mode ()
+    (when (boundp 'ac-sources)
+      (if (eq (car ac-sources) 'ac-source-yasnippet)
+          (setq ac-sources (cons 'ac-source-yasnippet (cons 'ac-source-emacs-eclim (cdr ac-sources))))
+        (setq ac-sources (cons 'ac-source-emacs-eclim ac-sources))))
+    (define-key eclim-mode-map (kbd "C-c C-e C-;") 'eclim-problems-correct)
+    (define-key eclim-mode-map (kbd "C-c C-e C-n") 'eclim-problems-next)
+    (define-key eclim-mode-map (kbd "C-c C-e C-p") 'eclim-problems-previous))
+  (add-hook 'eclim-mode-hook 'init--eclim-mode)
+
+  (defun eclim-enable ()
+    (interactive)
+    (require 'eclim)
+    (require 'ac-emacs-eclim-source)
+
+    (add-hook 'eproject-mode-hook 'eproject-maybe-turn-on-eclim)
+    (mapc (lambda (buffer)
+            (with-current-buffer buffer
+              (when (and buffer-file-name
+                         (eclim--accepted-p buffer-file-name)
+                         (eclim--project-dir buffer-file-name))
+               (eclim-mode +1))))
+          (buffer-list)))
+  (defun eclim-disable ()
+    (interactive)
+    (remove-hook 'eproject-mode-hook 'eproject-maybe-turn-on-eclim)
+    (mapc (lambda (buffer)
+            (with-current-buffer buffer
+              (eclim-mode -1)))
+          (buffer-list))))
+```
+
+<a name="sec-7-87"></a>
+## server
+
+Start emacs server.
+
+```cl
+(define-module server
+
+  (defcustom server-delete-frame-functions
+    '(anything-c-adaptive-save-history
+      bookmark-exit-hook-internal
+      ac-comphist-save
+      ido-kill-emacs-hook
+      org-clock-save
+      org-id-locations-save
+      org-babel-remove-temporary-directory
+      recentf-save-list
+      semanticdb-kill-emacs-hook
+      session-save-session
+      w3m-arrived-shutdown
+      w3m-cookie-shutdown
+      tramp-dump-connection-properties)
+    "List of functions that should be called when a OS window is closed"
+    :group 'server
+    :type '(repeat symbol))
+
+  (defun server--last-frontend-frame-p ()
+    (= 2 (length (frame-list))))
+
+  (defun server--run-delete-frame-functions (frame)
+    (when (server--last-frontend-frame-p)
+      (mapc (lambda (f)
+              (when (fboundp f)
+                (funcall f)))
+            server-delete-frame-functions)))
+
+  ;; Buggy to run the functions in MacOS X
+  (when (and (daemonp) (not (eq system-type 'darwin)))
+    (add-hook 'delete-frame-functions 'server--run-delete-frame-functions))
+
+  (define-minor-mode server-edit-minor-mode
+    "Allow C-c C-c to run server-edit without change major modes keymap"
+    nil ""
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "C-c C-c") 'server-edit)
+      map))
+
+  (defun init--server-visit ()
+    (server-edit-minor-mode +1))
+
+  ;; run last to run on the minor mode for any enabled major modes
+  (add-hook 'server-visit-hook 'init--server-visit t)
+
+  (server-start))
 ```
 
 <a name="sec-8"></a>

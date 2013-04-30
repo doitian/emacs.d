@@ -177,7 +177,6 @@ custom.el if you prefer it.
   (global-hl-line-mode)
 #+END_SRC
 
-
 * My Config
 
 ** Basic
@@ -298,7 +297,6 @@ Load package on demand
           ("gnu" . "http://elpa.gnu.org/packages/")))
 #+END_SRC
 
-
 * Modules
 
 ** s
@@ -388,12 +386,11 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
       (interactive "p\ncZap back up to char: ")
       (zap-up-to-char (- arg) char))
   
-    (global-set-key "\C-z" 'iy-go-to-char)
     (global-set-key (kbd "M-m") 'iy-go-to-char)
     (global-set-key (kbd "M-M") 'iy-go-to-char-backward)
     (global-set-key (kbd "C-S-z") 'iy-go-to-char-backward)
   
-    (global-set-key (kbd "M-S-z") 'zap-back-up-to-char)
+    (global-set-key (kbd "M-Z") 'zap-back-up-to-char)
   
     (define-key my-keymap "d" 'zap-up-to-char)
     (define-key my-keymap "D" 'zap-back-up-to-char)
@@ -1223,9 +1220,117 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
 ** windows-commands
 #+BEGIN_SRC emacs-lisp
   (define-module windows-commands
+    (defvar init--windows-keymap (make-sparse-keymap))
     (define-key my-minor-mode-map (kbd "M-o") 'other-window)
     (define-key my-minor-mode-map (kbd "M-O") 'other-frame)
-    )
+  
+    (winner-mode 1)
+    (define-key winner-mode-map [(control c)] nil)
+  
+    (defvar init--winner-undo-redo-map
+      (let ((map (make-sparse-keymap)))
+        (define-key map "," 'winner-undo)
+        (define-key map "." 'winner-redo)
+        map))
+  
+    (temporary-mode-define-keys init--windows-keymap 'init--winner-undo-redo)
+    (define-key init--windows-keymap (kbd "s") 'split-window-below)
+    (define-key init--windows-keymap (kbd "d") 'mf-indirect-region-or-buffer)
+    (define-key init--windows-keymap (kbd "v") 'split-window-right)
+    (define-key init--windows-keymap (kbd "c") 'delete-window)
+    (define-key init--windows-keymap (kbd "o") 'delete-other-windows)
+    (define-key init--windows-keymap (kbd "k") 'mf-kill-buffer-and-window)
+  
+    (define-key my-keymap "w" init--windows-keymap))
+#+END_SRC
+** winring
+#+BEGIN_SRC emacs-lisp
+  (define-module winring
+    (require-module windows-commands)
+    (custom-set-variables
+     '(winring-show-names t))
+  
+    (require 'winring)
+    (defun winring-create-frame-hook (frame)
+      (winring-set-name "W" frame))
+  
+    (defun winring-jump-or-create (&optional name)
+      "Jump to or create configuration by name"
+      (interactive)
+      (let* ((ring (winring-get-ring))
+             (n (1- (ring-length ring)))
+             (current (winring-name-of-current))
+             (lst (list (cons current -1)))
+             (def (if (>= n 0) (winring-name-of (ring-ref ring 0)) current))
+             index item)
+        (while (<= 0 n)
+          (push (cons (winring-name-of (ring-ref ring n)) n) lst)
+          (setq n (1- n)))
+        (setq name
+              (or name
+                  (ido-completing-read
+                   (format "Window configuration name (%s): " current)
+                   (mapcar 'car lst) nil 'confirm nil 'winring-name-history def)))
+        (setq index (cdr (assoc name lst)))
+        (if (eq nil index)
+            (progn
+              (winring-save-current-configuration)
+              (delete-other-windows)
+              (switch-to-buffer winring-new-config-buffer-name)
+              (winring-set-name name))
+          (when (<= 0 index)
+            (setq item (ring-remove ring index))
+            (winring-save-current-configuration)
+            (winring-restore-configuration item)))))
+  
+    (winring-initialize)
+  
+    (define-key init--windows-keymap "2" 'winring-duplicate-configuration)
+    (define-key init--windows-keymap "0" 'winring-delete-configuration)
+    (define-key init--windows-keymap "r" 'winring-rename-configuration)
+    (define-key init--windows-keymap "w" 'winring-jump-or-create)
+    (define-key init--windows-keymap "n" 'winring-next-configuration)
+    (define-key init--windows-keymap "p" 'winring-prev-configuration)
+    (define-key init--windows-keymap (kbd "C-n") 'winring-prev-configuration)
+    (define-key init--windows-keymap (kbd "C-p") 'winring-prev-configuration))
+#+END_SRC
+** pointback
+#+BEGIN_SRC emacs-lisp
+  (define-module pointback
+    (require-package 'pointback)
+    (global-pointback-mode +1))
+#+END_SRC
+** popwin
+#+BEGIN_SRC emacs-lisp
+  (define-module popwin
+    (require-package 'popwin)
+    (require-package 'import-popwin)
+    (require-module windows-commands)
+  
+    (require 'popwin)
+    (require 'import-popwin)
+  
+    (popwin-mode +1)
+    (global-set-key "\C-z" popwin:keymap)
+    (define-key my-keymap "n" popwin:keymap)
+  
+  
+    (import-popwin:add :mode 'java-mode
+                       :regexp "import\\s-+")
+  
+    (defun popwin:toggle-last-buffer ()
+      (interactive)
+      (if (popwin:popup-window-live-p)
+          (if (eq (get-buffer-window) popwin:popup-window)
+              (popwin:close-popup-window)
+            (select-window popwin:popup-window))
+        (popwin:popup-last-buffer)))
+  
+    (define-key popwin:keymap "n" 'popwin:toggle-last-buffer)
+    (define-key popwin:keymap "\C-z" 'popwin:toggle-last-buffer)
+    (define-key popwin:keymap "c" 'popwin:close-popup-window)
+    (define-key popwin:keymap "i" 'import-popwin)
+    (define-key init--windows-keymap "i" 'import-popwin))
 #+END_SRC
 ** buffers-commands
 #+BEGIN_SRC emacs-lisp
@@ -1544,7 +1649,6 @@ Auto revert, and helper functions to revert without confirmation.
     (require-package 'quickrun)
   
     (custom-set-variables
-     '(compilation-window-height 11)
      '(compilation-auto-jump-to-first-error nil)
      '(compilation-context-lines 5)
      '(compilation-scroll-output (quote first-error)))
@@ -1917,6 +2021,34 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
       (let ((ediff-window-display-p (lambda () nil)))
         (ediff-show-registry))))
 #+END_SRC
+** ediff-winring
+#+BEGIN_SRC emacs-lisp
+  (define-module ediff-winring
+    (require-module winring)
+    (require-module windows-commands)
+    
+    (defun init--ediff-before-setup-winring-jump ()
+      (winring-jump-or-create "*ediff*"))
+    (defun init--ediff-after-setup-save-register ()
+      (set-register 'ediff (list (current-window-configuration) (point-marker))))
+    (defun init--ediff-quit-winring-delete ()
+      (when (string= (winring-name-of-current) "*ediff*")
+        (let ((prev (ring-remove (winring-get-ring) 0)))
+          (winring-restore-configuration prev))))
+  
+    (defun ediff-last-window-configuration ()
+      (interactive
+      (winring-jump-or-create "*ediff*")
+      (when (get-register 'ediff)
+        (jump-to-register 'ediff)))
+    
+    (add-hook 'ediff-before-setup-hook 'init--ediff-before-setup-winring-jump)
+    (add-hook 'ediff-after-setup-windows-hook 'init--ediff-after-setup-save-register
+              'append)
+    (add-hook 'ediff-quit-hook 'init--ediff-quit-winring-delete)
+  
+    (define-key init--windows-keymap "e" 'ediff-last-window-configuration)))
+#+END_SRC
 ** time-stamp
 #+BEGIN_SRC emacs-lisp
   (define-module time-stamp
@@ -1956,7 +2088,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
         (define-key map "0" 'highlight-symbol-next)
         map))
   
-    (temporary-mode-define-keys  my-keymap 'highlight-symbol-navigation)
+    (temporary-mode-define-keys my-keymap 'highlight-symbol-navigation)
     
     (define-key my-keymap (kbd "+") 'highlight-symbol-query-replace)
     (define-key my-keymap (kbd "=") 'highlight-symbol-at-point)
@@ -2183,7 +2315,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
       (with-current-buffer (find-file-noselect deft-directory)
         (org-drill 'directory)))
   
-    (define-key my-keymap "n" 'deft))
+    (define-key my-keymap "m" 'deft))
 #+END_SRC
 
 ** mail
@@ -2712,6 +2844,43 @@ Install =emacs-rails= using =make vendor=
       (local-set-key (kbd "C-M-e") 'c-end-of-defun))
   
     (add-hook 'c-mode-common-hook 'init--c-mode-common))
+#+END_SRC
+
+
+** win-move-resize
+
+#+BEGIN_SRC emacs-lisp
+  (define-module win-move-resize
+    (require-package 'buffer-move)
+    (global-set-key [C-up] 'buf-move-up)
+    (global-set-key [C-down] 'buf-move-down)
+    (global-set-key [C-left] 'buf-move-left)
+    (global-set-key [C-right] 'buf-move-right)
+  
+    (windmove-default-keybindings 'meta)
+  
+    (require 'win-resize)
+  
+    (defvar win-move-resize-map
+      (let ((map (make-sparse-keymap)))
+        (define-key map "h" 'windmove-left)
+        (define-key map "j" 'windmove-down)
+        (define-key map "k" 'windmove-up)
+        (define-key map "l" 'windmove-right)
+        ;; may C-h is translated to backspace
+        (define-key map (kbd "C-h") 'buf-move-left)
+        (define-key map (kbd "C-j") 'buf-move-down)
+        (define-key map (kbd "C-k") 'buf-move-up)
+        (define-key map (kbd "C-l") 'buf-move-right)
+        (define-key map (kbd "<backspace>") 'buf-move-left)
+        (define-key map (kbd "<DEL>") 'buf-move-left)
+        (define-key map "H" 'win-resize-enlarge-vert)
+        (define-key map "J" 'win-resize-minimize-horiz)
+        (define-key map "K" 'win-resize-enlarge-horiz)
+        (define-key map "L" 'win-resize-minimize-vert)
+        map))
+  
+    (temporary-mode-define-keys my-keymap 'win-move-resize))
 #+END_SRC
 
 * Module Groups

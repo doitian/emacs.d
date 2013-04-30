@@ -136,6 +136,7 @@ site-lisp-update:
 	curl -k -L -o site-lisp/thing-actions.el https://github.com/doitian/thing-actions.el/raw/master/thing-actions.el
 	curl -k -L -o "site-lisp/thingatpt+.el" http://www.emacswiki.org/emacs-en/download/thingatpt%2b.el
 	curl -k -L -o site-lisp/thing-cmds.el http://www.emacswiki.org/emacs-en/download/thing-cmds.el
+	curl -k -L -o site-lisp/winring.el https://launchpadlibrarian.net/43687812/winring.el
 	$(MAKE)
 
 update: elpa-update site-lisp-update

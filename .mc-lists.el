@@ -16,7 +16,11 @@
         kill-region
         org-beginning-of-line
         org-end-of-line
+        paredit-doublequote
+        paredit-forward-delete
         paredit-forward-kill-word
+        paredit-meta-doublequote
+        paredit-splice-sexp
         ruby-end-space
         whole-line-or-region-kill-region
         whole-line-or-region-kill-ring-save

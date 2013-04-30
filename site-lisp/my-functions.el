@@ -92,39 +92,63 @@ Calling this command 3 times will always result in no whitespaces around cursor.
   (back-to-indentation))
 
 ;; http://www.emacswiki.org/emacs/IndirectBuffers
-(defvar mf-indirect-mode-name nil
+(defvar mf-indirect-mode nil
   "Mode to set for indirect buffers.")
-(make-variable-buffer-local 'mf-indirect-mode-name)
+(make-variable-buffer-local 'mf-indirect-mode)
+
+(defun mf-indirect-completing-read-mode ()
+  (intern
+   (completing-read
+    "Mode: "
+    (mapcar (lambda (e)
+              (list (symbol-name e)))
+            (apropos-internal "-mode$" 'commandp))
+    nil t)))
+
+(defun mf-indirect-completing-read-name (current-buffer-name mode)
+  (let* ((name (generate-new-buffer-name
+                (format "*indirect %s[ %s ]*"
+                        (buffer-name) (replace-regexp-in-string "-mode$" "" (symbol-name mode)))))
+         (result (read-from-minibuffer (format "Buffer name (%s): " name))))
+    (if (zerop (length result)) name result)))
 
 ;;;###autoload
-(defun mf-indirect-region (start end)
-  "Edit the current region in another buffer.
-    If the buffer-local variable `mf-indirect-mode-name' is not set, prompt
-    for mode name to choose for the indirect buffer interactively.
-    Otherwise, use the value of said variable as argument to a funcall."
-  (interactive "r")
-  (let ((buffer-name (generate-new-buffer-name "*indirect*"))
-        (mode
-         (if (not mf-indirect-mode-name)
-             (setq mf-indirect-mode-name
-                   (intern
-                    (completing-read 
-                     "Mode: "
-                     (mapcar (lambda (e) 
-                               (list (symbol-name e)))
-                             (apropos-internal "-mode$" 'commandp))
-                     nil t)))
-           mf-indirect-mode-name)))
-    (pop-to-buffer (make-indirect-buffer (current-buffer) buffer-name))
-    (funcall mode)
-    (narrow-to-region start end)
-    (goto-char (point-min))
-    (shrink-window-if-larger-than-buffer)))
+(defun mf-indirect-region (start end mode name)
+  "Edit the current region in another buffer."
+  (interactive (let* ((mode (or (and (not current-prefix-arg) mf-indirect-mode)
+                                (mf-indirect-completing-read-mode)))
+                      (name (mf-indirect-completing-read-name
+                             (buffer-name)
+                             mode)))
+                 (list (point) (mark) mode name)))
+  (setq mf-indirect-mode mode)
+  (pop-to-buffer (make-indirect-buffer (current-buffer) name))
+  (funcall mode)
+  (narrow-to-region start end)
+  (goto-char (point-min))
+  (shrink-window-if-larger-than-buffer))
+
+;;;###autoload
+(defun mf-indirect-buffer (mode name)
+  (interactive (let* ((mode (or (and (not current-prefix-arg) major-mode)
+                                (mf-indirect-completing-read-mode)))
+                      (name (mf-indirect-completing-read-name (buffer-name) mode)))
+                 (list mode name)))
+  (pop-to-buffer (make-indirect-buffer (current-buffer) name))
+  (funcall mode))
+
+;;;###autoload
+(defun mf-indirect-region-or-buffer ()
+  (interactive)
+  (call-interactively
+   (if (region-active-p)
+       'mf-indirect-region
+     'mf-indirect-buffer)))
 
 ;;;###autoload
 (defun mf-switch-to-previous-buffer ()
   (interactive)
-  (switch-to-buffer (other-buffer)))
+  (switch-to-buffer (other-buffer (current-buffer) t)))
 
 ;;;###autoload
 (defun mf-rename-current-buffer-file ()

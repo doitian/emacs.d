@@ -2033,21 +2033,27 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
       (set-register 'ediff (list (current-window-configuration) (point-marker))))
     (defun init--ediff-quit-winring-delete ()
       (when (string= (winring-name-of-current) "*ediff*")
+        (set-register 'ediff nil)
         (let ((prev (ring-remove (winring-get-ring) 0)))
           (winring-restore-configuration prev))))
   
-    (defun ediff-last-window-configuration ()
-      (interactive
-      (winring-jump-or-create "*ediff*")
-      (when (get-register 'ediff)
-        (jump-to-register 'ediff))))
+    (defun winring-toggle-ediff ()
+      (interactive)
+      (if (string= (winring-name-of-current) "*ediff*")
+          (let ((prev (ring-remove (winring-get-ring) 0)))
+            (winring-restore-configuration prev))
+        (if (get-register 'ediff)
+            (progn
+             (winring-jump-or-create "*ediff*")
+             (jump-to-register 'ediff))
+          (error "No active ediff window configuration"))))
   
     (add-hook 'ediff-before-setup-hook 'init--ediff-before-setup-winring-jump)
     (add-hook 'ediff-after-setup-windows-hook 'init--ediff-after-setup-save-register
               'append)
     (add-hook 'ediff-quit-hook 'init--ediff-quit-winring-delete)
   
-    (define-key init--windows-keymap "e" 'ediff-last-window-configuration))
+    (define-key init--windows-keymap "e" 'winring-toggle-ediff))
 #+END_SRC
 ** time-stamp
 #+BEGIN_SRC emacs-lisp

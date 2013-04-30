@@ -149,6 +149,12 @@ Otherwise return the name wrap in a list."
 (defmacro require-module (name &optional reload)
   "Load a module by name."
   (let ((init (intern (concat "module-" (symbol-name name) "-init"))))
+    `(funcall ',init ,reload)))
+
+(defmacro require-module-maybe (name &optional reload)
+  "Load a module by name.
+Skip module in black list or not in white list when it is not blank."
+  (let ((init (intern (concat "module-" (symbol-name name) "-init"))))
     `(unless (memq ',name (module--expand-names module-black-list))
        (funcall ',init ,reload))))
 
@@ -156,19 +162,23 @@ Otherwise return the name wrap in a list."
 
 ;;;###autoload
 (defun module-load (name &optional reload)
-  "Load a module by name. Prefix argument force reload the module"
+  "Load a module by name.
+With \\[universal-argument] to force reload the module.
+With \\[universal-argument] \\[universal-argument] to also include not allowed module."
   (interactive (list
                 (intern
                  (completing-read "Module: "
                                   (mapcar (lambda (module) (cons module module))
                                           (if current-prefix-arg
-                                              (module--allowed)
+                                              (if (and (listp current-prefix-arg) (car current-prefix-arg) (= 16 (car current-prefix-arg)))
+                                                  module-list
+                                                (module--allowed))
                                             (module--loadable)))
                                   nil t nil
                                   'module-load-history))
                 current-prefix-arg))
   (let ((init (intern (format "module-%s-init" (symbol-name name)))))
-    (when (and (fboundp init) (not (memq name (module--expand-names module-black-list))))
+    (when (fboundp init)
       (funcall init reload))))
 
 (unless (fboundp 'load-module)

@@ -77,40 +77,41 @@
 <li><a href="#sec-7-48">7.48. spell</a></li>
 <li><a href="#sec-7-49">7.49. tab-fix</a></li>
 <li><a href="#sec-7-50">7.50. yasnippet</a></li>
-<li><a href="#sec-7-51">7.51. ediff-mode</a></li>
-<li><a href="#sec-7-52">7.52. ediff-winring</a></li>
-<li><a href="#sec-7-53">7.53. time-stamp</a></li>
-<li><a href="#sec-7-54">7.54. autopair</a></li>
-<li><a href="#sec-7-55">7.55. highlight</a></li>
-<li><a href="#sec-7-56">7.56. hippie-expand</a></li>
-<li><a href="#sec-7-57">7.57. abbrev</a></li>
-<li><a href="#sec-7-58">7.58. search-files</a></li>
-<li><a href="#sec-7-59">7.59. alternative-files</a></li>
-<li><a href="#sec-7-60">7.60. ibuffer-mode</a></li>
-<li><a href="#sec-7-61">7.61. deft</a></li>
-<li><a href="#sec-7-62">7.62. mail</a></li>
-<li><a href="#sec-7-63">7.63. css</a></li>
-<li><a href="#sec-7-64">7.64. haml-mode</a></li>
-<li><a href="#sec-7-65">7.65. yaml-mode</a></li>
-<li><a href="#sec-7-66">7.66. rainbow-mode</a></li>
-<li><a href="#sec-7-67">7.67. markdown-mode</a></li>
-<li><a href="#sec-7-68">7.68. lisp-mode</a></li>
-<li><a href="#sec-7-69">7.69. ruby-mode</a></li>
-<li><a href="#sec-7-70">7.70. rails</a></li>
-<li><a href="#sec-7-71">7.71. rspec-mode</a></li>
-<li><a href="#sec-7-72">7.72. mmm-mode</a></li>
-<li><a href="#sec-7-73">7.73. flycheck</a></li>
-<li><a href="#sec-7-74">7.74. tmux-send</a></li>
-<li><a href="#sec-7-75">7.75. speedbar</a></li>
-<li><a href="#sec-7-76">7.76. woman</a></li>
-<li><a href="#sec-7-77">7.77. clean-buffer</a></li>
-<li><a href="#sec-7-78">7.78. uniquify-buffer</a></li>
-<li><a href="#sec-7-79">7.79. diminish</a></li>
-<li><a href="#sec-7-80">7.80. dtrt-indent</a></li>
-<li><a href="#sec-7-81">7.81. undo-tree</a></li>
-<li><a href="#sec-7-82">7.82. coffee-mode</a></li>
-<li><a href="#sec-7-83">7.83. c-mode</a></li>
-<li><a href="#sec-7-84">7.84. win-move-resize</a></li>
+<li><a href="#sec-7-51">7.51. auto-complete</a></li>
+<li><a href="#sec-7-52">7.52. ediff-mode</a></li>
+<li><a href="#sec-7-53">7.53. ediff-winring</a></li>
+<li><a href="#sec-7-54">7.54. time-stamp</a></li>
+<li><a href="#sec-7-55">7.55. autopair</a></li>
+<li><a href="#sec-7-56">7.56. highlight</a></li>
+<li><a href="#sec-7-57">7.57. hippie-expand</a></li>
+<li><a href="#sec-7-58">7.58. abbrev</a></li>
+<li><a href="#sec-7-59">7.59. search-files</a></li>
+<li><a href="#sec-7-60">7.60. alternative-files</a></li>
+<li><a href="#sec-7-61">7.61. ibuffer-mode</a></li>
+<li><a href="#sec-7-62">7.62. deft</a></li>
+<li><a href="#sec-7-63">7.63. mail</a></li>
+<li><a href="#sec-7-64">7.64. css</a></li>
+<li><a href="#sec-7-65">7.65. haml-mode</a></li>
+<li><a href="#sec-7-66">7.66. yaml-mode</a></li>
+<li><a href="#sec-7-67">7.67. rainbow-mode</a></li>
+<li><a href="#sec-7-68">7.68. markdown-mode</a></li>
+<li><a href="#sec-7-69">7.69. lisp-mode</a></li>
+<li><a href="#sec-7-70">7.70. ruby-mode</a></li>
+<li><a href="#sec-7-71">7.71. rails</a></li>
+<li><a href="#sec-7-72">7.72. rspec-mode</a></li>
+<li><a href="#sec-7-73">7.73. mmm-mode</a></li>
+<li><a href="#sec-7-74">7.74. flycheck</a></li>
+<li><a href="#sec-7-75">7.75. tmux-send</a></li>
+<li><a href="#sec-7-76">7.76. speedbar</a></li>
+<li><a href="#sec-7-77">7.77. woman</a></li>
+<li><a href="#sec-7-78">7.78. clean-buffer</a></li>
+<li><a href="#sec-7-79">7.79. uniquify-buffer</a></li>
+<li><a href="#sec-7-80">7.80. diminish</a></li>
+<li><a href="#sec-7-81">7.81. dtrt-indent</a></li>
+<li><a href="#sec-7-82">7.82. undo-tree</a></li>
+<li><a href="#sec-7-83">7.83. coffee-mode</a></li>
+<li><a href="#sec-7-84">7.84. c-mode</a></li>
+<li><a href="#sec-7-85">7.85. win-move-resize</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -1679,9 +1680,6 @@ inactive -> switch -> full screen -> hide
     (require 'helm-locate)
     (require 'helm-w3m)
 
-       ;;; Shortcuts
-    (define-key helm-map (kbd "M-s") 'helm-select-with-prefix-shortcut)
-
     (remove-hook 'helm-before-initialize-hook 'init--helm-load))
 
   (add-hook 'helm-before-initialize-hook 'init--helm-load)
@@ -2071,6 +2069,12 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (require-package 'yasnippet)
   (require-package 'popup)
   (require 'popup nil t)
+  (when (featurep 'popup)
+    (define-key popup-menu-keymap (kbd "M-n") 'popup-next)
+    (define-key popup-menu-keymap (kbd "TAB") 'popup-next)
+    (define-key popup-menu-keymap (kbd "<tab>") 'popup-next)
+    (define-key popup-menu-keymap (kbd "<backtab>") 'popup-previous)
+    (define-key popup-menu-keymap (kbd "M-p") 'popup-previous))
 
   (custom-set-variables
    '(yas-trigger-key "TAB")
@@ -2132,6 +2136,73 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
 ```
 
 <a name="sec-7-51"></a>
+## auto-complete
+
+```cl
+(define-module auto-complete
+  (require-package 'auto-complete)
+  (require-module yasnippet)
+
+  (custom-set-variables
+   '(ac-use-fuzzy nil)
+   '(ac-trigger-key "TAB")
+   '(ac-auto-start nil)
+   '(ac-use-menu-map t)
+   '(ac-auto-show-menu nil)
+   '(ac-show-menu nil)
+   '(ac-use-quick-help t)
+   '(ac-non-trigger-commands nil)
+   '(ac-trigger-commands nil)
+   '(ac-trigger-commands-on-completing
+     '(self-insert-command case-dwim-dash case-dwim-underscore
+                           delete-backward-char backward-delete-char
+                           backward-delete-char-untabify autopair-backspace
+                           paredit-backward-delete paredit-backward-kill-word))
+   '(ac-modes nil)
+   '(ac-disable-inline t))
+
+  (require 'auto-complete)
+  (require 'auto-complete-config)
+  (global-auto-complete-mode -1)
+
+  ;; Force always
+  (defun ac-trigger-key-command (&rest ignore)
+    (interactive "P")
+    (unless (auto-complete-1 :triggered 'trigger-key)
+      (ac-fallback-command 'ac-trigger-key-command)))
+
+  (defun ac-update-greedy-command ()
+    (interactive)
+    (if (or (eq last-command 'ac-update-greedy-command)
+            (eq last-command 'ac-expand)
+            (eq last-command 'yas-expand))
+        (progn
+          (ac-expand)
+          (setq this-command 'ac-expand))
+      (ac-update-greedy t)))
+
+  (define-key ac-complete-mode-map (kbd "M-SPC") 'ac-complete)
+  (define-key ac-complete-mode-map (kbd "M-<tab>") 'ac-complete)
+  (define-key ac-complete-mode-map (kbd "C-g") 'ac-stop)
+  (define-key ac-complete-mode-map "\t" 'ac-update-greedy-command)
+  (define-key ac-complete-mode-map [tab] 'ac-update-greedy-command)
+
+
+  (add-hook 'prog-mode-hook 'auto-complete-mode)
+  (add-hook 'ruby-mode-hook 'auto-complete-mode)
+
+  (setq-default
+   ac-sources '(ac-source-yasnippet
+                ac-source-abbrev
+                ac-source-dictionary
+                ac-source-imenu
+                ac-source-words-in-buffer
+                ac-source-words-in-same-mode-buffers
+                ;; ac-source-words-in-all-buffer
+                )))
+```
+
+<a name="sec-7-52"></a>
 ## ediff-mode
 
 ```cl
@@ -2147,7 +2218,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
       (ediff-show-registry))))
 ```
 
-<a name="sec-7-52"></a>
+<a name="sec-7-53"></a>
 ## ediff-winring
 
 ```cl
@@ -2184,7 +2255,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (define-key init--windows-keymap "e" 'winring-toggle-ediff))
 ```
 
-<a name="sec-7-53"></a>
+<a name="sec-7-54"></a>
 ## time-stamp
 
 ```cl
@@ -2196,7 +2267,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
         time-stamp-end ">"))
 ```
 
-<a name="sec-7-54"></a>
+<a name="sec-7-55"></a>
 ## autopair
 
 ```cl
@@ -2209,7 +2280,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (add-hook 'c-mode-common-hook 'autopair-mode))
 ```
 
-<a name="sec-7-55"></a>
+<a name="sec-7-56"></a>
 ## highlight
 
 ```cl
@@ -2243,7 +2314,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (add-hook 'ruby-mode-hook 'highlight-parentheses-mode))
 ```
 
-<a name="sec-7-56"></a>
+<a name="sec-7-57"></a>
 ## hippie-expand
 
 ```cl
@@ -2269,7 +2340,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (global-set-key (kbd "M-/") 'hippie-expand))  
 ```
 
-<a name="sec-7-57"></a>
+<a name="sec-7-58"></a>
 ## abbrev
 
 ```cl
@@ -2279,7 +2350,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
    '(mail-abbrevs-mode t)))
 ```
 
-<a name="sec-7-58"></a>
+<a name="sec-7-59"></a>
 ## search-files
 
 ```cl
@@ -2294,7 +2365,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (global-set-key (kbd "<f11>") 'find-grep-dired))
 ```
 
-<a name="sec-7-59"></a>
+<a name="sec-7-60"></a>
 ## alternative-files
 
 ```cl
@@ -2343,7 +2414,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (define-key my-keymap (kbd "A") 'alternative-files-create-file))
 ```
 
-<a name="sec-7-60"></a>
+<a name="sec-7-61"></a>
 ## ibuffer-mode
 
 ```cl
@@ -2443,7 +2514,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
 
 ```
 
-<a name="sec-7-61"></a>
+<a name="sec-7-62"></a>
 ## deft
 
 ```cl
@@ -2469,7 +2540,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (define-key my-keymap "m" 'deft))
 ```
 
-<a name="sec-7-62"></a>
+<a name="sec-7-63"></a>
 ## mail
 
 ```cl
@@ -2486,7 +2557,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (add-hook 'server-visit-hook 'init--mutt-compose))
 ```
 
-<a name="sec-7-63"></a>
+<a name="sec-7-64"></a>
 ## css
 
 css, sass, scss
@@ -2511,7 +2582,7 @@ css, sass, scss
   (add-hook 'sass-mode-hook 'init--sass-load))
 ```
 
-<a name="sec-7-64"></a>
+<a name="sec-7-65"></a>
 ## haml-mode
 
 ```cl
@@ -2519,7 +2590,7 @@ css, sass, scss
   (require-package 'haml-mode))
 ```
 
-<a name="sec-7-65"></a>
+<a name="sec-7-66"></a>
 ## yaml-mode
 
 ```cl
@@ -2527,7 +2598,7 @@ css, sass, scss
   (require-package 'yaml-mode))
 ```
 
-<a name="sec-7-66"></a>
+<a name="sec-7-67"></a>
 ## rainbow-mode
 
 ```cl
@@ -2539,7 +2610,7 @@ css, sass, scss
   (add-hook 'scss-mode-hook 'rainbow-mode))
 ```
 
-<a name="sec-7-67"></a>
+<a name="sec-7-68"></a>
 ## markdown-mode
 
 ```cl
@@ -2552,7 +2623,7 @@ css, sass, scss
   (add-hook 'markdown-mode-hook 'auto-fill-mode))
 ```
 
-<a name="sec-7-68"></a>
+<a name="sec-7-69"></a>
 ## lisp-mode
 
 ```cl
@@ -2606,7 +2677,7 @@ css, sass, scss
   (add-hook 'emacs-lisp-mode-hook 'init--emacs-lisp-load))
 ```
 
-<a name="sec-7-69"></a>
+<a name="sec-7-70"></a>
 ## ruby-mode
 
 ```cl
@@ -2666,7 +2737,7 @@ css, sass, scss
   (add-hook 'ruby-mode-hook 'init--ruby-mode))
 ```
 
-<a name="sec-7-70"></a>
+<a name="sec-7-71"></a>
 ## rails
 
 Install `emacs-rails` using `make vendor`
@@ -2683,7 +2754,7 @@ Install `emacs-rails` using `make vendor`
   (require 'emacs-rails-hacks))
 ```
 
-<a name="sec-7-71"></a>
+<a name="sec-7-72"></a>
 ## rspec-mode
 
 ```cl
@@ -2709,7 +2780,7 @@ Install `emacs-rails` using `make vendor`
    '(rspec-key-command-prefix (kbd "M-s v"))))
 ```
 
-<a name="sec-7-72"></a>
+<a name="sec-7-73"></a>
 ## mmm-mode
 
 ```cl
@@ -2771,7 +2842,7 @@ Install `emacs-rails` using `make vendor`
   (add-to-list 'auto-mode-alist '("\\.jst\\.ejs\\'"  . html-erb-mode)))
 ```
 
-<a name="sec-7-73"></a>
+<a name="sec-7-74"></a>
 ## flycheck
 
 ```cl
@@ -2792,7 +2863,7 @@ Install `emacs-rails` using `make vendor`
   (global-set-key (kbd "M-~") 'flycheck-previous-error))
 ```
 
-<a name="sec-7-74"></a>
+<a name="sec-7-75"></a>
 ## tmux-send
 
 ```cl
@@ -2801,7 +2872,7 @@ Install `emacs-rails` using `make vendor`
   (global-set-key (kbd "C-<f6>") 'tmux-select))
 ```
 
-<a name="sec-7-75"></a>
+<a name="sec-7-76"></a>
 ## speedbar
 
 ```cl
@@ -2810,7 +2881,7 @@ Install `emacs-rails` using `make vendor`
   (global-set-key (kbd "<ESC> <f7>") 'speedbar-get-focus))
 ```
 
-<a name="sec-7-76"></a>
+<a name="sec-7-77"></a>
 ## woman
 
 ```cl
@@ -2821,7 +2892,7 @@ Install `emacs-rails` using `make vendor`
   (fset 'man 'woman))
 ```
 
-<a name="sec-7-77"></a>
+<a name="sec-7-78"></a>
 ## clean-buffer
 
 ```cl
@@ -2833,7 +2904,7 @@ Install `emacs-rails` using `make vendor`
    '(midnight-mode t nil (midnight))))
 ```
 
-<a name="sec-7-78"></a>
+<a name="sec-7-79"></a>
 ## uniquify-buffer
 
 ```cl
@@ -2843,7 +2914,7 @@ Install `emacs-rails` using `make vendor`
    '(uniquify-strip-common-suffix nil)))
 ```
 
-<a name="sec-7-79"></a>
+<a name="sec-7-80"></a>
 ## diminish
 
 ```cl
@@ -2882,7 +2953,7 @@ Install `emacs-rails` using `make vendor`
   (diminish 'auto-fill-function " F"))
 ```
 
-<a name="sec-7-80"></a>
+<a name="sec-7-81"></a>
 ## dtrt-indent
 
 ```cl
@@ -2891,7 +2962,7 @@ Install `emacs-rails` using `make vendor`
   (dtrt-indent-mode 1))
 ```
 
-<a name="sec-7-81"></a>
+<a name="sec-7-82"></a>
 ## undo-tree
 
 ```cl
@@ -2903,7 +2974,7 @@ Install `emacs-rails` using `make vendor`
   (define-key ctl-x-r-map "U" 'undo-tree-restore-state-from-register))
 ```
 
-<a name="sec-7-82"></a>
+<a name="sec-7-83"></a>
 ## coffee-mode
 
 ```cl
@@ -2911,7 +2982,7 @@ Install `emacs-rails` using `make vendor`
   (require-package 'coffee-mode))
 ```
 
-<a name="sec-7-83"></a>
+<a name="sec-7-84"></a>
 ## c-mode
 
 ```cl
@@ -3021,7 +3092,7 @@ Install `emacs-rails` using `make vendor`
   (add-hook 'c-mode-common-hook 'init--c-mode-common))
 ```
 
-<a name="sec-7-84"></a>
+<a name="sec-7-85"></a>
 ## win-move-resize
 
 ```cl

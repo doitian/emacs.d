@@ -1571,9 +1571,6 @@ Auto revert, and helper functions to revert without confirmation.
       (require 'helm-locate)
       (require 'helm-w3m)
   
-         ;;; Shortcuts
-      (define-key helm-map (kbd "M-s") 'helm-select-with-prefix-shortcut)
-  
       (remove-hook 'helm-before-initialize-hook 'init--helm-load))
   
     (add-hook 'helm-before-initialize-hook 'init--helm-load)
@@ -1946,70 +1943,140 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
 -   run =make snippets= in shell
 
 #+BEGIN_SRC emacs-lisp
-  (define-module yasnippet
-    (require-package 'yasnippet)
-    (require-package 'popup)
-    (require 'popup nil t)
-    
-    (custom-set-variables
-     '(yas-trigger-key "TAB")
-     '(yas-choose-keys-first nil)
-     '(yas-prompt-functions (quote (yas-popup-isearch-prompt
-                                    yas-ido-prompt
-                                    yas-x-prompt
-                                    yas-no-prompt)))
-     '(yas-wrap-around-region nil)
-     '(yas-use-menu nil))
-    
-    (defun yas-buffer-name-stub ()
-      (let ((name (or (buffer-file-name)
-                      (buffer-name))))
-        (replace-regexp-in-string
-         "^t_\\|_?\\(test\\|spec\\)$" ""
-         (file-name-sans-extension (file-name-nondirectory name)))))
-    
-    (defun yas-safer-expand ()
-      (let ((yas-fallback-behavior 'return-nil))
-        (call-interactively 'yas-expand)))
-    
-    (defun yas-ido-insert-snippets (&optional no-condition)
-      (interactive "P")
-      (let ((yas-prompt-functions '(yas-ido-prompt)))
-        (yas-insert-snippet)))
-    
-    (defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
+    (define-module yasnippet
+      (require-package 'yasnippet)
+      (require-package 'popup)
+      (require 'popup nil t)
       (when (featurep 'popup)
-        (popup-menu*
-         (mapcar
-          (lambda (choice)
-            (popup-make-item
-             (or (and display-fn (funcall display-fn choice))
-                 choice)
-             :value choice))
-          choices)
-         :prompt prompt
-         :isearch t
-         )))
+        (define-key popup-menu-keymap (kbd "M-n") 'popup-next)
+        (define-key popup-menu-keymap (kbd "TAB") 'popup-next)
+        (define-key popup-menu-keymap (kbd "<tab>") 'popup-next)
+        (define-key popup-menu-keymap (kbd "<backtab>") 'popup-previous)
+        (define-key popup-menu-keymap (kbd "M-p") 'popup-previous))
+      
+      (custom-set-variables
+       '(yas-trigger-key "TAB")
+       '(yas-choose-keys-first nil)
+       '(yas-prompt-functions (quote (yas-popup-isearch-prompt
+                                      yas-ido-prompt
+                                      yas-x-prompt
+                                      yas-no-prompt)))
+       '(yas-wrap-around-region nil)
+       '(yas-use-menu nil))
+      
+      (defun yas-buffer-name-stub ()
+        (let ((name (or (buffer-file-name)
+                        (buffer-name))))
+          (replace-regexp-in-string
+           "^t_\\|_?\\(test\\|spec\\)$" ""
+           (file-name-sans-extension (file-name-nondirectory name)))))
+      
+      (defun yas-safer-expand ()
+        (let ((yas-fallback-behavior 'return-nil))
+          (call-interactively 'yas-expand)))
+      
+      (defun yas-ido-insert-snippets (&optional no-condition)
+        (interactive "P")
+        (let ((yas-prompt-functions '(yas-ido-prompt)))
+          (yas-insert-snippet)))
+      
+      (defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
+        (when (featurep 'popup)
+          (popup-menu*
+           (mapcar
+            (lambda (choice)
+              (popup-make-item
+               (or (and display-fn (funcall display-fn choice))
+                   choice)
+               :value choice))
+            choices)
+           :prompt prompt
+           :isearch t
+           )))
+      
+      (defadvice yas--menu-keymap-get-create (around ignore (mode) activate))
+      
+      (define-key my-keymap (kbd "<tab>") 'yas-insert-snippet)
+      
+      (let ((map (make-sparse-keymap)))
+        (define-key map (kbd "M-/") 'yas-ido-insert-snippets)
+        (define-key map (kbd "/") 'yas-ido-insert-snippets)
+        (define-key map (kbd "n") 'yas-new-snippet)
+        (define-key map (kbd "o") 'yas-visit-snippet-file)
+        (define-key map (kbd "i") 'auto-insert)
+        (define-key my-keymap (kbd "M-/") map))
+      
+      (setq yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
+      (yas-global-mode +1)
+      (defadvice yas-reload-all (before yas-recompile-all-before-reload activate)
+        (yas-recompile-all)))
     
-    (defadvice yas--menu-keymap-get-create (around ignore (mode) activate))
-    
-    (define-key my-keymap (kbd "<tab>") 'yas-insert-snippet)
-    
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "M-/") 'yas-ido-insert-snippets)
-      (define-key map (kbd "/") 'yas-ido-insert-snippets)
-      (define-key map (kbd "n") 'yas-new-snippet)
-      (define-key map (kbd "o") 'yas-visit-snippet-file)
-      (define-key map (kbd "i") 'auto-insert)
-      (define-key my-keymap (kbd "M-/") map))
-    
-    (setq yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
-    (yas-global-mode +1)
-    (defadvice yas-reload-all (before yas-recompile-all-before-reload activate)
-      (yas-recompile-all)))
-  
 #+END_SRC
 
+** auto-complete
+#+BEGIN_SRC emacs-lisp
+  (define-module auto-complete
+    (require-package 'auto-complete)
+    (require-module yasnippet)
+  
+    (custom-set-variables
+     '(ac-use-fuzzy nil)
+     '(ac-trigger-key "TAB")
+     '(ac-auto-start nil)
+     '(ac-use-menu-map t)
+     '(ac-auto-show-menu nil)
+     '(ac-show-menu nil)
+     '(ac-use-quick-help t)
+     '(ac-non-trigger-commands nil)
+     '(ac-trigger-commands nil)
+     '(ac-trigger-commands-on-completing
+       '(self-insert-command case-dwim-dash case-dwim-underscore
+                             delete-backward-char backward-delete-char
+                             backward-delete-char-untabify autopair-backspace
+                             paredit-backward-delete paredit-backward-kill-word))
+     '(ac-modes nil)
+     '(ac-disable-inline t))
+  
+    (require 'auto-complete)
+    (require 'auto-complete-config)
+    (global-auto-complete-mode -1)
+  
+    ;; Force always
+    (defun ac-trigger-key-command (&rest ignore)
+      (interactive "P")
+      (unless (auto-complete-1 :triggered 'trigger-key)
+        (ac-fallback-command 'ac-trigger-key-command)))
+  
+    (defun ac-update-greedy-command ()
+      (interactive)
+      (if (or (eq last-command 'ac-update-greedy-command)
+              (eq last-command 'ac-expand)
+              (eq last-command 'yas-expand))
+          (progn
+            (ac-expand)
+            (setq this-command 'ac-expand))
+        (ac-update-greedy t)))
+  
+    (define-key ac-complete-mode-map (kbd "M-SPC") 'ac-complete)
+    (define-key ac-complete-mode-map (kbd "M-<tab>") 'ac-complete)
+    (define-key ac-complete-mode-map (kbd "C-g") 'ac-stop)
+    (define-key ac-complete-mode-map "\t" 'ac-update-greedy-command)
+    (define-key ac-complete-mode-map [tab] 'ac-update-greedy-command)
+  
+  
+    (add-hook 'prog-mode-hook 'auto-complete-mode)
+    (add-hook 'ruby-mode-hook 'auto-complete-mode)
+  
+    (setq-default
+     ac-sources '(ac-source-yasnippet
+                  ac-source-abbrev
+                  ac-source-dictionary
+                  ac-source-imenu
+                  ac-source-words-in-buffer
+                  ac-source-words-in-same-mode-buffers
+                  ;; ac-source-words-in-all-buffer
+                  )))
+#+END_SRC
 ** ediff-mode
 #+BEGIN_SRC emacs-lisp
   (define-module ediff-mode
@@ -2853,7 +2920,6 @@ Install =emacs-rails= using =make vendor=
   
     (add-hook 'c-mode-common-hook 'init--c-mode-common))
 #+END_SRC
-
 
 ** win-move-resize
 

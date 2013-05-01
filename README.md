@@ -61,7 +61,7 @@
 <li><a href="#sec-7-32">7.32. vc</a></li>
 <li><a href="#sec-7-33">7.33. isearch</a></li>
 <li><a href="#sec-7-34">7.34. revert</a></li>
-<li><a href="#sec-7-35">7.35. eshell</a></li>
+<li><a href="#sec-7-35">7.35. terminal</a></li>
 <li><a href="#sec-7-36">7.36. eproject</a></li>
 <li><a href="#sec-7-37">7.37. helm</a></li>
 <li><a href="#sec-7-38">7.38. octave-mode</a></li>
@@ -113,8 +113,9 @@
 <li><a href="#sec-7-84">7.84. c-mode</a></li>
 <li><a href="#sec-7-85">7.85. win-move-resize</a></li>
 <li><a href="#sec-7-86">7.86. scala-mode</a></li>
-<li><a href="#sec-7-87">7.87. eclim</a></li>
-<li><a href="#sec-7-88">7.88. server</a></li>
+<li><a href="#sec-7-87">7.87. visual-regexp</a></li>
+<li><a href="#sec-7-88">7.88. eclim</a></li>
+<li><a href="#sec-7-89">7.89. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -418,8 +419,8 @@ Load package on demand
 ;; @purcell https://github.com/purcell/emacs.d/blob/master/init-elpa.el
 (defun require-package (package &optional min-version no-refresh)
   "Install given PACKAGE, optionally requiring MIN-VERSION.
-If NO-REFRESH is non-nil, the available package lists will not be
-re-downloaded in order to locate PACKAGE."
+  If NO-REFRESH is non-nil, the available package lists will not be
+  re-downloaded in order to locate PACKAGE."
   (if (package-installed-p package min-version)
       t
     (if (or (assoc package package-archive-contents) no-refresh)
@@ -429,6 +430,8 @@ re-downloaded in order to locate PACKAGE."
         (require-package package min-version t)))))
 
 (package-initialize)
+(unless (package-installed-p 'dash)
+  (package-install-file (concat my-site-lisp-dir "dash.el")))
 
 (setq package-archives
       '(("melpa" . "http://melpa.milkbox.net/packages/")
@@ -735,14 +738,15 @@ Install latest org by running `make org`. Othewise system bundled version is use
 
   (add-hook 'org-mode-hook 'init--org-mode)
 
+  (autoload 'org-footnote-action "org-footnote" nil t)
+
   (global-set-key (kbd "C-c l") 'org-store-link)
   (global-set-key (kbd "C-c L") 'org-insert-link-global)
   (global-set-key (kbd "C-c o") 'org-open-at-point-global)
   (global-set-key (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "C-c t") 'org-footnote-action)
   (define-key my-keymap (kbd "r") 'org-capture)
   (define-key my-keymap (kbd "M-r") 'org-capture)
-  (autoload 'org-footnote-action "org-footnote" nil t)
-  (define-key my-keymap (kbd "t") 'org-footnote-action)
   (define-key my-keymap (kbd "<return>") 'org-clock-goto))
 ```
 
@@ -1372,7 +1376,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   (define-key init--windows-keymap (kbd "v") 'split-window-right)
   (define-key init--windows-keymap (kbd "c") 'delete-window)
   (define-key init--windows-keymap (kbd "o") 'delete-other-windows)
-  (define-key init--windows-keymap (kbd "k") 'mf-kill-buffer-and-window)
+  (define-key init--windows-keymap (kbd "x") 'mf-kill-buffer-and-window)
 
   (define-key my-keymap "w" init--windows-keymap))
 ```
@@ -1496,7 +1500,8 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
 (define-module files-commands
   (global-set-key (kbd "C-x C-r") 'mf-rename-current-buffer-file)
   (global-set-key (kbd "C-x M-f") 'mf-find-alternative-file-with-sudo)
-  )
+  (define-key my-keymap "g" 'gpicker-find-file)
+  (define-key my-keymap (kbd "M-g") 'gpicker-find-file))
 ```
 
 <a name="sec-7-32"></a>
@@ -1596,42 +1601,86 @@ Auto revert, and helper functions to revert without confirmation.
 ```
 
 <a name="sec-7-35"></a>
-## eshell
+## terminal
 
 ```cl
-(define-module eshell
-  (defun eshell-named (&optional name)
+(define-module terminal
+  (defun terminal-eshell-named (&optional name)
     "Get or create eshell buffer with specified name"
     (let ((eshell-buffer-name (or name eshell-buffer-name)))
       (save-window-excursion (eshell))))
 
-  (defun eshell-toggle (&optional name)
-    "Toggle eshell buffer with the name.
+  (defun terminal-term-named (&optional name)
+    "Get or create term buffer with specified name"
+    (let ((buffer (get-buffer-create (or name "*term*"))))
+      (when (not (term-check-proc buffer))
+        (with-current-buffer buffer
+          (term-mode)
+          (term-exec buffer (or name "*term*") (getenv "SHELL") nil nil)
+          (term-char-mode)
+          (goto-char (point-max))))
+      buffer))
+
+  (defvar terminal--kind-alist
+    '((eshell terminal-eshell-named eshell-send-input)
+      (term terminal-term-named term-send-input)))
+
+  (defun terminal--toggle (kind name)
+    "Toggle terminal buffer with the name.
 hide -> show -> full screen -> hide
 inactive -> switch -> full screen -> hide
 "
-    (interactive)
-    (let* ((eshell-buffer (eshell-named name)))
-      (if (eq (current-buffer) eshell-buffer)
+    (let* ((kind-info (assoc-default kind terminal--kind-alist))
+           (buffer (funcall (car kind-info) name)))
+      (if (eq (current-buffer) buffer)
           (if (eq (length (window-list)) 1)
               ;; full screen
               (switch-to-buffer (other-buffer))
             ;; active, go to full screen
             (delete-other-windows))
-        ;; activate the eshell buffer
-        (switch-to-buffer-other-window eshell-buffer))))
+        ;; activate the buffer
+        (switch-to-buffer-other-window buffer))))
 
-  (defun eshell-here (&optional name)
-    "Get or create eshell in current directory."
-    (interactive)
-    (let ((dir default-directory)
-          (eshell-buffer (eshell-named name)))
-      (unless (eq (current-buffer) eshell-buffer)
-        (switch-to-buffer-other-window eshell-buffer)
+  (defun terminal--here (kind name)
+    "Get or create in current directory."
+    (let* ((dir default-directory)
+           (kind-info (assoc-default kind terminal--kind-alist))
+           (buffer (funcall (car kind-info) name)))
+      (unless (eq (current-buffer) buffer)
+        (switch-to-buffer-other-window buffer)
         (goto-char (point-max))
         (insert (format "cd '%s'" dir))
-        (eshell-send-input))))
+        (funcall (cadr kind-info)))))
 
+  (defun eshell-toggle (&optional name)
+    (interactive)
+    (terminal--toggle 'eshell name))
+
+  (defun eshell-here (&optional name)
+    (interactive)
+    (terminal--here 'eshell name))
+
+  (defun term-toggle (&optional name)
+    (interactive)
+    (terminal--toggle 'term name))
+
+  (defun term-here (&optional name)
+    (interactive)
+    (terminal--here 'term name))
+
+  (defun init--term-exec ()
+    "Close buffer when terminal exists."
+    (let* ((buff (current-buffer))
+           (proc (get-buffer-process buff)))
+      (lexical-let ((buff buff))
+        (set-process-sentinel proc (lambda (process event)
+                                     (if (string= event "finished\n")
+                                         (kill-buffer buff)))))))
+
+  (add-hook 'term-exec-hook 'init--term-exec)
+
+  (define-key my-keymap (kbd "t") 'term-toggle)
+  (define-key my-keymap (kbd "T") 'term-here)
   (define-key my-keymap (kbd "e") 'eshell-toggle)
   (define-key my-keymap (kbd "E") 'eshell-here))
 ```
@@ -1646,7 +1695,9 @@ inactive -> switch -> full screen -> hide
   (require 'eproject-plus)
 
   (define-key my-keymap (kbd "p P") 'eproject-plus-open-project)
-  (define-key my-keymap (kbd "p p") 'eproject-revisit-project))
+  (define-key my-keymap (kbd "p p") 'eproject-revisit-project)
+  (define-key my-keymap (kbd "f") 'eproject-plus-find-file-with-cache)
+  (define-key my-keymap (kbd "M-f") 'eproject-plus-find-file-with-cache))
 ```
 
 <a name="sec-7-37"></a>
@@ -2025,7 +2076,11 @@ Misc editing config
    '(whitespace-style (quote (face tabs trailing newline indentation space-before-tab tab-mark newline-mark)))
    '(coffee-cleanup-whitespace nil))
   (add-hook 'prog-mode-hook 'whitespace-mode)
-  (define-key my-keymap (kbd "SPC") 'whitespace-cleanup))
+  (defun whitespace-cleanup-and-save ()
+    (interactive)
+    (whitespace-cleanup)
+    (call-interactively (key-binding (kbd "C-x C-s"))))
+  (define-key my-keymap (kbd "SPC") 'whitespace-cleanup-and-save))
 ```
 
 <a name="sec-7-46"></a>
@@ -2345,6 +2400,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
 (define-module highlight
   (require-package 'highlight-symbol)
   (require-package 'highlight-parentheses)
+  (require-package 'highlight-indentation)
 
   (custom-set-variables
    '(highlight-symbol-idle-delay 1)
@@ -2353,6 +2409,23 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
    '(pulse-delay 0.03)
    '(pulse-flag nil)
    '(pulse-iterations 5))
+
+  (defun toggle-highlight-indentation ()
+    (interactive)
+    (if (and (boundp 'highlight-indentation-mode) highlight-indentation-mode)
+        (progn
+          (call-interactively 'highlight-indentation-mode +1)
+          (call-interactively 'highlight-indentation-current-column-mode +1))
+      (call-interactively 'highlight-indentation-mode -1)
+      (call-interactively 'highlight-indentation-current-column-mode -1)))
+
+  (defun enable-highlight-indentation ()
+    (interactive)
+    (call-interactively 'highlight-indentation-mode +1)
+    (call-interactively 'highlight-indentation-current-column-mode +1))
+
+  (add-hook 'coffee-mode-hook 'enable-highlight-indentation)
+  (add-hook 'python-mode-hook 'enable-highlight-indentation)
 
   (defvar highlight-symbol-navigation-map
     (let ((map (make-sparse-keymap)))
@@ -2366,6 +2439,8 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (define-key my-keymap (kbd "=") 'highlight-symbol-at-point)
   (define-key my-keymap (kbd "-") 'highlight-symbol-remove-all)
   (define-key my-keymap (kbd "_") 'highlight-symbol-mode)
+  (define-key my-keymap (kbd "\\") 'toggle-highlight-indentation)
+  (define-key my-keymap (kbd "|") 'highlight-indentation-set-offset)
 
   (add-hook 'c-mode-common-hook 'highlight-parentheses-mode)
   (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
@@ -2606,12 +2681,12 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (defun init--deft-mode ()
     (define-key deft-mode-map (kbd "C-c SPC") 'org-drill-deft)
     (remove-hook 'deft-mode-hook 'init--deft-mode))
-  (remove-hook 'deft-mode-hook 'init--deft-mode)
+  (add-hook 'deft-mode-hook 'init--deft-mode)
 
   (defun org-drill-deft ()
     "Run org-drill in deft-directory"
     (interactive)
-    (with-current-buffer (find-file-noselect deft-directory)
+    (with-current-buffer (find-file-noselect (concat deft-directory "/.timestamp"))
       (org-drill 'directory)))
 
   (define-key my-keymap "m" 'deft))
@@ -3172,6 +3247,7 @@ Install `emacs-rails` using `make vendor`
 
 ```cl
 (define-module win-move-resize
+  (require-module windows-commands)
   (require-package 'buffer-move)
   (global-set-key [C-up] 'buf-move-up)
   (global-set-key [C-down] 'buf-move-down)
@@ -3213,6 +3289,17 @@ Install `emacs-rails` using `make vendor`
 ```
 
 <a name="sec-7-87"></a>
+## visual-regexp
+
+```cl
+(define-module visual-regexp
+  (require-package 'visual-regexp)
+  (autoload 'vr/query-replace "visual-regexp" nil t)
+  (define-key my-keymap (kbd "v a") 'vr/replace)
+  (define-key my-keymap (kbd "v q") 'vr/query-replace))
+```
+
+<a name="sec-7-88"></a>
 ## eclim
 
 ```cl
@@ -3263,7 +3350,7 @@ Install `emacs-rails` using `make vendor`
           (buffer-list))))
 ```
 
-<a name="sec-7-88"></a>
+<a name="sec-7-89"></a>
 ## server
 
 Start emacs server.
@@ -3344,43 +3431,7 @@ Start emacs server.
 # Backlog
 
 ```
-(push 'visual-regexp el-get-packages)
-(autoload 'vr/query-replace "visual-regexp" nil t)
-(define-key iy-map (kbd "4") 'vr/replace)
-(define-key iy-map (kbd "5") 'vr/query-replace)
-(push 'fringe-helper el-get-packages)
-
-(push 'ace-jump-mode el-get-packages)
-
-(push 'tumbl el-get-packages)
-
-(push 'cheat el-get-packages)
-
-(unless (eq system-type 'darwin)
-  (push 'haskell-mode el-get-packages)
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation))
-
-(push 'erlware-mode el-get-packages)
-
-(push 'sml-modeline el-get-packages)
-(defun iy-el-get-after-sml-modeline ()
-  (sml-modeline-mode))
-
-(push 'pos-tip el-get-packages)
-
-(push 'highlight-indentation el-get-packages)
-(autoload 'highlight-indentation-mode "highlight-indentation" nil t)
-(autoload 'highlight-indentation-current-column-mode "highlight-indentation" nil t)
-
-(defun ||()
-  (interactive)
-  (if (and (boundp 'highlight-indentation-mode) highlight-indentation-mode)
-      (progn
-        (call-interactively 'highlight-indentation-mode 1)
-        (call-interactively 'highlight-indentation-current-column-mode 1))
-    (call-interactively 'highlight-indentation-mode 0)
-    (call-interactively 'highlight-indentation-current-column-mode 0)))
-
-(push 'switch-window el-get-packages)
-(setq switch-window-shortcut-style 'qwerty)
+(require-package 'haskell-mode)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+(require-package 'erlware-mode)
 ```

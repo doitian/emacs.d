@@ -568,6 +568,15 @@
  `(git-gutter-fr:added ((t (:foreground ,zenburn-green+1))))
  `(git-gutter-fr:deleted ((t (:foreground ,zenburn-red+1))))
 
+ '(term-color-black ((t (:foreground "#002b36"))))
+ '(term-color-blue ((t (:foreground "#268bd2"))))
+ '(term-color-cyan ((t (:foreground "#2aa198"))))
+ '(term-color-green ((t (:foreground "#859900"))))
+ '(term-color-magenta ((t (:foreground "#d33682"))))
+ '(term-color-red ((t (:foreground "#dc322f"))))
+ '(term-color-white ((t (:foreground "#eee8d5"))))
+ '(term-color-yellow ((t (:foreground "#b58900"))))
+
  `(which-func ((t (:foreground ,zenburn-yellow))))
 
  `(highlight-indentation-face ((t (:foreground ,zenburn-bg+1 :stipple ,(list 9 10 (string 12 24 12 24 12 24 12 24 12 24 12 24 12 24 12 24 0 0 0 0))))))

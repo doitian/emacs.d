@@ -35,7 +35,8 @@
                        (cons key `(lambda ()
                                     (interactive)
                                     (call-interactively ',binding)
-                                    (temporary-mode-start ',mode-name ,(intern (format "%s-map" mode-name)))))
+                                    (temporary-mode-start ',mode-name ,(intern (format "%s-map" mode-name)))
+                                    (setq this-command ',binding)))
                        (cdr keymap)))))
    temporary-keymap))
 

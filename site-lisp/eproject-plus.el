@@ -168,6 +168,14 @@ to select from, open file when selected."
   (interactive)
   (eshell-here (ignore-errors (concat "*eshell*<" (eproject-name) ">"))))
 
+(defun eproject-plus-term-toggle ()
+  (interactive)
+  (term-toggle (ignore-errors (concat "*term*<" (eproject-name) ">"))))
+
+(defun eproject-plus-term-here ()
+  (interactive)
+  (term-here (ignore-errors (concat "*term*<" (eproject-name) ">"))))
+
 (defun eproject-root-safe ()
   (ignore-errors (eproject-root)))
 
@@ -284,6 +292,8 @@ to select from, open file when selected."
   (define-key map "o" 'eproject-plus-find-file-with-cache)
   (define-key map "e" 'eproject-plus-eshell-toggle)
   (define-key map "E" 'eproject-plus-eshell-here)
+  (define-key map "t" 'eproject-plus-term-toggle)
+  (define-key map "T" 'eproject-plus-term-here)
   (define-key map "r" 'rgrep-in-project-root)
   (define-key map "a" 'ag-project-at-point)
   (define-key map "A" 'ag-regexp-project-at-point)

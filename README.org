@@ -2,13 +2,13 @@
 
 ** Quick Start
 
-#+BEGIN_HTML
+#+BEGIN_EXAMPLE
 cd ~
 git clone git://github.com/doitian/emacs.d.git .emacs.d
 cd .emacs.d
 make vendor all elpa
 emacs --debug-init
-#+END_HTML
+#+END_EXAMPLE
 
 ** Generate init.el
 
@@ -877,7 +877,7 @@ Opinioned GTD config based on org
 #+BEGIN_SRC emacs-lisp
   (define-module org-export
     (require-module org-basic)
-
+  
     (custom-set-variables
      '(org-export-backends '(md html icalendar latex beamer))
      '(org-icalendar-use-scheduled '(todo-start event-if-todo))
@@ -893,6 +893,17 @@ Opinioned GTD config based on org
              (if (and (member "@errands" tags) (not (member "noexport" tags)))
                  (org-set-tags-to (append tags '("export")))
                (org-set-tags-to (append tags '("noexport")))))))))
+  
+    (defvar org-md-fanced-code-block-language-alist nil)
+    (setq org-md-fanced-code-block-language-alist
+          '(("emacs-lisp" . "cl")))
+  
+    (defadvice org-md-example-block (around fenced-code-block (example-block contents info) activate)
+      (let ((lang (or (org-element-property :language example-block) "")))
+        (setq ad-return-value
+              (concat "```" (or (assoc-default lang org-md-fanced-code-block-language-alist) lang) "\n"
+                      (org-remove-indentation (org-element-property :value example-block))
+                      "```\n"))))
   
     (add-hook 'org-export-before-parsing-hook 'iy-org-ical-verify))
 #+END_SRC

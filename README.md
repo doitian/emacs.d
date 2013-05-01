@@ -128,18 +128,20 @@
 <a name="sec-1-1"></a>
 ## Quick Start
 
+```
 cd ~
 git clone git://github.com/doitian/emacs.d.git .emacs.d
 cd .emacs.d
 make vendor all elpa
 emacs --debug-init
+```
 
 <a name="sec-1-2"></a>
 ## Generate init.el
 
 Use `make` or eval following lisp code. Move to the end of the expression, and press <kbd>Ctrl-X Ctrl-E</kbd>.
 
-```cl
+```
 (progn
   (let* ((dir (file-name-directory (buffer-file-name)))
          (site-lisp (concat dir "site-lisp"))
@@ -1052,6 +1054,17 @@ this with to-do items than with projects or headings."
            (if (and (member "@errands" tags) (not (member "noexport" tags)))
                (org-set-tags-to (append tags '("export")))
              (org-set-tags-to (append tags '("noexport")))))))))
+
+  (defvar org-md-fanced-code-block-language-alist nil)
+  (setq org-md-fanced-code-block-language-alist
+        '(("emacs-lisp" . "cl")))
+
+  (defadvice org-md-example-block (around fenced-code-block (example-block contents info) activate)
+    (let ((lang (or (org-element-property :language example-block) "")))
+      (setq ad-return-value
+            (concat "```" (or (assoc-default lang org-md-fanced-code-block-language-alist) lang) "\n"
+                    (org-remove-indentation (org-element-property :value example-block))
+                    "```\n"))))
 
   (add-hook 'org-export-before-parsing-hook 'iy-org-ical-verify))
 ```
@@ -3330,7 +3343,7 @@ Start emacs server.
 <a name="sec-9"></a>
 # Backlog
 
-```cl
+```
 (push 'visual-regexp el-get-packages)
 (autoload 'vr/query-replace "visual-regexp" nil t)
 (define-key iy-map (kbd "4") 'vr/replace)

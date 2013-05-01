@@ -11,10 +11,15 @@
                 "\"></a>\n"
                 ad-return-value)))
 
-(defun org-md-example-block (example-block contents info)
-  (concat "```cl\n"
-          (org-remove-indentation (org-element-property :value example-block))
-          "```\n"))
+(defvar org-md-fanced-code-block-language-alist
+  '(("emacs-lisp" . "cl")))
+
+(defadvice org-md-example-block (around fenced-code-block (example-block contents info) activate)
+  (let ((lang (or (org-element-property :language example-block) "")))
+    (setq ad-return-value
+          (concat "```" (or (assoc-default lang org-md-fanced-code-block-language-alist) lang) "\n"
+                  (org-remove-indentation (org-element-property :value example-block))
+                  "```\n"))))
 
 ;; Local Variables:
 ;; no-byte-compile: t

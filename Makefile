@@ -130,7 +130,7 @@ site-lisp-update:
 	curl -k -L -o site-lisp/hide-comnt.el http://www.emacswiki.org/emacs-en/download/hide-comnt.el
 	curl -k -L -o site-lisp/inf-ruby.el https://raw.github.com/nonsequitur/inf-ruby/master/inf-ruby.el
 	curl -k -L -o site-lisp/notify.el http://www.emacswiki.org/emacs/download/notify.el
-	curl -k -L -o site-lisp/pallet.el https://raw.github.com/rdallasgray/pallet/master/src/pallet.el
+	curl -k -L https://raw.github.com/rdallasgray/pallet/master/src/pallet.el | sed 's/^@COMMENTARY//' > site-lisp/pallet.el
 	curl -k -L -o site-lisp/pick-backup.el https://raw.github.com/emacsmirror/pick-backup/master/pick-backup.el
 	curl -k -L -o site-lisp/sequential-command.el http://www.emacswiki.org/emacs/download/sequential-command.el
 	curl -k -L -o site-lisp/thing-actions.el https://github.com/doitian/thing-actions.el/raw/master/thing-actions.el

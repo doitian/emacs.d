@@ -1804,16 +1804,12 @@ Misc editing config
 #+BEGIN_SRC emacs-lisp
   (define-module whitespace
     (custom-set-variables
-     '(whitespace-action '(cleanup))
-     '(whitespace-global-modes
-       '(emacs-lisp-mode ruby-mode coffee-mode sass-mode
-                         css-mode haml-mode python-mode
-                         go-mode))
-     '(whitespace-line-column fill-column)
+     '(whitespace-action nil)
+     '(whitespace-global-modes nil)
+     '(whitespace-line-column nil)
      '(whitespace-style (quote (face tabs trailing newline indentation space-before-tab tab-mark newline-mark)))
      '(coffee-cleanup-whitespace nil))
-  
-    (global-whitespace-mode +1)
+    (add-hook 'prog-mode-hook 'whitespace-mode)
     (define-key my-keymap (kbd "SPC") 'whitespace-cleanup))
 #+END_SRC
 
@@ -2032,10 +2028,11 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
               ac-source-words-in-same-mode-buffers)))
     (add-hook 'emacs-lisp-mode-hook 'init--ac-emacs-lisp-mode))
 #+END_SRC
-** subword-mode
+** prog-mode-generic
 #+BEGIN_SRC emacs-lisp
-  (define-module subword-mode
-    (add-hook 'prog-mode-hook 'subword-mode))
+  (define-module prog-mode-generic
+    (add-hook 'prog-mode-hook 'subword-mode)
+    (add-hook 'prog-mode-hook 'electric-pair-mode))
 #+END_SRC
 ** auto-insert
 #+BEGIN_SRC emacs-lisp
@@ -2102,14 +2099,6 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
           time-stamp-format "%:y-%02m-%02d %02H:%02M:%02S"
           time-stamp-start "[Uu]pdated\\(_at\\)?[ \t]*:?[ \t]+<"
           time-stamp-end ">"))
-#+END_SRC
-** autopair
-#+BEGIN_SRC emacs-lisp
-  (define-module autopair
-    (require-package 'autopair)
-    (setq autopair-blink nil)
-    
-    (add-hook 'prog-mode-hook 'autopair-mode))
 #+END_SRC
 ** highlight
 #+BEGIN_SRC emacs-lisp
@@ -2204,7 +2193,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
             (list
              (concat root "/spec/factories/" (alternative-files--pluralize-string name) ".rb"))))
   
-         ((string-match "^\\(.*\\)/spec/factories/\\(.+\\).rb$" file)
+         ((string-match "^\\(.*\\)/spec/factories/\\(.+\\)\\.rb$" file)
           (let* ((root (match-string 1 file))
                  (name (match-string 2 file))
                  (singular-name (alternative-files--singularize-string name)))
@@ -2230,9 +2219,28 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
             (list
              (concat base "_test.go")))))))
   
+    (defun alternative-files-maven-finder (&optional file)
+      (let ((file (or file (alternative-files--detect-file-name))))
+        (cond
+         ((string-match "^\\(.+\\)/main/\\(.+\\)\\.\\(java\\|scala\\)$" file)
+          (let ((root (match-string 1 file))
+                (name (match-string 2 file))
+                (ext (match-string 3 file)))
+            (list
+             (concat root "/test/" name "Test." ext)
+             (concat root "/test/" name "Spec." ext)
+             (concat root "/test/" name "Suite." ext))))
+         ((string-match "^\\(.+\\)/test/\\(.+\\)\\(?:Test\\|Spec\\|Suite\\)\\.\\(java\\|scala\\)$" file)
+          (let ((root (match-string 1 file))
+                (name (match-string 2 file))
+                (ext (match-string 3 file)))
+            (list
+             (concat root "/main/" name "." ext)))))))
+  
     (setq alternative-files-user-functions
           '(alternative-files-factories-finder
-            alternative-files-go-finder))
+            alternative-files-go-finder
+            alternative-files-maven-finder))
   
     (define-key my-keymap "a" 'alternative-files-find-file)
     (define-key my-keymap (kbd "M-a") 'alternative-files-find-file)

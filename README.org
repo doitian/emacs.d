@@ -1322,30 +1322,30 @@ of commands using <kbd>C-x g C-h</kbd>. My favrite one is <kbd>C-x g i</kbd>,
 add changes interactively using =ediff=.
 
 #+BEGIN_SRC emacs-lisp
-    (define-module vc
-      (custom-set-variables
-       '(git-state-modeline-decoration (quote git-state-decoration-large-dot))
-       '(vc-follow-symlinks t))
+  (define-module vc
+    (custom-set-variables
+     '(git-state-modeline-decoration (quote git-state-decoration-large-dot))
+     '(vc-follow-symlinks t))
   
-      (mapc (lambda (pattern)
-              (unless (member pattern revert-without-query)
-                (setq revert-without-query (cons pattern revert-without-query))))
-            '("COMMIT_EDITMSG\\'" "MERGE_MSG\\'" "git-rebase-todo"))
+    (mapc (lambda (pattern)
+            (unless (member pattern revert-without-query)
+              (setq revert-without-query (cons pattern revert-without-query))))
+          '("COMMIT_EDITMSG\\'" "MERGE_MSG\\'" "git-rebase-todo"))
   
-      (let ((git-emacs-dir (concat my-vendor-dir "git-emacs")))
-        (when (file-exists-p (concat git-emacs-dir "/git-emacs.el"))
-          (setq load-path (cons git-emacs-dir load-path))
-          (require 'git-emacs)))
-    
-      (add-to-list 'auto-mode-alist '("\\.gitconfig\\'" . conf-mode))
-      (add-to-list 'auto-mode-alist '("\\.git/config\\'" . conf-mode))
-    
-      (defadvice vc-mode-line (after colorize-vc-mode-line activate)
-        (when vc-mode
-          (put-text-property 1 (length vc-mode) 'face 'font-lock-string-face vc-mode)))
+    (let ((git-emacs-dir (concat my-vendor-dir "git-emacs")))
+      (when (file-exists-p (concat git-emacs-dir "/git-emacs.el"))
+        (setq load-path (cons git-emacs-dir load-path))
+        (require 'git-emacs)))
   
-      (global-set-key (kbd "C-<f12>") 'git-status)
-      (global-set-key (kbd "<ESC> <f12>") 'git-status))
+    (add-to-list 'auto-mode-alist '("\\.gitconfig\\'" . conf-mode))
+    (add-to-list 'auto-mode-alist '("\\.git/config\\'" . conf-mode))
+  
+    (defadvice vc-mode-line (after colorize-vc-mode-line activate)
+      (when vc-mode
+        (put-text-property 1 (length vc-mode) 'face 'eproject-plus-mode-line-project-name-face vc-mode)))
+  
+    (global-set-key (kbd "C-<f12>") 'git-status)
+    (global-set-key (kbd "<ESC> <f12>") 'git-status))
 #+END_SRC
 
 ** isearch

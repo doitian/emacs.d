@@ -457,12 +457,8 @@
  `(helm-grep-lineno ((t (:foreground ,zenburn-yellow))))
  `(helm-match ((t (:foreground ,zenburn-fg :background "#506070"))))
 
- ;; sml modeline
- `(sml-modeline-end-face ((t (:foreground ,zenburn-blue-4 :background "#101211"))))
- `(sml-modeline-vis-face ((t (:background ,zenburn-blue-4 :foreground "#1e2320"))))
-
  ;; eproject
- `(eproject-mode-line-project-name-face ((t (:foreground ,zenburn-blue))))
+ `(eproject-plus-mode-line-project-name-face ((t (:foreground ,zenburn-blue))))
 
  `(ediff-current-diff-A ((t (:background "#495766" :foreground ,zenburn-fg))))
  `(ediff-current-diff-Ancestor ((t (:background "#495766" :foreground ,zenburn-fg))))

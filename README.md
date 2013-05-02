@@ -1534,7 +1534,7 @@ add changes interactively using `ediff`.
 
   (defadvice vc-mode-line (after colorize-vc-mode-line activate)
     (when vc-mode
-      (put-text-property 1 (length vc-mode) 'face 'font-lock-string-face vc-mode)))
+      (put-text-property 1 (length vc-mode) 'face 'eproject-plus-mode-line-project-name-face vc-mode)))
 
   (global-set-key (kbd "C-<f12>") 'git-status)
   (global-set-key (kbd "<ESC> <f12>") 'git-status))

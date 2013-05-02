@@ -1494,7 +1494,7 @@ Auto revert, and helper functions to revert without confirmation.
 
 #+BEGIN_SRC emacs-lisp
     (define-module eproject
-      (require-module eshell)
+      (require-module terminal)
       (require-package 'eproject)
       (require 'eproject-plus)
     

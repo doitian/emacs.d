@@ -1690,7 +1690,7 @@ inactive -> switch -> full screen -> hide
 
 ```cl
 (define-module eproject
-  (require-module eshell)
+  (require-module terminal)
   (require-package 'eproject)
   (require 'eproject-plus)
 

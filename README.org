@@ -2528,6 +2528,15 @@ css, sass, scss
     (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
     (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
   
+    (defun markdown-demote-all ()
+      (interactive)
+      (ignore-errors
+        (markdown-demote)
+        (outline-next-visible-heading))
+      (while (not (eobp))
+        (markdown-demote)
+        (outline-next-visible-heading)))
+  
     (add-hook 'markdown-mode-hook 'auto-fill-mode))
 #+END_SRC
 

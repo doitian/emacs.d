@@ -134,9 +134,12 @@ custom.el if you prefer it.
 
 #+BEGIN_SRC emacs-lisp
   (setq custom-theme-directory (expand-file-name "themes" user-emacs-directory))
-  (load (concat custom-theme-directory "/zenburn-theme"))
-  (set-frame-font my-frame-font)
-  (set-fontset-font "fontset-default" 'chinese-gbk my-frame-font-chinese)
+  (defun init--theme ()
+    ;; (load-theme 'zenburn t)
+    (load (concat custom-theme-directory "/zenburn-theme.el"))
+    (set-frame-font my-frame-font)
+    (set-fontset-font "fontset-default" 'chinese-gbk my-frame-font-chinese))
+  (init--theme)
   
   (setq frame-title-format '(buffer-file-name "Emacs: %b (%f)" "Emacs: %b"))
   
@@ -150,13 +153,14 @@ custom.el if you prefer it.
   
   (defun run-after-make-frame-hooks (frame)
     "Selectively run either `after-make-console-frame-hooks' or
-  `after-make-window-system-frame-hooks'"
+    `after-make-window-system-frame-hooks'"
     (select-frame frame)
     (run-hooks (if window-system
                    'after-make-window-system-frame-hooks
                  'after-make-console-frame-hooks)))
   
   (add-hook 'after-make-frame-functions 'run-after-make-frame-hooks)
+  ;; (add-hook 'after-make-frame-functions 'init--theme)
   
   (custom-set-variables
    '(blink-cursor-mode t)
@@ -1481,6 +1485,19 @@ Auto revert, and helper functions to revert without confirmation.
           (set-process-sentinel proc (lambda (process event)
                                        (if (string= event "finished\n")
                                            (kill-buffer buff)))))))
+  
+    ;; Advice `dired-run-shell-command' with asynchronously.
+    (defadvice dired-run-shell-command (around dired-run-shell-command-async activate)
+      "Postfix COMMAND argument of `dired-run-shell-command' with an ampersand.
+  If there is none yet, so that it is run asynchronously."
+      (let* ((cmd (ad-get-arg 0))
+             (cmd-length (length cmd))
+             (last-cmd-char (substring cmd
+                                       (max 0 (- cmd-length 1))
+                                       cmd-length)))
+        (unless (string= last-cmd-char "&")
+          (ad-set-arg 0 (concat cmd "&")))
+        (save-window-excursion ad-do-it)))
   
     (add-hook 'term-exec-hook 'init--term-exec)
   

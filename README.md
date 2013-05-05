@@ -467,7 +467,13 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
 (define-module delete-keys-hacks
   "Translate C-h and M-r to delete char and word backward"
   (define-key key-translation-map [?\C-h] [?\C-?])
-  (define-key key-translation-map [?\M-r] [?\C-\M-?]))
+  (define-key key-translation-map [?\M-r] [?\C-\M-?])
+  (global-set-key (kbd "<backspace>") '(lambda ()
+                                         (interactive)
+                                         (error "Use C-h")))
+  (global-set-key (kbd "M-<backspace>") '(lambda ()
+                                         (interactive)
+                                         (error "Use M-r"))))
 ```
 
 <a name="sec-7-3"></a>
@@ -2191,7 +2197,8 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
 
   (custom-set-variables
    '(yas-trigger-key "TAB")
-   '(yas-expand-only-for-last-commands '(self-insert-command org-self-insert-command))
+   ;; Add yas-expand itself, so when auto-complete completes and retry, yas-expand can work.
+   '(yas-expand-only-for-last-commands '(self-insert-command org-self-insert-command yas-expand))
    '(yas-choose-keys-first nil)
    '(yas-prompt-functions (quote (yas-popup-isearch-prompt
                                   yas-ido-prompt

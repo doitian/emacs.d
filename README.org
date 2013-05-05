@@ -322,10 +322,16 @@ To get help, use <kbd>C-H</kbd> or <kbd>F1</kbd> instead.
 This is an opinioned config, disable it by adding it to =module-black-list=.
 
 #+BEGIN_SRC emacs-lisp
-(define-module delete-keys-hacks
-  "Translate C-h and M-r to delete char and word backward"
-  (define-key key-translation-map [?\C-h] [?\C-?])
-  (define-key key-translation-map [?\M-r] [?\C-\M-?]))
+  (define-module delete-keys-hacks
+    "Translate C-h and M-r to delete char and word backward"
+    (define-key key-translation-map [?\C-h] [?\C-?])
+    (define-key key-translation-map [?\M-r] [?\C-\M-?])
+    (global-set-key (kbd "<backspace>") '(lambda ()
+                                           (interactive)
+                                           (error "Use C-h")))
+    (global-set-key (kbd "M-<backspace>") '(lambda ()
+                                           (interactive)
+                                           (error "Use M-r"))))
 #+END_SRC
 
 ** my-basic-keybindings

@@ -2198,7 +2198,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (custom-set-variables
    '(yas-trigger-key "TAB")
    ;; Add yas-expand itself, so when auto-complete completes and retry, yas-expand can work.
-   '(yas-expand-only-for-last-commands '(self-insert-command org-self-insert-command yas-expand))
+   '(yas-expand-only-for-last-commands '(self-insert-command org-self-insert-command yas-expand ac-next ac-previous ac-expand))
    '(yas-choose-keys-first nil)
    '(yas-prompt-functions (quote (yas-popup-isearch-prompt
                                   yas-ido-prompt

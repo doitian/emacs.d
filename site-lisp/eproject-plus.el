@@ -97,7 +97,7 @@ ROOT defaults to the current buffer's project-root."
       "mvn test")
      ((file-exists-p "conf/routes")
       "play auto-test")
-     ((file-exists-p "build.sbt")
+     ((or (file-exists-p "build.sbt") (file-exists-p "project/Build.scala"))
       "sbt test")
      (t nil))))
 

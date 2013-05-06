@@ -590,6 +590,8 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   (require-package 'ido-hacks)
   (require-package 'ido-complete-space-or-hyphen)
 
+  (put 'ido-exit-minibuffer 'ido 'ignore)
+
   (ido-complete-space-or-hyphen-enable)
   (require 'ido-hacks)
   (ido-hacks-mode +1)

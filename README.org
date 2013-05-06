@@ -3112,6 +3112,11 @@ Install =emacs-rails= using =make vendor=
                 (eclim-mode -1)))
             (buffer-list))))
 #+END_SRC
+** mac
+#+BEGIN_SRC emacs-lisp
+  (define-module mac
+    (custom-set-variables '(mac-command-modifier 'meta)))
+#+END_SRC
 ** server
 
 Start emacs server.

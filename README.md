@@ -115,7 +115,8 @@
 <li><a href="#sec-7-86">7.86. scala-mode</a></li>
 <li><a href="#sec-7-87">7.87. visual-regexp</a></li>
 <li><a href="#sec-7-88">7.88. eclim</a></li>
-<li><a href="#sec-7-89">7.89. server</a></li>
+<li><a href="#sec-7-89">7.89. mac</a></li>
+<li><a href="#sec-7-90">7.90. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -3384,6 +3385,14 @@ Install `emacs-rails` using `make vendor`
 ```
 
 <a name="sec-7-89"></a>
+## mac
+
+```cl
+(define-module mac
+  (custom-set-variables '(mac-command-modifier 'meta)))
+```
+
+<a name="sec-7-90"></a>
 ## server
 
 Start emacs server.

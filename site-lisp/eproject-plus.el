@@ -97,6 +97,8 @@ ROOT defaults to the current buffer's project-root."
       "mvn test")
      ((file-exists-p "conf/routes")
       "play auto-test")
+     ((file-exists-p "build.sbt")
+      "sbt test")
      (t nil))))
 
 (defun eproject-plus-detect-project (&optional file)

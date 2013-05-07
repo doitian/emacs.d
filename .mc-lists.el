@@ -15,7 +15,10 @@
         iy-go-to-char-quit
         kill-region
         org-beginning-of-line
+        org-delete-char
         org-end-of-line
+        org-open-line
+        org-self-insert-command
         paredit-backward-kill-word
         paredit-doublequote
         paredit-forward-delete

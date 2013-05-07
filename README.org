@@ -1290,6 +1290,7 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
   
     (add-to-list 'popwin:special-display-config 'rspec-compilation-mode)
     (add-to-list 'popwin:special-display-config "*quickrun*")
+    (add-to-list 'popwin:special-display-config '("*Inspector*" :noselect t))
   
     (import-popwin:add :mode 'java-mode
                        :regexp "import\\s-+")
@@ -3143,7 +3144,15 @@ Install [[https://github.com/aemoncannon/ensime][ensime]] using =make vendor=
         (when (and (buffer-file-name)
                    (eq major-mode 'scala-mode)
                    (file-exists-p (concat (eproject-root) ".ensime")))
-          (ensime-scala-mode-hook))))
+          (ensime-mode +1))))
+  
+    (defun init--ensime-mode ()
+      (when (boundp 'ac-sources)
+        (if (eq (car ac-sources) 'ac-source-yasnippet)
+            (setq ac-sources (cons 'ac-source-yasnippet (cons 'ac-source-ensime-completions (cdr ac-sources))))
+          (setq ac-sources (cons 'ac-source-ensime-completions ac-sources))))
+      (local-set-key (kbd "M-s /") 'ensime-inspect-type-at-point))
+    (add-hook 'ensime-mode-hook 'init--ensime-mode)
   
     (defun ensime-enable ()
       (interactive)

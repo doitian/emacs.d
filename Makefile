@@ -21,6 +21,12 @@ ORG_PKGNAME := org-$(ORG_VERSION)
 ORG_TARBALL := $(ORG_PKGNAME).tar.gz
 ORG_DOWNLOAD_URL := http://orgmode.org/$(ORG_TARBALL)
 
+ENSIME_VERSION := 0.9.8.9
+ENSIME_SCALA_VERSION := 2.10.0
+ENSIME_PKGNAME := ensime_$(ENSIME_SCALA_VERSION)-$(ENSIME_VERSION)
+ENSIME_TARBALL := $(ENSIME_PKGNAME).tar.gz
+ENSIME_DOWNLOAD_URL := https://www.dropbox.com/sh/ryd981hq08swyqr/ZiCwjjr_vm/ENSIME%20Releases/$(ENSIME_TARBALL)
+
 YAS_DIR := $(firstword $(wildcard elpa/yasnippet-*))
 YAS_SUBDIRS = $(wildcard snippets/*)
 YAS_COMPILED = $(YAS_SUBDIRS:%=%/.yas-compiled-snippets.el)
@@ -65,9 +71,9 @@ snippets-clean:
 clean:
 	rm -rf init.el site-lisp/my-loaddefs.el $(ELCFILES)
 
-vendor-clean: org-clean git-emacs-clean emacs-rails-clean
+vendor-clean: org-clean git-emacs-clean emacs-rails-clean ensime-clean
 
-vendor: org git-emacs emacs-rails
+vendor: org git-emacs emacs-rails ensime
 
 org: vendor/$(ORG_PKGNAME)/lisp/org-loaddefs.el
 
@@ -82,6 +88,17 @@ vendor/$(ORG_PKGNAME): tmp/${ORG_TARBALL}
 
 tmp/${ORG_TARBALL}:
 	curl -o $@ ${ORG_DOWNLOAD_URL}
+
+ensime: vendor/$(ENSIME_PKGNAME)/bin/server
+
+ensime-clean:
+	rm -rf tmp/ensime-* vendor/ensime-*
+
+vendor/$(ENSIME_PKGNAME)/bin/server: tmp/${ENSIME_TARBALL}
+	tar -xzf $< -C vendor
+
+tmp/${ENSIME_TARBALL}:
+	curl -o $@ ${ENSIME_DOWNLOAD_URL}
 
 git-emacs: vendor/git-emacs/git-emacs.elc
 
@@ -146,3 +163,4 @@ update: elpa-update site-lisp-update
 .PHONY: snippets snippets-clean
 .PHONY: cartonize
 .PHONY: elpa elpa-update site-lisp-update update
+.PHONY: ensime-clean ensime

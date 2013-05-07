@@ -115,9 +115,10 @@
 <li><a href="#sec-7-86">7.86. scala-mode</a></li>
 <li><a href="#sec-7-87">7.87. visual-regexp</a></li>
 <li><a href="#sec-7-88">7.88. eclim</a></li>
-<li><a href="#sec-7-89">7.89. ianyme</a></li>
-<li><a href="#sec-7-90">7.90. mac</a></li>
-<li><a href="#sec-7-91">7.91. server</a></li>
+<li><a href="#sec-7-89">7.89. ensime</a></li>
+<li><a href="#sec-7-90">7.90. ianyme</a></li>
+<li><a href="#sec-7-91">7.91. mac</a></li>
+<li><a href="#sec-7-92">7.92. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -2569,7 +2570,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (defun alternative-files-maven-finder (&optional file)
     (let ((file (or file (alternative-files--detect-file-name))))
       (cond
-       ((string-match "^\\(.+\\)/main/\\(.+\\)\\.\\(java\\|scala\\)$" file)
+       ((string-match "^\\(.+\\)/\\(?:app\\|main\\)/\\(.+\\)\\.\\(java\\|scala\\)$" file)
         (let ((root (match-string 1 file))
               (name (match-string 2 file))
               (ext (match-string 3 file)))
@@ -2582,7 +2583,8 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
               (name (match-string 2 file))
               (ext (match-string 3 file)))
           (list
-           (concat root "/main/" name "." ext)))))))
+           (concat root "/main/" name "." ext)
+           (concat root "/app/" name "." ext)))))))
 
   (setq alternative-files-user-functions
         '(alternative-files-factories-finder
@@ -3388,6 +3390,56 @@ Install `emacs-rails` using `make vendor`
 ```
 
 <a name="sec-7-89"></a>
+## ensime
+
+Add [ENSIME-sbt-cmd](https://github.com/aemoncannon/ensime-sbt-cmd) in `~/.sbt/plugins/plugins.sbt`
+
+```
+addSbtPlugin("org.ensime" % "ensime-sbt-cmd" % "VERSION")
+```
+
+Install [ensime](https://github.com/aemoncannon/ensime) using `make vendor`
+
+```cl
+(define-module ensime
+  (let ((path
+         (car (nreverse (file-expand-wildcards (concat my-vendor-dir "ensime_*"))))))
+    (when path
+      ;; Append ensime elisp dir
+      (setq load-path
+            (nreverse (cons (concat path "/elisp")
+                            (nreverse load-path))))))
+
+  (custom-set-variables
+   '(ensime-ac-override-settings nil))
+
+  (defun eproject-maybe-turn-on-ensime (&optional buffer)
+    (with-current-buffer (or buffer (current-buffer))
+      (when (and (buffer-file-name)
+                 (eq major-mode 'scala-mode)
+                 (file-exists-p (concat (eproject-root) ".ensime")))
+        (ensime-scala-mode-hook))))
+
+  (defun ensime-enable ()
+    (interactive)
+    (require 'ensime)
+    (ensime)
+    (add-hook 'eproject-mode-hook 'eproject-maybe-turn-on-ensime)
+    (mapc 'eproject-maybe-turn-on-ensime (buffer-list)))
+
+  (defun ensime-disable ()
+    (interactive)
+    (remove-hook 'eproject-mode-hook 'eproject-maybe-turn-on-ensime)
+    (mapc (lambda (buffer)
+            (with-current-buffer buffer
+              (ensime-mode -1)))
+          (buffer-list))
+    (ensime-disconnect-all)
+    (ignore-errors
+      (ensime-shutdown))))
+```
+
+<a name="sec-7-90"></a>
 ## ianyme
 
 Functions to manage site iany.me
@@ -3409,7 +3461,7 @@ Functions to manage site iany.me
       (set-visited-file-name newname))))
 ```
 
-<a name="sec-7-90"></a>
+<a name="sec-7-91"></a>
 ## mac
 
 ```cl
@@ -3417,7 +3469,7 @@ Functions to manage site iany.me
   (custom-set-variables '(mac-command-modifier 'meta)))
 ```
 
-<a name="sec-7-91"></a>
+<a name="sec-7-92"></a>
 ## server
 
 Start emacs server.

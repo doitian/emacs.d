@@ -1092,7 +1092,7 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
       (if (region-active-p)
           (call-interactively 'mc/edit-lines)
         ad-do-it))
-    
+  
     (define-key ctl-x-r-map (kbd "C-r") 'mc/edit-lines)
     (define-key ctl-x-r-map (kbd ",") 'mc/edit-lines)
     (define-key ctl-x-r-map (kbd "C-,") 'mc/edit-lines)
@@ -3113,6 +3113,24 @@ Install =emacs-rails= using =make vendor=
               (with-current-buffer buffer
                 (eclim-mode -1)))
             (buffer-list))))
+#+END_SRC
+** ianyme
+Functions to manage site iany.me
+#+BEGIN_SRC emacs-lisp
+  (define-module ianyme
+    (defun wiki ()
+      (interactive)
+      (ido-find-file-in-dir (concat my-codebase-dir "iany.me/content/wiki")))
+    (defun blog ()
+      (interactive)
+      (ido-find-file-in-dir (concat my-codebase-dir "iany.me/content/posts")))
+    (defun wikify ()
+      (interactive)
+      (let* ((oldname (buffer-file-name))
+             (basename (file-name-nondirectory oldname))
+             (newname (concat my-codebase-dir "iany.me/content/wiki/" basename)))
+        (rename-file oldname newname)
+        (set-visited-file-name newname))))
 #+END_SRC
 ** mac
 #+BEGIN_SRC emacs-lisp

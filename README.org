@@ -3178,7 +3178,15 @@ Install [[https://github.com/aemoncannon/ensime][ensime]] using =make vendor=
     (let ((path
            (car (nreverse (file-expand-wildcards (concat my-vendor-dir "ess-*"))))))
       (when path
-        (load (concat path "/ess-autoloads.el") t t))))
+        (setq load-path (cons path load-path))
+        (autoload 'R-mode "ess-site" nil t)
+        (autoload 'Rnw-mode "ess-site" nil t)
+  
+        (setq auto-mode-alist
+              (append
+               '(("\\.[rR]\\'"        . R-mode)
+                 ("\\.[rR]nw\\'"      . Rnw-mode))
+               auto-mode-alist)))))
 #+END_SRC
 ** ianyme
 Functions to manage site iany.me

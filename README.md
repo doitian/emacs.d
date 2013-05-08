@@ -116,9 +116,10 @@
 <li><a href="#sec-7-87">7.87. visual-regexp</a></li>
 <li><a href="#sec-7-88">7.88. eclim</a></li>
 <li><a href="#sec-7-89">7.89. ensime</a></li>
-<li><a href="#sec-7-90">7.90. ianyme</a></li>
-<li><a href="#sec-7-91">7.91. mac</a></li>
-<li><a href="#sec-7-92">7.92. server</a></li>
+<li><a href="#sec-7-90">7.90. ess</a></li>
+<li><a href="#sec-7-91">7.91. ianyme</a></li>
+<li><a href="#sec-7-92">7.92. mac</a></li>
+<li><a href="#sec-7-93">7.93. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -3449,6 +3450,25 @@ Install [ensime](https://github.com/aemoncannon/ensime) using `make vendor`
 ```
 
 <a name="sec-7-90"></a>
+## ess
+
+```cl
+(define-module ess
+  (let ((path
+         (car (nreverse (file-expand-wildcards (concat my-vendor-dir "ess-*"))))))
+    (when path
+      (setq load-path (cons path load-path))
+      (autoload 'R-mode "ess-site" nil t)
+      (autoload 'Rnw-mode "ess-site" nil t)
+
+      (setq auto-mode-alist
+            (append
+             '(("\\.[rR]\\'"        . R-mode)
+               ("\\.[rR]nw\\'"      . Rnw-mode))
+             auto-mode-alist)))))
+```
+
+<a name="sec-7-91"></a>
 ## ianyme
 
 Functions to manage site iany.me
@@ -3470,7 +3490,7 @@ Functions to manage site iany.me
       (set-visited-file-name newname))))
 ```
 
-<a name="sec-7-91"></a>
+<a name="sec-7-92"></a>
 ## mac
 
 ```cl
@@ -3478,7 +3498,7 @@ Functions to manage site iany.me
   (custom-set-variables '(mac-command-modifier 'meta)))
 ```
 
-<a name="sec-7-92"></a>
+<a name="sec-7-93"></a>
 ## server
 
 Start emacs server.

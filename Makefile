@@ -27,6 +27,11 @@ ENSIME_PKGNAME := ensime_$(ENSIME_SCALA_VERSION)-$(ENSIME_VERSION)
 ENSIME_TARBALL := $(ENSIME_PKGNAME).tar.gz
 ENSIME_DOWNLOAD_URL := https://www.dropbox.com/sh/ryd981hq08swyqr/ZiCwjjr_vm/ENSIME%20Releases/$(ENSIME_TARBALL)
 
+ESS_VERSION := 12.09-2
+ESS_PKGNAME := ess-$(ESS_VERSION)
+ESS_TARBALL := $(ESS_PKGNAME).tgz
+ESS_DOWNLOAD_URL := http://ess.r-project.org/downloads/ess/$(ESS_TARBALL)
+
 YAS_DIR := $(firstword $(wildcard elpa/yasnippet-*))
 YAS_SUBDIRS = $(wildcard snippets/*)
 YAS_COMPILED = $(YAS_SUBDIRS:%=%/.yas-compiled-snippets.el)
@@ -71,9 +76,9 @@ snippets-clean:
 clean:
 	rm -rf init.el site-lisp/my-loaddefs.el $(ELCFILES)
 
-vendor-clean: org-clean git-emacs-clean emacs-rails-clean ensime-clean
+vendor-clean: org-clean git-emacs-clean emacs-rails-clean ensime-clean ess-clean
 
-vendor: org git-emacs emacs-rails ensime
+vendor: org git-emacs emacs-rails ensime ess
 
 org: vendor/$(ORG_PKGNAME)/lisp/org-loaddefs.el
 
@@ -81,7 +86,7 @@ org-clean:
 	rm -rf tmp/org-* vendor/org-*
 
 vendor/$(ORG_PKGNAME)/lisp/org-loaddefs.el: vendor/$(ORG_PKGNAME)
-	cd $< && make compile
+	cd $< && $(MAKE) EMACS=$(EMACS) compile
 
 vendor/$(ORG_PKGNAME): tmp/${ORG_TARBALL}
 	tar -xzf $< -C vendor
@@ -100,13 +105,27 @@ vendor/$(ENSIME_PKGNAME)/bin/server: tmp/${ENSIME_TARBALL}
 tmp/${ENSIME_TARBALL}:
 	curl -o $@ ${ENSIME_DOWNLOAD_URL}
 
+ess: vendor/$(ESS_PKGNAME)/lisp/ess.elc
+
+ess-clean:
+	rm -rf tmp/ess-* vendor/ess-*
+
+vendor/$(ESS_PKGNAME)/lisp/ess.elc: vendor/$(ESS_PKGNAME)
+	cd $< && $(MAKE) EMACS=$(EMACS) all
+
+vendor/$(ESS_PKGNAME): tmp/${ESS_TARBALL}
+	tar -xzf $< -C vendor
+
+tmp/${ESS_TARBALL}:
+	curl -o $@ ${ESS_DOWNLOAD_URL}
+
 git-emacs: vendor/git-emacs/git-emacs.elc
 
 git-emacs-clean:
 	rm -f vendor/git-emacs/*.elc
 
 vendor/git-emacs/git-emacs.elc: vendor/git-emacs/git-emacs.el
-	cd vendor/git-emacs && make
+	cd vendor/git-emacs && $(MAKE) EMACS=$(EMACS)
 
 emacs-rails: vendor/emacs-rails/rails.elc
 
@@ -163,4 +182,4 @@ update: elpa-update site-lisp-update
 .PHONY: snippets snippets-clean
 .PHONY: cartonize
 .PHONY: elpa elpa-update site-lisp-update update
-.PHONY: ensime-clean ensime
+.PHONY: ensime-clean ensime ess ess-clean

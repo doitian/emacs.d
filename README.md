@@ -1622,6 +1622,8 @@ Auto revert, and helper functions to revert without confirmation.
 
 ```cl
 (define-module terminal
+  (autoload 'term-check-proc "term")
+
   (defun terminal-eshell-named (&optional name)
     "Get or create eshell buffer with specified name"
     (let ((eshell-buffer-name (or name eshell-buffer-name)))

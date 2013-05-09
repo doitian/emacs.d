@@ -117,9 +117,10 @@
 <li><a href="#sec-7-88">7.88. eclim</a></li>
 <li><a href="#sec-7-89">7.89. ensime</a></li>
 <li><a href="#sec-7-90">7.90. ess</a></li>
-<li><a href="#sec-7-91">7.91. ianyme</a></li>
-<li><a href="#sec-7-92">7.92. mac</a></li>
-<li><a href="#sec-7-93">7.93. server</a></li>
+<li><a href="#sec-7-91">7.91. js-mode</a></li>
+<li><a href="#sec-7-92">7.92. ianyme</a></li>
+<li><a href="#sec-7-93">7.93. mac</a></li>
+<li><a href="#sec-7-94">7.94. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -3471,6 +3472,56 @@ Install [ensime](https://github.com/aemoncannon/ensime) using `make vendor`
 ```
 
 <a name="sec-7-91"></a>
+## js-mode
+
+```cl
+(define-module js-mode
+  (custom-set-variables
+   '(js-indent-level 2)
+   '(js-expr-indent-offset 2)
+   '(js-enabled-frameworks nil)
+   '(inf-mongo-command "mongo")
+   )
+
+  (require-package 'inf-mongo)
+
+  (defun moz-eval-statement-or-region ()
+    "Send the previous statement to the inferior Mongo process."
+    (interactive)
+    (save-window-excursion
+      (save-excursion
+        (unless (region-active-p)
+          (thing-region "sentence"))
+        (moz-send-region (mark) (point))))
+    (display-buffer (process-buffer (inferior-moz-process))))
+  (defun init--moz-minor-mode-load ()
+    (define-key moz-minor-mode-map (kbd "C-M-x") 'moz-eval-statement-or-region)
+    (define-key moz-minor-mode-map (kbd "C-x C-e") 'moz-eval-statement-or-region)
+    (remove-hook 'moz-minor-mode-hook 'init--moz-minor-mode-load))
+  (add-hook 'moz-minor-mode-hook 'init--moz-minor-mode-load)
+
+  (defun mongo-eval-statement-or-region ()
+    "Send the previous statement to the inferior Mongo process."
+    (interactive)
+    (save-window-excursion
+      (save-excursion
+        (unless (region-active-p)
+          (thing-region "sentence"))
+        (mongo-send-region-and-go (mark) (point))))
+    (display-buffer inf-mongo-buffer))
+
+  (defvar mongo-minor-mode-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "C-M-x") 'mongo-eval-statement-or-region)
+      (define-key map (kbd "C-x C-e") 'mongo-eval-statement-or-region)
+      map))
+
+  (define-minor-mode mongo-minor-mode
+    "Eval commands in mongo shell"
+    nil " mongo" 'mongo-minor-mode-map))
+```
+
+<a name="sec-7-92"></a>
 ## ianyme
 
 Functions to manage site iany.me
@@ -3492,7 +3543,7 @@ Functions to manage site iany.me
       (set-visited-file-name newname))))
 ```
 
-<a name="sec-7-92"></a>
+<a name="sec-7-93"></a>
 ## mac
 
 ```cl
@@ -3500,7 +3551,7 @@ Functions to manage site iany.me
   (custom-set-variables '(mac-command-modifier 'meta)))
 ```
 
-<a name="sec-7-93"></a>
+<a name="sec-7-94"></a>
 ## server
 
 Start emacs server.

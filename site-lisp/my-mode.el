@@ -95,8 +95,6 @@
   t "" my-minor-mode-map
   :global t)
 
-(define-key my-keymap (kbd "C-g") 'keyboard-quit)
-
 (provide 'my-mode)
 
 ;;; my-mode.el ends here

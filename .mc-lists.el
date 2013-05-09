@@ -5,6 +5,7 @@
       '(
         back-to-indentation-or-beginning
         c-electric-delete-forward
+        c-electric-paren
         c-electric-semi&comma
         delete-horizontal-space
         forward-symbol

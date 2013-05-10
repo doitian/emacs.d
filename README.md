@@ -269,9 +269,9 @@ custom.el if you prefer it.
 
 ```cl
 (setq custom-theme-directory (expand-file-name "themes" user-emacs-directory))
+(load (concat custom-theme-directory "/zenburn-theme.el"))
 (defun init--theme ()
   ;; (load-theme 'zenburn t)
-  (load (concat custom-theme-directory "/zenburn-theme.el"))
   (set-frame-font my-frame-font)
   (set-fontset-font "fontset-default" 'chinese-gbk my-frame-font-chinese))
 (init--theme)
@@ -295,7 +295,7 @@ custom.el if you prefer it.
                'after-make-console-frame-hooks)))
 
 (add-hook 'after-make-frame-functions 'run-after-make-frame-hooks)
-;; (add-hook 'after-make-frame-functions 'init--theme)
+(add-hook 'after-make-window-system-frame-hooks 'init--theme)
 
 (custom-set-variables
  '(blink-cursor-mode t)
@@ -3507,7 +3507,7 @@ Install [ensime](https://github.com/aemoncannon/ensime) using `make vendor`
       (save-excursion
         (unless (region-active-p)
           (thing-region "sentence"))
-        (mongo-send-region-and-go (mark) (point))))
+        (mongo-send-region (mark) (point))))
     (display-buffer inf-mongo-buffer))
 
   (defvar mongo-minor-mode-map
@@ -3518,7 +3518,7 @@ Install [ensime](https://github.com/aemoncannon/ensime) using `make vendor`
 
   (define-minor-mode mongo-minor-mode
     "Eval commands in mongo shell"
-    nil " mongo" 'mongo-minor-mode-map))
+    nil " mongo" mongo-minor-mode-map))
 ```
 
 <a name="sec-7-92"></a>

@@ -894,6 +894,11 @@ Opinioned GTD config based on org
     (require-module org-basic)
   
     (custom-set-variables
+     '(org-latex-listings t)
+     '(org-latex-packages-alist nil)
+     '(org-latex-minted-options '(("linenos") ("framesep=2mm")))
+     '(org-latex-pdf-process '("xelatex -interaction nonstopmode -shell-escape -output-directory %o %f"
+                               "xelatex -interaction nonstopmode -shell-escape -output-directory %o %f"))
      '(org-export-backends '(md html icalendar latex beamer))
      '(org-icalendar-use-scheduled '(todo-start event-if-todo))
      '(org-icalendar-store-UID t)
@@ -1763,6 +1768,26 @@ Auto revert, and helper functions to revert without confirmation.
                                                  (compile ,command)))))
             (global-set-key (kbd "M-s v") map)))
         (compile command)))
+  
+    (defadvice quickrun (around init--quick-run)
+      (init--quick-run)
+      ad-do-it
+      (ad-disable-advice 'quickrun 'around 'init--quick-run)
+      (ad-activate 'quickrun))
+    (ad-enable-advice 'quickrun 'around 'init--quick-run)
+    (ad-activate 'quickrun)
+  
+    (defun init--quick-run ()
+      (quickrun-add-command
+       "objc" '((:command . "gcc")
+                (:exec    . ((lambda ()
+                               (if (eq system-type 'darwin)
+                                   "%c -x objective-c %o -o %e %s -framework foundation"
+                                 "%c -x objective-c %o -o %e %s `gnustep-config --objc-flags` `gnustep-config --base-libs`"))
+                             "%e %a"))
+                (:remove  . ("%e"))
+                (:description . "Compile Objective-C file with gcc and execute"))
+       :override t))
   
     (global-set-key [f5] 'compile)
     (define-key my-keymap (kbd "M-c") 'recompile)
@@ -3260,6 +3285,36 @@ Functions to manage site iany.me
   (define-module mac
     (custom-set-variables '(mac-command-modifier 'meta)))
 #+END_SRC
+** cscope
+
+#+BEGIN_SRC emacs-lisp
+  (define-module cscope
+    (when (require 'xcscope nil t)
+      (defcustom cscope-ignore-case t
+        "*Whether to ignore case while searching."
+        :group 'cscope
+        :type 'boolean)
+  
+      (defun cscope-toggle-case ()
+        (interactive)
+        (setq cscope-ignore-case (not cscope-ignore-case))
+        (cscope-tell-ignore-case))
+      (defun cscope-tell-ignore-case ()
+        (interactive)
+        (message "Cscope Ignore Case (%s)"
+                 (if cscope-ignore-case "Enable" "Disable")))
+  
+      (define-key cscope:map "\C-csv" 'cscope-toggle-case)
+      (define-key cscope:map "\C-csV" 'cscope-tell-ignore-case)
+      (define-key cscope-list-entry-keymap "v" 'cscope-toggle-case)
+      (define-key cscope-list-entry-keymap "V" 'cscope-tell-ignore-case)
+  
+      (defadvice cscope-call (before ignore-case activate)
+        "ignore case in cscope search"
+        (when cscope-ignore-case
+          (ad-set-arg 1 (cons "-C" (ad-get-arg 1)))))))
+#+END_SRC
+
 ** server
 
 Start emacs server.

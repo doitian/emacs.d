@@ -120,7 +120,8 @@
 <li><a href="#sec-7-91">7.91. js-mode</a></li>
 <li><a href="#sec-7-92">7.92. ianyme</a></li>
 <li><a href="#sec-7-93">7.93. mac</a></li>
-<li><a href="#sec-7-94">7.94. server</a></li>
+<li><a href="#sec-7-94">7.94. cscope</a></li>
+<li><a href="#sec-7-95">7.95. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -1061,6 +1062,11 @@ this with to-do items than with projects or headings."
   (require-module org-basic)
 
   (custom-set-variables
+   '(org-latex-listings t)
+   '(org-latex-packages-alist nil)
+   '(org-latex-minted-options '(("linenos") ("framesep=2mm")))
+   '(org-latex-pdf-process '("xelatex -interaction nonstopmode -shell-escape -output-directory %o %f"
+                             "xelatex -interaction nonstopmode -shell-escape -output-directory %o %f"))
    '(org-export-backends '(md html icalendar latex beamer))
    '(org-icalendar-use-scheduled '(todo-start event-if-todo))
    '(org-icalendar-store-UID t)
@@ -1967,6 +1973,26 @@ If there is none yet, so that it is run asynchronously."
                                                (compile ,command)))))
           (global-set-key (kbd "M-s v") map)))
       (compile command)))
+
+  (defadvice quickrun (around init--quick-run)
+    (init--quick-run)
+    ad-do-it
+    (ad-disable-advice 'quickrun 'around 'init--quick-run)
+    (ad-activate 'quickrun))
+  (ad-enable-advice 'quickrun 'around 'init--quick-run)
+  (ad-activate 'quickrun)
+
+  (defun init--quick-run ()
+    (quickrun-add-command
+     "objc" '((:command . "gcc")
+              (:exec    . ((lambda ()
+                             (if (eq system-type 'darwin)
+                                 "%c -x objective-c %o -o %e %s -framework foundation"
+                               "%c -x objective-c %o -o %e %s `gnustep-config --objc-flags` `gnustep-config --base-libs`"))
+                           "%e %a"))
+              (:remove  . ("%e"))
+              (:description . "Compile Objective-C file with gcc and execute"))
+     :override t))
 
   (global-set-key [f5] 'compile)
   (define-key my-keymap (kbd "M-c") 'recompile)
@@ -3552,6 +3578,37 @@ Functions to manage site iany.me
 ```
 
 <a name="sec-7-94"></a>
+## cscope
+
+```cl
+(define-module cscope
+  (when (require 'xcscope nil t)
+    (defcustom cscope-ignore-case t
+      "*Whether to ignore case while searching."
+      :group 'cscope
+      :type 'boolean)
+
+    (defun cscope-toggle-case ()
+      (interactive)
+      (setq cscope-ignore-case (not cscope-ignore-case))
+      (cscope-tell-ignore-case))
+    (defun cscope-tell-ignore-case ()
+      (interactive)
+      (message "Cscope Ignore Case (%s)"
+               (if cscope-ignore-case "Enable" "Disable")))
+
+    (define-key cscope:map "\C-csv" 'cscope-toggle-case)
+    (define-key cscope:map "\C-csV" 'cscope-tell-ignore-case)
+    (define-key cscope-list-entry-keymap "v" 'cscope-toggle-case)
+    (define-key cscope-list-entry-keymap "V" 'cscope-tell-ignore-case)
+
+    (defadvice cscope-call (before ignore-case activate)
+      "ignore case in cscope search"
+      (when cscope-ignore-case
+        (ad-set-arg 1 (cons "-C" (ad-get-arg 1)))))))
+```
+
+<a name="sec-7-95"></a>
 ## server
 
 Start emacs server.

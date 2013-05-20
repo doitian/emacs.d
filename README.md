@@ -573,7 +573,11 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
 ```cl
 (define-module ido
   (ido-mode +1)
-  (ido-load-history))
+  (ido-load-history)
+
+  (custom-set-variables
+   '(ido-save-directory-list-file
+     (expand-file-name ".ido.last" user-emacs-directory))))
 ```
 
 <a name="sec-7-7"></a>
@@ -1290,6 +1294,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   (define-key ctl-x-r-map (kbd "C-e") 'mc/edit-ends-of-lines)
   (define-key ctl-x-r-map (kbd "C-SPC") 'mc/mark-all-in-region)
   (define-key ctl-x-r-map (kbd "C-f") 'mc/mark-sgml-tag-pair)
+  (define-key ctl-x-r-map (kbd "#") 'mc/insert-numbers)
 
   (global-unset-key (kbd "C-<down-mouse-1>"))
   (global-set-key (kbd "C-<mouse-1>") 'mc/add-cursor-on-click)
@@ -1757,22 +1762,26 @@ If there is none yet, so that it is run asynchronously."
         '((name . "Projects")
           (candidates . (lambda ()
                           (mapcar 'cdr (eproject-projects))))
-          (real-to-display . (lambda (e)
-                               (file-name-nondirectory (directory-file-name e))))
           (type . file)))
 
+  (defvar helm--eproject-root nil)
   (setq helm-source-eproject-files-in-project
-        '((name . "Project Files")
-          ;; (delayed)
-          (candidate-number-limit . 9999)
+        `((name . "Project Files")
+          (init . (lambda () (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))))
+          (candidate-number-limit . 10)
           (requires-pattern . 3)
-          (real-to-display . (lambda (e)
-                               (with-helm-current-buffer
-                                 (file-relative-name e (eproject-root-safe)))))
+          ;; real-to-display
+          (filtered-candidate-transformer
+           . (lambda (c s)
+               (mapcar (lambda (f)
+                         (file-relative-name f helm--eproject-root))
+                       c)))
           (candidates . (lambda ()
-                          (with-helm-current-buffer
-                            (eproject-plus-list-project-files-with-cache (eproject-root-safe)))))
-          (type . file)))
+                          (eproject-plus-list-project-files-with-cache helm--eproject-root)))
+          ;; (delayed)
+          (action . ,(cdr (helm-get-actions-from-type
+                          helm-source-locate)))
+          ))
 
   (setq helm-source-alternative-files
         '((name . "Alternative Files")
@@ -2133,7 +2142,8 @@ Misc editing config
    '(whitespace-global-modes nil)
    '(whitespace-line-column nil)
    '(whitespace-style (quote (face tabs trailing newline indentation space-before-tab tab-mark newline-mark)))
-   '(coffee-cleanup-whitespace nil))
+   '(coffee-cleanup-whitespace nil)
+   '(recentf-save-file (expand-file-name ".recentf" user-emacs-directory)))
   (add-hook 'prog-mode-hook 'whitespace-mode)
   (defun whitespace-cleanup-and-save ()
     (interactive)

@@ -122,6 +122,7 @@
 <li><a href="#sec-7-93">7.93. mac</a></li>
 <li><a href="#sec-7-94">7.94. cscope</a></li>
 <li><a href="#sec-7-95">7.95. server</a></li>
+<li><a href="#sec-7-96">7.96. speedbar</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -2308,7 +2309,9 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
 ```cl
 (define-module auto-complete
   (require-package 'auto-complete)
+  (require-package 'pos-tip)
   (require-module yasnippet)
+  (require 'pos-tip)
 
   (custom-set-variables
    '(ac-use-fuzzy nil)
@@ -3672,6 +3675,14 @@ Start emacs server.
   (add-hook 'server-visit-hook 'init--server-visit t)
 
   (server-start))
+```
+
+<a name="sec-7-96"></a>
+## speedbar
+
+```cl
+(define-module speedbar
+  (global-set-key (kbd "<f8>") 'speedbar))
 ```
 
 <a name="sec-8"></a>

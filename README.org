@@ -2090,8 +2090,10 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
 #+BEGIN_SRC emacs-lisp
   (define-module auto-complete
     (require-package 'auto-complete)
+    (require-package 'pos-tip)
     (require-module yasnippet)
-    
+    (require 'pos-tip)
+  
     (custom-set-variables
      '(ac-use-fuzzy nil)
      '(ac-trigger-key "TAB")
@@ -3379,6 +3381,13 @@ Start emacs server.
   
     (server-start))
 #+END_SRC
+** speedbar
+
+#+BEGIN_SRC emacs-lisp
+  (define-module speedbar
+    (global-set-key (kbd "<f8>") 'speedbar))
+#+END_SRC
+
 * Module Groups
 
 #+BEGIN_SRC emacs-lisp

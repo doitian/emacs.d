@@ -15,7 +15,7 @@
 (defun eproject-plus-completing-read-function (prompt choices)
   "Rewrite `eproject--completing-read' to handle buffers completing read"
   (if (bufferp (car choices))
-      (eproject-plus-completing-read-buffer prompt buffers)
+      (eproject-plus-completing-read-buffer prompt choices)
     (completing-read prompt choices nil t)))
 
 (defface eproject-plus-mode-line-project-name-face
@@ -69,21 +69,21 @@ ROOT defaults to the current buffer's project-root."
     result))
 
 (defvar eproject-plus--set-attribute-history nil)
-(defun* eproject-plus-set-attribute (key value &optional (root (eproject-root)))
+(defun eproject-plus-set-attribute (key value &optional root)
   (interactive (let ((key-name (completing-read
                                 "attribute: "
                                 (mapcar (lambda (name) (substring (symbol-name name) 1))
-                                        (eproject-plus-plist-keys (eproject-plus-attributes root)))
+                                        (eproject-plus-plist-keys (eproject-plus-attributes (or root (eproject-root)))))
                                 nil nil nil 'eproject-plus--set-attribute-history)))
                  (list
                   (intern (concat ":" key-name))
                   (read-from-minibuffer
                    (concat key-name ": ")
-                   (prin1-to-string (eproject-attribute (intern (concat ":" key-name)) root))
+                   (prin1-to-string (eproject-attribute (intern (concat ":" key-name)) (or root (eproject-root))))
                    nil t))))
   "Set attribute KEY to VALUE for the eproject ROOT
 ROOT defaults to the current buffer's project-root."
-  (setf (getf (cdr (assoc root eproject-attributes-alist)) key) value)
+  (setf (getf (cdr (assoc (or root (eproject-root)) eproject-attributes-alist)) key) value)
   value)
 
 (defun eproject-plus-guess-compile-command (root)
@@ -184,6 +184,7 @@ to select from, open file when selected."
 (defun eproject-plus-compile ()
   "My compile wrapper"
   (interactive)
+  (defvar compile-history nil)
   (let* ((compile-command (if eproject-mode (eproject-attribute :compile-command) compile-command))
          (compile-history (if eproject-mode
                               (or (eproject-attribute :compile-history)
@@ -227,7 +228,7 @@ to select from, open file when selected."
       ad-do-it)))
 
 (defun eproject-plus--init ()
-  ;; setup mode line
+  "Setup mode line."
   (make-local-variable 'mode-line-buffer-identification)
   (setq mode-line-buffer-identification
         (nconc
@@ -236,7 +237,7 @@ to select from, open file when selected."
            (eproject-name)
            'face 'eproject-plus-mode-line-project-name-face)
           " ")
-         (copy-list (default-value 'mode-line-buffer-identification)))))
+         (mapcar 'identity (default-value 'mode-line-buffer-identification)))))
 
 (defmacro eproject-plus-defun-in-project-root (func)
   `(defun ,(intern (concat (symbol-name func) "-in-project-root")) ()
@@ -279,7 +280,7 @@ to select from, open file when selected."
 (add-hook 'eshell-mode-hook 'eproject-maybe-turn-on)
 
 (defcustom eproject-plus-keymap-prefix "M-s p"
-  "Prefix for eproject plus commands")
+  "Prefix for eproject plus commands" :group 'eproject)
 
 (let ((map (make-sparse-keymap)))
   (define-key map "i" 'eproject-plus-invalidate-project-files-cache)

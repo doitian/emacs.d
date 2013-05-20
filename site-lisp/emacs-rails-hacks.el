@@ -66,10 +66,9 @@
       (car-safe (car-safe (cdr-safe (car-safe (cdr-safe (cdr-safe hook))))))))
 
 (defun rails-hacks--delete-hooks ()
-  (setq find-file-hooks
-        (delete-if 'rails-hacks--find-hook-p find-file-hooks))
-  (setq dired-mode-hook
-        (delete-if 'rails-hacks--dired-mode-hook-p dired-mode-hook)))
+  "Remove hooks. Must be called just after required `rails'."
+  (setq find-file-hook (cdr find-file-hook))
+  (setq dired-mode-hook (cdr dired-mode-hook)))
 
 (defadvice rails-core:prepare-command (around rails-hacks--zeus-maybe (command) activate)
   (if (or (file-exists-p (rails-core:file ".zeus.sock"))

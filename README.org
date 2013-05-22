@@ -1284,41 +1284,6 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
     (require-package 'pointback)
     (global-pointback-mode +1))
 #+END_SRC
-** popwin
-#+BEGIN_SRC emacs-lisp
-  (define-module popwin
-    (require-package 'popwin)
-    (require-package 'import-popwin)
-    (require-module windows-commands)
-  
-    (require 'popwin)
-    (require 'import-popwin)
-  
-    (popwin-mode +1)
-    (global-set-key "\C-z" popwin:keymap)
-    (define-key my-keymap "n" popwin:keymap)
-  
-    (add-to-list 'popwin:special-display-config 'rspec-compilation-mode)
-    (add-to-list 'popwin:special-display-config "*quickrun*")
-    (add-to-list 'popwin:special-display-config '("*Inspector*" :noselect t))
-  
-    (import-popwin:add :mode 'java-mode
-                       :regexp "import\\s-+")
-  
-    (defun popwin:toggle-last-buffer ()
-      (interactive)
-      (if (popwin:popup-window-live-p)
-          (if (eq (get-buffer-window) popwin:popup-window)
-              (popwin:close-popup-window)
-            (select-window popwin:popup-window))
-        (popwin:popup-last-buffer)))
-  
-    (define-key popwin:keymap "n" 'popwin:toggle-last-buffer)
-    (define-key popwin:keymap "\C-z" 'popwin:toggle-last-buffer)
-    (define-key popwin:keymap "c" 'popwin:close-popup-window)
-    (define-key popwin:keymap "i" 'import-popwin)
-    (define-key init--windows-keymap "i" 'import-popwin))
-#+END_SRC
 ** buffers-commands
 #+BEGIN_SRC emacs-lisp
   (define-module buffers-commands
@@ -1550,6 +1515,7 @@ Auto revert, and helper functions to revert without confirmation.
     (require-module alternative-files)
     (require-package 'helm)
     (require 'helm-config)
+    (require 'helm-locate)
   
     (defvar helm-source-eproject-projects nil)
     (defvar helm-source-eproject-files-in-project nil)
@@ -1708,7 +1674,7 @@ Auto revert, and helper functions to revert without confirmation.
       (define-key compilation-mode-map "l" 'compilation-restore-mode-line)
       (remove-hook 'compilation-start-hook 'init--compile-load))
     (add-hook 'compilation-start-hook 'init--compile-load)
-    
+  
     (defun colorize-compilation-buffer ()
       (toggle-read-only)
       (ansi-color-apply-on-region (point-min) (point-max))
@@ -3327,6 +3293,146 @@ Functions to manage site iany.me
           (ad-set-arg 1 (cons "-C" (ad-get-arg 1)))))))
 #+END_SRC
 
+** speedbar
+
+#+BEGIN_SRC emacs-lisp
+  (define-module speedbar
+    (global-set-key (kbd "<f8>") 'speedbar))
+#+END_SRC
+
+** folding
+
+#+BEGIN_SRC emacs-lisp
+  (define-module folding
+    (require-package 'fold-dwim)
+    (require 'fold-dwim)
+    (require 'hideshow)
+  
+    (define-key my-keymap (kbd "M-i") 'fold-dwim-toggle)
+    (define-key my-keymap (kbd "I") 'fold-dwim-show-all)
+    (define-key my-keymap (kbd "C-i") 'fold-dwim-hide-all)
+  
+    ;; Outline-minor-mode key map
+    (define-prefix-command 'my-outline-map nil "Outline-")
+  
+    ;; HIDE
+    (define-key my-outline-map "q" 'hide-sublevels) ; Hide everything but the top-level headings
+    (define-key my-outline-map "t" 'hide-body) ; Hide everything but headings (all body lines)
+    (define-key my-outline-map "o" 'hide-other) ; Hide other branches
+    (define-key my-outline-map "c" 'hide-entry) ; Hide this entry's body
+    (define-key my-outline-map "l" 'hide-leaves) ; Hide body lines in this entry and sub-entries
+    (define-key my-outline-map "d" 'hide-subtree) ; Hide everything in this entry and sub-entries
+  
+    ;; SHOW
+    (define-key my-outline-map "a" 'show-all)  ; Show (expand) everything
+    (define-key my-outline-map "e" 'show-entry) ; Show this heading's body
+    (define-key my-outline-map "i" 'show-children) ; Show this heading's immediate child sub-headings
+    (define-key my-outline-map "k" 'show-branches) ; Show all sub-headings under this heading
+    (define-key my-outline-map "s" 'show-subtree) ; Show (expand) everything in this heading & below
+  
+    ;; MOVE
+    (define-key my-outline-map "u" 'outline-up-heading)              ; Up
+    (define-key my-outline-map "n" 'outline-next-visible-heading)    ; Next
+    (define-key my-outline-map "p" 'outline-previous-visible-heading) ; Previous
+    (define-key my-outline-map "f" 'outline-forward-same-level) ; Forward - same level
+    (define-key my-outline-map "b" 'outline-backward-same-level) ; Backward - same level
+  
+    (define-key my-outline-map "i" 'fold-dwim-toggle)
+    (define-key my-outline-map (kbd "TAB") 'toggle-selective-display)
+  
+    (define-key my-keymap (kbd "i") my-outline-map)
+  
+    ;; Folding
+    (defvar fringe-face 'fringe)
+    (defface collapsed-face '((t (:background "#2e3330" :foreground "#57705c"))) "Collapsed Overlay")
+    (defvar collapsed-face 'collapsed-face)
+  
+    (add-hook 'lisp-mode-hook 'hs-minor-mode)
+    (add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
+    (add-hook 'ruby-mode-hook 'hs-minor-mode)
+  
+    (defun toggle-selective-display (column)
+        (interactive "P")
+        (set-selective-display
+         (or column
+             (unless selective-display
+               (1+ (current-column))))))
+  
+    ;; http://code.google.com/p/bamanzi-misc/source/browse/trunk/_emacs.d/site-lisp/common/fold_/hideshow-fringe.el?r=122&spec=svn448
+    (define-fringe-bitmap 'hs-marker [0 24 24 126 126 24 24 0])
+  
+    (defun display-code-line-counts (ov)
+      (when (eq 'code (overlay-get ov 'hs))
+        (let* ((marker-string "*fringe-dummy*")
+               (marker-length (length marker-string))
+               (display-string (format " (%d)..." (count-lines (overlay-start ov) (overlay-end ov)))))
+          (overlay-put ov 'help-echo "Hiddent text. M-s M-i to show")
+          (put-text-property 0 marker-length 'display (list 'left-fringe 'hs-marker 'fringe-face) marker-string)
+          (overlay-put ov 'before-string marker-string)
+          (put-text-property 1 (length display-string) 'face 'collapsed-face display-string)
+          (overlay-put ov 'display display-string)
+          (overlay-put ov 'evaporate t))))
+  
+    (setq hs-set-up-overlay 'display-code-line-counts)
+  
+    (add-to-list 'hs-special-modes-alist
+                 '(ruby-mode
+                   "\\(def\\|do\\|{\\)" "\\(end\\|}\\)" "#"
+                   (lambda (arg) (ruby-end-of-block)) nil))
+  
+    (defadvice outline-flag-region (after display-code-line-counts (from to flag) activate)
+      (when flag
+        (dolist (ov (overlays-in from to))
+          (when (eq 'outline (overlay-get ov 'invisible))
+            (let* ((marker-string "*fringe-dummy*")
+                   (marker-length (length marker-string))
+                   (display-string "..."))
+              (overlay-put ov 'help-echo "Hiddent text. M-s i s to show")
+              (put-text-property 0 marker-length 'display (list 'left-fringe 'hs-marker 'fringe-face) marker-string)
+              (overlay-put ov 'before-string marker-string)
+              (put-text-property 0 (length display-string) 'face 'collapsed-face display-string)
+              (overlay-put ov 'display display-string)
+              (overlay-put ov 'evaporate t))))))
+  
+    (defvar iy-forward-comment-stop-at-outline-header t)
+  
+    (defun iy-forward-one-comment ()
+      (let ((iy-forward-comment-stop-at-outline-header nil))
+        ;; stop if at the begining of outline heading
+        (when (not (and (bolp) (outline-on-heading-p)))
+          (when (forward-comment 1)
+            ;; forward-comment should not skip outline heading
+            (let ((pos (point)))
+              (if (and (forward-comment -1)
+                       (outline-on-heading-p))
+                  nil
+                (goto-char pos)
+                t))))))
+  
+    (defun iy-backward-one-comment ()
+      (let ((iy-forward-comment-stop-at-outline-header nil))
+        (when (forward-comment -1)
+          (if (outline-on-heading-p)
+              (progn
+                (end-of-line)
+                nil)
+            t))))
+  
+    ;; Fix outline-minor-mode conflicts with fold-dwim
+    (defadvice forward-comment (around stop-at-outline-header (count) activate)
+      (if (and (or outline-minor-mode (eq major-mode 'outline-mode))
+               iy-forward-comment-stop-at-outline-header)
+          (progn
+            (while (and (> count 0) (iy-forward-one-comment))
+              (setq count (1- count)))
+            (while (and (< count 0) (iy-backward-one-comment))
+              (setq count (1+ count)))
+            (setq ad-return-value (zerop count)))
+        ad-do-it))
+    )
+  
+#+END_SRC
+
 ** server
 
 Start emacs server.
@@ -3380,12 +3486,6 @@ Start emacs server.
     (add-hook 'server-visit-hook 'init--server-visit t)
   
     (server-start))
-#+END_SRC
-** speedbar
-
-#+BEGIN_SRC emacs-lisp
-  (define-module speedbar
-    (global-set-key (kbd "<f8>") 'speedbar))
 #+END_SRC
 
 * Module Groups

@@ -122,7 +122,8 @@
 <li><a href="#sec-7-93">7.93. cscope</a></li>
 <li><a href="#sec-7-94">7.94. speedbar</a></li>
 <li><a href="#sec-7-95">7.95. folding</a></li>
-<li><a href="#sec-7-96">7.96. server</a></li>
+<li><a href="#sec-7-96">7.96. erlang</a></li>
+<li><a href="#sec-7-97">7.97. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -1716,7 +1717,6 @@ If there is none yet, so that it is run asynchronously."
   (require-module alternative-files)
   (require-package 'helm)
   (require 'helm-config)
-  (require 'helm-locate)
 
   (defvar helm-source-eproject-projects nil)
   (defvar helm-source-eproject-files-in-project nil)
@@ -1731,21 +1731,12 @@ If there is none yet, so that it is run asynchronously."
   (defvar helm--eproject-root nil)
   (setq helm-source-eproject-files-in-project
         `((name . "Project Files")
+          (type . file)
           (init . (lambda () (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))))
-          (candidate-number-limit . 10)
+          (candidate-number-limit . 9999)
           (requires-pattern . 3)
-          ;; real-to-display
-          (filtered-candidate-transformer
-           . (lambda (c s)
-               (mapcar (lambda (f)
-                         (file-relative-name f helm--eproject-root))
-                       c)))
           (candidates . (lambda ()
-                          (eproject-plus-list-project-files-with-cache helm--eproject-root)))
-          ;; (delayed)
-          (action . ,(cdr (helm-get-actions-from-type
-                          helm-source-locate)))
-          ))
+                          (eproject-plus-list-project-files-with-cache helm--eproject-root)))))
 
   (setq helm-source-alternative-files
         '((name . "Alternative Files")
@@ -2356,12 +2347,24 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
 
 ```cl
 (define-module auto-insert
-  ;; (require 'autoinsert)
-
+  (require 'autoinsert)
   (define-key my-keymap (kbd "C-n") 'auto-insert)
 
   (custom-set-variables
-   '(auto-insert-directory (expand-file-name "insert/" user-emacs-directory))))
+   '(auto-insert-directory (expand-file-name "insert/" user-emacs-directory)))
+
+  (defvar auto-insert-alist-default auto-insert-alist)
+
+  (setq auto-insert-alist
+        (append
+         '((("\\.erl\\'" . "Erlang Module")
+            nil
+            "-module("
+            (file-name-nondirectory
+             (file-name-sans-extension buffer-file-name))
+            ")." \n
+            "-export([" _ "]).\n"))
+         auto-insert-alist-default)))
 ```
 
 <a name="sec-7-52"></a>
@@ -3341,7 +3344,7 @@ Install `emacs-rails` using `make vendor`
 (define-module visual-regexp
   (require-package 'visual-regexp)
   (autoload 'vr/query-replace "visual-regexp" nil t)
-  (define-key my-keymap (kbd "v a") 'vr/replace)
+  (define-key my-keymap (kbd "v Q") 'vr/replace)
   (define-key my-keymap (kbd "v q") 'vr/query-replace))
 ```
 
@@ -3727,6 +3730,16 @@ Functions to manage site iany.me
 ```
 
 <a name="sec-7-96"></a>
+## erlang
+
+```cl
+(define-module erlang
+  (custom-set-variables
+   '(erlang-indent-level 2))
+  (require-package 'erlang))
+```
+
+<a name="sec-7-97"></a>
 ## server
 
 Start emacs server.

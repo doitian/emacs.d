@@ -1515,7 +1515,6 @@ Auto revert, and helper functions to revert without confirmation.
     (require-module alternative-files)
     (require-package 'helm)
     (require 'helm-config)
-    (require 'helm-locate)
   
     (defvar helm-source-eproject-projects nil)
     (defvar helm-source-eproject-files-in-project nil)
@@ -1530,21 +1529,12 @@ Auto revert, and helper functions to revert without confirmation.
     (defvar helm--eproject-root nil)
     (setq helm-source-eproject-files-in-project
           `((name . "Project Files")
+            (type . file)
             (init . (lambda () (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))))
-            (candidate-number-limit . 10)
+            (candidate-number-limit . 9999)
             (requires-pattern . 3)
-            ;; real-to-display
-            (filtered-candidate-transformer
-             . (lambda (c s)
-                 (mapcar (lambda (f)
-                           (file-relative-name f helm--eproject-root))
-                         c)))
             (candidates . (lambda ()
-                            (eproject-plus-list-project-files-with-cache helm--eproject-root)))
-            ;; (delayed)
-            (action . ,(cdr (helm-get-actions-from-type
-                            helm-source-locate)))
-            ))
+                            (eproject-plus-list-project-files-with-cache helm--eproject-root)))))
   
     (setq helm-source-alternative-files
           '((name . "Alternative Files")
@@ -2134,12 +2124,24 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
 ** auto-insert
 #+BEGIN_SRC emacs-lisp
   (define-module auto-insert
-    ;; (require 'autoinsert)
-  
+    (require 'autoinsert)
     (define-key my-keymap (kbd "C-n") 'auto-insert)
   
     (custom-set-variables
-     '(auto-insert-directory (expand-file-name "insert/" user-emacs-directory))))
+     '(auto-insert-directory (expand-file-name "insert/" user-emacs-directory)))
+  
+    (defvar auto-insert-alist-default auto-insert-alist)
+  
+    (setq auto-insert-alist
+          (append
+           '((("\\.erl\\'" . "Erlang Module")
+              nil
+              "-module("
+              (file-name-nondirectory
+               (file-name-sans-extension buffer-file-name))
+              ")." \n
+              "-export([" _ "]).\n"))
+           auto-insert-alist-default)))
 #+END_SRC
 ** ediff-mode
 #+BEGIN_SRC emacs-lisp
@@ -3069,7 +3071,7 @@ Install =emacs-rails= using =make vendor=
   (define-module visual-regexp
     (require-package 'visual-regexp)
     (autoload 'vr/query-replace "visual-regexp" nil t)
-    (define-key my-keymap (kbd "v a") 'vr/replace)
+    (define-key my-keymap (kbd "v Q") 'vr/replace)
     (define-key my-keymap (kbd "v q") 'vr/query-replace))
 #+END_SRC
 ** eclim
@@ -3431,6 +3433,15 @@ Functions to manage site iany.me
         ad-do-it))
     )
   
+#+END_SRC
+
+** erlang
+
+#+BEGIN_SRC emacs-lisp
+  (define-module erlang
+    (custom-set-variables
+     '(erlang-indent-level 2))
+    (require-package 'erlang))
 #+END_SRC
 
 ** server

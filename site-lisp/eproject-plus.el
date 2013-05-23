@@ -126,8 +126,10 @@ ROOT defaults to the current buffer's project-root."
 (defun* eproject-plus-list-project-files-with-cache (&optional (root (eproject-root-safe)) force)
   (when root
     (let ((files (eproject-attribute :project-files-cache root)))
-      (if (and files (not force)) files
-        (eproject-plus-set-attribute :project-files-cache (eproject-list-project-files) root)))))
+      (when (or (not files) force)
+        (setq files (eproject-list-project-files root)))
+      (eproject-plus-set-attribute :project-files-cache files root)
+      files)))
 
 (defun* eproject-plus-invalidate-project-files-cache (&optional (root (eproject-root-safe)))
   (interactive)

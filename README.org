@@ -2824,17 +2824,6 @@ Install =emacs-rails= using =make vendor=
     (global-set-key (kbd "C-<f7>") 'speedbar-get-focus)
     (global-set-key (kbd "<ESC> <f7>") 'speedbar-get-focus))
 #+END_SRC
-
-** woman
-
-#+BEGIN_SRC emacs-lisp
-  (define-module woman
-    (custom-set-variables
-     '(woman-fontify t)
-     '(woman-use-topic-at-point-default t))
-    (fset 'man 'woman))
-#+END_SRC
-
 ** clean-buffer
 
 #+BEGIN_SRC emacs-lisp
@@ -3440,10 +3429,15 @@ Functions to manage site iany.me
 #+BEGIN_SRC emacs-lisp
   (define-module erlang
     (custom-set-variables
-     '(erlang-indent-level 2))
+     '(erlang-indent-level 2)
+     '(erlang-root-dir "/usr/lib/erlang"))
+  
     (defun init--erlang-mode ()
       (run-hooks 'prog-mode-hook)
-      (electric-pair-mode -1))
+      (electric-pair-mode -1)
+      (local-set-key (kbd "C-c C-c") 'erlang-compile)
+      (local-set-key (kbd "M-s /") 'erlang-man-function)
+      (local-set-key (kbd "M-s ?") 'erlang-man-module))
     (add-hook 'erlang-mode-hook 'init--erlang-mode)
     (require-package 'erlang))
 #+END_SRC

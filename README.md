@@ -102,28 +102,27 @@
 <li><a href="#sec-7-73">7.73. flycheck</a></li>
 <li><a href="#sec-7-74">7.74. tmux-send</a></li>
 <li><a href="#sec-7-75">7.75. speedbar</a></li>
-<li><a href="#sec-7-76">7.76. woman</a></li>
-<li><a href="#sec-7-77">7.77. clean-buffer</a></li>
-<li><a href="#sec-7-78">7.78. uniquify-buffer</a></li>
-<li><a href="#sec-7-79">7.79. diminish</a></li>
-<li><a href="#sec-7-80">7.80. dtrt-indent</a></li>
-<li><a href="#sec-7-81">7.81. undo-tree</a></li>
-<li><a href="#sec-7-82">7.82. coffee-mode</a></li>
-<li><a href="#sec-7-83">7.83. c-mode</a></li>
-<li><a href="#sec-7-84">7.84. win-move-resize</a></li>
-<li><a href="#sec-7-85">7.85. scala-mode</a></li>
-<li><a href="#sec-7-86">7.86. visual-regexp</a></li>
-<li><a href="#sec-7-87">7.87. eclim</a></li>
-<li><a href="#sec-7-88">7.88. ensime</a></li>
-<li><a href="#sec-7-89">7.89. ess</a></li>
-<li><a href="#sec-7-90">7.90. js-mode</a></li>
-<li><a href="#sec-7-91">7.91. ianyme</a></li>
-<li><a href="#sec-7-92">7.92. mac</a></li>
-<li><a href="#sec-7-93">7.93. cscope</a></li>
-<li><a href="#sec-7-94">7.94. speedbar</a></li>
-<li><a href="#sec-7-95">7.95. folding</a></li>
-<li><a href="#sec-7-96">7.96. erlang</a></li>
-<li><a href="#sec-7-97">7.97. server</a></li>
+<li><a href="#sec-7-76">7.76. clean-buffer</a></li>
+<li><a href="#sec-7-77">7.77. uniquify-buffer</a></li>
+<li><a href="#sec-7-78">7.78. diminish</a></li>
+<li><a href="#sec-7-79">7.79. dtrt-indent</a></li>
+<li><a href="#sec-7-80">7.80. undo-tree</a></li>
+<li><a href="#sec-7-81">7.81. coffee-mode</a></li>
+<li><a href="#sec-7-82">7.82. c-mode</a></li>
+<li><a href="#sec-7-83">7.83. win-move-resize</a></li>
+<li><a href="#sec-7-84">7.84. scala-mode</a></li>
+<li><a href="#sec-7-85">7.85. visual-regexp</a></li>
+<li><a href="#sec-7-86">7.86. eclim</a></li>
+<li><a href="#sec-7-87">7.87. ensime</a></li>
+<li><a href="#sec-7-88">7.88. ess</a></li>
+<li><a href="#sec-7-89">7.89. js-mode</a></li>
+<li><a href="#sec-7-90">7.90. ianyme</a></li>
+<li><a href="#sec-7-91">7.91. mac</a></li>
+<li><a href="#sec-7-92">7.92. cscope</a></li>
+<li><a href="#sec-7-93">7.93. speedbar</a></li>
+<li><a href="#sec-7-94">7.94. folding</a></li>
+<li><a href="#sec-7-95">7.95. erlang</a></li>
+<li><a href="#sec-7-96">7.96. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -3083,17 +3082,6 @@ Install `emacs-rails` using `make vendor`
 ```
 
 <a name="sec-7-76"></a>
-## woman
-
-```cl
-(define-module woman
-  (custom-set-variables
-   '(woman-fontify t)
-   '(woman-use-topic-at-point-default t))
-  (fset 'man 'woman))
-```
-
-<a name="sec-7-77"></a>
 ## clean-buffer
 
 ```cl
@@ -3105,7 +3093,7 @@ Install `emacs-rails` using `make vendor`
    '(midnight-mode t nil (midnight))))
 ```
 
-<a name="sec-7-78"></a>
+<a name="sec-7-77"></a>
 ## uniquify-buffer
 
 ```cl
@@ -3115,7 +3103,7 @@ Install `emacs-rails` using `make vendor`
    '(uniquify-strip-common-suffix nil)))
 ```
 
-<a name="sec-7-79"></a>
+<a name="sec-7-78"></a>
 ## diminish
 
 ```cl
@@ -3153,7 +3141,7 @@ Install `emacs-rails` using `make vendor`
   (diminish 'auto-fill-function " F"))
 ```
 
-<a name="sec-7-80"></a>
+<a name="sec-7-79"></a>
 ## dtrt-indent
 
 ```cl
@@ -3162,7 +3150,7 @@ Install `emacs-rails` using `make vendor`
   (dtrt-indent-mode 1))
 ```
 
-<a name="sec-7-81"></a>
+<a name="sec-7-80"></a>
 ## undo-tree
 
 ```cl
@@ -3174,7 +3162,7 @@ Install `emacs-rails` using `make vendor`
   (define-key ctl-x-r-map "U" 'undo-tree-restore-state-from-register))
 ```
 
-<a name="sec-7-82"></a>
+<a name="sec-7-81"></a>
 ## coffee-mode
 
 ```cl
@@ -3182,7 +3170,7 @@ Install `emacs-rails` using `make vendor`
   (require-package 'coffee-mode))
 ```
 
-<a name="sec-7-83"></a>
+<a name="sec-7-82"></a>
 ## c-mode
 
 ```cl
@@ -3291,7 +3279,7 @@ Install `emacs-rails` using `make vendor`
   (add-hook 'c-mode-common-hook 'init--c-mode-common))
 ```
 
-<a name="sec-7-84"></a>
+<a name="sec-7-83"></a>
 ## win-move-resize
 
 ```cl
@@ -3329,7 +3317,7 @@ Install `emacs-rails` using `make vendor`
   (temporary-mode-define-keys my-keymap 'win-move-resize))
 ```
 
-<a name="sec-7-85"></a>
+<a name="sec-7-84"></a>
 ## scala-mode
 
 ```cl
@@ -3337,7 +3325,7 @@ Install `emacs-rails` using `make vendor`
   (require-package 'scala-mode2))
 ```
 
-<a name="sec-7-86"></a>
+<a name="sec-7-85"></a>
 ## visual-regexp
 
 ```cl
@@ -3348,7 +3336,7 @@ Install `emacs-rails` using `make vendor`
   (define-key my-keymap (kbd "v q") 'vr/query-replace))
 ```
 
-<a name="sec-7-87"></a>
+<a name="sec-7-86"></a>
 ## eclim
 
 ```cl
@@ -3399,7 +3387,7 @@ Install `emacs-rails` using `make vendor`
           (buffer-list))))
 ```
 
-<a name="sec-7-88"></a>
+<a name="sec-7-87"></a>
 ## ensime
 
 Add [ENSIME-sbt-cmd](https://github.com/aemoncannon/ensime-sbt-cmd) in `~/.sbt/plugins/plugins.sbt`
@@ -3457,7 +3445,7 @@ Install [ensime](https://github.com/aemoncannon/ensime) using `make vendor`
       (ensime-shutdown))))
 ```
 
-<a name="sec-7-89"></a>
+<a name="sec-7-88"></a>
 ## ess
 
 ```cl
@@ -3476,7 +3464,7 @@ Install [ensime](https://github.com/aemoncannon/ensime) using `make vendor`
              auto-mode-alist)))))
 ```
 
-<a name="sec-7-90"></a>
+<a name="sec-7-89"></a>
 ## js-mode
 
 ```cl
@@ -3526,7 +3514,7 @@ Install [ensime](https://github.com/aemoncannon/ensime) using `make vendor`
     nil " mongo" mongo-minor-mode-map))
 ```
 
-<a name="sec-7-91"></a>
+<a name="sec-7-90"></a>
 ## ianyme
 
 Functions to manage site iany.me
@@ -3548,7 +3536,7 @@ Functions to manage site iany.me
       (set-visited-file-name newname))))
 ```
 
-<a name="sec-7-92"></a>
+<a name="sec-7-91"></a>
 ## mac
 
 ```cl
@@ -3556,7 +3544,7 @@ Functions to manage site iany.me
   (custom-set-variables '(mac-command-modifier 'meta)))
 ```
 
-<a name="sec-7-93"></a>
+<a name="sec-7-92"></a>
 ## cscope
 
 ```cl
@@ -3587,7 +3575,7 @@ Functions to manage site iany.me
         (ad-set-arg 1 (cons "-C" (ad-get-arg 1)))))))
 ```
 
-<a name="sec-7-94"></a>
+<a name="sec-7-93"></a>
 ## speedbar
 
 ```cl
@@ -3595,7 +3583,7 @@ Functions to manage site iany.me
   (global-set-key (kbd "<f8>") 'speedbar))
 ```
 
-<a name="sec-7-95"></a>
+<a name="sec-7-94"></a>
 ## folding
 
 ```cl
@@ -3729,21 +3717,26 @@ Functions to manage site iany.me
 
 ```
 
-<a name="sec-7-96"></a>
+<a name="sec-7-95"></a>
 ## erlang
 
 ```cl
 (define-module erlang
   (custom-set-variables
-   '(erlang-indent-level 2))
+   '(erlang-indent-level 2)
+   '(erlang-root-dir "/usr/lib/erlang"))
+
   (defun init--erlang-mode ()
     (run-hooks 'prog-mode-hook)
-    (electric-pair-mode -1))
+    (electric-pair-mode -1)
+    (local-set-key (kbd "C-c C-c") 'erlang-compile)
+    (local-set-key (kbd "M-s /") 'erlang-man-function)
+    (local-set-key (kbd "M-s ?") 'erlang-man-module))
   (add-hook 'erlang-mode-hook 'init--erlang-mode)
   (require-package 'erlang))
 ```
 
-<a name="sec-7-97"></a>
+<a name="sec-7-96"></a>
 ## server
 
 Start emacs server.

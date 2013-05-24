@@ -3441,6 +3441,10 @@ Functions to manage site iany.me
   (define-module erlang
     (custom-set-variables
      '(erlang-indent-level 2))
+    (defun init--erlang-mode ()
+      (run-hooks 'prog-mode-hook)
+      (electric-pair-mode -1))
+    (add-hook 'erlang-mode-hook 'init--erlang-mode)
     (require-package 'erlang))
 #+END_SRC
 

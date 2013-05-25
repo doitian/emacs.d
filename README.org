@@ -532,7 +532,7 @@ Install latest org by running =make org=. Othewise system bundled version is use
      '(org-read-date-prefer-future 'time)
      '(org-completion-use-ido t)
      '(org-refile-targets '((org-agenda-files :maxlevel . 3)
-                            '(:maxlevel . 3)))
+                            (nil :maxlevel . 3)))
      '(org-refile-use-outline-path 'file)
      '(org-outline-path-complete-in-steps nil)
      '(org-clock-history-length 35)
@@ -849,6 +849,9 @@ Opinioned GTD config based on org
             ("T" "TODO List"
              ((todo "GOING|PAUSE|TODO"))
              ((org-agenda-todo-ignore-with-date nil)))
+            ("D" "DONE List"
+             ((todo "DONE|CANCELED"))
+             ((org-agenda-todo-ignore-with-date nil)))
             ("M" "Maybe"
              ((todo "WAITING|LATER")
               (todo "SOMEDAY"))
@@ -887,8 +890,7 @@ Opinioned GTD config based on org
              ((org-agenda-files (append (file-expand-wildcards (concat my-dropbox-dir "g/snippets/*.org" ))
                                         (file-expand-wildcards (concat my-dropbox-dir "g/snippets/*/*.org"))))))
   
-            ("g" "open dropbox/g" dired-g)))
-    )
+            ("g" "open dropbox/g" dired-g))))
 #+END_SRC
 
 ** org-export
@@ -3435,7 +3437,6 @@ Functions to manage site iany.me
     (defun init--erlang-mode ()
       (run-hooks 'prog-mode-hook)
       (electric-pair-mode -1)
-      (local-set-key (kbd "C-c C-c") 'erlang-compile)
       (local-set-key (kbd "M-s /") 'erlang-man-function)
       (local-set-key (kbd "M-s ?") 'erlang-man-module))
     (add-hook 'erlang-mode-hook 'init--erlang-mode)

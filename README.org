@@ -3453,6 +3453,13 @@ Functions to manage site iany.me
     (require-package 'erlang))
 #+END_SRC
 
+** slim
+
+#+BEGIN_SRC emacs-lisp
+  (define-module slim
+    (require-package 'slim-mode))
+#+END_SRC
+
 ** server
 
 Start emacs server.

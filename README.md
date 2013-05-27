@@ -122,7 +122,8 @@
 <li><a href="#sec-7-93">7.93. speedbar</a></li>
 <li><a href="#sec-7-94">7.94. folding</a></li>
 <li><a href="#sec-7-95">7.95. erlang</a></li>
-<li><a href="#sec-7-96">7.96. server</a></li>
+<li><a href="#sec-7-96">7.96. slim</a></li>
+<li><a href="#sec-7-97">7.97. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -3748,6 +3749,14 @@ Functions to manage site iany.me
 ```
 
 <a name="sec-7-96"></a>
+## slim
+
+```cl
+(define-module slim
+  (require-package 'slim-mode))
+```
+
+<a name="sec-7-97"></a>
 ## server
 
 Start emacs server.

@@ -99,6 +99,8 @@ ROOT defaults to the current buffer's project-root."
       "play auto-test")
      ((or (file-exists-p "build.sbt") (file-exists-p "project/Build.scala"))
       "sbt test")
+     ((file-exists-p "project.clj")
+      "lein test")
      (t nil))))
 
 (defun eproject-plus-detect-project (&optional file)

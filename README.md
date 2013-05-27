@@ -1686,7 +1686,12 @@ If there is none yet, so that it is run asynchronously."
         (ad-set-arg 0 (concat cmd "&")))
       (save-window-excursion ad-do-it)))
 
+  (defun init--term-mode ()
+    (when (fboundp 'yas-minor-mode)
+      (yas-minor-mode -1)))
+
   (add-hook 'term-exec-hook 'init--term-exec)
+  (add-hook 'term-mode-hook 'init--term-mode)
 
   (define-key my-keymap (kbd "t") 'term-toggle)
   (define-key my-keymap (kbd "T") 'term-here)

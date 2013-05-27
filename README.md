@@ -1705,6 +1705,7 @@ If there is none yet, so that it is run asynchronously."
 
   (define-key my-keymap (kbd "p P") 'eproject-plus-open-project)
   (define-key my-keymap (kbd "p p") 'eproject-revisit-project)
+  (define-key my-keymap (kbd "M-p") 'eproject-plus-find-file-with-cache)
   (define-key my-keymap (kbd "f") 'eproject-plus-find-file-with-cache)
   (define-key my-keymap (kbd "M-f") 'eproject-plus-find-file-with-cache))
 ```
@@ -1736,16 +1737,20 @@ If there is none yet, so that it is run asynchronously."
           (init . (lambda () (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))))
           (candidate-number-limit . 9999)
           (requires-pattern . 3)
+          (real-to-display . (lambda (e)
+                               (with-helm-current-buffer
+                                 (file-relative-name e helm--eproject-root))))
           (candidates . (lambda ()
                           (eproject-plus-list-project-files-with-cache helm--eproject-root)))))
 
   (setq helm-source-alternative-files
         '((name . "Alternative Files")
+          (init . (lambda () (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))))
           (candidates . (lambda ()
                           (with-helm-current-buffer (alternative-files-existing))))
           (real-to-display . (lambda (e)
                                (with-helm-current-buffer
-                                (file-relative-name e (eproject-root-safe)))))
+                                (file-relative-name e helm--eproject-root))))
           (type . file)))
 
   (defun helm-eproject-projects ()

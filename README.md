@@ -54,7 +54,7 @@
 <li><a href="#sec-7-25">7.25. dired</a></li>
 <li><a href="#sec-7-26">7.26. windows-commands</a></li>
 <li><a href="#sec-7-27">7.27. winring</a></li>
-<li><a href="#sec-7-28">7.28. pointback</a></li>
+<li><a href="#sec-7-28">7.28. pointback&#xa0;&#xa0;&#xa0;<span class="tag"><span class="DISABLED">DISABLED</span></span></a></li>
 <li><a href="#sec-7-29">7.29. buffers-commands</a></li>
 <li><a href="#sec-7-30">7.30. files-commands</a></li>
 <li><a href="#sec-7-31">7.31. vc</a></li>
@@ -123,7 +123,8 @@
 <li><a href="#sec-7-94">7.94. folding</a></li>
 <li><a href="#sec-7-95">7.95. erlang</a></li>
 <li><a href="#sec-7-96">7.96. slim</a></li>
-<li><a href="#sec-7-97">7.97. server</a></li>
+<li><a href="#sec-7-97">7.97. sgml</a></li>
+<li><a href="#sec-7-98">7.98. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -1468,12 +1469,13 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
 ```
 
 <a name="sec-7-28"></a>
-## pointback
+## pointback     :DISABLED:
 
 ```cl
-(define-module pointback
-  (require-package 'pointback)
-  (global-pointback-mode +1))
+;;; Conflict with skeleton
+;; (define-module pointback
+;;   (require-package 'pointback)
+;;   (global-pointback-mode +1))
 ```
 
 <a name="sec-7-29"></a>
@@ -2260,6 +2262,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
     (define-key map (kbd "n") 'yas-new-snippet)
     (define-key map (kbd "o") 'yas-visit-snippet-file)
     (define-key map (kbd "i") 'auto-insert)
+    (define-key map (kbd "RET") 'zencoding-expand-yas)
     (define-key my-keymap (kbd "M-/") map))
 
   (setq yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
@@ -3757,6 +3760,15 @@ Functions to manage site iany.me
 ```
 
 <a name="sec-7-97"></a>
+## sgml
+
+```cl
+(define-module sgml
+  (require-package 'zencoding-mode)
+  (add-hook 'sgml-mode-hook 'zencoding-mode))
+```
+
+<a name="sec-7-98"></a>
 ## server
 
 Start emacs server.

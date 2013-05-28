@@ -1280,11 +1280,12 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
     (define-key init--windows-keymap (kbd "C-n") 'winring-prev-configuration)
     (define-key init--windows-keymap (kbd "C-p") 'winring-prev-configuration))
 #+END_SRC
-** pointback
+** pointback                                                          :DISABLED:
 #+BEGIN_SRC emacs-lisp
-  (define-module pointback
-    (require-package 'pointback)
-    (global-pointback-mode +1))
+  ;;; Conflict with skeleton
+  ;; (define-module pointback
+  ;;   (require-package 'pointback)
+  ;;   (global-pointback-mode +1))
 #+END_SRC
 ** buffers-commands
 #+BEGIN_SRC emacs-lisp
@@ -2045,6 +2046,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
       (define-key map (kbd "n") 'yas-new-snippet)
       (define-key map (kbd "o") 'yas-visit-snippet-file)
       (define-key map (kbd "i") 'auto-insert)
+      (define-key map (kbd "RET") 'zencoding-expand-yas)
       (define-key my-keymap (kbd "M-/") map))
   
     (setq yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
@@ -3458,6 +3460,14 @@ Functions to manage site iany.me
 #+BEGIN_SRC emacs-lisp
   (define-module slim
     (require-package 'slim-mode))
+#+END_SRC
+
+** sgml
+
+#+BEGIN_SRC emacs-lisp
+  (define-module sgml
+    (require-package 'zencoding-mode)
+    (add-hook 'sgml-mode-hook 'zencoding-mode))
 #+END_SRC
 
 ** server

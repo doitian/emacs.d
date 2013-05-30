@@ -15,6 +15,7 @@
         iy-go-to-char-kill-ring-save
         iy-go-to-char-quit
         kill-region
+        mf-shrink-whitespaces
         org-beginning-of-line
         org-delete-char
         org-end-of-line

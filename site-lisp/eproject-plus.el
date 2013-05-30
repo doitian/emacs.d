@@ -101,6 +101,8 @@ ROOT defaults to the current buffer's project-root."
       "sbt test")
      ((file-exists-p "project.clj")
       "lein test")
+     ((file-exists-p "build.xml")
+      "ant")
      (t nil))))
 
 (defun eproject-plus-detect-project (&optional file)
@@ -205,6 +207,54 @@ to select from, open file when selected."
       (eproject-plus-set-attribute :compile-history compile-history)
       (eproject-plus-set-attribute :compile-command compile-command))))
 
+(defun eproject-plus-android-manifest ()
+  "AndroidManifest.xml"
+  (let ((file (concat (eproject-root-safe) "AndroidManifest.xml")))
+    (when (file-exists-p file) file)))
+
+(defun eproject-plus-android-package ()
+  "Android package name"
+  (let ((manifest (eproject-plus-android-manifest)))
+    (when manifest
+      (or (eproject-attribute :android-package)
+          (let ((root (car (xml-parse-file manifest))) package)
+            (setq package (xml-get-attribute root 'package))
+            (eproject-plus-set-attribute :android-package package)
+            package)))))
+
+(defun eproject-plus-android-main-activities ()
+  "Android package name"
+  (let ((manifest (eproject-plus-android-manifest)))
+    (when manifest
+      (or (eproject-attribute :android-main-activities)
+          (let ((root (car (xml-parse-file manifest))) activites)
+
+            (mapc
+             (lambda (node)
+               (when (xml-get-attribute
+                      (car
+                       (xml-get-children
+                        (car (xml-get-children node 'intent-filter))
+                        'action))
+                      'android:name)
+                 (setq activites
+                       (cons (xml-get-attribute node 'android:name) activites))))
+             (xml-get-children
+              (car (xml-get-children (car (xml-parse-file "/home/ian/codebase/android-command-line/AndroidManifest.xml")) 'application))
+              'activity))
+
+            (eproject-plus-set-attribute :android-main-activities activites)
+            activites)))))
+
+(defvar eproject-plus-android-start-app-hist nil)
+(defun eproject-plus-android-start-app (activity)
+  (interactive (list (let ((activites (eproject-plus-android-main-activities)))
+                       (when activites
+                         (ido-completing-read "Activity: " activites nil t nil 'eproject-plus-android-start-app-hist)))))
+  (when activity
+    (start-process "*adb am start*" nil "adb"
+                   "shell" "am" "start" (concat (eproject-plus-android-package) "/." activity))))
+
 (defadvice eproject-maybe-turn-on (around eproject-plus-ignore-errors)
   (ignore-errors
     ad-do-it))
@@ -308,6 +358,8 @@ to select from, open file when selected."
   (define-key map "!" 'shell-command-in-project-root)
   (define-key map "?" 'eproject-plus-pp-attributes)
   (define-key map "=" 'eproject-plus-set-attribute)
+  (define-key map "d" 'eproject-plus-android-start-app)
+  
 
   ;; generate  C-update
   (define-key map "'" 'eproject-plus-visit-tags-table)

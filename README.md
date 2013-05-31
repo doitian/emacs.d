@@ -2321,6 +2321,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (define-key ac-complete-mode-map [tab] 'ac-update-greedy-command)
 
   (add-hook 'prog-mode-hook 'auto-complete-mode)
+  (add-hook 'nxml-mode-hook 'auto-complete-mode)
 
   (setq-default
    ac-sources '(ac-source-yasnippet
@@ -3765,7 +3766,10 @@ Functions to manage site iany.me
 ```cl
 (define-module sgml
   (require-package 'zencoding-mode)
-  (add-hook 'sgml-mode-hook 'zencoding-mode))
+  (defun init--sgml-mode ()
+    (zencoding-mode +1)
+    (setq sgml-xml-mode t))
+  (add-hook 'sgml-mode-hook 'init--sgml-mode))
 ```
 
 <a name="sec-7-98"></a>

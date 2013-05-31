@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: LinearLayout
+# key: LinearLayout
+# --
+<LinearLayout
+    android:layout_width="${1:wrap_content$(yas-choose-value "match_parent" "wrap_content")}"
+    android:layout_height="${2:wrap_content$(yas-choose-value "match_parent" "wrap_content")}"
+    android:orientation="${3:vertical$(yas-choose-value "horizontal" "vertical")}">
+  $0
+</LinearLayout>

@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: fragment
+# key: fragment
+# --
+<fragment
+    android:name="${1:.MyFragment}"
+    android:id="@+id/${2:myFragment}"
+    android:layout_width="${3:wrap_content$(yas-choose-value "match_parent" "wrap_content")}"
+    android:layout_height="${4:wrap_content$(yas-choose-value "match_parent" "wrap_content")}" />
+$0    

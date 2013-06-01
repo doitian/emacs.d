@@ -3490,8 +3490,7 @@ Install [ensime](https://github.com/aemoncannon/ensime) using `make vendor`
    '(js-indent-level 2)
    '(js-expr-indent-offset 2)
    '(js-enabled-frameworks nil)
-   '(inf-mongo-command "mongo")
-   )
+   '(inf-mongo-command "mongo"))
 
   (require-package 'inf-mongo)
 
@@ -3766,6 +3765,8 @@ Functions to manage site iany.me
 ```cl
 (define-module sgml
   (require-package 'zencoding-mode)
+  (custom-set-variables
+   '(zencoding-indentation 2))
   (defun init--sgml-mode ()
     (zencoding-mode +1)
     (setq sgml-xml-mode t))

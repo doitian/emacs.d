@@ -18,6 +18,15 @@
       (eproject-plus-completing-read-buffer prompt choices)
     (completing-read prompt choices nil t)))
 
+(defvar eproject-plus--attribute-history nil)
+(defun eproject-plus-completing-read-attribute (&optional root)
+  "Completing attribute from current project"
+  (completing-read
+   "attribute: "
+   (mapcar (lambda (name) (substring (symbol-name name) 1))
+           (eproject-plus-plist-keys (eproject-plus-attributes (or root (eproject-root)))))
+   nil nil nil 'eproject-plus--attribute-history))
+
 (defface eproject-plus-mode-line-project-name-face
   '((t (:inherit font-lock-string-face :bold t)))
   "Face for displaying the project name in the modeline." :group 'eproject)
@@ -60,6 +69,37 @@ ROOT defaults to the current buffer's project-root."
   (interactive)
   (pp-display-expression (eproject-plus-attributes root) "*eproject attributes*"))
 
+(defun eproject-plus-insert-attributes (&optional root)
+  "Insert attributes into file"
+  (interactive)
+  (let ((orig (eproject-plus-attributes (or root (eproject-root))))
+        attributes key value)
+    (while orig
+      (setq key (car orig))
+      (setq orig (cdr orig))
+      (setq value (car orig))
+      (setq orig (cdr orig))
+
+      (when (and (not (member key '(:project-files-cache
+                                    :type
+                                    :config-file
+                                    :file-name-map
+                                    :name
+                                    :type
+                                    :loaded-from-config-file)))
+                 (not (member key attributes))
+                 )
+        (setq value
+              (cond
+               ((not value) value)
+               ((or (listp value) (symbolp value)) (list 'quote value))
+               (t value)))
+        (setq attributes (plist-put attributes key value))))
+    (erase-buffer)
+    (insert
+     (substring (pp-to-string attributes) 1 -2))
+    (insert "\n")))
+
 (defun eproject-plus-plist-keys (plist)
   "Get all keys in plist"
   (let (result)
@@ -68,27 +108,22 @@ ROOT defaults to the current buffer's project-root."
       (setq plist (cdr (cdr plist))))
     result))
 
-(defvar eproject-plus--set-attribute-history nil)
 (defun eproject-plus-set-attribute (key value &optional root)
-  (interactive (let ((key-name (completing-read
-                                "attribute: "
-                                (mapcar (lambda (name) (substring (symbol-name name) 1))
-                                        (eproject-plus-plist-keys (eproject-plus-attributes (or root (eproject-root)))))
-                                nil nil nil 'eproject-plus--set-attribute-history)))
+  "Set attribute KEY to VALUE for the eproject ROOT
+ROOT defaults to the current buffer's project-root."
+  (interactive (let ((key-name (eproject-plus-completing-read-attribute)))
                  (list
                   (intern (concat ":" key-name))
                   (read-from-minibuffer
                    (concat key-name ": ")
-                   (prin1-to-string (eproject-attribute (intern (concat ":" key-name)) (or root (eproject-root))))
+                   (prin1-to-string (eproject-attribute (intern (concat ":" key-name)) (eproject-root)))
                    nil t))))
-  "Set attribute KEY to VALUE for the eproject ROOT
-ROOT defaults to the current buffer's project-root."
   (setf (getf (cdr (assoc (or root (eproject-root)) eproject-attributes-alist)) key) value)
   value)
 
 (defun eproject-plus-guess-compile-command (root)
   (let ((default-directory root))
-    (cond 
+    (cond
      ((or (file-exists-p "Makefile") (file-exists-p "makefile"))
       "make -k")
      ((file-exists-p "Rakefile")
@@ -255,6 +290,43 @@ to select from, open file when selected."
     (start-process "*adb am start*" nil "adb"
                    "shell" "am" "start" (concat (eproject-plus-android-package) "/." activity))))
 
+(defun eproject-plus-edit-dot-eproject (&optional other-window)
+  (interactive "p")
+  (let ((file (expand-file-name ".eproject" (eproject-root))))
+    (if other-window
+        (find-file-other-window file)
+      (find-file file))))
+
+(defun eproject-plus-completing-read-proeprty (property &optional no-insert)
+  "Completing read from eproject attribute"
+  (interactive (list (eproject-plus-completing-read-attribute (eproject-root))
+                     current-prefix-arg))
+  (let ((result (completing-read
+                 (concat property ": ")
+                 (eproject-attribute (intern (concat ":" property))))))
+    (unless no-insert
+      (insert result))
+    result))
+
+;;;###autoload
+(defun yas-epp (property &optional prompt)
+  (defvar yas-moving-away-p)
+  (defvar yas-modified-p)
+
+  (unless (or yas-moving-away-p
+              yas-modified-p)
+    (let* ((root (eproject-root-safe))
+           (choices (when root (eproject-attribute property root)))
+           (choice (completing-read
+                    (concat
+                     (or prompt (substring (symbol-name property) 1)) ": ")
+                    choices)))
+      (when (and root (not (member choice choices)))
+        (eproject-plus-set-attribute property (cons choice choices) root))
+      choice)))
+
+(member "foox" '("foo" "bar"))
+
 (defadvice eproject-maybe-turn-on (around eproject-plus-ignore-errors)
   (ignore-errors
     ad-do-it))
@@ -358,8 +430,9 @@ to select from, open file when selected."
   (define-key map "!" 'shell-command-in-project-root)
   (define-key map "?" 'eproject-plus-pp-attributes)
   (define-key map "=" 'eproject-plus-set-attribute)
+  (define-key map "/" 'eproject-plus-completing-read-proeprty)
   (define-key map "d" 'eproject-plus-android-start-app)
-  
+  (define-key map "." 'eproject-plus-edit-dot-eproject)
 
   ;; generate  C-update
   (define-key map "'" 'eproject-plus-visit-tags-table)
@@ -367,6 +440,7 @@ to select from, open file when selected."
   (define-key eproject-mode-map (kbd eproject-plus-keymap-prefix) map))
 
 (define-key eproject-mode-map "\C-c" nil)
+(define-key dot-eproject-mode-map (kbd "C-c i") 'eproject-plus-insert-attributes)
 
 (provide 'eproject-plus)
 ;;; eproject-plus.el ends here

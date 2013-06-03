@@ -308,6 +308,17 @@ to select from, open file when selected."
       (insert result))
     result))
 
+(defun eproject-plus-run ()
+  "Completion read :commands and run."
+  (let* ((choices (eproject-attribute :commands))
+         (key (completing-read
+               "Command: "
+               (mapcar 'car choices)
+               nil t)))
+    (let ((default-directory (eproject-root)))
+      (compile (mapconcat 'identity (assoc-default key choices nil nil) "; ")
+               current-prefix-arg))))
+
 ;;;###autoload
 (defun yas-epp (property &optional prompt)
   (defvar yas-moving-away-p)
@@ -414,6 +425,7 @@ to select from, open file when selected."
   (define-key map "p" 'eproject-revisit-project)
   (define-key map "s" 'eproject-plus-open-session)
   (define-key map "c" 'eproject-plus-compile)
+  (define-key map "x" 'eproject-plus-run)
   (define-key map "b" 'eproject-switch-to-buffer)
   (define-key map "\C-b" 'eproject-ibuffer)
   (define-key map "\C-f" 'ido-find-file-in-project-root)

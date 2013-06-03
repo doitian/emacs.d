@@ -1678,11 +1678,11 @@ Auto revert, and helper functions to revert without confirmation.
     (defvar my-helm-sources nil)
     (setq my-helm-sources
           '(helm-source-alternative-files
-            helm-source-files-in-current-dir
             helm-source-eproject-files-in-project
-            helm-source-eproject-projects
+            helm-source-files-in-current-dir
             helm-source-buffers-list
             helm-source-file-cache
+            helm-source-eproject-projects
             helm-source-recentf
             helm-source-file-name-history
             helm-source-bookmarks
@@ -2090,7 +2090,8 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
                                     yas-x-prompt
                                     yas-no-prompt)))
      '(yas-wrap-around-region nil)
-     '(yas-use-menu nil))
+     '(yas-use-menu nil)
+     '(yas-triggers-in-field t))
   
     (defun yas-buffer-name-stub ()
       (let ((name (or (buffer-file-name)

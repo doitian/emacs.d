@@ -1821,23 +1821,13 @@ If there is none yet, so that it is run asynchronously."
           (type . file)))
 
   (defvar helm--eproject-root nil)
-  (setq helm-source-eproject-files-in-project
-        `((name . "Project Files")
-          (type . file)
-          (candidates-in-buffer)
-          (init . (lambda ()
-                    (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))
-                    (if helm--eproject-root
-                        (helm-candidate-buffer
-                         (or (eproject-plus--cache-buffer helm--eproject-root)
-                             (progn
-                               (eproject-plus-list-project-files-with-cache)
-                               (eproject-plus--cache-buffer helm--eproject-root))))
-                      (helm-candidate-buffer 'global))))
-          (requires-pattern . 3)
-          (real-to-display . (lambda (e)
-                               (with-helm-current-buffer
-                                 (file-relative-name e helm--eproject-root))))))
+
+  (defun helm--eproject-transform-candidates (candidates source)
+    "convert each candidate to cons of (disp . real)"
+    (mapcar (lambda (i)
+              (cons (propertize i 'face 'helm-ff-file)
+                    (expand-file-name i helm--eproject-root)))
+            candidates))
 
   (setq helm-source-alternative-files
         '((name . "Alternative Files")
@@ -1881,6 +1871,20 @@ If there is none yet, so that it is run asynchronously."
     (require 'helm-files)
     (require 'helm-locate)
     (require 'helm-w3m)
+
+    (setq helm-source-eproject-files-in-project
+          `((name . "Project Files")
+            (init . (lambda ()
+                      (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))
+                      (helm-candidate-buffer
+                       (or (eproject-plus--cache-buffer helm--eproject-root)
+                           (progn
+                             (eproject-plus-list-project-files-with-cache helm--eproject-root)
+                             (eproject-plus--cache-buffer helm--eproject-root))
+                           'local))))
+            (candidates-in-buffer)
+            (filtered-candidate-transformer . helm--eproject-transform-candidates)
+            (action . ,(cdr (helm-get-actions-from-type helm-c-source-locate)))))
 
     (remove-hook 'helm-before-initialize-hook 'init--helm-load))
 

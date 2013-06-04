@@ -80,8 +80,7 @@ ROOT defaults to the current buffer's project-root."
       (setq value (car orig))
       (setq orig (cdr orig))
 
-      (when (and (not (member key '(:project-files-cache
-                                    :type
+      (when (and (not (member key '(:type
                                     :config-file
                                     :file-name-map
                                     :name
@@ -154,26 +153,69 @@ ROOT defaults to the current buffer's project-root."
                  (setq besttype type))))
     (cons bestroot besttype)))
 
-(defun eproject-list-project-files-by-git (root)
+(defun eproject-list-project-files-by-git (root buffer)
   (let ((default-directory root))
-    (with-temp-buffer
+    (with-current-buffer buffer
       (call-process "git" nil (list (current-buffer) nil) nil
-                    "ls-files" "--full-name" "-c" "-o" "--exclude-standard" "-z")
-      (mapcar 'expand-file-name
-              (split-string (buffer-string) "\0")))))
+                    "--no-pager" "ls-files" "--full-name" "-c" "-o" "--exclude-standard"))))
+
+(defun eproject-list-project-files-by-hg (root buffer)
+  (let ((default-directory root))
+    (with-current-buffer buffer
+      (call-process "hg" nil (list (current-buffer) nil) nil "manifest"))))
+
+(defun eproject-list-project-files-by-bzr (root buffer)
+  (let ((default-directory root))
+    (with-current-buffer buffer
+      (call-process "bzr" nil (list (current-buffer) nil) nil
+                    "ls" "--versioned"))))
+
+;;;###autoload
+(defun eproject-plus--cache-buffer (root)
+  (get-buffer (format "*eproject cache[ %s ]*" root)))
+
+(defun eproject-plus--cache-buffer-create (root)
+  (get-buffer-create (format "*eproject cache[ %s ]*" root)))
+
+(defun eproject-plus--cache-file (root)
+  (expand-file-name ".eproject-files" root))
+
+(defun eproject-plus--load-cache-file (root)
+  (with-current-buffer (eproject-plus--cache-buffer root)
+    (erase-buffer)
+    (let ((file (eproject-plus--cache-file root)))
+      (when (file-exists-p file)
+        (insert-file-contents file)))))
 
 (defun* eproject-plus-list-project-files-with-cache (&optional (root (eproject-root-safe)) force)
   (when root
-    (let ((files (eproject-attribute :project-files-cache root)))
-      (when (or (not files) force)
-        (setq files (eproject-list-project-files root)))
-      (eproject-plus-set-attribute :project-files-cache files root)
-      files)))
+    (let ((default-directory root)
+          (relevant-files (eproject-attribute :relevant-files root))
+          (file (eproject-plus--cache-file root))
+          (buffer (eproject-plus--cache-buffer root)))
+      (unless buffer
+        (setq buffer (eproject-plus--cache-buffer-create root))
+        (if (file-exists-p file)
+            (eproject-plus--load-cache-file root)
+          (with-current-buffer buffer
+            (if (symbolp relevant-files)
+                (funcall
+                 (intern (concat "eproject-list-project-files-by-" (prin1-to-string relevant-files)))
+                 root
+                 (current-buffer))
+              (insert
+               (mapconcat 'file-relative-name (eproject-list-project-files root) "\n")))
+            (write-string-to-file file (buffer-string)))))
+      (with-current-buffer (eproject-plus--cache-buffer root)
+        (split-string (buffer-string) "\n")))))
 
 (defun* eproject-plus-invalidate-project-files-cache (&optional (root (eproject-root-safe)))
   (interactive)
   (when root
-    (eproject-plus-set-attribute :project-files-cache nil root)))
+    (let* ((file (eproject-plus--cache-file root))
+           (buffer (eproject-plus--cache-buffer root)))
+      (when buffer (kill-buffer buffer))
+      (when (file-exists-p file) (delete-file file)))))
 
 (defun eproject-plus-find-file-with-cache (&optional force)
   "Present the user with a list of files in the current project.
@@ -336,8 +378,6 @@ to select from, open file when selected."
         (eproject-plus-set-attribute property (cons choice choices) root))
       choice)))
 
-(member "foox" '("foo" "bar"))
-
 (defadvice eproject-maybe-turn-on (around eproject-plus-ignore-errors)
   (ignore-errors
     ad-do-it))
@@ -359,9 +399,14 @@ to select from, open file when selected."
          (relevant-files (eproject-attribute :relevant-files root)))
     (if (symbolp (eproject-attribute :relevant-files root))
         (setq ad-return-value
-              (funcall
-               (intern (concat "eproject-list-project-files-by-" (prin1-to-string relevant-files)))
-               root))
+              (with-temp-buffer
+                (funcall
+                 (intern (concat "eproject-list-project-files-by-" (prin1-to-string relevant-files)))
+                 root
+                 (current-buffer))
+                (let ((default-directory root))
+                  (mapcar 'file-relative-name
+                          (split-string (buffer-string) "\n")))))
       ad-do-it)))
 
 (defun eproject-plus--init ()
@@ -389,14 +434,21 @@ to select from, open file when selected."
 (eproject-plus-defun-in-project-root shell-command)
 
 ;; use git backend by default
-(plist-put (car (last (assoc 'generic-git eproject-project-types)))
-           :relevant-files 'git)
+
+(mapc
+ (lambda (type)
+   (when (member (car type) '(generic-git generic-hg generic-bzr))
+     (setf (car (last type))
+           (plist-put (car (last type))
+                      :relevant-files (intern (substring (symbol-name (car type)) 8))))))
+ eproject-project-types)
+
+
 (setq
  eproject-extra-attributes
  '(
    ((lambda (root) t)
-    (:compile-command eproject-plus-guess-compile-command
-                      :project-files-cache nil))))
+    (:compile-command eproject-plus-guess-compile-command))))
 
 ;; redefine the function
 (fset 'eproject-detect-project 'eproject-plus-detect-project)

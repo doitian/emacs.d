@@ -1824,14 +1824,20 @@ If there is none yet, so that it is run asynchronously."
   (setq helm-source-eproject-files-in-project
         `((name . "Project Files")
           (type . file)
-          (init . (lambda () (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))))
-          (candidate-number-limit . 9999)
+          (candidates-in-buffer)
+          (init . (lambda ()
+                    (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))
+                    (if helm--eproject-root
+                        (helm-candidate-buffer
+                         (or (eproject-plus--cache-buffer helm--eproject-root)
+                             (progn
+                               (eproject-plus-list-project-files-with-cache)
+                               (eproject-plus--cache-buffer helm--eproject-root))))
+                      (helm-candidate-buffer 'global))))
           (requires-pattern . 3)
           (real-to-display . (lambda (e)
                                (with-helm-current-buffer
-                                 (file-relative-name e helm--eproject-root))))
-          (candidates . (lambda ()
-                          (eproject-plus-list-project-files-with-cache helm--eproject-root)))))
+                                 (file-relative-name e helm--eproject-root))))))
 
   (setq helm-source-alternative-files
         '((name . "Alternative Files")
@@ -1884,11 +1890,11 @@ If there is none yet, so that it is run asynchronously."
   (defvar my-helm-sources nil)
   (setq my-helm-sources
         '(helm-source-alternative-files
-          helm-source-files-in-current-dir
           helm-source-eproject-files-in-project
-          helm-source-eproject-projects
+          helm-source-files-in-current-dir
           helm-source-buffers-list
           helm-source-file-cache
+          helm-source-eproject-projects
           helm-source-recentf
           helm-source-file-name-history
           helm-source-bookmarks
@@ -2309,7 +2315,8 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
                                   yas-x-prompt
                                   yas-no-prompt)))
    '(yas-wrap-around-region nil)
-   '(yas-use-menu nil))
+   '(yas-use-menu nil)
+   '(yas-triggers-in-field t))
 
   (defun yas-buffer-name-stub ()
     (let ((name (or (buffer-file-name)

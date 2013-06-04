@@ -1618,14 +1618,20 @@ Auto revert, and helper functions to revert without confirmation.
     (setq helm-source-eproject-files-in-project
           `((name . "Project Files")
             (type . file)
-            (init . (lambda () (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))))
-            (candidate-number-limit . 9999)
+            (candidates-in-buffer)
+            (init . (lambda ()
+                      (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))
+                      (if helm--eproject-root
+                          (helm-candidate-buffer
+                           (or (eproject-plus--cache-buffer helm--eproject-root)
+                               (progn
+                                 (eproject-plus-list-project-files-with-cache)
+                                 (eproject-plus--cache-buffer helm--eproject-root))))
+                        (helm-candidate-buffer 'global))))
             (requires-pattern . 3)
             (real-to-display . (lambda (e)
                                  (with-helm-current-buffer
-                                   (file-relative-name e helm--eproject-root))))
-            (candidates . (lambda ()
-                            (eproject-plus-list-project-files-with-cache helm--eproject-root)))))
+                                   (file-relative-name e helm--eproject-root))))))
   
     (setq helm-source-alternative-files
           '((name . "Alternative Files")

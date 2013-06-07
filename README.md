@@ -1078,7 +1078,7 @@ this with to-do items than with projects or headings."
    '(org-latex-minted-options '(("linenos") ("framesep=2mm")))
    '(org-latex-pdf-process '("xelatex -interaction nonstopmode -shell-escape -output-directory %o %f"
                              "xelatex -interaction nonstopmode -shell-escape -output-directory %o %f"))
-   '(org-export-backends '(md html icalendar latex beamer))
+   '(org-export-backends '(md html icalendar latex beamer freemind))
    '(org-icalendar-use-scheduled '(todo-start event-if-todo))
    '(org-icalendar-store-UID t)
    '(org-combined-agenda-icalendar-file (concat my-dropbox-dir "g/ical/org.ics")))

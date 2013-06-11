@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: Button
+# key: Button
+# --
+<Button
+    android:id="@+id/${1:id}"
+    android:layout_width="${2:wrap_content$(yas-choose-value "match_parent" "wrap_content")}"
+    android:layout_height="${3:wrap_content$(yas-choose-value "match_parent" "wrap_content")}"
+    android:text="${4:OK}" />
+$0

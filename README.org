@@ -1328,24 +1328,19 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
         (or (derived-mode-p 'compilation-mode)
             (and (boundp 'compilation-shell-minor-mode) compilation-shell-minor-mode))))
   
-    (defun init--display-buffer-dired-p (buffer alist)
-      (with-current-buffer (get-buffer buffer)
-        (derived-mode-p 'dired-mode)))
-  
     (custom-set-variables
      '(display-buffer-alist
        '((init--display-buffer-compilation-p
           init--windata-display-buffer
           (dir . bottom)
           (size . 0.3)
-          (frame-p . t))
-         (init--display-buffer-dired-p
-          init--windata-display-buffer
-          (dir . left)
-          (size . 0.3)
           (frame-p . t)))))
   
-    (defun init--dired ()
+           (init--display-buffer-dired-p
+          init--windata-display-buffer
+          )
+  
+    (defun init--display-dired ()
       (interactive)
       (let ((first-window (car (window-list))))
         (if (and
@@ -1354,9 +1349,13 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
                (eq major-mode 'dired-mode)))
             (delete-window first-window)
           (select-window
-           (display-buffer (dired-noselect default-directory))))))
+           (init--windata-display-buffer
+            (dired-noselect default-directory)
+            '((dir . left)
+              (size . 0.3)
+              (frame-p . t)))))))
   
-    (define-key my-keymap (kbd "n") 'init--dired))
+    (define-key my-keymap (kbd "n") 'init--display-dired))
 #+END_SRC
 
 ** pointback                                                          :DISABLED:

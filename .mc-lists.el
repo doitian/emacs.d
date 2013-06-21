@@ -7,6 +7,7 @@
         c-electric-delete-forward
         c-electric-paren
         c-electric-semi&comma
+        coffee-dedent-line-backspace
         delete-horizontal-space
         forward-symbol
         indent-region

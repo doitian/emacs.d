@@ -205,7 +205,7 @@ ROOT defaults to the current buffer's project-root."
                  (current-buffer))
               (insert
                (mapconcat 'file-relative-name (eproject-list-project-files root) "\n")))
-            (write-string-to-file file (buffer-string)))))
+            (write-region (point-min) (point-max) file))))
       (with-current-buffer (eproject-plus--cache-buffer root)
         (split-string (buffer-string) "\n")))))
 

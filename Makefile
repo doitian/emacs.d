@@ -1,8 +1,10 @@
 OSTYPE := $(shell echo $$OSTYPE)
 ifeq (,$(findstring darwin,$(OSTYPE)))
   EMACS := emacs
+  VC_GIT_PATH := -L /usr/share/doc/git-core/contrib/emacs -L ~/.emacs.d/
 else
   EMACS := /Applications/Emacs.app/Contents/MacOS/Emacs
+  VC_GIT_PATH := -L /usr/local/Cellar/git/1.8.3.1/share/git-core/contrib/emacs -L /Applications/Emacs.app/Contents/Resources/lisp/vc
 endif
 
 BATCH := $(EMACS) -batch -q -no-site-file -L site-lisp
@@ -125,7 +127,7 @@ git-emacs-clean:
 	rm -f vendor/git-emacs/*.elc
 
 vendor/git-emacs/git-emacs.elc: vendor/git-emacs/git-emacs.el
-	cd vendor/git-emacs && $(MAKE) EMACS=$(EMACS)
+	cd vendor/git-emacs && $(MAKE) VC_GIT_PATH=$(VC_GIT_PATH) EMACS=$(EMACS)
 
 emacs-rails: vendor/emacs-rails/rails.elc
 

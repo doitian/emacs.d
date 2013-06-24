@@ -1527,10 +1527,6 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
         (size . 0.3)
         (frame-p . t)))))
 
-         (init--display-buffer-dired-p
-        init--windata-display-buffer
-        )
-
   (defun init--display-dired ()
     (interactive)
     (let ((first-window (car (window-list))))
@@ -3690,7 +3686,29 @@ Functions to manage site iany.me
 
 ```cl
 (define-module mac
-  (custom-set-variables '(mac-command-modifier 'meta)))
+  (when (eq system-type 'darwin)
+    (custom-set-variables '(mac-command-modifier 'meta)
+                          '(mac-option-modifier 'super))
+
+    (define-key key-translation-map (kbd "s-<tab>") (kbd "M-TAB"))
+    (define-key key-translation-map (kbd "s-SPC") (kbd "M-SPC"))
+
+    (require-package 'dash-at-point)
+    (define-key my-keymap "?" 'dash-at-point)
+    (global-set-key (kbd "s-/") 'dash-at-point)
+
+    (defvar mac--open-dictionary-hist)
+    (defun mac--open-dictionary (the-word)
+      "Open Dictionary.app for the-word"
+      (interactive (list
+                    (let* ((wap (word-at-point))
+                           (w (read-from-minibuffer
+                               (format "Dictionary Lookup (%s): " wap)
+                               nil nil nil 'mac--open-dictionary-hist)))
+                      (if (zerop (length w)) wap w))))
+      (start-process "dash" nil "open" (concat "dict:///" the-word)))
+
+    (global-set-key (kbd "s-l") 'mac--open-dictionary)))
 ```
 
 <a name="sec-7-93"></a>

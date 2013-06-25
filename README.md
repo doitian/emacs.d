@@ -795,9 +795,6 @@ Store org agenda files in dropbox directory
   (defun org ()
     (interactive)
     (ido-find-file-in-dir org-directory))
-  (defun snippets ()
-    (interactive)
-    (ido-find-file-in-dir (concat my-dropbox-dir "g/snippets")))
   (defun dired-g (&rest arguments)
     (interactive)
     (dired (concat my-dropbox-dir "g")))
@@ -835,9 +832,6 @@ Capture template
       :prepend t :empty-lines 1)
      ("i" "Idea" entry (file (concat org-directory "/spark.org") "")
       "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i")
-
-     ("c" "Code snippet" entry (file (concat my-dropbox-dir "g/snippets/inbox.org"))
-      "* %^{title} %^g\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n\n#+BEGIN_SRC %^{lang}\n  %i%?\n#+END_SRC\n")
 
      ("b" "Default template" entry (file+headline "inbox.org" "Bookmarks")
       "* %:description\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %c\n\n  %i"
@@ -1054,13 +1048,6 @@ this with to-do items than with projects or headings."
            ((org-agenda-files (file-expand-wildcards (concat org-directory "/*.org_archive" )))))
           ("X" "Archive search" search ""
            ((org-agenda-files (file-expand-wildcards (concat org-directory "/*.org_archive" )))))
-
-          ("c" "Code snippets tags search" tags ""
-           ((org-agenda-files (append (file-expand-wildcards (concat my-dropbox-dir "g/snippets/*.org" ))
-                                      (file-expand-wildcards (concat my-dropbox-dir "g/snippets/*/*.org"))))))
-          ("C" "Code snippets search" search ""
-           ((org-agenda-files (append (file-expand-wildcards (concat my-dropbox-dir "g/snippets/*.org" ))
-                                      (file-expand-wildcards (concat my-dropbox-dir "g/snippets/*/*.org"))))))
 
           ("g" "open dropbox/g" dired-g))))
 ```
@@ -3688,14 +3675,16 @@ Functions to manage site iany.me
 (define-module mac
   (when (eq system-type 'darwin)
     (custom-set-variables '(mac-command-modifier 'meta)
-                          '(mac-option-modifier 'super))
+                          '(mac-option-modifier 'super)
+                          '(ns-pop-up-frames nil))
 
     (define-key key-translation-map (kbd "s-<tab>") (kbd "M-TAB"))
     (define-key key-translation-map (kbd "s-SPC") (kbd "M-SPC"))
 
     (require-package 'dash-at-point)
     (define-key my-keymap "?" 'dash-at-point)
-    (global-set-key (kbd "s-/") 'dash-at-point)
+
+    (global-set-key (kbd "C-M-z") 'delete-horizontal-space)
 
     (defvar mac--open-dictionary-hist)
     (defun mac--open-dictionary (the-word)

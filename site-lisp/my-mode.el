@@ -21,6 +21,7 @@
   "Set `my-exec-path' to VAL"
   (let ((paths (mapcar 'expand-file-name (and val (split-string val ":")))))
     (set sym val)
+    (message "%S" (cons sym val))
     (setq exec-path (append paths my--original-exec-path))
     (setenv "PATH" (mapconcat 'identity (append paths (list my--original-env-path)) path-separator))))
 

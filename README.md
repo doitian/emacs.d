@@ -3697,7 +3697,13 @@ Functions to manage site iany.me
                       (if (zerop (length w)) wap w))))
       (start-process "dash" nil "open" (concat "dict:///" the-word)))
 
-    (global-set-key (kbd "s-l") 'mac--open-dictionary)))
+    (global-set-key (kbd "s-l") 'mac--open-dictionary)
+
+    ;; for DEVONThink
+    (add-to-list 'auto-mode-alist '("\\.scala\\.txt\\'" . scala-mode))
+    (add-to-list 'auto-mode-alist '("\\.xml\\.txt\\'" . xml-mode))
+
+    ))
 ```
 
 <a name="sec-7-93"></a>

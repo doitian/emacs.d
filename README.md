@@ -3675,11 +3675,12 @@ Functions to manage site iany.me
 (define-module mac
   (when (eq system-type 'darwin)
     (custom-set-variables '(mac-command-modifier 'meta)
-                          '(mac-option-modifier 'super)
+                          '(mac-option-modifier 'hyper)
                           '(ns-pop-up-frames nil))
 
-    (define-key key-translation-map (kbd "s-<tab>") (kbd "M-TAB"))
-    (define-key key-translation-map (kbd "s-SPC") (kbd "M-SPC"))
+    (define-key key-translation-map (kbd "H-<tab>") (kbd "M-TAB"))
+    (define-key key-translation-map (kbd "H-SPC") (kbd "M-SPC"))
+    ;; H-u, U-e, H-n, H-return
 
     (require-package 'dash-at-point)
     (define-key my-keymap "?" 'dash-at-point)
@@ -3966,7 +3967,7 @@ Start emacs server.
             server-delete-frame-functions)))
 
   ;; Buggy to run the functions in MacOS X
-  (when (and (daemonp) (not (eq system-type 'darwin)))
+  (when (daemonp)
     (add-hook 'delete-frame-functions 'server--run-delete-frame-functions))
 
   (define-minor-mode server-edit-minor-mode

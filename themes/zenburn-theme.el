@@ -576,8 +576,8 @@
  `(which-func ((t (:foreground ,zenburn-yellow))))
 
  ;; (string 12 24 12 24 12 24 12 24 12 24 12 24 12 24 12 24 0 0 0 0)
- `(highlight-indentation-face ((t (:foreground ,zenburn-bg+1 :stipple ,(list 9 10 (string 48 24 48 24 48 24 48 24 48 24 48 24 48 24 48 24 0 0 0 0))))))
- `(highlight-indentation-current-column-face ((t (:foreground ,zenburn-bg+3 :stipple ,(list 9 10 (string 48 24 48 24 48 24 48 24 48 24 48 24 48 24 48 24 0 0 0 0))))))
+ `(highlight-indentation-face ((t (:background ,zenburn-bg+1))))
+ `(highlight-indentation-current-column-face ((t (:background ,zenburn-bg+3))))
  )
 
 (provide-theme 'zenburn)

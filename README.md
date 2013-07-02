@@ -479,9 +479,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   "Translate C-h and M-r to delete char and word backward"
   (define-key key-translation-map [?\C-h] [?\C-?])
   (define-key key-translation-map [?\M-r] [?\C-\M-?])
-  (global-set-key (kbd "<backspace>") '(lambda ()
-                                         (interactive)
-                                         (error "Use C-h")))
+  (global-set-key (kbd "<backspace>") 'backward-delete-char)
   (global-set-key (kbd "M-<backspace>") '(lambda ()
                                          (interactive)
                                          (error "Use M-r"))))
@@ -1972,13 +1970,14 @@ If there is none yet, so that it is run asynchronously."
     :group 'compilation)
 
   (defun compilation-notify-result (buffer message)
-    (setq message (s-trim message))
-    (let ((pass (string= message "finished")))
-      (notify mode-name message
-              :icon (if pass "dialog-ok" "dialog-error"))
-      (if pass
-          (set-face-attribute 'mode-line nil :background compilation-defualt-mode-line-background)
-        (set-face-attribute 'mode-line nil :background compilation-error-mode-line-background))))
+    (unless (member major-mode '(ag-mode))
+      (setq message (s-trim message))
+      (let ((pass (string= message "finished")))
+        (notify mode-name message
+                :icon (if pass "dialog-ok" "dialog-error"))
+        (if pass
+            (set-face-attribute 'mode-line nil :background compilation-defualt-mode-line-background)
+          (set-face-attribute 'mode-line nil :background compilation-error-mode-line-background)))))
 
   (defun compilation-restore-mode-line ()
     (interactive)

@@ -45,25 +45,16 @@
 
 ;;;###autoload
 (defun rails-hacks-maybe-turn-on ()
-  (when (rails-project:root)
+  (when (and (buffer-file-name) (rails-project:root))
     (rails-hacks-rails-load)
     (rails-minor-mode t)
-    (when (buffer-file-name)
-      (rails-apply-for-buffer-type))))
+    (rails-apply-for-buffer-type)))
 
 ;;;###autoload
 (defun rails-hacks-maybe-turn-on-only-minor-mode ()
   (when (rails-project:root)
     (rails-hacks-rails-load)
     (rails-minor-mode t)))
-
-(defun rails-hacks--find-hook-p (hook)
-  (eq 'rails-project:root
-      (car-safe (car-safe (cdr-safe (car-safe (car-safe (cdr-safe (car-safe (cdr-safe (cdr-safe hook)))))))))))
-
-(defun rails-hacks--dired-mode-hook-p (hook)
-  (eq 'rails-project:root
-      (car-safe (car-safe (cdr-safe (car-safe (cdr-safe (cdr-safe hook))))))))
 
 (defun rails-hacks--delete-hooks ()
   "Remove hooks. Must be called just after required `rails'."

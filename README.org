@@ -1992,7 +1992,8 @@ Misc editing config
 #+BEGIN_SRC emacs-lisp
   (define-module bookmark
     (custom-set-variables
-     '(bookmark-use-annotations nil))
+     '(bookmark-use-annotations nil)
+     '(bmkp-auto-light-when-set 'autonamed-bookmark))
   
     (require-package 'bookmark+)
   
@@ -2005,7 +2006,24 @@ Misc editing config
         (define-key map (kbd "<") 'bmkp-previous-bookmark)
         (define-key map (kbd ">") 'bmkp-next-bookmark)
         map))
-
+  
+    (defadvice bmkp-last-specific-file-p (around expand-bookmark-file-name (bookmark) activate)
+      (let ((file (expand-file-name (bookmark-get-filename bookmark))))
+        (message "%S" (cons file bmkp-last-specific-file))
+        (setq ad-return-value (and file  (string= file bmkp-last-specific-file)))))
+  
+    (defadvice bmkp-file-this-dir-bookmark-p (around expand-bookmark-file-name (bookmark) activate)
+      (setq ad-return-value
+       (and (bmkp-file-bookmark-p bookmark)
+            (equal (file-name-directory (expand-file-name (bookmark-get-filename bookmark)))
+                   (expand-file-name default-directory)))))
+  
+    (defadvice bmkp-dired-this-dir-bookmark-p (around expand-bookmark-file-name (bookmark) activate)
+      (setq ad-return-value
+            (and (bmkp-dired-bookmark-p bookmark)
+                 (let ((dir (file-name-directory (expand-file-name (bookmark-get-filename bookmark)))))
+                   (bmkp-same-file-p dir (expand-file-name default-directory))))))
+  
     (temporary-mode-define-keys my-keymap 'bmkp-navigation)
     (global-set-key (kbd "C-x j SPC") 'jump-to-register))
 #+END_SRC

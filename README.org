@@ -3645,6 +3645,13 @@ Functions to manage site iany.me
      '(haskell-mode-hook '(turn-on-haskell-indentation))))
 #+END_SRC
 
+** handlebars-mode
+
+#+BEGIN_SRC emacs-lisp
+  (define-module handlebars-mode
+    (require-package 'handlebars-mode))
+#+END_SRC
+
 ** server
 
 Start emacs server.

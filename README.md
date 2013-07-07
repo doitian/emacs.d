@@ -126,7 +126,8 @@
 <li><a href="#sec-7-97">7.97. sgml</a></li>
 <li><a href="#sec-7-98">7.98. sh-mode</a></li>
 <li><a href="#sec-7-99">7.99. haskell-mode</a></li>
-<li><a href="#sec-7-100">7.100. server</a></li>
+<li><a href="#sec-7-100">7.100. handlebars-mode</a></li>
+<li><a href="#sec-7-101">7.101. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -3948,6 +3949,14 @@ Functions to manage site iany.me
 ```
 
 <a name="sec-7-100"></a>
+## handlebars-mode
+
+```cl
+(define-module handlebars-mode
+  (require-package 'handlebars-mode))
+```
+
+<a name="sec-7-101"></a>
 ## server
 
 Start emacs server.

@@ -305,6 +305,14 @@ Load package on demand
 
 * Modules
 
+** powerline
+
+#+BEGIN_SRC emacs-lisp
+  (define-module powerline
+    (require-package 'powerline)
+    (powerline-default-theme))
+#+END_SRC
+
 ** s
 
 #+BEGIN_SRC emacs-lisp

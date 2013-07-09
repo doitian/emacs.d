@@ -188,6 +188,16 @@
  '(mode-line-inactive
    ((t (:background "#2e3330" :foreground "#88b090"
                     :box (:color "#2e3330" :line-width 2)))))
+
+ '(powerline-active1 ((t (:background "#363e39" :inherit mode-line))))
+ '(powerline-active2 ((t (:background "#4d5a52" :inherit mode-line))))
+ '(powerline-inactive1 ((t (:background "#222623" :inherit mode-line-inactive))))
+ '(powerline-inactive2 ((t (:background "#161817" :inherit mode-line-inactive))))
+ ;; '(powerline-active1 ((t (:background "grey22" :inherit mode-line))))
+ ;; '(powerline-active2 ((t (:background "grey40" :inherit mode-line))))
+ ;; '(powerline-inactive1 ((t (:background "grey11" :inherit mode-line-inactive))))
+ ;; '(powerline-inactive2 ((t (:background "grey20" :inherit mode-line-inactive))))
+
  '(region ((t (:foreground "#71d3b4" :background "#233323"))))
  '(cua-rectangle ((t (:foreground "#71d3b4" :background "#233323"))))
  `(minibuffer-prompt ((t (:foreground ,zenburn-yellow))))

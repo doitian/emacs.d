@@ -1919,22 +1919,24 @@ If there is none yet, so that it is run asynchronously."
   ;; 2. If we didn't input any typically regexp characters, convert spaces to .*,
   ;;    however, it is still order related.
   (defun helm-pattern-to-regexp (string)
-    (prin1-to-string
-     (if (string-match-p "[][*+$^]" string) string
-       (let ((parts (split-string string "[ \t]+" t)))
-         (if (eq 2 (length parts))
-             ;; for two parts a,b we make a.*b\|b.*a
-             (concat
-              (mapconcat 'regexp-quote parts ".*")
-              "\\|"
-              (mapconcat 'regexp-quote (reverse parts) ".*"))
-           ;; only 1 part or more than 2 parts, fine, just combine them using .*,
-           ;; thus it will slow down locate a lot. This means you have to type in order
-           (mapconcat 'regexp-quote parts ".*"))))))
+    (if (string-match-p "^locate" helm-locate-command)
+        (prin1-to-string
+         (if (string-match-p "[][*+$^]" string) string
+           (let ((parts (split-string string "[ \t]+" t)))
+             (if (eq 2 (length parts))
+                 ;; for two parts a,b we make a.*b\|b.*a
+                 (concat
+                  (mapconcat 'regexp-quote parts ".*")
+                  "\\|"
+                  (mapconcat 'regexp-quote (reverse parts) ".*"))
+               ;; only 1 part or more than 2 parts, fine, just combine them using .*,
+               ;; thus it will slow down locate a lot. This means you have to type in order
+               (mapconcat 'regexp-quote parts ".*")))))
+      string))
 
   ;; Hack
   ;; Convert helm pattern to regexp for locate
-  (defadvice helm-c-locate-init (around helm-pattern-to-regexp () activate)
+  (defadvice helm-locate-init (around helm-pattern-to-regexp () activate)
     (let ((helm-pattern (helm-pattern-to-regexp helm-pattern)))
       ad-do-it))
   )
@@ -3107,7 +3109,7 @@ Install `emacs-rails` using `make vendor`
    ;; already handled by ~/bin/rspec
    '(rspec-use-bundler-when-possible nil)
    '(rspec-use-zeus-when-possible nil)
-   '(rspec-use-rake-flag nil)
+   '(rspec-use-rake-when-possible nil)
    '(rspec-key-command-prefix (kbd "M-s v"))))
 ```
 
@@ -3704,7 +3706,11 @@ Functions to manage site iany.me
   (when (eq system-type 'darwin)
     (custom-set-variables '(mac-command-modifier 'meta)
                           '(mac-option-modifier 'hyper)
-                          '(ns-pop-up-frames nil))
+                          '(ns-pop-up-frames nil)
+                          '(helm-locate-command "mdfind %s %s")
+                          '(locate-command "mdfind"))
+
+    (defalias 'mdfind 'locate)
 
     (define-key key-translation-map (kbd "H-<tab>") (kbd "M-TAB"))
     (define-key key-translation-map (kbd "H-SPC") (kbd "M-SPC"))

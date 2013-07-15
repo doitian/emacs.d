@@ -3066,6 +3066,7 @@ css, sass, scss
   (add-to-list 'auto-mode-alist '("\\.gemspec\\'" . ruby-mode))
   (add-to-list 'auto-mode-alist '("\\.rabl\\'" . ruby-mode))
   (add-to-list 'auto-mode-alist '("\\.jbuilder\\'" . ruby-mode))
+  (add-to-list 'auto-mode-alist '("\\.tokamak\\'" . ruby-mode))
 
   (add-hook 'ruby-mode-hook 'init--ruby-mode))
 ```

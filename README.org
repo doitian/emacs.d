@@ -2760,21 +2760,21 @@ css, sass, scss
   (define-module ruby-mode
     (custom-set-variables
      '(ruby-deep-indent-paren nil))
-    
+  
     (require-package 'ruby-end)
     (require-package 'yari)
-    
+  
     (defalias 'ri 'yari)
-    
+  
     (defun init--ruby-mode ()
       (local-set-key (kbd "M-s /") 'yari)
-      
+  
       (ruby-end-mode +1)
       (hs-minor-mode +1)
       (turn-on-auto-fill)
-      
+  
       (setq autopair-extra-pairs '(:code ((?` . ?`)))))
-    
+  
     ;;https://gist.github.com/dgutov/1274520
     (defadvice ruby-indent-line (after unindent-closing-paren activate)
       (let ((column (current-column))
@@ -2808,7 +2808,8 @@ css, sass, scss
     (add-to-list 'auto-mode-alist '("\\.gemspec\\'" . ruby-mode))
     (add-to-list 'auto-mode-alist '("\\.rabl\\'" . ruby-mode))
     (add-to-list 'auto-mode-alist '("\\.jbuilder\\'" . ruby-mode))
-    
+    (add-to-list 'auto-mode-alist '("\\.tokamak\\'" . ruby-mode))
+  
     (add-hook 'ruby-mode-hook 'init--ruby-mode))
 #+END_SRC
 

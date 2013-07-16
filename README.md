@@ -610,17 +610,25 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
    '(ido-read-file-name-as-directory-commands nil)
    '(ido-use-filename-at-point nil))
 
+  (require-package 'flx)
   (require-package 'ido-hacks)
   (require-package 'ido-complete-space-or-hyphen)
 
   (put 'ido-exit-minibuffer 'ido 'ignore)
 
   (ido-complete-space-or-hyphen-enable)
+
   (require 'ido-hacks)
   (ido-hacks-mode +1)
-
+  ;; Use flx in flex matching
+  (ad-disable-advice 'ido-set-matches-1 'around 'ido-hacks-ido-set-matches-1)
+  (ad-activate 'ido-set-matches-1)
   (mapc (lambda (s) (put s 'ido-hacks-fix-default t))
         '(bookmark-set))
+
+  (require 'flx-ido)
+  (setq ido-use-faces nil)
+  (flx-ido-mode +1)
 
   (defun init--ido-setup ()
     (define-key ido-completion-map (kbd "M-m") 'ido-merge-work-directories)
@@ -1570,8 +1578,9 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
 (define-module files-commands
   (global-set-key (kbd "C-x C-r") 'mf-rename-current-buffer-file)
   (global-set-key (kbd "C-x M-f") 'mf-find-alternative-file-with-sudo)
-  (define-key my-keymap "g" 'gpicker-find-file)
-  (define-key my-keymap (kbd "M-g") 'gpicker-find-file))
+  (when (locate-file "gpicker" exec-path)
+    (define-key my-keymap "g" 'gpicker-find-file)
+    (define-key my-keymap (kbd "M-g") 'gpicker-find-file)))
 ```
 
 <a name="sec-7-33"></a>

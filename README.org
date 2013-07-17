@@ -3676,6 +3676,15 @@ Functions to manage site iany.me
     (require-package 'handlebars-mode))
 #+END_SRC
 
+** mediawiki
+
+#+BEGIN_SRC emacs-lisp
+  (define-module mediawiki
+    (require-package 'mediawiki)
+    (autoload 'mediawiki-site "mediawiki" nil t)
+    (autoload 'mediawiki-mode "mediawiki" nil t))
+#+END_SRC
+
 ** server
 
 Start emacs server.
@@ -3729,7 +3738,11 @@ Start emacs server.
     (add-hook 'server-visit-hook 'init--server-visit t)
   
     (require-package 'edit-server)
-    (setq edit-server-new-frame nil)
+    (custom-set-variables
+     '(edit-server-default-major-mode 'markdown-mode)
+     '(edit-server-url-major-mode-alist
+       '(("wiki\\.groupondev\\.com" . mediawiki-mode)))
+     '(edit-server-new-frame nil))
   
     (server-start)
     (edit-server-start))

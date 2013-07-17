@@ -4035,7 +4035,11 @@ Start emacs server.
   ;; run last to run on the minor mode for any enabled major modes
   (add-hook 'server-visit-hook 'init--server-visit t)
 
-  (server-start))
+  (require-package 'edit-server)
+  (setq edit-server-new-frame nil)
+
+  (server-start)
+  (edit-server-start))
 ```
 
 <a name="sec-8"></a>

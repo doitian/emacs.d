@@ -1390,6 +1390,9 @@ add changes interactively using =ediff=.
 
 #+BEGIN_SRC emacs-lisp
   (define-module vc
+    (require-package 'git-messenger)
+    (require-package 'git-gutter+)
+  
     (custom-set-variables
      '(git-state-modeline-decoration (quote git-state-decoration-large-dot))
      '(vc-follow-symlinks t))
@@ -1412,7 +1415,19 @@ add changes interactively using =ediff=.
         (put-text-property 1 (length vc-mode) 'face 'eproject-plus-mode-line-project-name-face vc-mode)))
   
     (global-set-key (kbd "C-<f12>") 'git-status)
-    (global-set-key (kbd "<ESC> <f12>") 'git-status))
+    (global-set-key (kbd "<ESC> <f12>") 'git-status)
+  
+    (global-set-key (kbd "C-x v w") 'git-messenger:popup-message)
+    (global-set-key (kbd "C-x v SPC") 'git-gutter+-mode)
+    (global-set-key (kbd "C-x v n") 'git-gutter+-next-hunk)
+    (global-set-key (kbd "C-x v p") 'git-gutter+-previous-hunk)
+    (global-set-key (kbd "C-x v .") 'git-gutter+-popup-hunk)
+    (global-set-key (kbd "C-x v ,") 'git-gutter+-revert-hunk)
+    (global-set-key (kbd "C-x v j") 'git-gutter+-stage-hunks)
+    (global-set-key (kbd "C-x v k") 'git-gutter+-commit)
+    (global-set-key (kbd "C-x v K") 'git-gutter+-commit)
+  
+    )
 #+END_SRC
 
 ** isearch

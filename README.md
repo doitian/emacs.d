@@ -128,7 +128,8 @@
 <li><a href="#sec-7-99">7.99. sh-mode</a></li>
 <li><a href="#sec-7-100">7.100. haskell-mode</a></li>
 <li><a href="#sec-7-101">7.101. handlebars-mode</a></li>
-<li><a href="#sec-7-102">7.102. server</a></li>
+<li><a href="#sec-7-102">7.102. mediawiki</a></li>
+<li><a href="#sec-7-103">7.103. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -1594,6 +1595,9 @@ add changes interactively using `ediff`.
 
 ```cl
 (define-module vc
+  (require-package 'git-messenger)
+  (require-package 'git-gutter+)
+
   (custom-set-variables
    '(git-state-modeline-decoration (quote git-state-decoration-large-dot))
    '(vc-follow-symlinks t))
@@ -1616,7 +1620,19 @@ add changes interactively using `ediff`.
       (put-text-property 1 (length vc-mode) 'face 'eproject-plus-mode-line-project-name-face vc-mode)))
 
   (global-set-key (kbd "C-<f12>") 'git-status)
-  (global-set-key (kbd "<ESC> <f12>") 'git-status))
+  (global-set-key (kbd "<ESC> <f12>") 'git-status)
+
+  (global-set-key (kbd "C-x v w") 'git-messenger:popup-message)
+  (global-set-key (kbd "C-x v SPC") 'git-gutter+-mode)
+  (global-set-key (kbd "C-x v n") 'git-gutter+-next-hunk)
+  (global-set-key (kbd "C-x v p") 'git-gutter+-previous-hunk)
+  (global-set-key (kbd "C-x v .") 'git-gutter+-popup-hunk)
+  (global-set-key (kbd "C-x v ,") 'git-gutter+-revert-hunk)
+  (global-set-key (kbd "C-x v j") 'git-gutter+-stage-hunks)
+  (global-set-key (kbd "C-x v k") 'git-gutter+-commit)
+  (global-set-key (kbd "C-x v K") 'git-gutter+-commit)
+
+  )
 ```
 
 <a name="sec-7-34"></a>
@@ -3983,6 +3999,16 @@ Functions to manage site iany.me
 ```
 
 <a name="sec-7-102"></a>
+## mediawiki
+
+```cl
+(define-module mediawiki
+  (require-package 'mediawiki)
+  (autoload 'mediawiki-site "mediawiki" nil t)
+  (autoload 'mediawiki-mode "mediawiki" nil t))
+```
+
+<a name="sec-7-103"></a>
 ## server
 
 Start emacs server.
@@ -4036,7 +4062,11 @@ Start emacs server.
   (add-hook 'server-visit-hook 'init--server-visit t)
 
   (require-package 'edit-server)
-  (setq edit-server-new-frame nil)
+  (custom-set-variables
+   '(edit-server-default-major-mode 'markdown-mode)
+   '(edit-server-url-major-mode-alist
+     '(("wiki\\.groupondev\\.com" . mediawiki-mode)))
+   '(edit-server-new-frame nil))
 
   (server-start)
   (edit-server-start))

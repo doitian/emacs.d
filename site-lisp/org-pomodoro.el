@@ -28,7 +28,6 @@
 
 (defun org-pomodoro-after-clock-in ()
   (when (not org-timer-current-timer)
-    (org-timer-set-timer org-pomodoro-minutes)
     (if org-pomodoro-is-mac
         (progn
           (let (title tags keyword)
@@ -50,7 +49,8 @@
         (interrupt-process org-pomodoro-process))
       (when org-pomodoro-command
         (setq org-pomodoro-process
-              (start-process "pomodoro" nil "pomodoro" "-l" (number-to-string org-pomodoro-minutes)))))))
+              (start-process "pomodoro" nil "pomodoro" "-l" (number-to-string org-pomodoro-minutes)))))
+    (org-timer-set-timer org-pomodoro-minutes)))
 
 (defun org-pomodoro-after-clock-out ()
   (org-pomodoro-stop-process)

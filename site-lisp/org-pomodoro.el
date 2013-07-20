@@ -5,6 +5,10 @@
 (defvar org-pomodoro-process nil)
 (defvar org-pomodoro-command (locate-file "pomodoro" exec-path))
 
+(defvar org-pomodoro-is-mac (eq system-type 'darwin))
+(defvar org-pomodoro-start-scpt (expand-file-name "~/Library/Scripts/Vitamin-R 2/Start.scpt"))
+(defvar org-pomodoro-stop-scpt (expand-file-name "~/Library/Scripts/Vitamin-R 2/Stop.scpt"))
+
 ;;;###autoload
 (defun org-pomodoro-on-org-load ()
   (push (cons "p" org-pomodoro-minutes) org-effort-durations)
@@ -25,12 +29,28 @@
 (defun org-pomodoro-after-clock-in ()
   (when (not org-timer-current-timer)
     (org-timer-set-timer org-pomodoro-minutes)
-    (when (and org-pomodoro-process
-               (eq 'run (process-status org-pomodoro-process)))
-      (interrupt-process org-pomodoro-process))
-    (when org-pomodoro-command
-      (setq org-pomodoro-process
-            (start-process "pomodoro" nil "pomodoro" "-l" (number-to-string org-pomodoro-minutes))))))
+    (if org-pomodoro-is-mac
+        (progn
+          (let (title tags keyword)
+            (save-excursion
+             (with-current-buffer (marker-buffer org-clock-marker)
+               (goto-char org-clock-marker)
+               (outline-previous-visible-heading 1)
+               (setq keyword (org-get-todo-state))
+               (setq title (substring-no-properties (org-get-heading t) (if keyword (1+ (length keyword)))))
+               (mapc
+                (lambda (tag)
+                  (unless (string= "next" tag)
+                    (add-to-list 'tags (substring-no-properties tag))))
+                (org-get-tags-at))
+               (setq tags (mapconcat 'identity tags ","))
+               (call-process "osascript" nil nil nil org-pomodoro-start-scpt title tags)))))
+      (when (and org-pomodoro-process
+                 (eq 'run (process-status org-pomodoro-process)))
+        (interrupt-process org-pomodoro-process))
+      (when org-pomodoro-command
+        (setq org-pomodoro-process
+              (start-process "pomodoro" nil "pomodoro" "-l" (number-to-string org-pomodoro-minutes)))))))
 
 (defun org-pomodoro-after-clock-out ()
   (org-pomodoro-stop-process)
@@ -38,10 +58,12 @@
     (org-pomodoro-cancel-timer-safe)))
 
 (defun org-pomodoro-stop-process ()
-  (when (and org-pomodoro-process
-             (eq 'run (process-status org-pomodoro-process)))
-    (interrupt-process org-pomodoro-process)
-    (setq org-pomodoro-process nil)))
+  (if org-pomodoro-is-mac
+      (call-process "osascript" nil nil nil org-pomodoro-stop-scpt)
+    (when (and org-pomodoro-process
+               (eq 'run (process-status org-pomodoro-process)))
+      (interrupt-process org-pomodoro-process)
+      (setq org-pomodoro-process nil))))
 
 (setq org-clock-out-remove-zero-time-clocks nil)
 (defun org-pomodoro-is-indivisible! ()
@@ -71,8 +93,9 @@
 (defun org-pomodoro-done ()
   (when (org-clock-is-active)
     (org-clock-out)
-    (start-process-shell-command "pomodoro-ring" nil "mplayer ~/Dropbox/resources/audio/ring.mp3")
-    (start-process-shell-command "pomodoro-osd" nil "echo Pomodoro Break | dzen2 -p 100 -geometry +0-0 -h 1080 -fn Sans-60 -ta l")))
+    (unless org-pomodoro-is-mac
+      (start-process-shell-command "pomodoro-ring" nil "mplayer ~/Dropbox/resources/audio/ring.mp3")
+      (start-process-shell-command "pomodoro-osd" nil "echo Pomodoro Break | dzen2 -p 100 -geometry +0-0 -h 1080 -fn Sans-60 -ta l"))))
 
 (defun org-pomodoro-cancel-timer-safe ()
   (when org-timer-current-timer (org-timer-cancel-timer)))

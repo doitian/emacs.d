@@ -709,10 +709,14 @@ Install latest org by running `make org`. Othewise system bundled version is use
 (define-module org-basic
   "Basic orgmode setup"
 
+  (setq org-modules '(org-bibtex org-bookmark org-expiry org-habit org-id org-info
+                                 org-inlinetask org-man org-w3m org-clock org-timer
+                                 org-protocol org-drill org-mu4e))
+  (when (eq system-type 'darwin)
+    (setq org-modules (append org-modules '(org-mac-link-grabber))))
+
   (custom-set-variables
-   '(org-modules '(org-bibtex org-bookmark org-expiry org-habit org-id org-info
-                              org-inlinetask org-man org-w3m org-clock org-timer
-                              org-protocol org-drill org-mu4e))
+   '(org-modules org-modules)
    '(org-global-properties '(("STYLE_ALL" . "habit")))
    '(org-read-date-prefer-future 'time)
    '(org-completion-use-ido t)
@@ -769,8 +773,13 @@ Install latest org by running `make org`. Othewise system bundled version is use
                           :height (face-attribute 'default :height)
                           :family (face-attribute 'default :family))))
 
+  (defun init--org-call-process-open (path)
+    "Open PATH using system open command."
+    (call-process "open" nil nil nil path))
+
   (defun init--org-load ()
     (wl-org-column-view-uses-fixed-width-face)
+    (org-add-link-type "open" 'init--org-call-process-open)
     (remove-hook 'org-mode-hook 'init--org-load))
   (add-hook 'org-mode-hook 'init--org-load)
 
@@ -851,8 +860,8 @@ Capture template
      ("i" "Idea" entry (file (concat org-directory "/spark.org") "")
       "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i")
 
-     ("b" "Default template" entry (file+headline "inbox.org" "Bookmarks")
-      "* %:description\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %c\n\n  %i"
+     ("b" "Default template" entry (file+headline (concat org-directory "/inbox.org") "Tasks")
+      "* TODO %:description\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %c\n\n  %i"
       :prepend t :empty-lines 1 :immediate-finish t))))
 ```
 
@@ -929,9 +938,11 @@ Opinioned GTD config based on org
                      ("@errands" . ?e)
                      ("@computer" . ?c)
                      ("@reading" . ?r)
-                     ("@phone" . ?p)
+                     ("@phone" . ?o)
                      ("@message" . ?m)
                      (:endgroup . nil)
+                     ("work" . ?w)
+                     ("personal" . ?p)
                      ("project" . ?x)
                      ("event" . ?v)
                      ("idea" . ?i)
@@ -961,15 +972,15 @@ Opinioned GTD config based on org
 
   (defun sacha/org-agenda-done (&optional arg)
     "Mark current TODO as done.
-This changes the line at point, all other lines in the agenda referring to
-the same tree node, and the headline of the tree node in the Org-mode file."
+    This changes the line at point, all other lines in the agenda referring to
+    the same tree node, and the headline of the tree node in the Org-mode file."
     (interactive "P")
     (org-agenda-todo "DONE"))
 
   (defun sacha/org-agenda-mark-done-and-add-followup ()
     "Mark the current TODO as done and add another task after it.
-Creates it at the same level as the previous task, so it's better to use
-this with to-do items than with projects or headings."
+    Creates it at the same level as the previous task, so it's better to use
+    this with to-do items than with projects or headings."
     (interactive)
     (org-agenda-todo "DONE")
     (org-agenda-switch-to)
@@ -977,8 +988,8 @@ this with to-do items than with projects or headings."
 
   (defun sacha/org-agenda-new ()
     "Create a new note or task at the current agenda item.
-Creates it at the same level as the previous task, so it's better to use
-this with to-do items than with projects or headings."
+    Creates it at the same level as the previous task, so it's better to use
+    this with to-do items than with projects or headings."
     (interactive)
     (org-agenda-switch-to)
     (org-capture 0))
@@ -989,7 +1000,7 @@ this with to-do items than with projects or headings."
     (org-agenda-check-type t 'agenda)
     (if (and (not day-of-year) (equal org-agenda-current-span 3))
         (error "Viewing span is already \"%s\"" 3))
-    (let* ((sd (or day-of-year 
+    (let* ((sd (or day-of-year
                    (org-get-at-bol 'day)
                    (time-to-days (current-time))))
            (sd (and sd (1- sd)))
@@ -999,7 +1010,7 @@ this with to-do items than with projects or headings."
       (org-agenda-redo)
       (org-agenda-find-same-or-today-or-agenda))
     (org-agenda-set-mode-name)
-    (message "Switched to %s view" 3))  
+    (message "Switched to %s view" 3))
 
   (defun init--org-agenda-mode ()
     (define-key org-agenda-mode-map "D" 'org-agenda-3-days-view)
@@ -1011,6 +1022,11 @@ this with to-do items than with projects or headings."
 
   (setq org-agenda-custom-commands
         '(("l" . "Context List")
+          ("lw" "Work"
+           ((tags-todo "work/GOING|PAUSE|TODO")))
+          ("lp" "Personal"
+           ((tags-todo "personal/GOING|PAUSE|TODO")))
+
           ("lh" "Home"
            ((tags-todo "@home/GOING|PAUSE|TODO")))
           ("le" "Errands"
@@ -1024,7 +1040,9 @@ this with to-do items than with projects or headings."
           ("lr" "Reading"
            ((tags-todo "@reading/GOING|PAUSE|TODO")))
           ("L" "Combined Context List"
-           ((tags-todo "@home/GOING|PAUSE|TODO")
+           ((tags-todo "work/GOING|PAUSE|TODO")
+            (tags-todo "personal/GOING|PAUSE|TODO")
+            (tags-todo "@home/GOING|PAUSE|TODO")
             (tags-todo "@errands/GOING|PAUSE|TODO")
             (tags-todo "@computer/GOING|PAUSE|TODO")
             (tags-todo "@phone/GOING|PAUSE|TODO")
@@ -1062,12 +1080,13 @@ this with to-do items than with projects or headings."
 
           ("p" "Projects" ((tags "project/-DONE-CANCELED") (stuck "")))
 
-          ("x" "Archive tags search" tags "" 
+          ("x" "Archive tags search" tags ""
            ((org-agenda-files (file-expand-wildcards (concat org-directory "/*.org_archive" )))))
           ("X" "Archive search" search ""
            ((org-agenda-files (file-expand-wildcards (concat org-directory "/*.org_archive" )))))
 
           ("g" "open dropbox/g" dired-g))))
+
 ```
 
 <a name="sec-7-17"></a>
@@ -1370,7 +1389,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
     (dired-details-install)
 
     (setq dired-omit-extensions
-          (append dired-user-omit-extensions    
+          (append dired-user-omit-extensions
                   dired-omit-extensions))
 
     (define-key dired-mode-map "E" 'wdired-change-to-wdired-mode)
@@ -1387,9 +1406,11 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   (autoload 'dired-jump "dired-x" "Jump to dired buffer corresponding to current buffer." t)
 
   (global-set-key (kbd "C-x C-j") 'dired-jump)
+  (global-set-key (kbd "C-x M-j") (lambda () (interactive)
+                                    (call-process "open" nil nil nil default-directory)))
   (add-hook 'dired-load-hook 'init--dired-load)
   (add-hook 'dired-mode-hook 'init--dired-mode)
-)
+  )
 ```
 
 <a name="sec-7-27"></a>
@@ -3740,12 +3761,11 @@ Functions to manage site iany.me
 
     (define-key key-translation-map (kbd "H-<tab>") (kbd "M-TAB"))
     (define-key key-translation-map (kbd "H-SPC") (kbd "M-SPC"))
-    ;; H-u, U-e, H-n, H-return
+
+    (require-package 'applescript-mode)
 
     (require-package 'dash-at-point)
     (define-key my-keymap "?" 'dash-at-point)
-
-    (global-set-key (kbd "C-M-z") 'delete-horizontal-space)
 
     (defvar mac--open-dictionary-hist)
     (defun mac--open-dictionary (the-word)
@@ -3759,6 +3779,15 @@ Functions to manage site iany.me
       (start-process "dash" nil "open" (concat "dict:///" the-word)))
 
     (global-set-key (kbd "s-l") 'mac--open-dictionary)
+
+    (defadvice case-dwim-capitalize (around ns-copy activate)
+      (if (region-active-p)
+          (ns-copy-including-secondary)
+        ad-do-it))
+    (defadvice scroll-down-command (around ns-paste (arg) activate)
+      (if (< (prefix-numeric-value arg) 0)
+          (yank)
+        ad-do-it))
 
     ;; for DEVONThink
     (add-to-list 'auto-mode-alist '("\\.scala\\.txt\\'" . scala-mode))

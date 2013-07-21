@@ -2012,7 +2012,7 @@ If there is none yet, so that it is run asynchronously."
     (toggle-read-only))
   (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
-  (defcustom compilation-defualt-mode-line-background "#2b2b2b"
+  (defcustom compilation-defualt-mode-line-background "#1e2320"
     "Default mode line background"
     :group 'compilation)
   (defcustom compilation-error-mode-line-background "#310602"

@@ -941,8 +941,6 @@ Opinioned GTD config based on org
                      ("@phone" . ?o)
                      ("@message" . ?m)
                      (:endgroup . nil)
-                     ("work" . ?w)
-                     ("personal" . ?p)
                      ("project" . ?x)
                      ("event" . ?v)
                      ("idea" . ?i)
@@ -1022,11 +1020,6 @@ Opinioned GTD config based on org
 
   (setq org-agenda-custom-commands
         '(("l" . "Context List")
-          ("lw" "Work"
-           ((tags-todo "work/GOING|PAUSE|TODO")))
-          ("lp" "Personal"
-           ((tags-todo "personal/GOING|PAUSE|TODO")))
-
           ("lh" "Home"
            ((tags-todo "@home/GOING|PAUSE|TODO")))
           ("le" "Errands"
@@ -1040,9 +1033,7 @@ Opinioned GTD config based on org
           ("lr" "Reading"
            ((tags-todo "@reading/GOING|PAUSE|TODO")))
           ("L" "Combined Context List"
-           ((tags-todo "work/GOING|PAUSE|TODO")
-            (tags-todo "personal/GOING|PAUSE|TODO")
-            (tags-todo "@home/GOING|PAUSE|TODO")
+           ((tags-todo "@home/GOING|PAUSE|TODO")
             (tags-todo "@errands/GOING|PAUSE|TODO")
             (tags-todo "@computer/GOING|PAUSE|TODO")
             (tags-todo "@phone/GOING|PAUSE|TODO")

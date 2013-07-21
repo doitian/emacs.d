@@ -361,6 +361,7 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
 #+BEGIN_SRC emacs-lisp
   (define-module movement-keybindings
     (global-set-key (kbd "M-g") 'goto-line)
+    (define-key my-keymap (kbd "M-g") 'what-line)
     (global-set-key (kbd "M-C-g") 'move-to-window-line-top-bottom)
   
     (global-set-key (kbd "M-F") 'forward-symbol)
@@ -418,6 +419,15 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
     (define-key my-keymap (kbd ":") 'iy-go-to-char-continue-backward)
   
     (global-set-key "\C-a" 'back-to-indentation-or-beginning))
+#+END_SRC
+
+** ace-jump
+
+#+BEGIN_SRC emacs-lisp
+  (define-module ace-jump
+    (require-package 'ace-jump-mode)
+    (define-key my-keymap "g" 'ace-jump-line-mode)
+    (define-key my-keymap (kbd "M-m") 'ace-jump-mode))
 #+END_SRC
 
 ** ido

@@ -191,18 +191,21 @@ custom.el if you prefer it.
   
    '(enable-recursive-minibuffers t)
    '(minibuffer-depth-indicate-mode t)
-   
+  
    '(tab-width 2)
    '(indent-tabs-mode nil)
    '(show-paren-mode t)
    '(fill-column 78)
-   
+  
    ;; '(delete-active-region 'kill)
    ;; '(delete-selection-mode t)
-
+  
    '(tags-add-tables nil)
-   
-   '(set-mark-command-repeat-pop t))
+  
+   '(set-mark-command-repeat-pop t)
+  
+   '(max-specpdl-size 2500)
+   '(max-lisp-eval-depth 1200))
 #+END_SRC
 
 ** File system
@@ -449,7 +452,7 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
   
     (custom-set-variables
      '(ido-enable-regexp nil)
-     '(ido-enable-flex-matching t)
+     '(ido-enable-flex-matching nil)
      '(ido-everywhere t)
      '(ido-read-file-name-as-directory-commands nil)
      '(ido-use-filename-at-point nil))
@@ -756,7 +759,7 @@ Opinioned GTD config based on org
      '(org-agenda-time-grid
        '((daily today require-timed remove-match)
          "----------------"
-         (930 1000 1200 1400 1600 1800 2000 2200 2400 2500)))
+         (700 800 900 1000 1100 1400 1500 1600 2000 2200)))
      '(org-todo-keywords
        '((sequence "TODO(t)" "GOING(g)" "PAUSE(p)" "WAITING(w@)" "LATER(l)"
                    "|" "DONE(d!/@)" "SOMEDAY(s)" "CANCELED(c@)")))
@@ -2679,13 +2682,14 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
 
 ** css
 
-css, sass, scss
+css, sass, scss, stylus
 
 #+BEGIN_SRC emacs-lisp
   (define-module css
     (require-module haml-mode)
     (require-package 'scss-mode)
     (require-package 'sass-mode)
+    (require-package 'stylus-mode)
   
     (custom-set-variables
      '(scss-compile-at-save nil))
@@ -2701,11 +2705,15 @@ css, sass, scss
     (add-hook 'sass-mode-hook 'init--sass-load))
 #+END_SRC
 
-** haml-mode
+** html-template-modes
 
 #+BEGIN_SRC emacs-lisp
-  (define-module haml-mode
-    (require-package 'haml-mode))
+  (define-module html-template-modes
+    (require-package 'haml-mode)
+    (require-package 'slim-mode)
+    (require-package 'handlebars-mode)
+    (add-to-list 'auto-mode-alist '("\\.handlebars$" . handlebars-mode))
+    (add-to-list 'auto-mode-alist '("\\.hbs$" . handlebars-mode)))
 #+END_SRC
 
 ** yaml-mode
@@ -3084,6 +3092,52 @@ Install =emacs-rails= using =make vendor=
     (define-key ctl-x-r-map "U" 'undo-tree-restore-state-from-register))
 #+END_SRC
 
+** js-mode
+#+BEGIN_SRC emacs-lisp
+  (define-module js-mode
+    (custom-set-variables
+     '(js-indent-level 2)
+     '(js-expr-indent-offset 2)
+     '(js-enabled-frameworks nil)
+     '(inf-mongo-command "mongo"))
+  
+    (require-package 'inf-mongo)
+  
+    (defun moz-eval-statement-or-region ()
+      "Send the previous statement to the inferior Mongo process."
+      (interactive)
+      (save-window-excursion
+        (save-excursion
+          (unless (region-active-p)
+            (thing-region "sentence"))
+          (moz-send-region (mark) (point))))
+      (display-buffer (process-buffer (inferior-moz-process))))
+    (defun init--moz-minor-mode-load ()
+      (define-key moz-minor-mode-map (kbd "C-M-x") 'moz-eval-statement-or-region)
+      (define-key moz-minor-mode-map (kbd "C-x C-e") 'moz-eval-statement-or-region)
+      (remove-hook 'moz-minor-mode-hook 'init--moz-minor-mode-load))
+    (add-hook 'moz-minor-mode-hook 'init--moz-minor-mode-load)
+  
+    (defun mongo-eval-statement-or-region ()
+      "Send the previous statement to the inferior Mongo process."
+      (interactive)
+      (save-window-excursion
+        (save-excursion
+          (unless (region-active-p)
+            (thing-region "sentence"))
+          (mongo-send-region (mark) (point))))
+      (display-buffer inf-mongo-buffer))
+  
+    (defvar mongo-minor-mode-map
+      (let ((map (make-sparse-keymap)))
+        (define-key map (kbd "C-M-x") 'mongo-eval-statement-or-region)
+        (define-key map (kbd "C-x C-e") 'mongo-eval-statement-or-region)
+        map))
+  
+    (define-minor-mode mongo-minor-mode
+      "Eval commands in mongo shell"
+      nil " mongo" mongo-minor-mode-map))
+#+END_SRC
 ** coffee-mode
 
 #+BEGIN_SRC emacs-lisp
@@ -3386,52 +3440,6 @@ Install [[https://github.com/aemoncannon/ensime][ensime]] using =make vendor=
                  ("\\.[rR]nw\\'"      . Rnw-mode))
                auto-mode-alist)))))
 #+END_SRC
-** js-mode
-#+BEGIN_SRC emacs-lisp
-  (define-module js-mode
-    (custom-set-variables
-     '(js-indent-level 2)
-     '(js-expr-indent-offset 2)
-     '(js-enabled-frameworks nil)
-     '(inf-mongo-command "mongo"))
-  
-    (require-package 'inf-mongo)
-  
-    (defun moz-eval-statement-or-region ()
-      "Send the previous statement to the inferior Mongo process."
-      (interactive)
-      (save-window-excursion
-        (save-excursion
-          (unless (region-active-p)
-            (thing-region "sentence"))
-          (moz-send-region (mark) (point))))
-      (display-buffer (process-buffer (inferior-moz-process))))
-    (defun init--moz-minor-mode-load ()
-      (define-key moz-minor-mode-map (kbd "C-M-x") 'moz-eval-statement-or-region)
-      (define-key moz-minor-mode-map (kbd "C-x C-e") 'moz-eval-statement-or-region)
-      (remove-hook 'moz-minor-mode-hook 'init--moz-minor-mode-load))
-    (add-hook 'moz-minor-mode-hook 'init--moz-minor-mode-load)
-  
-    (defun mongo-eval-statement-or-region ()
-      "Send the previous statement to the inferior Mongo process."
-      (interactive)
-      (save-window-excursion
-        (save-excursion
-          (unless (region-active-p)
-            (thing-region "sentence"))
-          (mongo-send-region (mark) (point))))
-      (display-buffer inf-mongo-buffer))
-  
-    (defvar mongo-minor-mode-map
-      (let ((map (make-sparse-keymap)))
-        (define-key map (kbd "C-M-x") 'mongo-eval-statement-or-region)
-        (define-key map (kbd "C-x C-e") 'mongo-eval-statement-or-region)
-        map))
-  
-    (define-minor-mode mongo-minor-mode
-      "Eval commands in mongo shell"
-      nil " mongo" mongo-minor-mode-map))
-#+END_SRC
 ** ianyme
 Functions to manage site iany.me
 #+BEGIN_SRC emacs-lisp
@@ -3678,13 +3686,6 @@ Functions to manage site iany.me
     (require-package 'erlang))
 #+END_SRC
 
-** slim
-
-#+BEGIN_SRC emacs-lisp
-  (define-module slim
-    (require-package 'slim-mode))
-#+END_SRC
-
 ** sgml
 
 #+BEGIN_SRC emacs-lisp
@@ -3712,13 +3713,6 @@ Functions to manage site iany.me
     (require-package 'haskell-mode)
     (custom-set-variables
      '(haskell-mode-hook '(turn-on-haskell-indentation))))
-#+END_SRC
-
-** handlebars-mode
-
-#+BEGIN_SRC emacs-lisp
-  (define-module handlebars-mode
-    (require-package 'handlebars-mode))
 #+END_SRC
 
 ** mediawiki

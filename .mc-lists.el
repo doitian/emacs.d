@@ -4,6 +4,7 @@
 (setq mc/cmds-to-run-for-all
       '(
         back-to-indentation-or-beginning
+        backward-delete-char
         c-electric-delete-forward
         c-electric-paren
         c-electric-semi&comma

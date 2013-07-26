@@ -93,7 +93,7 @@
 <li><a href="#sec-7-64">7.64. deft</a></li>
 <li><a href="#sec-7-65">7.65. mail</a></li>
 <li><a href="#sec-7-66">7.66. css</a></li>
-<li><a href="#sec-7-67">7.67. haml-mode</a></li>
+<li><a href="#sec-7-67">7.67. html-template-modes</a></li>
 <li><a href="#sec-7-68">7.68. yaml-mode</a></li>
 <li><a href="#sec-7-69">7.69. rainbow-mode</a></li>
 <li><a href="#sec-7-70">7.70. markdown-mode</a></li>
@@ -110,27 +110,25 @@
 <li><a href="#sec-7-81">7.81. diminish</a></li>
 <li><a href="#sec-7-82">7.82. dtrt-indent</a></li>
 <li><a href="#sec-7-83">7.83. undo-tree</a></li>
-<li><a href="#sec-7-84">7.84. coffee-mode</a></li>
-<li><a href="#sec-7-85">7.85. c-mode</a></li>
-<li><a href="#sec-7-86">7.86. win-move-resize</a></li>
-<li><a href="#sec-7-87">7.87. scala-mode</a></li>
-<li><a href="#sec-7-88">7.88. visual-regexp</a></li>
-<li><a href="#sec-7-89">7.89. eclim</a></li>
-<li><a href="#sec-7-90">7.90. ensime</a></li>
-<li><a href="#sec-7-91">7.91. ess</a></li>
-<li><a href="#sec-7-92">7.92. js-mode</a></li>
+<li><a href="#sec-7-84">7.84. js-mode</a></li>
+<li><a href="#sec-7-85">7.85. coffee-mode</a></li>
+<li><a href="#sec-7-86">7.86. c-mode</a></li>
+<li><a href="#sec-7-87">7.87. win-move-resize</a></li>
+<li><a href="#sec-7-88">7.88. scala-mode</a></li>
+<li><a href="#sec-7-89">7.89. visual-regexp</a></li>
+<li><a href="#sec-7-90">7.90. eclim</a></li>
+<li><a href="#sec-7-91">7.91. ensime</a></li>
+<li><a href="#sec-7-92">7.92. ess</a></li>
 <li><a href="#sec-7-93">7.93. ianyme</a></li>
 <li><a href="#sec-7-94">7.94. mac</a></li>
 <li><a href="#sec-7-95">7.95. cscope</a></li>
 <li><a href="#sec-7-96">7.96. folding</a></li>
 <li><a href="#sec-7-97">7.97. erlang</a></li>
-<li><a href="#sec-7-98">7.98. slim</a></li>
-<li><a href="#sec-7-99">7.99. sgml</a></li>
-<li><a href="#sec-7-100">7.100. sh-mode</a></li>
-<li><a href="#sec-7-101">7.101. haskell-mode</a></li>
-<li><a href="#sec-7-102">7.102. handlebars-mode</a></li>
-<li><a href="#sec-7-103">7.103. mediawiki</a></li>
-<li><a href="#sec-7-104">7.104. server</a></li>
+<li><a href="#sec-7-98">7.98. sgml</a></li>
+<li><a href="#sec-7-99">7.99. sh-mode</a></li>
+<li><a href="#sec-7-100">7.100. haskell-mode</a></li>
+<li><a href="#sec-7-101">7.101. mediawiki</a></li>
+<li><a href="#sec-7-102">7.102. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -349,7 +347,10 @@ custom.el if you prefer it.
 
  '(tags-add-tables nil)
 
- '(set-mark-command-repeat-pop t))
+ '(set-mark-command-repeat-pop t)
+
+ '(max-specpdl-size 2500)
+ '(max-lisp-eval-depth 1200))
 ```
 
 <a name="sec-5-2"></a>
@@ -618,7 +619,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
 
   (custom-set-variables
    '(ido-enable-regexp nil)
-   '(ido-enable-flex-matching t)
+   '(ido-enable-flex-matching nil)
    '(ido-everywhere t)
    '(ido-read-file-name-as-directory-commands nil)
    '(ido-use-filename-at-point nil))
@@ -933,7 +934,7 @@ Opinioned GTD config based on org
    '(org-agenda-time-grid
      '((daily today require-timed remove-match)
        "----------------"
-       (930 1000 1200 1400 1600 1800 2000 2200 2400 2500)))
+       (700 800 900 1000 1100 1400 1500 1600 2000 2200)))
    '(org-todo-keywords
      '((sequence "TODO(t)" "GOING(g)" "PAUSE(p)" "WAITING(w@)" "LATER(l)"
                  "|" "DONE(d!/@)" "SOMEDAY(s)" "CANCELED(c@)")))
@@ -2934,13 +2935,14 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
 <a name="sec-7-66"></a>
 ## css
 
-css, sass, scss
+css, sass, scss, stylus
 
 ```cl
 (define-module css
   (require-module haml-mode)
   (require-package 'scss-mode)
   (require-package 'sass-mode)
+  (require-package 'stylus-mode)
 
   (custom-set-variables
    '(scss-compile-at-save nil))
@@ -2957,11 +2959,15 @@ css, sass, scss
 ```
 
 <a name="sec-7-67"></a>
-## haml-mode
+## html-template-modes
 
 ```cl
-(define-module haml-mode
-  (require-package 'haml-mode))
+(define-module html-template-modes
+  (require-package 'haml-mode)
+  (require-package 'slim-mode)
+  (require-package 'handlebars-mode)
+  (add-to-list 'auto-mode-alist '("\\.handlebars$" . handlebars-mode))
+  (add-to-list 'auto-mode-alist '("\\.hbs$" . handlebars-mode)))
 ```
 
 <a name="sec-7-68"></a>
@@ -3360,6 +3366,55 @@ Install `emacs-rails` using `make vendor`
 ```
 
 <a name="sec-7-84"></a>
+## js-mode
+
+```cl
+(define-module js-mode
+  (custom-set-variables
+   '(js-indent-level 2)
+   '(js-expr-indent-offset 2)
+   '(js-enabled-frameworks nil)
+   '(inf-mongo-command "mongo"))
+
+  (require-package 'inf-mongo)
+
+  (defun moz-eval-statement-or-region ()
+    "Send the previous statement to the inferior Mongo process."
+    (interactive)
+    (save-window-excursion
+      (save-excursion
+        (unless (region-active-p)
+          (thing-region "sentence"))
+        (moz-send-region (mark) (point))))
+    (display-buffer (process-buffer (inferior-moz-process))))
+  (defun init--moz-minor-mode-load ()
+    (define-key moz-minor-mode-map (kbd "C-M-x") 'moz-eval-statement-or-region)
+    (define-key moz-minor-mode-map (kbd "C-x C-e") 'moz-eval-statement-or-region)
+    (remove-hook 'moz-minor-mode-hook 'init--moz-minor-mode-load))
+  (add-hook 'moz-minor-mode-hook 'init--moz-minor-mode-load)
+
+  (defun mongo-eval-statement-or-region ()
+    "Send the previous statement to the inferior Mongo process."
+    (interactive)
+    (save-window-excursion
+      (save-excursion
+        (unless (region-active-p)
+          (thing-region "sentence"))
+        (mongo-send-region (mark) (point))))
+    (display-buffer inf-mongo-buffer))
+
+  (defvar mongo-minor-mode-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "C-M-x") 'mongo-eval-statement-or-region)
+      (define-key map (kbd "C-x C-e") 'mongo-eval-statement-or-region)
+      map))
+
+  (define-minor-mode mongo-minor-mode
+    "Eval commands in mongo shell"
+    nil " mongo" mongo-minor-mode-map))
+```
+
+<a name="sec-7-85"></a>
 ## coffee-mode
 
 ```cl
@@ -3367,7 +3422,7 @@ Install `emacs-rails` using `make vendor`
   (require-package 'coffee-mode))
 ```
 
-<a name="sec-7-85"></a>
+<a name="sec-7-86"></a>
 ## c-mode
 
 ```cl
@@ -3476,7 +3531,7 @@ Install `emacs-rails` using `make vendor`
   (add-hook 'c-mode-common-hook 'init--c-mode-common))
 ```
 
-<a name="sec-7-86"></a>
+<a name="sec-7-87"></a>
 ## win-move-resize
 
 ```cl
@@ -3514,7 +3569,7 @@ Install `emacs-rails` using `make vendor`
   (temporary-mode-define-keys my-keymap 'win-move-resize))
 ```
 
-<a name="sec-7-87"></a>
+<a name="sec-7-88"></a>
 ## scala-mode
 
 ```cl
@@ -3538,7 +3593,7 @@ Install `emacs-rails` using `make vendor`
   (add-hook 'scala-mode-hook 'init--scala-mode))
 ```
 
-<a name="sec-7-88"></a>
+<a name="sec-7-89"></a>
 ## visual-regexp
 
 ```cl
@@ -3549,7 +3604,7 @@ Install `emacs-rails` using `make vendor`
   (define-key my-keymap (kbd "v q") 'vr/query-replace))
 ```
 
-<a name="sec-7-89"></a>
+<a name="sec-7-90"></a>
 ## eclim
 
 ```cl
@@ -3600,7 +3655,7 @@ Install `emacs-rails` using `make vendor`
           (buffer-list))))
 ```
 
-<a name="sec-7-90"></a>
+<a name="sec-7-91"></a>
 ## ensime
 
 Add [ENSIME-sbt-cmd](https://github.com/aemoncannon/ensime-sbt-cmd) in `~/.sbt/plugins/plugins.sbt`
@@ -3658,7 +3713,7 @@ Install [ensime](https://github.com/aemoncannon/ensime) using `make vendor`
       (ensime-shutdown))))
 ```
 
-<a name="sec-7-91"></a>
+<a name="sec-7-92"></a>
 ## ess
 
 ```cl
@@ -3675,55 +3730,6 @@ Install [ensime](https://github.com/aemoncannon/ensime) using `make vendor`
              '(("\\.[rR]\\'"        . R-mode)
                ("\\.[rR]nw\\'"      . Rnw-mode))
              auto-mode-alist)))))
-```
-
-<a name="sec-7-92"></a>
-## js-mode
-
-```cl
-(define-module js-mode
-  (custom-set-variables
-   '(js-indent-level 2)
-   '(js-expr-indent-offset 2)
-   '(js-enabled-frameworks nil)
-   '(inf-mongo-command "mongo"))
-
-  (require-package 'inf-mongo)
-
-  (defun moz-eval-statement-or-region ()
-    "Send the previous statement to the inferior Mongo process."
-    (interactive)
-    (save-window-excursion
-      (save-excursion
-        (unless (region-active-p)
-          (thing-region "sentence"))
-        (moz-send-region (mark) (point))))
-    (display-buffer (process-buffer (inferior-moz-process))))
-  (defun init--moz-minor-mode-load ()
-    (define-key moz-minor-mode-map (kbd "C-M-x") 'moz-eval-statement-or-region)
-    (define-key moz-minor-mode-map (kbd "C-x C-e") 'moz-eval-statement-or-region)
-    (remove-hook 'moz-minor-mode-hook 'init--moz-minor-mode-load))
-  (add-hook 'moz-minor-mode-hook 'init--moz-minor-mode-load)
-
-  (defun mongo-eval-statement-or-region ()
-    "Send the previous statement to the inferior Mongo process."
-    (interactive)
-    (save-window-excursion
-      (save-excursion
-        (unless (region-active-p)
-          (thing-region "sentence"))
-        (mongo-send-region (mark) (point))))
-    (display-buffer inf-mongo-buffer))
-
-  (defvar mongo-minor-mode-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "C-M-x") 'mongo-eval-statement-or-region)
-      (define-key map (kbd "C-x C-e") 'mongo-eval-statement-or-region)
-      map))
-
-  (define-minor-mode mongo-minor-mode
-    "Eval commands in mongo shell"
-    nil " mongo" mongo-minor-mode-map))
 ```
 
 <a name="sec-7-93"></a>
@@ -3983,14 +3989,6 @@ Functions to manage site iany.me
 ```
 
 <a name="sec-7-98"></a>
-## slim
-
-```cl
-(define-module slim
-  (require-package 'slim-mode))
-```
-
-<a name="sec-7-99"></a>
 ## sgml
 
 ```cl
@@ -4004,7 +4002,7 @@ Functions to manage site iany.me
   (add-hook 'sgml-mode-hook 'init--sgml-mode))
 ```
 
-<a name="sec-7-100"></a>
+<a name="sec-7-99"></a>
 ## sh-mode
 
 ```cl
@@ -4012,7 +4010,7 @@ Functions to manage site iany.me
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode)))
 ```
 
-<a name="sec-7-101"></a>
+<a name="sec-7-100"></a>
 ## haskell-mode
 
 ```cl
@@ -4022,15 +4020,7 @@ Functions to manage site iany.me
    '(haskell-mode-hook '(turn-on-haskell-indentation))))
 ```
 
-<a name="sec-7-102"></a>
-## handlebars-mode
-
-```cl
-(define-module handlebars-mode
-  (require-package 'handlebars-mode))
-```
-
-<a name="sec-7-103"></a>
+<a name="sec-7-101"></a>
 ## mediawiki
 
 ```cl
@@ -4040,7 +4030,7 @@ Functions to manage site iany.me
   (autoload 'mediawiki-mode "mediawiki" nil t))
 ```
 
-<a name="sec-7-104"></a>
+<a name="sec-7-102"></a>
 ## server
 
 Start emacs server.

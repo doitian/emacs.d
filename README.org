@@ -1782,13 +1782,6 @@ Auto revert, and helper functions to revert without confirmation.
     )
 #+END_SRC
 
-** octave-mode
-
-#+BEGIN_SRC emacs-lisp
-  (define-module octave-mode
-    (add-to-list 'auto-mode-alist '("\\.m\\'" . octave-mode)))
-#+END_SRC
-
 ** compile-and-run
 
 #+BEGIN_SRC emacs-lisp
@@ -2295,7 +2288,17 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
 #+BEGIN_SRC emacs-lisp
   (define-module prog-mode-generic
     (add-hook 'prog-mode-hook 'subword-mode)
-    (add-hook 'prog-mode-hook 'electric-pair-mode))
+    (add-hook 'prog-mode-hook 'electric-pair-mode)
+  
+    (defun font-lock-comment-annotations ()
+      "Highlight a bunch of well known comment annotations.
+  
+  This functions should be added to the hooks of major modes for programming."
+      (font-lock-add-keywords
+       nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|OPTIMIZE\\|HACK\\|REFACTOR\\):"
+              1 font-lock-warning-face t))))
+  
+    (add-hook 'prog-mode-hook 'font-lock-comment-annotations))
 #+END_SRC
 ** auto-insert
 #+BEGIN_SRC emacs-lisp
@@ -3250,6 +3253,22 @@ Install =emacs-rails= using =make vendor=
       (local-set-key (kbd "C-M-a") 'c-beginning-of-defun)
       (local-set-key (kbd "C-M-e") 'c-end-of-defun))
   
+    (defun bh-choose-header-mode ()
+      (interactive)
+      (if (string-equal (substring (buffer-file-name) -2) ".h")
+          (progn
+            ;; OK, we got a .h file, if a .m file exists we'll assume it's
+            ;; an objective c file. Otherwise, we'll look for a .cpp file.
+            (let ((dot-m-file (concat (substring (buffer-file-name) 0 -1) "m"))
+                  (dot-cpp-file (concat (substring (buffer-file-name) 0 -1) "cpp")))
+              (if (file-exists-p dot-m-file)
+                  (progn
+                    (objc-mode)
+                    )
+                (if (file-exists-p dot-cpp-file)
+                    (c++-mode)))))))
+  
+    (add-hook 'find-file-hook 'bh-choose-header-mode)
     (add-hook 'c-mode-common-hook 'init--c-mode-common))
 #+END_SRC
 

@@ -2683,13 +2683,24 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
     (add-hook 'server-visit-hook 'init--mutt-compose))
 #+END_SRC
 
+** html-template-modes
+
+#+BEGIN_SRC emacs-lisp
+  (define-module html-template-modes
+    (require-package 'haml-mode)
+    (require-package 'slim-mode)
+    (require-package 'handlebars-mode)
+    (add-to-list 'auto-mode-alist '("\\.handlebars$" . handlebars-mode))
+    (add-to-list 'auto-mode-alist '("\\.hbs$" . handlebars-mode)))
+#+END_SRC
+
 ** css
 
 css, sass, scss, stylus
 
 #+BEGIN_SRC emacs-lisp
   (define-module css
-    (require-module haml-mode)
+    (require-module html-template-modes)
     (require-package 'scss-mode)
     (require-package 'sass-mode)
     (require-package 'stylus-mode)
@@ -2706,17 +2717,6 @@ css, sass, scss, stylus
       (remove-hook 'sass-mode-hook 'init--sass-load))
   
     (add-hook 'sass-mode-hook 'init--sass-load))
-#+END_SRC
-
-** html-template-modes
-
-#+BEGIN_SRC emacs-lisp
-  (define-module html-template-modes
-    (require-package 'haml-mode)
-    (require-package 'slim-mode)
-    (require-package 'handlebars-mode)
-    (add-to-list 'auto-mode-alist '("\\.handlebars$" . handlebars-mode))
-    (add-to-list 'auto-mode-alist '("\\.hbs$" . handlebars-mode)))
 #+END_SRC
 
 ** yaml-mode

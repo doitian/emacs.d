@@ -91,8 +91,8 @@
 <li><a href="#sec-7-62">7.62. ibuffer-mode</a></li>
 <li><a href="#sec-7-63">7.63. deft</a></li>
 <li><a href="#sec-7-64">7.64. mail</a></li>
-<li><a href="#sec-7-65">7.65. css</a></li>
-<li><a href="#sec-7-66">7.66. html-template-modes</a></li>
+<li><a href="#sec-7-65">7.65. html-template-modes</a></li>
+<li><a href="#sec-7-66">7.66. css</a></li>
 <li><a href="#sec-7-67">7.67. yaml-mode</a></li>
 <li><a href="#sec-7-68">7.68. rainbow-mode</a></li>
 <li><a href="#sec-7-69">7.69. markdown-mode</a></li>
@@ -2934,13 +2934,25 @@ This functions should be added to the hooks of major modes for programming."
 ```
 
 <a name="sec-7-65"></a>
+## html-template-modes
+
+```cl
+(define-module html-template-modes
+  (require-package 'haml-mode)
+  (require-package 'slim-mode)
+  (require-package 'handlebars-mode)
+  (add-to-list 'auto-mode-alist '("\\.handlebars$" . handlebars-mode))
+  (add-to-list 'auto-mode-alist '("\\.hbs$" . handlebars-mode)))
+```
+
+<a name="sec-7-66"></a>
 ## css
 
 css, sass, scss, stylus
 
 ```cl
 (define-module css
-  (require-module haml-mode)
+  (require-module html-template-modes)
   (require-package 'scss-mode)
   (require-package 'sass-mode)
   (require-package 'stylus-mode)
@@ -2957,18 +2969,6 @@ css, sass, scss, stylus
     (remove-hook 'sass-mode-hook 'init--sass-load))
 
   (add-hook 'sass-mode-hook 'init--sass-load))
-```
-
-<a name="sec-7-66"></a>
-## html-template-modes
-
-```cl
-(define-module html-template-modes
-  (require-package 'haml-mode)
-  (require-package 'slim-mode)
-  (require-package 'handlebars-mode)
-  (add-to-list 'auto-mode-alist '("\\.handlebars$" . handlebars-mode))
-  (add-to-list 'auto-mode-alist '("\\.hbs$" . handlebars-mode)))
 ```
 
 <a name="sec-7-67"></a>

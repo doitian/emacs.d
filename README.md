@@ -859,6 +859,8 @@ Capture template
       "* TODO %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i")
      ("j" "Journal" plain (file+datetree (concat org-directory "/journal.org"))
       "\n%?\n" :empty-lines 1)
+     ("m" "Management" plain (file+datetree (concat org-directory "/management.org"))
+      "\n%?\n" :empty-lines 1)
      ("p" "Pomodoro" plain (file+datetree (concat org-directory "/pomodoro.org"))
       "\n%?\n" :empty-lines 1)
      ("d" "Dump" plain (file+olp (concat org-directory "/inbox.org") "Quick Notes" "Plain")
@@ -2958,7 +2960,8 @@ css, sass, scss, stylus
   (require-package 'stylus-mode)
 
   (custom-set-variables
-   '(scss-compile-at-save nil))
+   '(scss-compile-at-save nil)
+   '(css-indent-offset 2))
 
   (defun init--sass-load ()
     ;; do not indent after CSS attribute

@@ -2714,6 +2714,7 @@ This functions should be added to the hooks of major modes for programming."
 ```cl
 (define-module search-files
   (require-package 'ag)
+  (require-package 'wgrep-ag)
 
   (define-key my-keymap (kbd "o") 'occur)
   (define-key my-keymap (kbd "O") 'multi-occur)

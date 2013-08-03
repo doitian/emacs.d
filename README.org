@@ -2470,6 +2470,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
 #+BEGIN_SRC emacs-lisp
   (define-module search-files
     (require-package 'ag)
+    (require-package 'wgrep-ag)
   
     (define-key my-keymap (kbd "o") 'occur)
     (define-key my-keymap (kbd "O") 'multi-occur)

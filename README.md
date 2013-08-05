@@ -624,6 +624,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
    '(ido-use-filename-at-point nil))
 
   (require-package 'flx)
+  (require-package 'flx-ido)
   (require-package 'ido-hacks)
   (require-package 'ido-complete-space-or-hyphen)
 
@@ -3014,6 +3015,18 @@ css, sass, scss, stylus
       (markdown-demote)
       (outline-next-visible-heading)))
 
+  (defun markdown-preview-in-marked (&optional file)
+    "Preview FILE in Marked.app"
+    (interactive)
+    (setq file (or file (buffer-file-name)))
+    (start-process "*marked" nil "open" "-a" "Marked" file))
+
+  (defun init--markdown-mode-mac ()
+    (local-set-key (kbd "C-c C-c p") 'markdown-preview-in-marked))
+
+  (when (eq system-type 'darwin)
+    (add-hook 'markdown-mode-hook 'init--markdown-mode-mac))
+
   (add-hook 'markdown-mode-hook 'auto-fill-mode))
 ```
 
@@ -3790,7 +3803,6 @@ Functions to manage site iany.me
     (defalias 'mdfind 'locate)
 
     (define-key key-translation-map (kbd "H-<tab>") (kbd "M-TAB"))
-    (define-key key-translation-map (kbd "H-SPC") (kbd "M-SPC"))
 
     (require-package 'applescript-mode)
 
@@ -3806,9 +3818,9 @@ Functions to manage site iany.me
                                (format "Dictionary Lookup (%s): " wap)
                                nil nil nil 'mac--open-dictionary-hist)))
                       (if (zerop (length w)) wap w))))
-      (start-process "dash" nil "open" (concat "dict:///" the-word)))
+      (start-process "dict" nil "open" (concat "dict:///" the-word)))
 
-    (global-set-key (kbd "s-l") 'mac--open-dictionary)
+    (global-set-key (kbd "H-SPC") 'mac--open-dictionary)
 
     (defadvice case-dwim-capitalize (around ns-copy activate)
       (if (region-active-p)

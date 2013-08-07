@@ -493,9 +493,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   (define-key key-translation-map [?\C-h] [?\C-?])
   (define-key key-translation-map [?\M-r] [?\C-\M-?])
   (global-set-key (kbd "<backspace>") 'backward-delete-char)
-  (global-set-key (kbd "M-<backspace>") '(lambda ()
-                                         (interactive)
-                                         (error "Use M-r"))))
+  (global-set-key (kbd "M-<backspace>") 'backward-kill-word))
 ```
 
 <a name="sec-7-4"></a>

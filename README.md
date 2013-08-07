@@ -2109,11 +2109,19 @@ If there is none yet, so that it is run asynchronously."
               (:description . "Compile Objective-C file with gcc and execute"))
      :override t))
 
+  (defun init--new-scratch (&optional extension)
+    "Create a temporary file with given EXTENSION."
+    (interactive "sextension: ")
+    (find-file (make-temp-file "scratch-" nil
+                               (concat "." (or extension "txt")))))
+
   (global-set-key [f5] 'compile)
+  (define-key my-keymap (kbd "5") 'compile)
   (define-key my-keymap (kbd "M-c") 'recompile)
 
   (define-key my-keymap (kbd "c") 'quickrun-compile-only)
   (define-key my-keymap (kbd "x") 'quickrun)
+  (define-key my-keymap (kbd "M-x") 'init--new-scratch)
   (global-set-key (kbd "C-1") 'run-or-replace-template)
   (define-key my-keymap (kbd "1") 'run-or-replace-template)
   (global-set-key (kbd "C-`") 'next-error)

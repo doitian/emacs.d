@@ -3100,7 +3100,6 @@ css, sass, scss, stylus
 
   (require-package 'ruby-end)
   (require-package 'yari)
-
   (defalias 'ri 'yari)
 
   (defun init--ruby-mode ()
@@ -3291,8 +3290,7 @@ Install `emacs-rails` using `make vendor`
 
 ```cl
 (define-module speedbar
-  (global-set-key (kbd "C-<f7>") 'speedbar-get-focus)
-  (global-set-key (kbd "<ESC> <f7>") 'speedbar-get-focus)
+  (global-set-key (kbd "<f8>") 'speedbar-get-focus)
 
   (custom-set-variables
    '(speedbar-frame-parameters '((minibuffer . nil)

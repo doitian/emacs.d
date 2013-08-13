@@ -970,7 +970,7 @@ Opinioned GTD config based on org
        ("GOING") ("next") ""))
    '(org-tags-exclude-from-inheritance '("project"))
    '(org-columns-default-format
-     "%42ITEM %TODO %3Effort(E){:} %3CLOCKSUM_T(R) %SCHEDULED")))
+     "%42ITEM %TODO %3Effort(E){:} %3CLOCKSUM(R) %SCHEDULED")))
 ```
 
 <a name="sec-7-17"></a>
@@ -3825,6 +3825,10 @@ Functions to manage site iany.me
       (start-process "dict" nil "open" (concat "dict:///" the-word)))
 
     (global-set-key (kbd "H-SPC") 'mac--open-dictionary)
+    (global-set-key (kbd "H-v") 'scroll-down-command)
+    (global-set-key (kbd "M-v") 'yank)
+    (global-set-key (kbd "H-V") 'scroll-up-command)
+    (global-set-key (kbd "C-S-v") 'scroll-down-command)
 
     (defadvice case-dwim-capitalize (around ns-copy activate)
       (if (region-active-p)

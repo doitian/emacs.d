@@ -7,7 +7,7 @@ else
   VC_GIT_PATH := -L /usr/local/Cellar/git/1.8.3.1/share/git-core/contrib/emacs -L /Applications/Emacs.app/Contents/Resources/lisp/vc
 endif
 
-BATCH := $(EMACS) -batch -q -no-site-file -L site-lisp
+BATCH := $(EMACS) -batch -q -no-site-file -L site-lisp -L vendor/confluence-el
 # -eval "(setq max-specpdl-size 2000 max-lisp-eval-depth 1000)"
 
 ELC := $(BATCH) -f batch-byte-compile
@@ -37,6 +37,11 @@ ESS_DOWNLOAD_URL := http://ess.r-project.org/downloads/ess/$(ESS_TARBALL)
 YAS_DIR := $(firstword $(wildcard elpa/yasnippet-*))
 YAS_SUBDIRS = $(wildcard snippets/*)
 YAS_COMPILED = $(YAS_SUBDIRS:%=%/.yas-compiled-snippets.el)
+
+CONFLUENCE_VERSION := 1.6
+CONFLUENCE_PKGNAME := confluence-el
+CONFLUENCE_TARBALL := $(CONFLUENCE_PKGNAME)-$(CONFLUENCE_VERSION).tar.gz
+CONFLUENCE_DOWNLOAD_URL := https://confluence-el.googlecode.com/files/$(CONFLUENCE_TARBALL)
 
 all: init.elc
 
@@ -78,9 +83,9 @@ snippets-clean:
 clean:
 	rm -rf init.el site-lisp/my-loaddefs.el $(ELCFILES)
 
-vendor-clean: org-clean git-emacs-clean emacs-rails-clean ensime-clean ess-clean
+vendor-clean: org-clean git-emacs-clean emacs-rails-clean ensime-clean ess-clean confluence-clean
 
-vendor: org git-emacs emacs-rails ensime ess
+vendor: org git-emacs emacs-rails ensime ess confluence
 
 org: vendor/$(ORG_PKGNAME)/lisp/org-loaddefs.el
 
@@ -145,6 +150,17 @@ vendor/git-emacs/git-emacs.el vendor/emacs-rails/rails.el:
 	git submodule init
 	git submodule update
 
+confluence: vendor/$(CONFLUENCE_PKGNAME)/confluence.elc vendor/$(CONFLUENCE_PKGNAME)/confluence-edit.elc vendor/$(CONFLUENCE_PKGNAME)/confluence-xml-edit.elc vendor/$(CONFLUENCE_PKGNAME)/xml-rpc.elc
+
+confluence-clean:
+	rm -rf tmp/confluence-* vendor/confluence-*
+
+vendor/$(CONFLUENCE_PKGNAME)/confluence.el vendor/$(CONFLUENCE_PKGNAME)/confluence-edit.el vendor/$(CONFLUENCE_PKGNAME)/confluence-xml-edit.el vendor/$(CONFLUENCE_PKGNAME)/xml-rpc.el: tmp/${CONFLUENCE_TARBALL}
+	tar -xzf $< -C vendor
+
+tmp/${CONFLUENCE_TARBALL}:
+	curl -o $@ ${CONFLUENCE_DOWNLOAD_URL}
+
 verify: init.elc
 	$(EMACS) --debug-init -q -eval "(setq module-black-list '(server))" -l ./init.elc -f module-initialize
 
@@ -185,3 +201,4 @@ update: elpa-update site-lisp-update
 .PHONY: cartonize
 .PHONY: elpa elpa-update site-lisp-update update
 .PHONY: ensime-clean ensime ess ess-clean
+.PHONY: confluence-clean confluence

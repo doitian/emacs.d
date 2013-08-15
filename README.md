@@ -126,7 +126,7 @@
 <li><a href="#sec-7-97">7.97. sgml</a></li>
 <li><a href="#sec-7-98">7.98. sh-mode</a></li>
 <li><a href="#sec-7-99">7.99. haskell-mode</a></li>
-<li><a href="#sec-7-100">7.100. mediawiki</a></li>
+<li><a href="#sec-7-100">7.100. confluence</a></li>
 <li><a href="#sec-7-101">7.101. server</a></li>
 </ul>
 </li>
@@ -212,7 +212,7 @@ Examples:
     
     <pre><code>EMACS_MODULE="!org" emacs</code></pre>
 
-By default all modules are auto loaded unless `module-auto-initialize` is
+By default all modules are auto loaded unless `module-auto-initialie` is
 set to `nil`. Module can be loaded manually using `module-load`. To load a
 module in black list or not in white list, clear the lists first using
 `module-clear-lists`.
@@ -570,7 +570,9 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
 
   (global-set-key (kbd "M-m") 'iy-go-to-char)
   (global-set-key (kbd "M-M") 'iy-go-to-char-backward)
-  (global-set-key (kbd "C-S-z") 'iy-go-to-char-backward)
+  (global-set-key (kbd "C-z") 'zap-up-to-char)
+  (global-set-key (kbd "C-S-z") 'zap-back-up-to-char)
+  (global-set-key (kbd "C-Z") 'zap-back-up-to-char)
 
   (global-set-key (kbd "M-Z") 'zap-back-up-to-char)
 
@@ -849,33 +851,34 @@ Capture template
 ```cl
 (define-module org-capture
   (require-module org-basic)
-  (setq
-   org-capture-templates
-   '(("r" "Notes" entry (file+headline (concat org-directory "/inbox.org") "Notes")
-      "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i"
-      :prepend t)
-     ("t" "TODO" entry (file+headline (concat org-directory "/inbox.org") "Tasks")
-      "* TODO %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i")
-     ("j" "Journal" plain (file+datetree (concat org-directory "/journal.org"))
-      "\n%?\n" :empty-lines 1)
-     ("m" "Management" plain (file+datetree (concat org-directory "/management.org"))
-      "\n%?\n" :empty-lines 1)
-     ("p" "Pomodoro" plain (file+datetree (concat org-directory "/pomodoro.org"))
-      "\n%?\n" :empty-lines 1)
-     ("d" "Dump" plain (file+olp (concat org-directory "/inbox.org") "Quick Notes" "Plain")
-      "\n--%U--------------------------------------------------\n%?\n" :empty-lines 1)
-     ("l" "List" item (file+olp (concat org-directory "/inbox.org") "Quick Notes" "List") "%?\n" :empty-lines 1)
-     ("s" "SOMEDAY" entry (file+headline (concat org-directory "/inbox.org") "Someday")
-      "* SOMEDAY %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i")
-     ("x" "Clipboard" entry (file+headline (concat org-directory "/inbox.org") "Notes")
-      "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %x"
-      :prepend t :empty-lines 1)
-     ("i" "Idea" entry (file (concat org-directory "/spark.org") "")
-      "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i")
+  (custom-set-variables
+   '(org-protocol-protocol-alist '(("edit-link" :protocol "edit-link" :function org-edit-url)))
+   '(org-capture-templates
+     '(("r" "Notes" entry (file+headline (concat org-directory "/inbox.org") "Notes")
+        "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i"
+        :prepend t)
+       ("t" "TODO" entry (file+headline (concat org-directory "/inbox.org") "Tasks")
+        "* TODO %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i")
+       ("j" "Journal" plain (file+datetree (concat org-directory "/journal.org"))
+        "\n%?\n" :empty-lines 1)
+       ("m" "Management" plain (file+datetree (concat org-directory "/management.org"))
+        "\n%?\n" :empty-lines 1)
+       ("p" "Pomodoro" plain (file+datetree (concat org-directory "/pomodoro.org"))
+        "\n%?\n" :empty-lines 1)
+       ("d" "Dump" plain (file+olp (concat org-directory "/inbox.org") "Quick Notes" "Plain")
+        "\n--%U--------------------------------------------------\n%?\n" :empty-lines 1)
+       ("l" "List" item (file+olp (concat org-directory "/inbox.org") "Quick Notes" "List") "%?\n" :empty-lines 1)
+       ("s" "SOMEDAY" entry (file+headline (concat org-directory "/inbox.org") "Someday")
+        "* SOMEDAY %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i")
+       ("x" "Clipboard" entry (file+headline (concat org-directory "/inbox.org") "Notes")
+        "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %x"
+        :prepend t :empty-lines 1)
+       ("i" "Idea" entry (file (concat org-directory "/spark.org") "")
+        "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i")
 
-     ("b" "Default template" entry (file+headline (concat org-directory "/inbox.org") "Tasks")
-      "* TODO %:description\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %c\n\n  %i"
-      :prepend t :empty-lines 1 :immediate-finish t))))
+       ("b" "Default template" entry (file+headline (concat org-directory "/inbox.org") "Tasks")
+        "* TODO %:description\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %c\n\n  %i"
+        :prepend t :empty-lines 1 :immediate-finish t)))))
 ```
 
 <a name="sec-7-15"></a>
@@ -1106,7 +1109,7 @@ Opinioned GTD config based on org
    '(org-latex-minted-options '(("linenos") ("framesep=2mm")))
    '(org-latex-pdf-process '("xelatex -interaction nonstopmode -shell-escape -output-directory %o %f"
                              "xelatex -interaction nonstopmode -shell-escape -output-directory %o %f"))
-   '(org-export-backends '(md html icalendar latex beamer freemind))
+   '(org-export-backends '(md html icalendar latex beamer freemind confluence))
    '(org-icalendar-use-scheduled '(todo-start event-if-todo))
    '(org-icalendar-store-UID t)
    '(org-combined-agenda-icalendar-file (concat my-dropbox-dir "g/ical/org.ics")))
@@ -1131,6 +1134,25 @@ Opinioned GTD config based on org
             (concat "```" (or (assoc-default lang org-md-fanced-code-block-language-alist) lang) "\n"
                     (org-remove-indentation (org-element-property :value example-block))
                     "```\n"))))
+
+  (defun org-confluene-verbatim (verbatim contents info)
+    "Transcode VERBATIM object into Markdown format.
+CONTENTS is nil.  INFO is a plist used as a communication
+channel."
+    (let ((value (org-element-property :value verbatim)))
+      (format "{{%s}}" value)))
+
+  (defun init--org-export-load ()
+    (let ((backend (assoc 'confluence org-export-registered-backends)))
+      (when backend
+        (plist-put
+         (cdr backend)
+         :translate-alist
+         (cons
+          (cons 'inline-src-block 'org-confluence-verbatim)
+          (plist-get (cdr backend) :translate-alist)))))
+    (remove-hook 'org-mode-hook 'init--org-export-load))
+  (add-hook 'org-mode-hook 'init--org-export-load)
 
   (add-hook 'org-export-before-parsing-hook 'iy-org-ical-verify))
 ```
@@ -4062,13 +4084,37 @@ Functions to manage site iany.me
 ```
 
 <a name="sec-7-100"></a>
-## mediawiki
+## confluence
 
 ```cl
-(define-module mediawiki
-  (require-package 'mediawiki)
-  (autoload 'mediawiki-site "mediawiki" nil t)
-  (autoload 'mediawiki-mode "mediawiki" nil t))
+(define-module confluence
+  (concat my-vendor-dir )
+  (setq load-path (cons (concat my-vendor-dir "confluence-el") load-path))
+  (require-package 'confluence)
+
+  (autoload 'confluence-get-page "confluence" nil t)
+  (autoload 'confluence-search "confluence" nil t)
+  (defalias 'cgp 'confluence-get-page )
+  (defalias 'cs 'confluence-search)
+
+  (custom-set-variables
+   '(confluence-url "http://localhost:8090/rpc/xmlrpc")
+   '(confluence-default-space-alist (list (cons confluence-url "Wiki"))))
+
+  (defun init--confluence-common ()
+    (longlines-mode +1)
+
+    (local-set-key (kbd "C-c C-c") 'confluence-toggle-page-content-type))
+
+  (defun init--confluence-mode ()
+    (local-set-key "\C-c" confluence-prefix-map)
+    (local-set-key "\C-m" 'confluence-newline-and-indent)
+    (local-set-key "\M-;" 'confluence-list-indent-dwim))
+
+  (add-hook 'confluence-mode-hook 'init--confluence-common)
+  (add-hook 'confluence-mode-hook 'init--confluence-mode)
+  (add-hook 'confluence-xml-edit-mode-hook 'init--confluence-common))
+
 ```
 
 <a name="sec-7-101"></a>

@@ -2343,7 +2343,7 @@ Misc editing config
   (add-hook 'flyspell-mode-hook 'init--flyspell-mode)
 
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-  (add-hook 'mail-mode-hook 'flyspell-mode)
+  (add-hook 'message-mode-hook 'flyspell-mode)
   (add-hook 'org-mode-hook 'flyspell-mode)
   (add-hook 'magit-log-edit-mode-hook 'flyspell-mode)
   (add-hook 'markdown-mode-hook 'flyspell-mode)
@@ -2959,8 +2959,8 @@ This functions should be added to the hooks of major modes for programming."
            (string-match-p
             "^mutt-"
             (file-name-nondirectory (buffer-file-name))))
-      (mail-mode)
-      (mail-text)))
+      (message-mode)
+      (message-goto-body)))
 
   (add-hook 'server-visit-hook 'init--mutt-compose))
 ```

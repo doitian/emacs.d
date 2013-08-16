@@ -176,7 +176,10 @@ custom.el if you prefer it.
    '(menu-bar-mode nil)
    '(scroll-bar-mode nil)
    '(use-file-dialog nil)
-   '(use-dialog-box nil))
+   '(use-dialog-box nil)
+   '(ps-default-fg nil)
+   '(ps-default-bg nil)
+   '(ps-print-color-p nil))
   
   (global-hl-line-mode)
 #+END_SRC
@@ -3538,7 +3541,8 @@ Functions to manage site iany.me
 #+BEGIN_SRC emacs-lisp
   (define-module mac
     (when (eq system-type 'darwin)
-      (custom-set-variables '(mac-command-modifier 'meta)
+      (custom-set-variables '(mac-command-modifier 'super)
+                            '(mac-right-command-modifier 'meta)
                             '(mac-option-modifier 'hyper)
                             '(ns-pop-up-frames nil)
                             '(helm-locate-command "mdfind %s %s")
@@ -3566,8 +3570,7 @@ Functions to manage site iany.me
   
       (global-set-key (kbd "H-SPC") 'mac--open-dictionary)
       (global-set-key (kbd "H-v") 'scroll-down-command)
-      (global-set-key (kbd "M-v") 'yank)
-      (global-set-key (kbd "H-V") 'scroll-up-command)
+      (global-set-key (kbd "M-v") 'scroll-down-command)
       (global-set-key (kbd "C-S-v") 'scroll-down-command)
   
       (defadvice case-dwim-capitalize (around ns-copy activate)

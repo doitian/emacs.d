@@ -2953,6 +2953,9 @@ This functions should be added to the hooks of major modes for programming."
 
 ```cl
 (define-module mail
+  (custom-set-variables
+   '(compose-mail-user-agent-warnings nil))
+
   (defun init--mutt-compose ()
     (when (and
            (buffer-file-name)
@@ -2962,7 +2965,19 @@ This functions should be added to the hooks of major modes for programming."
       (message-mode)
       (message-goto-body)))
 
-  (add-hook 'server-visit-hook 'init--mutt-compose))
+  (add-hook 'server-visit-hook 'init--mutt-compose)
+
+  (autoload 'external-abook-try-expand "external-abook" nil t)
+  (defun init--message-mode ()
+    (local-set-key "\C-c\t" 'external-abook-try-expand))
+
+  (add-hook 'message-mode-hook 'init--message-mode)
+
+  (when (eq system-type 'darwin)
+    (custom-set-variables
+     '(external-abook-command "contacts -lSf '%%e\t\"%%n\"' '%s'")
+     '(message-signature-file nil)
+     '(message-send-mail-function 'message-send-mail-with-mailclient))))
 ```
 
 <a name="sec-7-65"></a>

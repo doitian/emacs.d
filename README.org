@@ -1357,23 +1357,24 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
     ;; Manage display-buffer-alist
   
     (defun init--windata-display-buffer (buffer alist)
-      (let ((win (selected-window))
-            (buf (get-buffer buffer))
-            (newwin
-             (windata-display-buffer
-              buffer
-              (assoc-default 'frame-p alist nil nil)
-              (assoc-default 'dir alist nil nil)
-              (assoc-default 'size alist nil 0.5)
-              (assoc-default 'delete-p alist nil nil))))
-  
-        ;; let quit-window delete the window
-        (set-window-parameter newwin 'quit-restore
-                              (list 'window 'window
-                                    win buf))
-        (set-window-prev-buffers newwin nil)
-  
-        newwin))
+      (let (win buf newwin)
+        (setq win (selected-window))
+        (setq buf (get-buffer buffer))
+        (or (get-buffer-window buf)
+            (with-current-buffer (window-buffer win)
+              (setq newwin
+                    (windata-display-buffer
+                     buf
+                     (assoc-default 'frame-p alist nil nil)
+                     (assoc-default 'dir alist nil nil)
+                     (assoc-default 'size alist nil 0.5)
+                     (assoc-default 'delete-p alist nil nil)))
+              ;; let quit-window delete the window
+              (set-window-parameter newwin 'quit-restore
+                                    (list 'window 'window
+                                          win buf))
+              (set-window-prev-buffers newwin nil)
+              newwin))))
   
     (defun init--display-buffer-compilation-p (buffer alist)
       (with-current-buffer (get-buffer buffer)
@@ -1925,13 +1926,13 @@ Auto revert, and helper functions to revert without confirmation.
     (defun init--new-scratch (&optional extension)
       "Create a temporary file with given EXTENSION."
       (interactive "sextension: ")
-      (find-file (make-temp-file "scratch-" nil
-                                 (concat "." (or extension "txt")))))
-  
+      (find-file-other-window (make-temp-file "scratch-" nil
+                                              (concat "." (or extension "txt")))))
+    
     (global-set-key [f5] 'compile)
     (define-key my-keymap (kbd "5") 'compile)
     (define-key my-keymap (kbd "M-c") 'recompile)
-  
+    
     (define-key my-keymap (kbd "c") 'quickrun-compile-only)
     (define-key my-keymap (kbd "x") 'quickrun)
     (define-key my-keymap (kbd "M-x") 'init--new-scratch)
@@ -2095,7 +2096,6 @@ Misc editing config
   
     (defadvice bmkp-last-specific-file-p (around expand-bookmark-file-name (bookmark) activate)
       (let ((file (expand-file-name (bookmark-get-filename bookmark))))
-        (message "%S" (cons file bmkp-last-specific-file))
         (setq ad-return-value (and file  (string= file bmkp-last-specific-file)))))
   
     (defadvice bmkp-file-this-dir-bookmark-p (around expand-bookmark-file-name (bookmark) activate)
@@ -3058,6 +3058,9 @@ Install =emacs-rails= using =make vendor=
 
 #+BEGIN_SRC emacs-lisp
   (define-module tmux-send
+    (defalias 'tcd 'tmux-cd)
+    (global-set-key (kbd "M-<f6>") 'tmux-toggle-send-next-compile-command)
+    (global-set-key (kbd "C-M-<f6>") 'tmux-repeat)
     (global-set-key (kbd "<f6>") 'tmux-send)
     (global-set-key (kbd "C-<f6>") 'tmux-select))
 #+END_SRC
@@ -3803,7 +3806,6 @@ Functions to manage site iany.me
   (define-module confluence
     (concat my-vendor-dir )
     (setq load-path (cons (concat my-vendor-dir "confluence-el") load-path))
-    (require-package 'confluence)
   
     (autoload 'confluence-get-page "confluence" nil t)
     (autoload 'confluence-search "confluence" nil t)

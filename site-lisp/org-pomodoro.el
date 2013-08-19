@@ -43,7 +43,8 @@
                     (add-to-list 'tags (substring-no-properties tag))))
                 (org-get-tags-at))
                (setq tags (mapconcat 'identity (cons (org-get-category) tags) ","))
-               (call-process "osascript" nil nil nil org-pomodoro-start-scpt title tags)))))
+               (unless (equal "OK" (car (process-lines "osascript" org-pomodoro-start-scpt title tags)))
+                 (org-clock-out))))))
       (when (and org-pomodoro-process
                  (eq 'run (process-status org-pomodoro-process)))
         (interrupt-process org-pomodoro-process))

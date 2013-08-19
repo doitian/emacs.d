@@ -1138,25 +1138,6 @@ Opinioned GTD config based on org
                     (org-remove-indentation (org-element-property :value example-block))
                     "```\n"))))
 
-  (defun org-confluene-verbatim (verbatim contents info)
-    "Transcode VERBATIM object into Markdown format.
-CONTENTS is nil.  INFO is a plist used as a communication
-channel."
-    (let ((value (org-element-property :value verbatim)))
-      (format "{{%s}}" value)))
-
-  (defun init--org-export-load ()
-    (let ((backend (assoc 'confluence org-export-registered-backends)))
-      (when backend
-        (plist-put
-         (cdr backend)
-         :translate-alist
-         (cons
-          (cons 'inline-src-block 'org-confluence-verbatim)
-          (plist-get (cdr backend) :translate-alist)))))
-    (remove-hook 'org-mode-hook 'init--org-export-load))
-  (add-hook 'org-mode-hook 'init--org-export-load)
-
   (add-hook 'org-export-before-parsing-hook 'iy-org-ical-verify))
 ```
 

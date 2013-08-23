@@ -235,9 +235,12 @@ Remove annoying UI
 ```cl
 (defvar my-site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory)
   ".emacs.d/site-lisp")
+(defvar my-extra-dir (expand-file-name "extra/" user-emacs-directory)
+  ".emacs.d/extra")
 (defvar my-vendor-dir (expand-file-name "vendor/" user-emacs-directory)
   ".emacs.d/vendor")
 
+(setq load-path (cons my-extra-dir load-path))
 (setq load-path (cons my-site-lisp-dir load-path))
 
 ;; load loaddefs if generated, otherwise load all files in site-lisp

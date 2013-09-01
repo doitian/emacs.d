@@ -1,0 +1,459 @@
+#+Title: Introduction to Org-Reveal
+#+Author: Yujie Wen
+#+Email: yjwen.ty@gmail.com
+
+#+OPTIONS: reveal_center:t reveal_progress:t reveal_history:nil reveal_control:t
+#+OPTIONS: reveal_mathjax:t reveal_rolling_links:t reveal_keyboard:t reveal_overview:t num:nil
+#+OPTIONS: reveal_width:1200 reveal_height:800
+#+REVEAL_MARGIN: 0.1
+#+REVEAL_MIN_SCALE: 0.5
+#+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_TRANS: cube
+#+REVEAL_THEME: moon
+#+REVEAL_HLEVEL: 2
+#+REVEAL_HEAD_PREAMBLE: <meta name="description" content="Org-Reveal Introduction.">
+#+REVEAL_PREAMBLE: my-preamble
+#+REVEAL_POSTAMBLE: <p> Created by yjwen. </p>
+#+EPRESENT_FRAME_LEVEL: 2
+
+* Reveal.js and Org-Reveal
+
+  - *Reveal.js* is a tool for creating good-looking HTML presentations,
+    authored by [[hakim.se][Hakim El Hattab]]. \\
+    For an example of reveal.js presentation, click [[http://lab.hakim.se/reveal-js/#/][here]].
+  - *Org-Reveal* exports your [[orgmode.org][Org]] documents to reveal.js
+    presentations.\\
+    With Org-reveal, you can create beautiful presentations with 3D
+    effects from simple but powerful Org contents.
+
+* Requirements and Installation
+
+  - Reveal.js.
+  - Latest org-mode.
+  - ox-reveal.el.
+  - And, of course, emacs.
+
+** Obtain Reveal.js
+
+   Download Reveal.js packages from [[https://github.com/hakimel/reveal.js/][here]].
+
+   Extract Reveal.js folders from the downloaded zip file.
+
+** Obtain org-mode
+
+   *Note*: Org-reveal relies on the Org-mode 8.0 export frame work.
+   Pre-packaged org-mode may be out-of-date.
+
+   If not sure, use the freshest development codes from git repository.
+#+BEGIN_SRC sh 
+$ git clone git://orgmode.org/org-mode.git
+#+END_SRC
+
+    Follow the [[http://orgmode.org/worg/dev/org-build-system.html][online instruction]] to build and install Org-mode.
+
+** Obtain Org-reveal
+
+   Download latest Org-reveal package from [[https://github.com/yjwen/org-reveal][the Org-reveal GitHub page]].
+
+   Or clone the GitHub repository:
+#+BEGIN_SRC sh
+$ git clone https://github.com/yjwen/org-reveal.git
+#+END_SRC
+
+   Copy =ox-reveal.el= to the Org-mode installation directory.
+
+   Add the following statement to your =.emacs= file.
+#+BEGIN_SRC lisp 
+(require 'ox-reveal)
+#+END_SRC
+
+* Configuration
+
+** Set the location of Reveal.js
+
+   Org-reveal must know where Reveal.js is on your computer before
+   exporting Org contents. The location of Reveal.js is the path to
+   the top directory of Reveal.js packages, the one which contains
+   file *README.md*, but *not* the one contains file reveal.js.
+
+   The default location is =./reveal.js=, relative to the Org file.
+
+   Change variable =org-reveal-root= 's value will change the location
+   globally. For example, add the following statement to your .emacs
+   file:
+#+BEGIN_SRC lisp 
+(setq org-reveal-root "file:///d:/reveal.js")
+#+END_SRC
+   *IMPORTANT*: the absolute path to Reveal.js should be in URL form,
+   "file:///path_to_reveal.js", as illustrated above.
+
+   By setting option =REVEAL_ROOT=, the location is only affected
+   within the Org file.
+
+#+BEGIN_SRC org 
+ #+REVEAL_ROOT: file:///d:/reveal.js
+#+END_SRC
+
+** First Try
+
+   To wake-up Org-reveal now, type "M-x load-library", then type
+   "ox-reveal".
+
+   Now you can export this manual into Reveal.js presentation by
+   typing "C-c C-e R R".
+
+   Open the generated "Readme.html" in your browser and enjoy the
+   cool slides.
+
+** The HLevel
+
+   Org-reveal maps each heading and its contents to one Reveal.js
+   slides. Since Reveal.js arranges slides into a 2-dimentional matrix,
+   Org-reveal use a *HLevel* value to decide map headings to hozirontal
+   or vertical slides.
+
+   * Headings of level less or equal to HLevel are mapped to hozirontal
+     slides.
+   * Headings of deeper levels are mapped to vertical slides.
+     
+   HLevel's default value is 1, means only level 1 headings are arranged
+   horizontally, deeper headings are mapped to vertical slides below its
+   parent level 1 heading.
+
+*** HLevel's Affects on Slides Layout
+
+    Assume we have a simple Org file as below:
+#+BEGIN_SRC org 
+,* H1
+,* H2
+,** H2.1
+,*** H2.1.1
+,* H3
+#+END_SRC
+
+    If HLevel is 1, the default value, headings H2.1 and H2.1.1 will
+    be mapping to vertical slides below the slides of heading H2.
+
+    [[./images/hlevel.png]]
+
+    If HLevel is changed to 2, slide of heading H2.1 will be changed
+    to the main hozirontal queue, and slide of heading H2.1.1 will be
+    a vertical slide below it.
+
+    [[./images/hlevel2.png]]
+
+*** Configure HLevel's Value
+
+    * Change variable =org-reveal-hlevel='s value to set HLevel globally.\\
+      For example, add the following statement to your =.emacs= file.
+#+BEGIN_SRC lisp 
+(setq org-reveal-hlevel 2)
+#+END_SRC
+
+    * Setting Org files local HLevel to option =REVEAL_HLEVEL=.
+#+BEGIN_SRC org 
+,#+REVEAL_HLEVEL 2
+#+END_SRC
+
+** Force Split
+
+   If one headings has too many things to fit into one slide, you can
+   split the contents into multiple vertical slides manually, by inserting
+
+#+BEGIN_SRC org
+,#+REVEAL: split
+#+END_SRC
+
+#+REVEAL: split
+
+   Now a new slide begins after =#+REVEAL= keyword.
+
+** Select Theme and Transition
+
+    Themes and transition styles are set globally throughout the whole
+    file by setting options =REVEAL_THEME=, =REVEAL_TRANS=, and =REVEAL_SPEED=.
+
+    For an example, please check the heading part of this document.
+
+    Available themes can be found in "css/theme/" in the reveal.js directory.
+
+    Available transitions are: default|cube|page|concave|zoom|linear|fade|none.
+
+** Set Slide Background
+
+   Slide background can be set to a color, an image or a repeating image
+   array by setting heading properties.
+
+*** Single Colored Background
+   :PROPERTIES:
+   :reveal_background: #543210
+   :END:
+
+    Set property =reveal_background= to either an RGB color value, or any
+    supported CSS color format.
+
+#+BEGIN_SRC org
+,*** Single Colored Background
+   :PROPERTIES:
+   :reveal_background: #123456
+   :END:
+#+END_SRC
+
+*** Single Image Background
+    :PROPERTIES:
+    :reveal_background: ./images/whale.jpg
+    :reveal_background_trans: slide
+    :END:
+
+    Set property =reveal_background= to an URL of background image.
+    Set property =reveal_background_trans= to =slide= to make background image
+    sliding rather than fading.
+#+BEGIN_SRC org
+,*** Single Image Background
+    :PROPERTIES:
+    :reveal_background: ./images/whale.jpg
+    :reveal_background_trans: slide
+    :END:
+#+END_SRC
+
+*** Repeating Image Background
+    :PROPERTIES:
+    :reveal_background: ./images/whale.jpg
+    :reveal_background_size: 200px
+    :reveal_background_repeat: repeat
+    :END:
+
+    Resize background image by setting property
+    =reveal_background_size= to a number.
+
+    Set property =reveal_background_repeat= to =repeat= to repeat
+    image on the background.
+#+BEGIN_SRC org
+,*** Repeating Image Background
+    :PROPERTIES:
+    :reveal_background: ./images/whale.jpg
+    :reveal_background_size: 200px
+    :reveal_background_repeat: repeat
+    :END:
+#+END_SRC
+
+** Slide Size
+
+   Reveal.js scales slides to best fit the display resolution. But in case
+   the auto-sizes are not satisfiable, you can specify the desired size by
+   option tag =width= and =height=.
+
+   The scaling behavior can also be contrainted by setting following
+   options:
+   * =#+REVEAL_MARGIN:= :: a float number, the factor of empty area
+        surrounding slide contents.
+   * =#+REVEAL_MIN_SCALE:= :: a float number, the minimun scaling down
+        ratio.
+   * =#+REVEAL_MAX_SCALE:= :: a float number, the maximum scaling up
+        ratio.
+** Extra Stylesheets
+
+    Set =REVEAL_EXTRA_CSS= to a stylesheet file path in order to load extra custom
+    styles after loading a theme.
+
+#+BEGIN_SRC org
+ #+REVEAL_EXTRA_CSS: my-custom-stylesheet.css
+#+END_SRC
+
+** Fragmented Contents
+
+    Make contents fragmented (show up one-by-one) by setting option =ATTR_REVEAL= with
+    property ":frag frag-style", as illustrated below.
+    
+#+ATTR_REVEAL: :frag roll-in
+    Paragraphs can be fragmented.
+
+#+ATTR_REVEAL: :frag roll-in
+    Items can be fragmented, too.
+
+    Availabe fragment styles are:
+#+ATTR_REVEAL: :frag grow
+    * grow
+#+ATTR_REVEAL: :frag shrink
+    * shrink
+#+ATTR_REVEAL: :frag roll-in
+    * roll-in
+#+ATTR_REVEAL: :frag fade-out
+    * fade-out
+#+ATTR_REVEAL: :frag highlight-red
+    * highlight-red
+#+ATTR_REVEAL: :frag highlight-green
+    * highlight-green
+#+ATTR_REVEAL: :frag highlight-blue
+    * highlight-blue
+
+** Data State
+   :PROPERTIES:
+   :reveal_data_state: alert
+   :END:
+
+   Set property =reveal_data_state= to headings to change this slide's
+   display style, as illustrated above.
+
+   Availabe data states are: alert|blackout|soothe.
+
+** Plug-ins
+
+   Reveal.js provides several plug-in functions.
+
+   - reveal-control : Show/hide browsing control pad.
+   - reveal-progress : Show/hide progress bar.
+   - reveal-history : Enable/disable slide history track.
+   - reveal-center : Enable/disable slide centering.
+     
+*** Configure Plug-ins
+
+    Each plug-ins can be set on/off by adding =#+OPTIONS= tags or
+    settinng custom variables.
+
+    - =#+OPTIONS= tags:\\
+      =reveal_control=, =reveal_progress=, =reveal_history=,
+      =reveal_center=, =reveal_rolling_links=, =reveal_keyboard=, =reveal_overview=
+    - Custom variables:\\
+      =org-reveal-control=, =org-reveal-progress=,
+      =org-reveal-history=, =org-reveal-center=, =org-reveal-rolling-links=, =org-reveal-keyaboard, =org-reveal-overview=
+
+    For an example, please refer to the heading part of this document.
+
+** Source Codes
+
+   Org-reveal use Org-Babel to highlight source codes.
+
+   Codes copied from [[http://www.haskell.org/haskellwiki/The_Fibonacci_sequence][Haskell Wiki]].
+#+BEGIN_SRC haskell
+
+  fibs = 0 : 1 : next fibs
+         where next (a : t@(b:_)) = (a+b) : next t
+#+END_SRC
+
+   If you saw odd indentation, please set variable =org-html-indent=
+   to =nil= and export again.
+
+** MathJax
+  :PROPERTIES:
+  :CUSTOM_ID: my-heading
+  :END:
+
+
+   ${n! \over k!(n-k)!} = {n \choose k}$
+
+   LateX equation are renderred in native HTML5 contents.
+
+   *IMPORTANT*: Displaying equations requires internet connection to
+   [[mathjax.org]] or local MathJax installation.
+
+   *IMPORTANT 2*: MathJax is disabled by default to reduce internet
+   traffic. Set =#+OPTIONS= tag =reveal_mathjax= or variable
+   =org-reveal-mathjax= to true to enable it. For local MathJax
+   installation, set option =REVEAL_MATH_JAX_URL= to the URL pointing
+   to the local MathJax location.
+   
+** Preamble and Postamble
+
+   You can define preamble and postamble contents which will not be
+   shown as slides, but will be exported into the body part of the
+   generated HTML file, at just before and after the slide contents.
+
+   Change preamble and postamble contents globally by setting variable
+   =org-reveal-preamble= and =org-reveal-postamble=.
+
+   Change preamble and postamble contents locally by setting options
+   =REVEAL_PREAMBLE= and =REVEAL_POSTAMBLE=, as illustrated at the
+   heading part of this document.
+
+   To add custom contents into HTML =<head>= parts, set contents to
+   variable =org-reveal-head-preamble= or option
+   =REVEAL_HEAD_PREAMBLE=.
+
+*** Generating Pre/Postamble by Emacs-Lisp Functions
+
+    If the contents of pre/postamble is the name of an evaluated
+    Emacs-Lisp funtion, which must accept an argument of Org-mode
+    info and return a string, the returned string will be taken
+    as pre/postamble contents.
+
+    So you can embed the Emacs-Lisp function as an Org-Babel source
+    block and mark it to be evaluated at exporting the document.
+
+    In this document, the =REVEAL_PREAMBLE= option is set to
+    =my-preamble=, now we will define =my-preamble= in an Org-Bable
+    source block, as illustrated below (invisible in the slides).
+
+#+BEGIN_SRC emacs-lisp :exports results :results silent
+  (defun my-preamble (info)
+    ""
+    "<p>
+  Thanks to Org-Babel, now we can embed preambles into Org document!
+  </p>")
+  
+#+END_SRC
+
+    The =:exports results :result silent= options mark the source
+    block to be evaluated at exporting and the evaluation result
+    is omitted, so it won't disturb slide contents.
+
+    Check the generated HTML to see how it works.
+
+** Raw HTML in Slides
+
+   Besides the Org contents, you can embed raw HTML contents
+   into slides by placing a =#+REVEAL_HTML= keyword.
+
+   Now break time, listen to a girl's song.
+
+#+REVEAL_HTML: <video  src="http://naga-eda.org/home/yujie/lengwanwan_youthtime.mp4"></video>
+   Leng WanWan - Youth times (冷碗碗 青春)
+
+** Speaker Notes
+   Reveal.js supports speaker notes, which are displayed in a seperate
+   browser window. Press 's' on slide windows will pop up an window
+   displaying current slide, next slide and the speak notes on current
+   slide.
+
+   Org-reveal recognize texts between =#+BEGIN_NOTES= and =#+END_NOTES=
+   as speaker notes. See the example below.
+
+#+BEGIN_SRC org
+,* Heading 1
+   Some contents.
+,#+BEGIN_NOTES
+  Enter speaker notes here.
+,#+END_NOTES
+#+END_SRC
+
+* Tips
+
+** Disable Heading Numbers
+
+   Add =num:nil= to =#+OPTIONS=
+#+BEGIN_SRC org
+ #+OPTIONS: num:nil
+#+END_SRC
+
+** Internal Links
+
+   Reveal.js supports only jump between slides, but not between
+   elements on slides. Thus, we can only link to headlines in an Org
+   document.
+
+   You can create links pointings to a headline's text, or its
+   custom-id, as the examples below:
+
+   * [[Tips]].
+   * [[#my-heading][Heading]] with a =CUSTOM_ID= property.
+
+* Thanks
+
+  Courtesy to:
+
+#+ATTR_REVEAL: :frag roll-in
+  The powerful Org-mode, 
+#+ATTR_REVEAL: :frag roll-in
+  the impressive Reveal.js
+#+ATTR_REVEAL: :frag roll-in
+  and the precise MathJax

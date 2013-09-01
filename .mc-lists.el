@@ -13,6 +13,7 @@
         forward-symbol
         indent-region
         iy-go-to-char--command
+        iy-go-to-char-done
         iy-go-to-char-kill-region
         iy-go-to-char-kill-ring-save
         iy-go-to-char-quit

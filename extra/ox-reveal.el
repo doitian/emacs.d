@@ -625,33 +625,36 @@ holding contextual information."
 contents is the transcoded contents string.
 info is a plist holding export options."
   (concat
-   (format "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-<!doctype html>\n<html%s>\n<head>\n"
-           (if-format " lang=\"%s\"" (plist-get info :language)))
-   "<meta charset=\"utf-8\">"
-   (if-format "<title>%s</title>\n" (plist-get info :title))
-   (if-format "<meta name=\"author\" content=\"%s\"/>\n" (plist-get info :author))
-   (if-format "<meta name=\"description\" content=\"%s\"/>\n" (plist-get info :description))
-   (if-format "<meta name=\"keywords\" content=\"%s\"/>\n" (plist-get info :keywords))
-   (org-reveal-stylesheets info)
-   (org-reveal-mathjax-scripts info)
-   (org-reveal--build-pre/postamble 'head-preamble info)
-   "</head>
-<body>\n"
+;;    (format "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+;; <!doctype html>\n<html%s>\n<head>\n"
+;;            (if-format " lang=\"%s\"" (plist-get info :language)))
+;;    "<meta charset=\"utf-8\">"
+;;    (if-format "<title>%s</title>\n" (plist-get info :title))
+;;    (if-format "<meta name=\"author\" content=\"%s\"/>\n" (plist-get info :author))
+;;    (if-format "<meta name=\"description\" content=\"%s\"/>\n" (plist-get info :description))
+;;    (if-format "<meta name=\"keywords\" content=\"%s\"/>\n" (plist-get info :keywords))
+;;    (org-reveal-stylesheets info)
+;;    (org-reveal-mathjax-scripts info)
+;;    (org-reveal--build-pre/postamble 'head-preamble info)
+;;    "</head>
+;; <body>\n"
    (org-reveal--build-pre/postamble 'preamble info)
-"<div class=\"reveal\">
-<div class=\"slides\">
-<section>
+;; "<div class=\"reveal\">
+;; <div class=\"slides\">
+;; <section>
+;; "
+   "<section>
 "
    (format-spec org-reveal-title-slide-template (org-html-format-spec info))
    "</section>\n"
    contents
-   "</div>
-</div>\n"
+;;    "</div>
+;; </div>\n"
    (org-reveal--build-pre/postamble 'postamble info)
-   (org-reveal-scripts info)
-   "</body>
-</html>\n"))
+;;    (org-reveal-scripts info)
+;;    "</body>
+;; </html>\n"
+   ))
 
 
 
@@ -661,8 +664,24 @@ info is a plist holding export options."
   (interactive)
   (let* ((extension (concat "." org-html-extension))
          (file (org-export-output-file-name extension subtreep)))
+    (when (string-match "^\\(.*/\\)?_\\(.*\\)$" file)
+      (setq file (concat (match-string 1 file) (match-string 2 file))))
     (org-export-to-file
      'reveal file subtreep visible-only body-only ext-plist)))
+
+(defun ox-reveal-jekyll-preamble (info)
+  "Preamble of the jekyll yaml headers."
+  (format
+   "---
+layout: presentation
+title: %s
+tag: [%s]
+description: %s
+---
+"
+   (or (car (plist-get info :title)) "")
+   (mapconcat 'identity (plist-get info :filetags) ", ")
+   (or (car (plist-get info :description)) "")))
 
 (provide 'ox-reveal)
 

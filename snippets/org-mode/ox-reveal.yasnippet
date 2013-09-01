@@ -1,0 +1,26 @@
+# -*- mode: snippet -*-
+# name: ox-reveal
+# key: reveal
+# --
+#+Title: ${1:`(s-titleize
+ (s-replace "-" " " (replace-regexp-in-string
+                     "^_?[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}-" ""
+                     (file-name-sans-extension (file-name-base (buffer-file-name))))))`}
+#+Author: 
+#+Email: $2
+#+FILETAGS:
+
+#+OPTIONS: reveal_center:t reveal_progress:t reveal_history:nil reveal_control:t
+#+OPTIONS: reveal_mathjax:t reveal_rolling_links:t reveal_keyboard:t reveal_overview:t num:nil
+#+OPTIONS: reveal_width:1200 reveal_height:800
+#+REVEAL_MARGIN: 0.1
+#+REVEAL_MIN_SCALE: 0.5
+#+REVEAL_MAX_SCALE: 2.5
+#+REVEAL_TRANS: cube
+#+REVEAL_THEME: moon
+#+REVEAL_HLEVEL: 2
+#+REVEAL_PREAMBLE: ox-reveal-jekyll-preamble
+#+EPRESENT_FRAME_LEVEL: 2
+
+$0
+

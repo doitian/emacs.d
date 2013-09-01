@@ -574,8 +574,13 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     (interactive "p\ncZap back up to char: ")
     (zap-up-to-char (- arg) char))
 
-  (global-set-key (kbd "M-m") 'iy-go-to-char)
-  (global-set-key (kbd "M-M") 'iy-go-to-char-backward)
+  (global-set-key (kbd "M-m") 'iy-go-up-to-char)
+  (global-set-key (kbd "M-M") 'iy-go-up-to-char-backward)
+  (define-key my-keymap (kbd "z") 'iy-go-to-char)
+  (define-key my-keymap (kbd "Z") 'iy-go-to-char-backward)
+  (define-key my-keymap (kbd ";") 'iy-go-to-or-up-to-continue)
+  (define-key my-keymap (kbd ":") 'iy-go-to-or-up-to-continue-backward)
+
   (global-set-key (kbd "C-z") 'zap-up-to-char)
   (global-set-key (kbd "C-S-z") 'zap-back-up-to-char)
   (global-set-key (kbd "C-Z") 'zap-back-up-to-char)
@@ -584,8 +589,6 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
 
   (define-key my-keymap "d" 'zap-up-to-char)
   (define-key my-keymap "D" 'zap-back-up-to-char)
-  (define-key my-keymap (kbd ";") 'iy-go-to-char-continue)
-  (define-key my-keymap (kbd ":") 'iy-go-to-char-continue-backward)
 
   (global-set-key "\C-a" 'back-to-indentation-or-beginning))
 ```

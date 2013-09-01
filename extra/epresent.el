@@ -294,8 +294,9 @@
   (text-scale-adjust epresent-text-scale)
   ;; make Org-mode be as pretty as possible
   (setq epresent-inline-image-overlays org-inline-image-overlays)
+  (setq org-inline-image-overlays t)
   (setq epresent-src-fontify-natively org-src-fontify-natively)
-  (setq org-src-fontify-natively t)
+  (setq org-src-ifontify-natively t)
   (setq epresent-hide-emphasis-markers org-hide-emphasis-markers)
   (setq org-hide-emphasis-markers t)
   (setq mode-line-format epresent-mode-line)

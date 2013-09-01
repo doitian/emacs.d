@@ -43,15 +43,16 @@
                     (add-to-list 'tags (substring-no-properties tag))))
                 (org-get-tags-at))
                (setq tags (mapconcat 'identity (cons (org-get-category) tags) ","))
-               (unless (equal "OK" (car (process-lines "osascript" org-pomodoro-start-scpt title tags)))
+               (if (equal "OK" (car (process-lines "osascript" org-pomodoro-start-scpt title tags)))
+                   (org-timer-set-timer org-pomodoro-minutes)
                  (org-clock-out))))))
       (when (and org-pomodoro-process
                  (eq 'run (process-status org-pomodoro-process)))
         (interrupt-process org-pomodoro-process))
       (when org-pomodoro-command
         (setq org-pomodoro-process
-              (start-process "pomodoro" nil "pomodoro" "-l" (number-to-string org-pomodoro-minutes)))))
-    (org-timer-set-timer org-pomodoro-minutes)))
+              (start-process "pomodoro" nil "pomodoro" "-l" (number-to-string org-pomodoro-minutes))))
+      (org-timer-set-timer org-pomodoro-minutes))))
 
 (defun org-pomodoro-after-clock-out ()
   (org-pomodoro-stop-process)

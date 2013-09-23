@@ -636,6 +636,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   (require-package 'flx-ido)
   (require-package 'ido-hacks)
   (require-package 'ido-complete-space-or-hyphen)
+  (put 'bookmark-set 'ido 'ignore)
 
   (put 'ido-exit-minibuffer 'ido 'ignore)
 

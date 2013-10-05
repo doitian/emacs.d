@@ -637,7 +637,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   (require-package 'ido-hacks)
   (require-package 'ido-complete-space-or-hyphen)
   (put 'bookmark-set 'ido 'ignore)
-
+  (put 'bmkp-bmenu-edit-bookmark-name-and-location 'ido 'ignore)
   (put 'ido-exit-minibuffer 'ido 'ignore)
 
   (ido-complete-space-or-hyphen-enable)
@@ -865,10 +865,10 @@ Capture template
    '(org-protocol-protocol-alist '(("edit-link" :protocol "edit-link" :function org-edit-url)))
    '(org-capture-templates
      '(("r" "Notes" entry (file+headline (concat org-directory "/inbox.org") "Notes")
-        "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i"
+        "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n%i"
         :prepend t)
        ("t" "TODO" entry (file+headline (concat org-directory "/inbox.org") "Tasks")
-        "* TODO %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i")
+        "* TODO %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n%i")
        ("j" "Journal" plain (file+datetree (concat org-directory "/journal.org"))
         "\n%?\n" :empty-lines 1)
        ("m" "Management" plain (file+datetree (concat org-directory "/management.org"))
@@ -879,15 +879,15 @@ Capture template
         "\n--%U--------------------------------------------------\n%?\n" :empty-lines 1)
        ("l" "List" item (file+olp (concat org-directory "/inbox.org") "Quick Notes" "List") "%?\n" :empty-lines 1)
        ("s" "SOMEDAY" entry (file+headline (concat org-directory "/inbox.org") "Someday")
-        "* SOMEDAY %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i")
+        "* SOMEDAY %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n%i")
        ("x" "Clipboard" entry (file+headline (concat org-directory "/inbox.org") "Notes")
         "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %x"
         :prepend t :empty-lines 1)
        ("i" "Idea" entry (file (concat org-directory "/spark.org") "")
-        "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n  %i")
+        "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n%i")
 
        ("b" "Default template" entry (file+headline (concat org-directory "/inbox.org") "Tasks")
-        "* TODO %:description\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %c\n\n  %i"
+        "* TODO %:description\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %c\n\n%i"
         :prepend t :empty-lines 1 :immediate-finish t)))))
 ```
 

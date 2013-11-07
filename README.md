@@ -3828,8 +3828,8 @@ Functions to manage site iany.me
 ```cl
 (define-module mac
   (when (eq system-type 'darwin)
-    (custom-set-variables '(mac-command-modifier 'super)
-                          '(mac-right-command-modifier 'meta)
+    (custom-set-variables '(mac-command-modifier 'meta)
+                          '(mac-right-command-modifier 'super)
                           '(mac-option-modifier 'hyper)
                           '(ns-pop-up-frames nil)
                           '(helm-locate-command "mdfind %s %s")

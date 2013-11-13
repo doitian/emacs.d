@@ -684,7 +684,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
    '(magit-repo-dirs-depth 1))
 
   (require-package 'magit)
-  (autoload 'magit-log-edit-mode "magit")
+  (require-package 'magit-log-edit)
 
   (defun magit-toggle-whitespace ()
     (interactive)
@@ -706,19 +706,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
     (define-key magit-mode-map (kbd "W") 'magit-toggle-whitespace)
     (local-set-key [f12] 'magit-quit-window))
 
-  (defun init--magit-log-edit-mode ()
-    (auto-fill-mode +1)
-    (setq fill-column 72))
-
-  (defun init--server-visit-setup-magit-log-edit-mode ()
-    (when (and (buffer-file-name)
-               (member (file-name-nondirectory (or (buffer-file-name) default-directory))
-                       '("MERGE_MSG" "COMMIT_EDITMSG")))
-      (magit-log-edit-mode)))
-
   (add-hook 'magit-mode-hook 'init--magit-mode)
-  (add-hook 'magit-log-edit-mode-hook 'init--magit-log-edit-mode)
-  (add-hook 'server-visit-hook 'init--server-visit-setup-magit-log-edit-mode)
 
   (global-set-key [f12] 'magit-status))
 ```
@@ -2336,7 +2324,6 @@ Misc editing config
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)
   (add-hook 'message-mode-hook 'flyspell-mode)
   (add-hook 'org-mode-hook 'flyspell-mode)
-  (add-hook 'magit-log-edit-mode-hook 'flyspell-mode)
   (add-hook 'markdown-mode-hook 'flyspell-mode)
 
   (global-set-key (kbd "C-4") 'ispell-word))

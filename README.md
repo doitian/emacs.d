@@ -684,7 +684,6 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
    '(magit-repo-dirs-depth 1))
 
   (require-package 'magit)
-  (require-package 'magit-log-edit)
 
   (defun magit-toggle-whitespace ()
     (interactive)

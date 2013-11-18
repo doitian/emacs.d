@@ -703,7 +703,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
 
   (defun init--magit-mode ()
     (define-key magit-mode-map (kbd "W") 'magit-toggle-whitespace)
-    (local-set-key [f12] 'magit-quit-window))
+    (local-set-key [f12] 'magit-mode-quit-window))
 
   (add-hook 'magit-mode-hook 'init--magit-mode)
 

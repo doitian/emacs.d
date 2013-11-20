@@ -1270,7 +1270,13 @@ These commands are also `multiple-cursors` compatible.
   (global-set-key (kbd "M-C") 'case-dwim-capitalize)
 
   (define-key isearch-mode-map (kbd "M-l") 'case-dwim-isearch-dash)
-  (define-key isearch-mode-map (kbd "M-u") 'case-dwim-isearch-underscore))
+  (define-key isearch-mode-map (kbd "M-u") 'case-dwim-isearch-underscore)
+
+
+  (defadvice helm-unmark-all (around helm-unmark-all-or-underscore () activate)
+    (if (zerop (with-helm-window (length helm-marked-candidates)))
+        (call-interactively 'case-dwim-underscore)
+      ad-do-it)))
 ```
 
 <a name="sec-7-25"></a>

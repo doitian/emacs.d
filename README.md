@@ -874,7 +874,7 @@ Capture template
         "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n%i")
 
        ("b" "Default template" entry (file+headline (concat org-directory "/inbox.org") "Tasks")
-        "* TODO %:description\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %c\n\n%i"
+        "* TODO %:description\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a"
         :prepend t :empty-lines 1 :immediate-finish t)))))
 ```
 

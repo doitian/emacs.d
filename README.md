@@ -874,7 +874,7 @@ Capture template
         "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n%i")
 
        ("b" "Default template" entry (file+headline (concat org-directory "/inbox.org") "Tasks")
-        "* TODO %:description\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a"
+        "* TODO %:description\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n%a"
         :prepend t :empty-lines 1 :immediate-finish t)))))
 ```
 
@@ -2970,6 +2970,7 @@ This functions should be added to the hooks of major modes for programming."
   (require-package 'haml-mode)
   (require-package 'slim-mode)
   (require-package 'handlebars-mode)
+  (require-package 'web-mode)
   (add-to-list 'auto-mode-alist '("\\.handlebars$" . handlebars-mode))
   (add-to-list 'auto-mode-alist '("\\.hbs$" . handlebars-mode)))
 ```

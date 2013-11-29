@@ -611,6 +611,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   (ido-mode +1)
   (ido-load-history)
 
+  (define-key ido-file-completion-map [(meta ?l)] nil)
   (custom-set-variables
    '(ido-save-directory-list-file
      (expand-file-name ".ido.last" user-emacs-directory))))
@@ -630,7 +631,8 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
    '(ido-enable-flex-matching nil)
    '(ido-everywhere t)
    '(ido-read-file-name-as-directory-commands nil)
-   '(ido-use-filename-at-point nil))
+   '(ido-use-filename-at-point nil)
+   '(flx-ido-threshhold 8000))
 
   (require-package 'flx)
   (require-package 'flx-ido)

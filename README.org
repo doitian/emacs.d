@@ -442,6 +442,16 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
     (define-key my-keymap (kbd "M-m") 'ace-jump-mode))
 #+END_SRC
 
+** projectile
+#+BEGIN_SRC emacs-lisp
+  (define-module projectile
+    (require-package 'projectile)
+    (custom-set-variables
+     '(projectile-enable-caching t)
+     '(projectile-switch-project-action 'projectile-dired)
+     '(projectile-keymap-prefix (kbd "M-s p")))
+    (projectile-global-mode))
+#+END_SRC
 ** ido
 #+BEGIN_SRC emacs-lisp
   (define-module ido

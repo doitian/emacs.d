@@ -30,14 +30,14 @@
 
 (defgroup sbt nil "sbt compilation shell mode" :group 'processes)
 
-(defcustom sbt-project-function 'eproject-root-safe
+(defcustom sbt-project-function 'projectile-project-p
   "Function to determine project root directory.
 
 It should be a function which returns directory name or nil.
 "
   :group 'sbt
   :type 'function
-  :options '(eproject-root-safe))
+  :options '(eproject-root-safe projectile-project-p))
 
 (defcustom sbt-exec-file (locate-file "sbt" exec-path)
   "Path of sbt executable."

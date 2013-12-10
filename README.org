@@ -473,7 +473,6 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
     (require-package 'ido-hacks)
     (require-package 'ido-complete-space-or-hyphen)
     (put 'bookmark-set 'ido 'ignore)
-    (put 'bmkp-bmenu-edit-bookmark-name-and-location 'ido 'ignore)
     (put 'ido-exit-minibuffer 'ido 'ignore)
   
     (ido-complete-space-or-hyphen-enable)
@@ -1472,9 +1471,9 @@ add changes interactively using =ediff=.
     (add-to-list 'auto-mode-alist '("\\.gitconfig\\'" . conf-mode))
     (add-to-list 'auto-mode-alist '("\\.git/config\\'" . conf-mode))
   
-    (defadvice vc-mode-line (after colorize-vc-mode-line activate)
-      (when vc-mode
-        (put-text-property 1 (length vc-mode) 'face 'eproject-plus-mode-line-project-name-face vc-mode)))
+    ;; (defadvice vc-mode-line (after colorize-vc-mode-line activate)
+    ;;   (when vc-mode
+    ;;     (put-text-property 1 (length vc-mode) 'face 'eproject-plus-mode-line-project-name-face vc-mode)))
   
     (global-set-key (kbd "C-<f12>") 'git-status)
     (global-set-key (kbd "<ESC> <f12>") 'git-status)
@@ -1654,73 +1653,48 @@ Auto revert, and helper functions to revert without confirmation.
     (define-key my-keymap (kbd "E") 'eshell-here))
 #+END_SRC
 
-** eproject
-
-#+BEGIN_SRC emacs-lisp
-    (define-module eproject
-      (require-module terminal)
-      (require-package 'eproject)
-      (require 'eproject-plus)
-    
-      (define-key my-keymap (kbd "p P") 'eproject-plus-open-project)
-      (define-key my-keymap (kbd "p p") 'eproject-revisit-project)
-      (define-key my-keymap (kbd "M-p") 'eproject-plus-find-file-with-cache)
-      (define-key my-keymap (kbd "f") 'eproject-plus-find-file-with-cache)
-      (define-key my-keymap (kbd "M-f") 'eproject-plus-find-file-with-cache))
-#+END_SRC
-
 ** helm
 
 #+BEGIN_SRC emacs-lisp
   (define-module helm
-    (require-module eproject)
-    (require-module alternative-files)
+    ;; (require-module alternative-files)
     (require-package 'helm)
     (require 'helm-config)
   
-    (defvar helm-source-eproject-projects nil)
-    (defvar helm-source-eproject-files-in-project nil)
-    (defvar helm-source-alternative-files nil)
+    ;; (defvar helm-source-alternative-files nil)
   
-    (setq helm-source-eproject-projects
-          '((name . "Projects")
-            (candidates . (lambda ()
-                            (mapcar 'cdr (eproject-projects))))
-            (type . file)))
+    ;; (setq helm-source-eproject-projects
+    ;;       '((name . "Projects")
+    ;;         (candidates . (lambda ()
+    ;;                         (mapcar 'cdr (eproject-projects))))
+    ;;         (type . file)))
   
-    (defvar helm--eproject-root nil)
+    ;; (defvar helm--eproject-root nil)
   
-    (defun helm--eproject-transform-candidates (candidates source)
-      "convert each candidate to cons of (disp . real)"
-      (mapcar (lambda (i)
-                (cons (propertize i 'face 'helm-ff-file)
-                      (expand-file-name i helm--eproject-root)))
-              candidates))
+    ;; (defun helm--eproject-transform-candidates (candidates source)
+    ;;   "convert each candidate to cons of (disp . real)"
+    ;;   (mapcar (lambda (i)
+    ;;             (cons (propertize i 'face 'helm-ff-file)
+    ;;                   (expand-file-name i helm--eproject-root)))
+    ;;           candidates))
   
-    (setq helm-source-alternative-files
-          '((name . "Alternative Files")
-            (init . (lambda () (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))))
-            (candidates . (lambda ()
-                            (with-helm-current-buffer (alternative-files-existing))))
-            (real-to-display . (lambda (e)
-                                 (with-helm-current-buffer
-                                  (file-relative-name e helm--eproject-root))))
-            (type . file)))
+    ;; (setq helm-source-alternative-files
+    ;;       '((name . "Alternative Files")
+    ;;         (init . (lambda () (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))))
+    ;;         (candidates . (lambda ()
+    ;;                         (with-helm-current-buffer (alternative-files-existing))))
+    ;;         (real-to-display . (lambda (e)
+    ;;                              (with-helm-current-buffer
+    ;;                               (file-relative-name e helm--eproject-root))))
+    ;;         (type . file)))
   
-    (defun helm-eproject-projects ()
-      (interactive)
-      (helm-other-buffer 'helm-source-eproject-projects "*helm projects*"))
+    ;; (defun helm-eproject-projects ()
+    ;;   (interactive)
+    ;;   (helm-other-buffer 'helm-source-eproject-projects "*helm projects*"))
   
-    (defun helm-eproject-files-in-project ()
-      (interactive)
-      (helm-other-buffer 'helm-source-eproject-files-in-project "*helm files in project*"))
-  
-    (defun helm-insert-buffer-base-name ()
-      "Insert buffer name stub."
-      (interactive)
-      (helm-insert-string
-       (with-current-buffer helm-current-buffer
-         (buffer-stub-name))))
+    ;; (defun helm-eproject-files-in-project ()
+    ;;   (interactive)
+    ;;   (helm-other-buffer 'helm-source-eproject-files-in-project "*helm files in project*"))
   
     (custom-set-variables
      '(helm-command-prefix-key "M-S")
@@ -1740,19 +1714,19 @@ Auto revert, and helper functions to revert without confirmation.
       (require 'helm-locate)
       (require 'helm-w3m)
   
-      (setq helm-source-eproject-files-in-project
-            `((name . "Project Files")
-              (init . (lambda ()
-                        (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))
-                        (helm-candidate-buffer
-                         (or (eproject-plus--cache-buffer helm--eproject-root)
-                             (progn
-                               (eproject-plus-list-project-files-with-cache helm--eproject-root)
-                               (eproject-plus--cache-buffer helm--eproject-root))
-                             'local))))
-              (candidates-in-buffer)
-              (filtered-candidate-transformer . helm--eproject-transform-candidates)
-              (action . ,(cdr (helm-get-actions-from-type helm-c-source-locate)))))
+      ;; (setq helm-source-eproject-files-in-project
+      ;;       `((name . "Project Files")
+      ;;         (init . (lambda ()
+      ;;                   (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))
+      ;;                   (helm-candidate-buffer
+      ;;                    (or (eproject-plus--cache-buffer helm--eproject-root)
+      ;;                        (progn
+      ;;                          (eproject-plus-list-project-files-with-cache helm--eproject-root)
+      ;;                          (eproject-plus--cache-buffer helm--eproject-root))
+      ;;                        'local))))
+      ;;         (candidates-in-buffer)
+      ;;         (filtered-candidate-transformer . helm--eproject-transform-candidates)
+      ;;         (action . ,(cdr (helm-get-actions-from-type helm-c-source-locate)))))
   
       (remove-hook 'helm-before-initialize-hook 'init--helm-load))
   
@@ -1761,16 +1735,16 @@ Auto revert, and helper functions to revert without confirmation.
     ;;; Sources
     (defvar my-helm-sources nil)
     (setq my-helm-sources
-          '(helm-source-alternative-files
-            helm-source-eproject-files-in-project
-            helm-source-files-in-current-dir
+          '(
+            ;; helm-source-alternative-files
+            ;; helm-source-eproject-files-in-project
+            ;; helm-source-files-in-current-dir
             helm-source-buffers-list
             helm-source-file-cache
-            helm-source-eproject-projects
+            ;; helm-source-eproject-projects
             helm-source-recentf
             helm-source-file-name-history
-            helm-source-bookmarks
-            helm-source-w3m-bookmarks))
+            helm-source-bookmarks))
   
     (defun my-helm-go ()
       "Preconfigured `helm' to fidn fiels"
@@ -1784,8 +1758,8 @@ Auto revert, and helper functions to revert without confirmation.
     (define-key helm-command-map (kbd "r") 'helm-register)
     (define-key helm-command-map (kbd "R") 'helm-regexp)
     (define-key helm-command-map (kbd "b") 'helm-c-pp-bookmarks)
-    (define-key helm-command-map (kbd "p") 'helm-eproject-projects)
-    (define-key helm-command-map (kbd "f") 'helm-eproject-files-in-project)
+    ;; (define-key helm-command-map (kbd "p") 'helm-eproject-projects)
+    ;; (define-key helm-command-map (kbd "f") 'helm-eproject-files-in-project)
     (define-key helm-command-map (kbd "<SPC>") 'helm-all-mark-rings)
   
     (global-set-key (kbd "M-X") 'my-helm-go)
@@ -2089,38 +2063,8 @@ Misc editing config
 #+BEGIN_SRC emacs-lisp
   (define-module bookmark
     (custom-set-variables
-     '(bookmark-use-annotations nil)
-     '(bmkp-auto-light-when-set 'autonamed-bookmark))
-  
-    (require-package 'bookmark+)
-  
-    (defvar bmkp-navigation-map
-      (let ((map (make-sparse-keymap)))
-        (define-key map "." 'bmkp-next-bookmark-this-buffer)
-        (define-key map "," 'bmkp-previous-bookmark-this-buffer)
-        (define-key map (kbd "M-.") 'bmkp-next-bookmark-this-buffer)
-        (define-key map (kbd "M-,") 'bmkp-previous-bookmark-this-buffer)
-        (define-key map (kbd "<") 'bmkp-previous-bookmark)
-        (define-key map (kbd ">") 'bmkp-next-bookmark)
-        map))
-  
-    (defadvice bmkp-last-specific-file-p (around expand-bookmark-file-name (bookmark) activate)
-      (let ((file (expand-file-name (bookmark-get-filename bookmark))))
-        (setq ad-return-value (and file  (string= file bmkp-last-specific-file)))))
-  
-    (defadvice bmkp-file-this-dir-bookmark-p (around expand-bookmark-file-name (bookmark) activate)
-      (setq ad-return-value
-       (and (bmkp-file-bookmark-p bookmark)
-            (equal (file-name-directory (expand-file-name (bookmark-get-filename bookmark)))
-                   (expand-file-name default-directory)))))
-  
-    (defadvice bmkp-dired-this-dir-bookmark-p (around expand-bookmark-file-name (bookmark) activate)
-      (setq ad-return-value
-            (and (bmkp-dired-bookmark-p bookmark)
-                 (let ((dir (file-name-directory (expand-file-name (bookmark-get-filename bookmark)))))
-                   (bmkp-same-file-p dir (expand-file-name default-directory))))))
-  
-    (temporary-mode-define-keys my-keymap 'bmkp-navigation)
+     '(bookmark-use-annotations nil))
+
     (global-set-key (kbd "C-x j SPC") 'jump-to-register))
 #+END_SRC
 
@@ -3129,7 +3073,6 @@ Install =emacs-rails= using =make vendor=
     (define-module diminish
       (require-package 'diminish)
       
-      (diminish-on-load eproject-mode-hook eproject-mode)
       (diminish-on-load highlight-parentheses-mode-hook highlight-parentheses-mode)
       (diminish-on-load yas-minor-mode-hook yas-minor-mode)
       (diminish-on-load whitespace-mode-hook global-whitespace-mode)
@@ -3415,7 +3358,6 @@ Install =emacs-rails= using =make vendor=
 
 #+BEGIN_SRC emacs-lisp
   (define-module eclim
-    (require-module eproject)
     (require-package 'emacs-eclim)
   
     (custom-set-variables
@@ -3423,12 +3365,12 @@ Install =emacs-rails= using =make vendor=
   
     (autoload 'start-eclimd "eclimd" nil t)
   
-    (defun eproject-maybe-turn-on-eclim ()
-      (when (and buffer-file-name
-                 (file-exists-p (concat (eproject-root) ".project"))
-                 (eclim--accepted-p buffer-file-name)
-                 (eclim--project-dir buffer-file-name))
-        (eclim-mode +1)))
+    ;; (defun eproject-maybe-turn-on-eclim ()
+    ;;   (when (and buffer-file-name
+    ;;              (file-exists-p (concat (eproject-root) ".project"))
+    ;;              (eclim--accepted-p buffer-file-name)
+    ;;              (eclim--project-dir buffer-file-name))
+    ;;     (eclim-mode +1)))
     (defun init--eclim-mode ()
       (when (boundp 'ac-sources)
         (if (eq (car ac-sources) 'ac-source-yasnippet)
@@ -3444,7 +3386,7 @@ Install =emacs-rails= using =make vendor=
       (require 'eclim)
       (require 'ac-emacs-eclim-source)
   
-      (add-hook 'eproject-mode-hook 'eproject-maybe-turn-on-eclim)
+      ;; (add-hook 'eproject-mode-hook 'eproject-maybe-turn-on-eclim)
       (mapc (lambda (buffer)
               (with-current-buffer buffer
                 (when (and buffer-file-name
@@ -3454,7 +3396,7 @@ Install =emacs-rails= using =make vendor=
             (buffer-list)))
     (defun eclim-disable ()
       (interactive)
-      (remove-hook 'eproject-mode-hook 'eproject-maybe-turn-on-eclim)
+      ;; (remove-hook 'eproject-mode-hook 'eproject-maybe-turn-on-eclim)
       (mapc (lambda (buffer)
               (with-current-buffer buffer
                 (eclim-mode -1)))
@@ -3483,12 +3425,12 @@ Install [[https://github.com/aemoncannon/ensime][ensime]] using =make vendor=
     (custom-set-variables
      '(ensime-ac-override-settings nil))
   
-    (defun eproject-maybe-turn-on-ensime (&optional buffer)
-      (with-current-buffer (or buffer (current-buffer))
-        (when (and (buffer-file-name)
-                   (eq major-mode 'scala-mode)
-                   (file-exists-p (concat (eproject-root) ".ensime")))
-          (ensime-mode +1))))
+    ;; (defun eproject-maybe-turn-on-ensime (&optional buffer)
+    ;;   (with-current-buffer (or buffer (current-buffer))
+    ;;     (when (and (buffer-file-name)
+    ;;                (eq major-mode 'scala-mode)
+    ;;                (file-exists-p (concat (eproject-root) ".ensime")))
+    ;;       (ensime-mode +1))))
   
     (defun init--ensime-mode ()
       (when (boundp 'ac-sources)
@@ -3502,12 +3444,13 @@ Install [[https://github.com/aemoncannon/ensime][ensime]] using =make vendor=
       (interactive)
       (require 'ensime)
       (ensime)
-      (add-hook 'eproject-mode-hook 'eproject-maybe-turn-on-ensime)
-      (mapc 'eproject-maybe-turn-on-ensime (buffer-list)))
+      ;; (add-hook 'eproject-mode-hook 'eproject-maybe-turn-on-ensime)
+      ;; (mapc 'eproject-maybe-turn-on-ensime (buffer-list))
+      )
   
     (defun ensime-disable ()
       (interactive)
-      (remove-hook 'eproject-mode-hook 'eproject-maybe-turn-on-ensime)
+      ;; (remove-hook 'eproject-mode-hook 'eproject-maybe-turn-on-ensime)
       (mapc (lambda (buffer)
               (with-current-buffer buffer
                 (ensime-mode -1)))

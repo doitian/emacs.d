@@ -64,70 +64,69 @@
 <li><a href="#sec-7-35">7.35. isearch</a></li>
 <li><a href="#sec-7-36">7.36. revert</a></li>
 <li><a href="#sec-7-37">7.37. terminal</a></li>
-<li><a href="#sec-7-38">7.38. eproject</a></li>
-<li><a href="#sec-7-39">7.39. helm</a></li>
-<li><a href="#sec-7-40">7.40. compile-and-run</a></li>
-<li><a href="#sec-7-41">7.41. editing</a></li>
-<li><a href="#sec-7-42">7.42. kill-ring</a></li>
-<li><a href="#sec-7-43">7.43. recentf</a></li>
-<li><a href="#sec-7-44">7.44. desktop</a></li>
-<li><a href="#sec-7-45">7.45. mark</a></li>
-<li><a href="#sec-7-46">7.46. whitespace</a></li>
-<li><a href="#sec-7-47">7.47. bookmark</a></li>
-<li><a href="#sec-7-48">7.48. spell</a></li>
-<li><a href="#sec-7-49">7.49. tab-fix</a></li>
-<li><a href="#sec-7-50">7.50. yasnippet</a></li>
-<li><a href="#sec-7-51">7.51. auto-complete</a></li>
-<li><a href="#sec-7-52">7.52. prog-mode-generic</a></li>
-<li><a href="#sec-7-53">7.53. auto-insert</a></li>
-<li><a href="#sec-7-54">7.54. ediff-mode</a></li>
-<li><a href="#sec-7-55">7.55. ediff-winring</a></li>
-<li><a href="#sec-7-56">7.56. time-stamp</a></li>
-<li><a href="#sec-7-57">7.57. highlight</a></li>
-<li><a href="#sec-7-58">7.58. hippie-expand</a></li>
-<li><a href="#sec-7-59">7.59. abbrev</a></li>
-<li><a href="#sec-7-60">7.60. search-files</a></li>
-<li><a href="#sec-7-61">7.61. alternative-files</a></li>
-<li><a href="#sec-7-62">7.62. ibuffer-mode</a></li>
-<li><a href="#sec-7-63">7.63. deft</a></li>
-<li><a href="#sec-7-64">7.64. mail</a></li>
-<li><a href="#sec-7-65">7.65. html-template-modes</a></li>
-<li><a href="#sec-7-66">7.66. css</a></li>
-<li><a href="#sec-7-67">7.67. yaml-mode</a></li>
-<li><a href="#sec-7-68">7.68. rainbow-mode</a></li>
-<li><a href="#sec-7-69">7.69. markdown-mode</a></li>
-<li><a href="#sec-7-70">7.70. lisp-mode</a></li>
-<li><a href="#sec-7-71">7.71. ruby-mode</a></li>
-<li><a href="#sec-7-72">7.72. rails</a></li>
-<li><a href="#sec-7-73">7.73. rspec-mode</a></li>
-<li><a href="#sec-7-74">7.74. mmm-mode</a></li>
-<li><a href="#sec-7-75">7.75. flycheck</a></li>
-<li><a href="#sec-7-76">7.76. tmux-send</a></li>
-<li><a href="#sec-7-77">7.77. speedbar</a></li>
-<li><a href="#sec-7-78">7.78. clean-buffer</a></li>
-<li><a href="#sec-7-79">7.79. uniquify-buffer</a></li>
-<li><a href="#sec-7-80">7.80. diminish</a></li>
-<li><a href="#sec-7-81">7.81. dtrt-indent</a></li>
-<li><a href="#sec-7-82">7.82. undo-tree</a></li>
-<li><a href="#sec-7-83">7.83. js-mode</a></li>
-<li><a href="#sec-7-84">7.84. coffee-mode</a></li>
-<li><a href="#sec-7-85">7.85. c-mode</a></li>
-<li><a href="#sec-7-86">7.86. win-move-resize</a></li>
-<li><a href="#sec-7-87">7.87. scala-mode</a></li>
-<li><a href="#sec-7-88">7.88. visual-regexp</a></li>
-<li><a href="#sec-7-89">7.89. eclim</a></li>
-<li><a href="#sec-7-90">7.90. ensime</a></li>
-<li><a href="#sec-7-91">7.91. ess</a></li>
-<li><a href="#sec-7-92">7.92. ianyme</a></li>
-<li><a href="#sec-7-93">7.93. mac</a></li>
-<li><a href="#sec-7-94">7.94. cscope</a></li>
-<li><a href="#sec-7-95">7.95. folding</a></li>
-<li><a href="#sec-7-96">7.96. erlang</a></li>
-<li><a href="#sec-7-97">7.97. sgml</a></li>
-<li><a href="#sec-7-98">7.98. sh-mode</a></li>
-<li><a href="#sec-7-99">7.99. haskell-mode</a></li>
-<li><a href="#sec-7-100">7.100. confluence</a></li>
-<li><a href="#sec-7-101">7.101. server</a></li>
+<li><a href="#sec-7-38">7.38. helm</a></li>
+<li><a href="#sec-7-39">7.39. compile-and-run</a></li>
+<li><a href="#sec-7-40">7.40. editing</a></li>
+<li><a href="#sec-7-41">7.41. kill-ring</a></li>
+<li><a href="#sec-7-42">7.42. recentf</a></li>
+<li><a href="#sec-7-43">7.43. desktop</a></li>
+<li><a href="#sec-7-44">7.44. mark</a></li>
+<li><a href="#sec-7-45">7.45. whitespace</a></li>
+<li><a href="#sec-7-46">7.46. bookmark</a></li>
+<li><a href="#sec-7-47">7.47. spell</a></li>
+<li><a href="#sec-7-48">7.48. tab-fix</a></li>
+<li><a href="#sec-7-49">7.49. yasnippet</a></li>
+<li><a href="#sec-7-50">7.50. auto-complete</a></li>
+<li><a href="#sec-7-51">7.51. prog-mode-generic</a></li>
+<li><a href="#sec-7-52">7.52. auto-insert</a></li>
+<li><a href="#sec-7-53">7.53. ediff-mode</a></li>
+<li><a href="#sec-7-54">7.54. ediff-winring</a></li>
+<li><a href="#sec-7-55">7.55. time-stamp</a></li>
+<li><a href="#sec-7-56">7.56. highlight</a></li>
+<li><a href="#sec-7-57">7.57. hippie-expand</a></li>
+<li><a href="#sec-7-58">7.58. abbrev</a></li>
+<li><a href="#sec-7-59">7.59. search-files</a></li>
+<li><a href="#sec-7-60">7.60. alternative-files</a></li>
+<li><a href="#sec-7-61">7.61. ibuffer-mode</a></li>
+<li><a href="#sec-7-62">7.62. deft</a></li>
+<li><a href="#sec-7-63">7.63. mail</a></li>
+<li><a href="#sec-7-64">7.64. html-template-modes</a></li>
+<li><a href="#sec-7-65">7.65. css</a></li>
+<li><a href="#sec-7-66">7.66. yaml-mode</a></li>
+<li><a href="#sec-7-67">7.67. rainbow-mode</a></li>
+<li><a href="#sec-7-68">7.68. markdown-mode</a></li>
+<li><a href="#sec-7-69">7.69. lisp-mode</a></li>
+<li><a href="#sec-7-70">7.70. ruby-mode</a></li>
+<li><a href="#sec-7-71">7.71. rails</a></li>
+<li><a href="#sec-7-72">7.72. rspec-mode</a></li>
+<li><a href="#sec-7-73">7.73. mmm-mode</a></li>
+<li><a href="#sec-7-74">7.74. flycheck</a></li>
+<li><a href="#sec-7-75">7.75. tmux-send</a></li>
+<li><a href="#sec-7-76">7.76. speedbar</a></li>
+<li><a href="#sec-7-77">7.77. clean-buffer</a></li>
+<li><a href="#sec-7-78">7.78. uniquify-buffer</a></li>
+<li><a href="#sec-7-79">7.79. diminish</a></li>
+<li><a href="#sec-7-80">7.80. dtrt-indent</a></li>
+<li><a href="#sec-7-81">7.81. undo-tree</a></li>
+<li><a href="#sec-7-82">7.82. js-mode</a></li>
+<li><a href="#sec-7-83">7.83. coffee-mode</a></li>
+<li><a href="#sec-7-84">7.84. c-mode</a></li>
+<li><a href="#sec-7-85">7.85. win-move-resize</a></li>
+<li><a href="#sec-7-86">7.86. scala-mode</a></li>
+<li><a href="#sec-7-87">7.87. visual-regexp</a></li>
+<li><a href="#sec-7-88">7.88. eclim</a></li>
+<li><a href="#sec-7-89">7.89. ensime</a></li>
+<li><a href="#sec-7-90">7.90. ess</a></li>
+<li><a href="#sec-7-91">7.91. ianyme</a></li>
+<li><a href="#sec-7-92">7.92. mac</a></li>
+<li><a href="#sec-7-93">7.93. cscope</a></li>
+<li><a href="#sec-7-94">7.94. folding</a></li>
+<li><a href="#sec-7-95">7.95. erlang</a></li>
+<li><a href="#sec-7-96">7.96. sgml</a></li>
+<li><a href="#sec-7-97">7.97. sh-mode</a></li>
+<li><a href="#sec-7-98">7.98. haskell-mode</a></li>
+<li><a href="#sec-7-99">7.99. confluence</a></li>
+<li><a href="#sec-7-100">7.100. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -639,7 +638,6 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   (require-package 'ido-hacks)
   (require-package 'ido-complete-space-or-hyphen)
   (put 'bookmark-set 'ido 'ignore)
-  (put 'bmkp-bmenu-edit-bookmark-name-and-location 'ido 'ignore)
   (put 'ido-exit-minibuffer 'ido 'ignore)
 
   (ido-complete-space-or-hyphen-enable)
@@ -1676,9 +1674,9 @@ add changes interactively using `ediff`.
   (add-to-list 'auto-mode-alist '("\\.gitconfig\\'" . conf-mode))
   (add-to-list 'auto-mode-alist '("\\.git/config\\'" . conf-mode))
 
-  (defadvice vc-mode-line (after colorize-vc-mode-line activate)
-    (when vc-mode
-      (put-text-property 1 (length vc-mode) 'face 'eproject-plus-mode-line-project-name-face vc-mode)))
+  ;; (defadvice vc-mode-line (after colorize-vc-mode-line activate)
+  ;;   (when vc-mode
+  ;;     (put-text-property 1 (length vc-mode) 'face 'eproject-plus-mode-line-project-name-face vc-mode)))
 
   (global-set-key (kbd "C-<f12>") 'git-status)
   (global-set-key (kbd "<ESC> <f12>") 'git-status)
@@ -1862,74 +1860,48 @@ If there is none yet, so that it is run asynchronously."
 ```
 
 <a name="sec-7-38"></a>
-## eproject
-
-```cl
-(define-module eproject
-  (require-module terminal)
-  (require-package 'eproject)
-  (require 'eproject-plus)
-
-  (define-key my-keymap (kbd "p P") 'eproject-plus-open-project)
-  (define-key my-keymap (kbd "p p") 'eproject-revisit-project)
-  (define-key my-keymap (kbd "M-p") 'eproject-plus-find-file-with-cache)
-  (define-key my-keymap (kbd "f") 'eproject-plus-find-file-with-cache)
-  (define-key my-keymap (kbd "M-f") 'eproject-plus-find-file-with-cache))
-```
-
-<a name="sec-7-39"></a>
 ## helm
 
 ```cl
 (define-module helm
-  (require-module eproject)
-  (require-module alternative-files)
+  ;; (require-module alternative-files)
   (require-package 'helm)
   (require 'helm-config)
 
-  (defvar helm-source-eproject-projects nil)
-  (defvar helm-source-eproject-files-in-project nil)
-  (defvar helm-source-alternative-files nil)
+  ;; (defvar helm-source-alternative-files nil)
 
-  (setq helm-source-eproject-projects
-        '((name . "Projects")
-          (candidates . (lambda ()
-                          (mapcar 'cdr (eproject-projects))))
-          (type . file)))
+  ;; (setq helm-source-eproject-projects
+  ;;       '((name . "Projects")
+  ;;         (candidates . (lambda ()
+  ;;                         (mapcar 'cdr (eproject-projects))))
+  ;;         (type . file)))
 
-  (defvar helm--eproject-root nil)
+  ;; (defvar helm--eproject-root nil)
 
-  (defun helm--eproject-transform-candidates (candidates source)
-    "convert each candidate to cons of (disp . real)"
-    (mapcar (lambda (i)
-              (cons (propertize i 'face 'helm-ff-file)
-                    (expand-file-name i helm--eproject-root)))
-            candidates))
+  ;; (defun helm--eproject-transform-candidates (candidates source)
+  ;;   "convert each candidate to cons of (disp . real)"
+  ;;   (mapcar (lambda (i)
+  ;;             (cons (propertize i 'face 'helm-ff-file)
+  ;;                   (expand-file-name i helm--eproject-root)))
+  ;;           candidates))
 
-  (setq helm-source-alternative-files
-        '((name . "Alternative Files")
-          (init . (lambda () (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))))
-          (candidates . (lambda ()
-                          (with-helm-current-buffer (alternative-files-existing))))
-          (real-to-display . (lambda (e)
-                               (with-helm-current-buffer
-                                (file-relative-name e helm--eproject-root))))
-          (type . file)))
+  ;; (setq helm-source-alternative-files
+  ;;       '((name . "Alternative Files")
+  ;;         (init . (lambda () (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))))
+  ;;         (candidates . (lambda ()
+  ;;                         (with-helm-current-buffer (alternative-files-existing))))
+  ;;         (real-to-display . (lambda (e)
+  ;;                              (with-helm-current-buffer
+  ;;                               (file-relative-name e helm--eproject-root))))
+  ;;         (type . file)))
 
-  (defun helm-eproject-projects ()
-    (interactive)
-    (helm-other-buffer 'helm-source-eproject-projects "*helm projects*"))
+  ;; (defun helm-eproject-projects ()
+  ;;   (interactive)
+  ;;   (helm-other-buffer 'helm-source-eproject-projects "*helm projects*"))
 
-  (defun helm-eproject-files-in-project ()
-    (interactive)
-    (helm-other-buffer 'helm-source-eproject-files-in-project "*helm files in project*"))
-
-  (defun helm-insert-buffer-base-name ()
-    "Insert buffer name stub."
-    (interactive)
-    (helm-insert-string
-     (with-current-buffer helm-current-buffer
-       (buffer-stub-name))))
+  ;; (defun helm-eproject-files-in-project ()
+  ;;   (interactive)
+  ;;   (helm-other-buffer 'helm-source-eproject-files-in-project "*helm files in project*"))
 
   (custom-set-variables
    '(helm-command-prefix-key "M-S")
@@ -1949,19 +1921,19 @@ If there is none yet, so that it is run asynchronously."
     (require 'helm-locate)
     (require 'helm-w3m)
 
-    (setq helm-source-eproject-files-in-project
-          `((name . "Project Files")
-            (init . (lambda ()
-                      (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))
-                      (helm-candidate-buffer
-                       (or (eproject-plus--cache-buffer helm--eproject-root)
-                           (progn
-                             (eproject-plus-list-project-files-with-cache helm--eproject-root)
-                             (eproject-plus--cache-buffer helm--eproject-root))
-                           'local))))
-            (candidates-in-buffer)
-            (filtered-candidate-transformer . helm--eproject-transform-candidates)
-            (action . ,(cdr (helm-get-actions-from-type helm-c-source-locate)))))
+    ;; (setq helm-source-eproject-files-in-project
+    ;;       `((name . "Project Files")
+    ;;         (init . (lambda ()
+    ;;                   (setq helm--eproject-root (with-helm-current-buffer (eproject-root-safe)))
+    ;;                   (helm-candidate-buffer
+    ;;                    (or (eproject-plus--cache-buffer helm--eproject-root)
+    ;;                        (progn
+    ;;                          (eproject-plus-list-project-files-with-cache helm--eproject-root)
+    ;;                          (eproject-plus--cache-buffer helm--eproject-root))
+    ;;                        'local))))
+    ;;         (candidates-in-buffer)
+    ;;         (filtered-candidate-transformer . helm--eproject-transform-candidates)
+    ;;         (action . ,(cdr (helm-get-actions-from-type helm-c-source-locate)))))
 
     (remove-hook 'helm-before-initialize-hook 'init--helm-load))
 
@@ -1970,16 +1942,16 @@ If there is none yet, so that it is run asynchronously."
   ;;; Sources
   (defvar my-helm-sources nil)
   (setq my-helm-sources
-        '(helm-source-alternative-files
-          helm-source-eproject-files-in-project
-          helm-source-files-in-current-dir
+        '(
+          ;; helm-source-alternative-files
+          ;; helm-source-eproject-files-in-project
+          ;; helm-source-files-in-current-dir
           helm-source-buffers-list
           helm-source-file-cache
-          helm-source-eproject-projects
+          ;; helm-source-eproject-projects
           helm-source-recentf
           helm-source-file-name-history
-          helm-source-bookmarks
-          helm-source-w3m-bookmarks))
+          helm-source-bookmarks))
 
   (defun my-helm-go ()
     "Preconfigured `helm' to fidn fiels"
@@ -1993,8 +1965,8 @@ If there is none yet, so that it is run asynchronously."
   (define-key helm-command-map (kbd "r") 'helm-register)
   (define-key helm-command-map (kbd "R") 'helm-regexp)
   (define-key helm-command-map (kbd "b") 'helm-c-pp-bookmarks)
-  (define-key helm-command-map (kbd "p") 'helm-eproject-projects)
-  (define-key helm-command-map (kbd "f") 'helm-eproject-files-in-project)
+  ;; (define-key helm-command-map (kbd "p") 'helm-eproject-projects)
+  ;; (define-key helm-command-map (kbd "f") 'helm-eproject-files-in-project)
   (define-key helm-command-map (kbd "<SPC>") 'helm-all-mark-rings)
 
   (global-set-key (kbd "M-X") 'my-helm-go)
@@ -2028,7 +2000,7 @@ If there is none yet, so that it is run asynchronously."
   )
 ```
 
-<a name="sec-7-40"></a>
+<a name="sec-7-39"></a>
 ## compile-and-run
 
 ```cl
@@ -2162,7 +2134,7 @@ If there is none yet, so that it is run asynchronously."
   (global-set-key (kbd "C-~") 'previous-error))
 ```
 
-<a name="sec-7-41"></a>
+<a name="sec-7-40"></a>
 ## editing
 
 Misc editing config
@@ -2194,7 +2166,7 @@ Misc editing config
   (global-set-key (kbd "C-8") 'pop-tag-mark))
 ```
 
-<a name="sec-7-42"></a>
+<a name="sec-7-41"></a>
 ## kill-ring
 
 ```cl
@@ -2216,7 +2188,7 @@ Misc editing config
       ad-do-it)))
 ```
 
-<a name="sec-7-43"></a>
+<a name="sec-7-42"></a>
 ## recentf
 
 ```cl
@@ -2232,7 +2204,7 @@ Misc editing config
   (global-set-key [f2] 'recentf-open-files))
 ```
 
-<a name="sec-7-44"></a>
+<a name="sec-7-43"></a>
 ## desktop
 
 ```cl
@@ -2262,7 +2234,7 @@ Misc editing config
   (add-to-list 'desktop-modes-not-to-save 'fundamental-mode))
 ```
 
-<a name="sec-7-45"></a>
+<a name="sec-7-44"></a>
 ## mark
 
 ```cl
@@ -2280,7 +2252,7 @@ Misc editing config
     (deactivate-mark)))
 ```
 
-<a name="sec-7-46"></a>
+<a name="sec-7-45"></a>
 ## whitespace
 
 ```cl
@@ -2300,48 +2272,18 @@ Misc editing config
   (define-key my-keymap (kbd "SPC") 'whitespace-cleanup-and-save))
 ```
 
-<a name="sec-7-47"></a>
+<a name="sec-7-46"></a>
 ## bookmark
 
 ```cl
 (define-module bookmark
   (custom-set-variables
-   '(bookmark-use-annotations nil)
-   '(bmkp-auto-light-when-set 'autonamed-bookmark))
+   '(bookmark-use-annotations nil))
 
-  (require-package 'bookmark+)
-
-  (defvar bmkp-navigation-map
-    (let ((map (make-sparse-keymap)))
-      (define-key map "." 'bmkp-next-bookmark-this-buffer)
-      (define-key map "," 'bmkp-previous-bookmark-this-buffer)
-      (define-key map (kbd "M-.") 'bmkp-next-bookmark-this-buffer)
-      (define-key map (kbd "M-,") 'bmkp-previous-bookmark-this-buffer)
-      (define-key map (kbd "<") 'bmkp-previous-bookmark)
-      (define-key map (kbd ">") 'bmkp-next-bookmark)
-      map))
-
-  (defadvice bmkp-last-specific-file-p (around expand-bookmark-file-name (bookmark) activate)
-    (let ((file (expand-file-name (bookmark-get-filename bookmark))))
-      (setq ad-return-value (and file  (string= file bmkp-last-specific-file)))))
-
-  (defadvice bmkp-file-this-dir-bookmark-p (around expand-bookmark-file-name (bookmark) activate)
-    (setq ad-return-value
-     (and (bmkp-file-bookmark-p bookmark)
-          (equal (file-name-directory (expand-file-name (bookmark-get-filename bookmark)))
-                 (expand-file-name default-directory)))))
-
-  (defadvice bmkp-dired-this-dir-bookmark-p (around expand-bookmark-file-name (bookmark) activate)
-    (setq ad-return-value
-          (and (bmkp-dired-bookmark-p bookmark)
-               (let ((dir (file-name-directory (expand-file-name (bookmark-get-filename bookmark)))))
-                 (bmkp-same-file-p dir (expand-file-name default-directory))))))
-
-  (temporary-mode-define-keys my-keymap 'bmkp-navigation)
   (global-set-key (kbd "C-x j SPC") 'jump-to-register))
 ```
 
-<a name="sec-7-48"></a>
+<a name="sec-7-47"></a>
 ## spell
 
 ```cl
@@ -2363,7 +2305,7 @@ Misc editing config
   (global-set-key (kbd "C-4") 'ispell-word))
 ```
 
-<a name="sec-7-49"></a>
+<a name="sec-7-48"></a>
 ## tab-fix
 
 ```cl
@@ -2384,7 +2326,7 @@ Misc editing config
   (add-hook 'markdown-mode-hook 'tab-fix-org-mode))
 ```
 
-<a name="sec-7-50"></a>
+<a name="sec-7-49"></a>
 ## yasnippet
 
 Compile all snippets into `snippets.el` and load it. After change or and any snippets, must
@@ -2474,7 +2416,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
 
 ```
 
-<a name="sec-7-51"></a>
+<a name="sec-7-50"></a>
 ## auto-complete
 
 ```cl
@@ -2551,7 +2493,7 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
   (add-hook 'emacs-lisp-mode-hook 'init--ac-emacs-lisp-mode))
 ```
 
-<a name="sec-7-52"></a>
+<a name="sec-7-51"></a>
 ## prog-mode-generic
 
 ```cl
@@ -2570,7 +2512,7 @@ This functions should be added to the hooks of major modes for programming."
   (add-hook 'prog-mode-hook 'font-lock-comment-annotations))
 ```
 
-<a name="sec-7-53"></a>
+<a name="sec-7-52"></a>
 ## auto-insert
 
 ```cl
@@ -2595,7 +2537,7 @@ This functions should be added to the hooks of major modes for programming."
          auto-insert-alist-default)))
 ```
 
-<a name="sec-7-54"></a>
+<a name="sec-7-53"></a>
 ## ediff-mode
 
 ```cl
@@ -2610,7 +2552,7 @@ This functions should be added to the hooks of major modes for programming."
       (ediff-show-registry))))
 ```
 
-<a name="sec-7-55"></a>
+<a name="sec-7-54"></a>
 ## ediff-winring
 
 ```cl
@@ -2647,7 +2589,7 @@ This functions should be added to the hooks of major modes for programming."
   (define-key init--windows-keymap "e" 'winring-toggle-ediff))
 ```
 
-<a name="sec-7-56"></a>
+<a name="sec-7-55"></a>
 ## time-stamp
 
 ```cl
@@ -2659,7 +2601,7 @@ This functions should be added to the hooks of major modes for programming."
         time-stamp-end ">"))
 ```
 
-<a name="sec-7-57"></a>
+<a name="sec-7-56"></a>
 ## highlight
 
 ```cl
@@ -2713,7 +2655,7 @@ This functions should be added to the hooks of major modes for programming."
   (add-hook 'ruby-mode-hook 'highlight-parentheses-mode))
 ```
 
-<a name="sec-7-58"></a>
+<a name="sec-7-57"></a>
 ## hippie-expand
 
 ```cl
@@ -2739,7 +2681,7 @@ This functions should be added to the hooks of major modes for programming."
   (global-set-key (kbd "M-/") 'hippie-expand))  
 ```
 
-<a name="sec-7-59"></a>
+<a name="sec-7-58"></a>
 ## abbrev
 
 ```cl
@@ -2749,7 +2691,7 @@ This functions should be added to the hooks of major modes for programming."
    '(mail-abbrevs-mode t)))
 ```
 
-<a name="sec-7-60"></a>
+<a name="sec-7-59"></a>
 ## search-files
 
 ```cl
@@ -2765,7 +2707,7 @@ This functions should be added to the hooks of major modes for programming."
   (global-set-key (kbd "<f11>") 'find-grep-dired))
 ```
 
-<a name="sec-7-61"></a>
+<a name="sec-7-60"></a>
 ## alternative-files
 
 ```cl
@@ -2834,7 +2776,7 @@ This functions should be added to the hooks of major modes for programming."
   (define-key my-keymap (kbd "A") 'alternative-files-create-file))
 ```
 
-<a name="sec-7-62"></a>
+<a name="sec-7-61"></a>
 ## ibuffer-mode
 
 ```cl
@@ -2934,7 +2876,7 @@ This functions should be added to the hooks of major modes for programming."
 
 ```
 
-<a name="sec-7-63"></a>
+<a name="sec-7-62"></a>
 ## deft
 
 ```cl
@@ -2960,7 +2902,7 @@ This functions should be added to the hooks of major modes for programming."
   (define-key my-keymap "m" 'deft))
 ```
 
-<a name="sec-7-64"></a>
+<a name="sec-7-63"></a>
 ## mail
 
 ```cl
@@ -2991,7 +2933,7 @@ This functions should be added to the hooks of major modes for programming."
      '(message-send-mail-function 'message-send-mail-with-mailclient))))
 ```
 
-<a name="sec-7-65"></a>
+<a name="sec-7-64"></a>
 ## html-template-modes
 
 ```cl
@@ -3004,7 +2946,7 @@ This functions should be added to the hooks of major modes for programming."
   (add-to-list 'auto-mode-alist '("\\.hbs$" . handlebars-mode)))
 ```
 
-<a name="sec-7-66"></a>
+<a name="sec-7-65"></a>
 ## css
 
 css, sass, scss, stylus
@@ -3031,7 +2973,7 @@ css, sass, scss, stylus
   (add-hook 'sass-mode-hook 'init--sass-load))
 ```
 
-<a name="sec-7-67"></a>
+<a name="sec-7-66"></a>
 ## yaml-mode
 
 ```cl
@@ -3039,7 +2981,7 @@ css, sass, scss, stylus
   (require-package 'yaml-mode))
 ```
 
-<a name="sec-7-68"></a>
+<a name="sec-7-67"></a>
 ## rainbow-mode
 
 ```cl
@@ -3051,7 +2993,7 @@ css, sass, scss, stylus
   (add-hook 'scss-mode-hook 'rainbow-mode))
 ```
 
-<a name="sec-7-69"></a>
+<a name="sec-7-68"></a>
 ## markdown-mode
 
 ```cl
@@ -3085,7 +3027,7 @@ css, sass, scss, stylus
   (add-hook 'markdown-mode-hook 'auto-fill-mode))
 ```
 
-<a name="sec-7-70"></a>
+<a name="sec-7-69"></a>
 ## lisp-mode
 
 ```cl
@@ -3139,7 +3081,7 @@ css, sass, scss, stylus
   (add-hook 'emacs-lisp-mode-hook 'init--emacs-lisp-load))
 ```
 
-<a name="sec-7-71"></a>
+<a name="sec-7-70"></a>
 ## ruby-mode
 
 ```cl
@@ -3198,7 +3140,7 @@ css, sass, scss, stylus
   (add-hook 'ruby-mode-hook 'init--ruby-mode))
 ```
 
-<a name="sec-7-72"></a>
+<a name="sec-7-71"></a>
 ## rails
 
 Install `emacs-rails` using `make vendor`
@@ -3215,7 +3157,7 @@ Install `emacs-rails` using `make vendor`
   (require 'emacs-rails-hacks))
 ```
 
-<a name="sec-7-73"></a>
+<a name="sec-7-72"></a>
 ## rspec-mode
 
 ```cl
@@ -3241,7 +3183,7 @@ Install `emacs-rails` using `make vendor`
    '(rspec-key-command-prefix (kbd "M-s v"))))
 ```
 
-<a name="sec-7-74"></a>
+<a name="sec-7-73"></a>
 ## mmm-mode
 
 ```cl
@@ -3303,7 +3245,7 @@ Install `emacs-rails` using `make vendor`
   (add-to-list 'auto-mode-alist '("\\.jst\\.ejs\\'"  . html-erb-mode)))
 ```
 
-<a name="sec-7-75"></a>
+<a name="sec-7-74"></a>
 ## flycheck
 
 ```cl
@@ -3325,7 +3267,7 @@ Install `emacs-rails` using `make vendor`
   (global-set-key (kbd "M-~") 'flycheck-previous-error))
 ```
 
-<a name="sec-7-76"></a>
+<a name="sec-7-75"></a>
 ## tmux-send
 
 ```cl
@@ -3337,7 +3279,7 @@ Install `emacs-rails` using `make vendor`
   (global-set-key (kbd "C-<f6>") 'tmux-select))
 ```
 
-<a name="sec-7-77"></a>
+<a name="sec-7-76"></a>
 ## speedbar
 
 ```cl
@@ -3358,7 +3300,7 @@ Install `emacs-rails` using `make vendor`
                                  (left . 0)))))
 ```
 
-<a name="sec-7-78"></a>
+<a name="sec-7-77"></a>
 ## clean-buffer
 
 ```cl
@@ -3370,7 +3312,7 @@ Install `emacs-rails` using `make vendor`
    '(midnight-mode t nil (midnight))))
 ```
 
-<a name="sec-7-79"></a>
+<a name="sec-7-78"></a>
 ## uniquify-buffer
 
 ```cl
@@ -3380,7 +3322,7 @@ Install `emacs-rails` using `make vendor`
    '(uniquify-strip-common-suffix nil)))
 ```
 
-<a name="sec-7-80"></a>
+<a name="sec-7-79"></a>
 ## diminish
 
 ```cl
@@ -3396,7 +3338,6 @@ Install `emacs-rails` using `make vendor`
 (define-module diminish
   (require-package 'diminish)
 
-  (diminish-on-load eproject-mode-hook eproject-mode)
   (diminish-on-load highlight-parentheses-mode-hook highlight-parentheses-mode)
   (diminish-on-load yas-minor-mode-hook yas-minor-mode)
   (diminish-on-load whitespace-mode-hook global-whitespace-mode)
@@ -3418,7 +3359,7 @@ Install `emacs-rails` using `make vendor`
   (diminish 'auto-fill-function " F"))
 ```
 
-<a name="sec-7-81"></a>
+<a name="sec-7-80"></a>
 ## dtrt-indent
 
 ```cl
@@ -3427,7 +3368,7 @@ Install `emacs-rails` using `make vendor`
   (dtrt-indent-mode 1))
 ```
 
-<a name="sec-7-82"></a>
+<a name="sec-7-81"></a>
 ## undo-tree
 
 ```cl
@@ -3439,7 +3380,7 @@ Install `emacs-rails` using `make vendor`
   (define-key ctl-x-r-map "U" 'undo-tree-restore-state-from-register))
 ```
 
-<a name="sec-7-83"></a>
+<a name="sec-7-82"></a>
 ## js-mode
 
 ```cl
@@ -3488,7 +3429,7 @@ Install `emacs-rails` using `make vendor`
     nil " mongo" mongo-minor-mode-map))
 ```
 
-<a name="sec-7-84"></a>
+<a name="sec-7-83"></a>
 ## coffee-mode
 
 ```cl
@@ -3496,7 +3437,7 @@ Install `emacs-rails` using `make vendor`
   (require-package 'coffee-mode))
 ```
 
-<a name="sec-7-85"></a>
+<a name="sec-7-84"></a>
 ## c-mode
 
 ```cl
@@ -3621,7 +3562,7 @@ Install `emacs-rails` using `make vendor`
   (add-hook 'c-mode-common-hook 'init--c-mode-common))
 ```
 
-<a name="sec-7-86"></a>
+<a name="sec-7-85"></a>
 ## win-move-resize
 
 ```cl
@@ -3659,7 +3600,7 @@ Install `emacs-rails` using `make vendor`
   (temporary-mode-define-keys my-keymap 'win-move-resize))
 ```
 
-<a name="sec-7-87"></a>
+<a name="sec-7-86"></a>
 ## scala-mode
 
 ```cl
@@ -3683,7 +3624,7 @@ Install `emacs-rails` using `make vendor`
   (add-hook 'scala-mode-hook 'init--scala-mode))
 ```
 
-<a name="sec-7-88"></a>
+<a name="sec-7-87"></a>
 ## visual-regexp
 
 ```cl
@@ -3694,12 +3635,11 @@ Install `emacs-rails` using `make vendor`
   (define-key my-keymap (kbd "v q") 'vr/query-replace))
 ```
 
-<a name="sec-7-89"></a>
+<a name="sec-7-88"></a>
 ## eclim
 
 ```cl
 (define-module eclim
-  (require-module eproject)
   (require-package 'emacs-eclim)
 
   (custom-set-variables
@@ -3707,12 +3647,12 @@ Install `emacs-rails` using `make vendor`
 
   (autoload 'start-eclimd "eclimd" nil t)
 
-  (defun eproject-maybe-turn-on-eclim ()
-    (when (and buffer-file-name
-               (file-exists-p (concat (eproject-root) ".project"))
-               (eclim--accepted-p buffer-file-name)
-               (eclim--project-dir buffer-file-name))
-      (eclim-mode +1)))
+  ;; (defun eproject-maybe-turn-on-eclim ()
+  ;;   (when (and buffer-file-name
+  ;;              (file-exists-p (concat (eproject-root) ".project"))
+  ;;              (eclim--accepted-p buffer-file-name)
+  ;;              (eclim--project-dir buffer-file-name))
+  ;;     (eclim-mode +1)))
   (defun init--eclim-mode ()
     (when (boundp 'ac-sources)
       (if (eq (car ac-sources) 'ac-source-yasnippet)
@@ -3728,7 +3668,7 @@ Install `emacs-rails` using `make vendor`
     (require 'eclim)
     (require 'ac-emacs-eclim-source)
 
-    (add-hook 'eproject-mode-hook 'eproject-maybe-turn-on-eclim)
+    ;; (add-hook 'eproject-mode-hook 'eproject-maybe-turn-on-eclim)
     (mapc (lambda (buffer)
             (with-current-buffer buffer
               (when (and buffer-file-name
@@ -3738,14 +3678,14 @@ Install `emacs-rails` using `make vendor`
           (buffer-list)))
   (defun eclim-disable ()
     (interactive)
-    (remove-hook 'eproject-mode-hook 'eproject-maybe-turn-on-eclim)
+    ;; (remove-hook 'eproject-mode-hook 'eproject-maybe-turn-on-eclim)
     (mapc (lambda (buffer)
             (with-current-buffer buffer
               (eclim-mode -1)))
           (buffer-list))))
 ```
 
-<a name="sec-7-90"></a>
+<a name="sec-7-89"></a>
 ## ensime
 
 Add [ENSIME-sbt-cmd](https://github.com/aemoncannon/ensime-sbt-cmd) in `~/.sbt/plugins/plugins.sbt`
@@ -3769,12 +3709,12 @@ Install [ensime](https://github.com/aemoncannon/ensime) using `make vendor`
   (custom-set-variables
    '(ensime-ac-override-settings nil))
 
-  (defun eproject-maybe-turn-on-ensime (&optional buffer)
-    (with-current-buffer (or buffer (current-buffer))
-      (when (and (buffer-file-name)
-                 (eq major-mode 'scala-mode)
-                 (file-exists-p (concat (eproject-root) ".ensime")))
-        (ensime-mode +1))))
+  ;; (defun eproject-maybe-turn-on-ensime (&optional buffer)
+  ;;   (with-current-buffer (or buffer (current-buffer))
+  ;;     (when (and (buffer-file-name)
+  ;;                (eq major-mode 'scala-mode)
+  ;;                (file-exists-p (concat (eproject-root) ".ensime")))
+  ;;       (ensime-mode +1))))
 
   (defun init--ensime-mode ()
     (when (boundp 'ac-sources)
@@ -3788,12 +3728,13 @@ Install [ensime](https://github.com/aemoncannon/ensime) using `make vendor`
     (interactive)
     (require 'ensime)
     (ensime)
-    (add-hook 'eproject-mode-hook 'eproject-maybe-turn-on-ensime)
-    (mapc 'eproject-maybe-turn-on-ensime (buffer-list)))
+    ;; (add-hook 'eproject-mode-hook 'eproject-maybe-turn-on-ensime)
+    ;; (mapc 'eproject-maybe-turn-on-ensime (buffer-list))
+    )
 
   (defun ensime-disable ()
     (interactive)
-    (remove-hook 'eproject-mode-hook 'eproject-maybe-turn-on-ensime)
+    ;; (remove-hook 'eproject-mode-hook 'eproject-maybe-turn-on-ensime)
     (mapc (lambda (buffer)
             (with-current-buffer buffer
               (ensime-mode -1)))
@@ -3803,7 +3744,7 @@ Install [ensime](https://github.com/aemoncannon/ensime) using `make vendor`
       (ensime-shutdown))))
 ```
 
-<a name="sec-7-91"></a>
+<a name="sec-7-90"></a>
 ## ess
 
 ```cl
@@ -3822,7 +3763,7 @@ Install [ensime](https://github.com/aemoncannon/ensime) using `make vendor`
              auto-mode-alist)))))
 ```
 
-<a name="sec-7-92"></a>
+<a name="sec-7-91"></a>
 ## ianyme
 
 Functions to manage site iany.me
@@ -3844,7 +3785,7 @@ Functions to manage site iany.me
       (set-visited-file-name newname))))
 ```
 
-<a name="sec-7-93"></a>
+<a name="sec-7-92"></a>
 ## mac
 
 ```cl
@@ -3898,7 +3839,7 @@ Functions to manage site iany.me
     ))
 ```
 
-<a name="sec-7-94"></a>
+<a name="sec-7-93"></a>
 ## cscope
 
 ```cl
@@ -3929,7 +3870,7 @@ Functions to manage site iany.me
         (ad-set-arg 1 (cons "-C" (ad-get-arg 1)))))))
 ```
 
-<a name="sec-7-95"></a>
+<a name="sec-7-94"></a>
 ## folding
 
 ```cl
@@ -4063,7 +4004,7 @@ Functions to manage site iany.me
 
 ```
 
-<a name="sec-7-96"></a>
+<a name="sec-7-95"></a>
 ## erlang
 
 ```cl
@@ -4081,7 +4022,7 @@ Functions to manage site iany.me
   (require-package 'erlang))
 ```
 
-<a name="sec-7-97"></a>
+<a name="sec-7-96"></a>
 ## sgml
 
 ```cl
@@ -4095,7 +4036,7 @@ Functions to manage site iany.me
   (add-hook 'sgml-mode-hook 'init--sgml-mode))
 ```
 
-<a name="sec-7-98"></a>
+<a name="sec-7-97"></a>
 ## sh-mode
 
 ```cl
@@ -4103,7 +4044,7 @@ Functions to manage site iany.me
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode)))
 ```
 
-<a name="sec-7-99"></a>
+<a name="sec-7-98"></a>
 ## haskell-mode
 
 ```cl
@@ -4113,7 +4054,7 @@ Functions to manage site iany.me
    '(haskell-mode-hook '(turn-on-haskell-indentation))))
 ```
 
-<a name="sec-7-100"></a>
+<a name="sec-7-99"></a>
 ## confluence
 
 ```cl
@@ -4146,7 +4087,7 @@ Functions to manage site iany.me
 
 ```
 
-<a name="sec-7-101"></a>
+<a name="sec-7-100"></a>
 ## server
 
 Start emacs server.

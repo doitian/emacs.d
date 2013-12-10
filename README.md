@@ -1901,7 +1901,7 @@ If there is none yet, so that it is run asynchronously."
                           (with-helm-current-buffer (alternative-files-existing))))
           (real-to-display . (lambda (e)
                                (with-helm-current-buffer
-                                (file-relative-name e helm--project-root))))
+                                 (file-relative-name e helm--project-root))))
           (type . file)))
 
   (custom-set-variables
@@ -1923,6 +1923,8 @@ If there is none yet, so that it is run asynchronously."
     (require 'helm-w3m)
     (require 'helm-projectile)
     (require 'helm-projectile-files-candidates-in-buffer)
+    (define-key projectile-mode-map (kbd "C-c p h") nil)
+    (define-key projectile-mode-map (kbd "M-s p h") 'helm-projectile)
 
     (remove-hook 'helm-before-initialize-hook 'init--helm-load))
 

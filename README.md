@@ -850,6 +850,32 @@ Capture template
 ```cl
 (define-module org-capture
   (require-module org-basic)
+
+  ;; Sparrow does not support getting current selected mail through Apple
+  ;; Script, but the message can be dragged. If the dragging message is
+  ;; dropped as text, the text contains subject and the URL to the message. So
+  ;; add around advice on ns-insert-text to monitor any Sparrow drop.
+  (defadvice ns-insert-text (around monitor-sparrow-drop activate)
+    (if (string-match "\\(.*\\) (\\(x-sparrow:.*\\))$" ns-input-text)
+        (let* ((subject (match-string 1 ns-input-text))
+               (link (match-string 2 ns-input-text))
+               (orglink (org-make-link-string link subject))
+               (org-capture-link-is-already-stored t))
+          (org-store-link-props :type "open"
+                                :link link
+                                :description (concat subject " :@message:")
+                                :annotation orglink
+                                :initial ""
+                                :query "")
+          (funcall 'org-capture nil "b"))
+      ad-do-it))
+
+  (defun ns-insert-text ()
+    "Insert contents of `ns-input-text' at point."
+    (interactive)
+    (insert ns-input-text)
+    (setq ns-input-text nil))
+
   (custom-set-variables
    '(org-protocol-protocol-alist '(("edit-link" :protocol "edit-link" :function org-edit-url)))
    '(org-capture-templates
@@ -1053,7 +1079,8 @@ Opinioned GTD config based on org
             (tags-todo "@computer/GOING|PAUSE|TODO")
             (tags-todo "@phone/GOING|PAUSE|TODO")
             (tags-todo "@message/GOING|PAUSE|TODO")
-            (tags-todo "@reading/GOING|PAUSE|TODO")))
+            (tags-todo "@reading/GOING|PAUSE|TODO")
+            (tags-todo "-@home-@errands-@computer-@phone-@message-@reading/GOING|PAUSE|TODO")))
           ("T" "TODO List"
            ((todo "GOING|PAUSE|TODO"))
            ((org-agenda-todo-ignore-with-date nil)))

@@ -448,7 +448,6 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
     (require-package 'projectile)
     (custom-set-variables
      '(projectile-enable-caching t)
-     '(projectile-switch-project-action 'projectile-dired)
      '(projectile-keymap-prefix (kbd "M-s p")))
   
     (defun projectile+-open-project (&optional force)
@@ -1436,13 +1435,6 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
     (define-key my-keymap (kbd "n") 'init--display-dired))
 #+END_SRC
 
-** pointback                                                          :DISABLED:
-#+BEGIN_SRC emacs-lisp
-  ;;; Conflict with skeleton
-  ;; (define-module pointback
-  ;;   (require-package 'pointback)
-  ;;   (global-pointback-mode +1))
-#+END_SRC
 ** buffers-commands
 #+BEGIN_SRC emacs-lisp
   (define-module buffers-commands

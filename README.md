@@ -1921,6 +1921,8 @@ If there is none yet, so that it is run asynchronously."
     (require 'helm-files)
     (require 'helm-locate)
     (require 'helm-w3m)
+    (require 'helm-projectile)
+    (require 'helm-projectile-files-candidates-in-buffer)
 
     (remove-hook 'helm-before-initialize-hook 'init--helm-load))
 
@@ -1931,7 +1933,7 @@ If there is none yet, so that it is run asynchronously."
   (setq my-helm-sources
         '(
           helm-source-alternative-files
-          helm-source-projectile-files-list
+          helm-source-projectile-files-candidates-in-buffer-files-list
           helm-source-files-in-current-dir
           helm-source-buffers-list
           helm-source-file-cache

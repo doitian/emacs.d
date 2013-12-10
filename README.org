@@ -1690,7 +1690,7 @@ Auto revert, and helper functions to revert without confirmation.
                             (with-helm-current-buffer (alternative-files-existing))))
             (real-to-display . (lambda (e)
                                  (with-helm-current-buffer
-                                  (file-relative-name e helm--project-root))))
+                                   (file-relative-name e helm--project-root))))
             (type . file)))
   
     (custom-set-variables
@@ -1710,6 +1710,10 @@ Auto revert, and helper functions to revert without confirmation.
       (require 'helm-files)
       (require 'helm-locate)
       (require 'helm-w3m)
+      (require 'helm-projectile)
+      (require 'helm-projectile-files-candidates-in-buffer)
+      (define-key projectile-mode-map (kbd "C-c p h") nil)
+      (define-key projectile-mode-map (kbd "M-s p h") 'helm-projectile)
   
       (remove-hook 'helm-before-initialize-hook 'init--helm-load))
   
@@ -1720,7 +1724,7 @@ Auto revert, and helper functions to revert without confirmation.
     (setq my-helm-sources
           '(
             helm-source-alternative-files
-            helm-source-projectile-files-list
+            helm-source-projectile-files-candidates-in-buffer-files-list
             helm-source-files-in-current-dir
             helm-source-buffers-list
             helm-source-file-cache

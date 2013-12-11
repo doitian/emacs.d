@@ -677,7 +677,11 @@ Store org agenda files in dropbox directory
     (require-module org-basic)
     (make-directory (concat my-dropbox-dir "g/org/projects") t)
     (setq org-directory (concat my-dropbox-dir "g/org"))
-    (setq org-agenda-files (list (concat my-dropbox-dir "g/org") (concat my-dropbox-dir "g/org/projects")))
+    (setq org-agenda-files
+          (mapcar
+           (lambda (e)
+             (concat my-dropbox-dir "g/org/" e))
+           (list "inbox.org" "personal.org" "someday.org" "habit.org" "journal.org" "projects")))
     (setq org-mobile-directory (concat my-dropbox-dir "MobileOrg"))
     (setq org-default-notes-file (concat org-directory "/inbox.org"))
     (setq org-mobile-inbox-for-pull (concat my-dropbox-dir "g/org/from_mobile.org"))
@@ -736,10 +740,6 @@ Capture template
           "* TODO %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n%i")
          ("j" "Journal" plain (file+datetree (concat org-directory "/journal.org"))
           "\n%?\n" :empty-lines 1)
-         ("m" "Management" plain (file+datetree (concat org-directory "/management.org"))
-          "\n%?\n" :empty-lines 1)
-         ("p" "Pomodoro" plain (file+datetree (concat org-directory "/pomodoro.org"))
-          "\n%?\n" :empty-lines 1)
          ("d" "Dump" plain (file+olp (concat org-directory "/inbox.org") "Quick Notes" "Plain")
           "\n--%U--------------------------------------------------\n%?\n" :empty-lines 1)
          ("l" "List" item (file+olp (concat org-directory "/inbox.org") "Quick Notes" "List") "%?\n" :empty-lines 1)
@@ -748,8 +748,6 @@ Capture template
          ("x" "Clipboard" entry (file+headline (concat org-directory "/inbox.org") "Notes")
           "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %x"
           :prepend t :empty-lines 1)
-         ("i" "Idea" entry (file (concat org-directory "/spark.org") "")
-          "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n%i")
   
          ("b" "Default template" entry (file+headline (concat org-directory "/inbox.org") "Tasks")
           "* TODO %:description\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n%a"

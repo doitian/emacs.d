@@ -539,6 +539,7 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
      '(magit-repo-dirs-depth 1))
   
     (require-package 'magit)
+    (global-magit-wip-save-mode +1)
   
     (defun magit-toggle-whitespace ()
       (interactive)

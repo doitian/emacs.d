@@ -3811,6 +3811,13 @@ Start emacs server.
         map))
   
     (defun init--server-visit ()
+      (when (and
+             (buffer-file-name)
+             (string-match-p
+              "^zsh[a-zA-Z0-9]+$"
+              (file-name-nondirectory (buffer-file-name))))
+        (sh-mode)
+        (sh-set-shell "zsh"))
       (server-edit-minor-mode +1))
   
     ;; run last to run on the minor mode for any enabled major modes

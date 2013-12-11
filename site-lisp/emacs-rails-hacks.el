@@ -58,8 +58,8 @@
 
 (defun rails-hacks--delete-hooks ()
   "Remove hooks. Must be called just after required `rails'."
-  (setq find-file-hook (cdr find-file-hook))
-  (setq dired-mode-hook (cdr dired-mode-hook)))
+  (setq-default find-file-hook (cdr (default-value 'find-file-hook)))
+  (setq-default dired-mode-hook (cdr (default-value 'dired-mode-hook))))
 
 (defadvice rails-core:prepare-command (around rails-hacks--zeus-maybe (command) activate)
   (if (or (file-exists-p (rails-core:file ".zeus.sock"))

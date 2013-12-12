@@ -3568,6 +3568,10 @@ Functions to manage site iany.me
       (add-to-list 'auto-mode-alist '("\\.scala\\.txt\\'" . scala-mode))
       (add-to-list 'auto-mode-alist '("\\.xml\\.txt\\'" . xml-mode))
   
+      (if (file-executable-p "/usr/local/bin/gls")
+          (setq insert-directory-program "/usr/local/bin/gls")
+        (setq dired-use-ls-dired nil))
+  
       ))
 #+END_SRC
 ** cscope

@@ -3300,7 +3300,9 @@ Install `emacs-rails` using `make vendor`
 (define-module tmux-send
   (defalias 'tcd 'tmux-cd)
   (global-set-key (kbd "M-<f6>") 'tmux-toggle-send-next-compile-command)
+  (global-set-key (kbd "s-<f6>") 'tmux-toggle-send-next-compile-command)
   (global-set-key (kbd "C-M-<f6>") 'tmux-repeat)
+  (global-set-key (kbd "H-<f6>") 'tmux-repeat)
   (global-set-key (kbd "<f6>") 'tmux-send)
   (global-set-key (kbd "C-<f6>") 'tmux-select))
 ```

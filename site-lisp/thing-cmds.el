@@ -8,9 +8,9 @@
 ;; Created: Sun Jul 30 16:40:29 2006
 ;; Version: 0
 ;; Package-Requires: ((hide-comnt "0"))
-;; Last-Updated: Tue Jul 23 17:03:37 2013 (-0700)
+;; Last-Updated: Thu Nov  7 20:30:59 2013 (-0800)
 ;;           By: dradams
-;;     Update #: 719
+;;     Update #: 738
 ;; URL: http://www.emacswiki.org/thing-cmds.el
 ;; Doc URL: http://www.emacswiki.org/ThingAtPointCommands
 ;; Keywords: thingatpt, thing, region, selection
@@ -32,8 +32,8 @@
 ;;
 ;;  Commands defined here:
 ;;
-;;    `cycle-thing-region', `mark-enclosing-sexp',
-;;    `mark-enclosing-sexp-backward', `mark-enclosing-sexp-forward',
+;;    `cycle-thing-region', `mark-enclosing-list',
+;;    `mark-enclosing-list-backward', `mark-enclosing-list-forward',
 ;;    `mark-thing', `next-visible-thing', `next-visible-thing-repeat',
 ;;    `previous-visible-thing', `previous-visible-thing-repeat',
 ;;    `select-thing-near-point', `thgcmd-bind-keys', `thing-region'.
@@ -66,6 +66,13 @@
 ;;
 ;;; Change Log:
 ;;
+;; 2013/11/07 dadams
+;;     Renamed: mark-enclosing-sexp* to mark-enclosing-list*.
+;;     mark-enclosing-list-(forward|backward): 2nd arg to mark-enclosing sexp just needs to be t.
+;; 2013/10/02 dadams
+;;     thgcmd-next-visible-thing-1: Put back <=, not <, for comparison.  See comment.
+;; 2013/09/08 dadams
+;;     next-visible-thing: Use point-max if region is active but empty.
 ;; 2013/07/22 dadams
 ;;     Code that uses with-comments-hidden conditional needs Emacs 21+, for hide-comnt.el.
 ;; 2012/08/21 dadams
@@ -341,25 +348,27 @@ to select more THINGS of the last kind selected."
   (setq deactivate-mark  nil))
 
 ;;;###autoload
-(defun mark-enclosing-sexp (&optional arg allow-extend) ; `C-M-U'
-  "Select a sexp surrounding the current cursor position.
+(defun mark-enclosing-list (&optional arg allow-extend) ; `C-M-U'
+  "Select a list surrounding the current cursor position.
 If the mark is active (e.g. when the command is repeated), widen the
-region to a sexp that encloses it.
+region to a list that encloses it.
 
 The starting position is added to the mark ring before doing anything
 else, so you can return to it (e.g. using `C-u C-SPC').
 
-A prefix argument determines which enclosing sexp is selected: 1 means
-the immediately enclosing sexp, 2 means the sexp immediately enclosing
+A prefix argument determines which enclosing list is selected: 1 means
+the immediately enclosing list, 2 means the list immediately enclosing
 that one, etc.
 
 A negative prefix argument puts point at the beginning of the region
 instead of the end.
 
-In Lisp code, point is moved to (up-list ARG), and mark is at the
-other end of the sexp.
+\"List\" here really means a balanced-parenthesis expression.  The
+syntax table determines which characters are such balanced delimiters.
+See (emacs) `Moving by Parens' and (elisp) `List Motion'.
 
-This command does not work if point is in a string or a comment."
+This command might does not work as expected if point is in a string
+or a comment."
   (interactive "P\np")
   (cond ((and allow-extend  (or (and (eq last-command this-command)  (mark t))
                                 (and transient-mark-mode  mark-active)))
@@ -367,26 +376,26 @@ This command does not work if point is in a string or a comment."
 	 (set-mark (save-excursion (up-list (- arg)) (point)))
          (up-list arg))
 	(t
-         (push-mark nil t)                     ; So user can get back.
+         (push-mark nil t)              ; So user can get back.
 	 (setq arg  (prefix-numeric-value arg))
          (push-mark (save-excursion (up-list (- arg)) (point)) nil t)
          (up-list arg))))
 
 ;;;###autoload
-(defun mark-enclosing-sexp-forward (&optional arg) ; `C-M-F' or maybe `C-M-)'
-  "`mark-enclosing-sexp' leaving point at region end."
+(defun mark-enclosing-list-forward (&optional arg) ; `C-M-F' or maybe `C-M-)'
+  "`mark-enclosing-list' leaving point at region end."
   (interactive "P")
   (if (or (and (eq last-command this-command)  (mark t))  (and transient-mark-mode  mark-active))
-      (mark-enclosing-sexp nil (prefix-numeric-value arg))
-    (mark-enclosing-sexp (prefix-numeric-value arg) t)))
+      (mark-enclosing-list nil t)
+    (mark-enclosing-list (prefix-numeric-value arg) t)))
 
 ;;;###autoload
-(defun mark-enclosing-sexp-backward (&optional arg) ; `C-M-B' or maybe `C-M-('
-  "`mark-enclosing-sexp' leaving point at region start."
+(defun mark-enclosing-list-backward (&optional arg) ; `C-M-B' or maybe `C-M-('
+  "`mark-enclosing-list' leaving point at region start."
   (interactive "P")
   (if (or (and (eq last-command this-command)  (mark t))  (and transient-mark-mode  mark-active))
-      (mark-enclosing-sexp nil (- (prefix-numeric-value arg)))
-    (mark-enclosing-sexp (- (prefix-numeric-value arg)) t)))
+      (mark-enclosing-list nil t)
+    (mark-enclosing-list (- (prefix-numeric-value arg)) t)))
 
 (when (> emacs-major-version 20)        ; `hide-comnt.el' is for Emacs 21+.
   (defun previous-visible-thing (thing start &optional end)
@@ -455,7 +464,9 @@ the bounds of THING.  Return nil if no such THING is found."
                               (symbol-name thgcmd-last-thing-type))))
                  thgcmd-last-thing-type))
            (point)
-           (if mark-active  (max (region-beginning) (region-end))  (point-max))))
+           (if (and mark-active  (not (eq (region-beginning) (region-end))))
+               (max (region-beginning) (region-end))
+             (point-max))))
     (setq thgcmd-last-thing-type  thing)
     (unless start (setq start  (point)))
     (unless end   (setq end  (if backward (point-min) (point-max))))
@@ -471,9 +482,11 @@ the bounds of THING.  Return nil if no such THING is found."
       (if (not thg+bds)
           nil
         ;; $$$$$$ Which is better, > or >=, < or <=, for the comparisons?
-        ;; $$$$$$ Seems that < is better than <=, at least for `icicle-search-thing':
-        ;; $$$$$$ for XML elements and lists, <= misses the first one.
-        (while (and thg+bds  (if backward (> (cddr thg+bds) (point)) (< (cadr thg+bds) (point))))
+        ;;        Seems that < is better than <=, at least for `icicle-search-thing':
+        ;;        for XML elements and lists, <= misses the first one.
+        ;; $$$$$$ No, I don't think that is the case (anymore).
+        ;;        <= is OK and is needed for interactive use of `next-visible-thing'.  
+        (while (and thg+bds  (if backward (> (cddr thg+bds) (point)) (<= (cadr thg+bds) (point))))
           (if backward
               (setq start  (max end (1- (cadr thg+bds))))
             (setq start  (min end (1+ (cddr thg+bds)))))
@@ -569,11 +582,11 @@ navigation are `C-x down' and `C-x up'."
     ;;   The first two replace the standard bindings for `mark-sexp' & `mark-word':
     (global-set-key [(control meta ? )] 'mark-thing) ; vs `mark-sexp'
     (global-set-key [(meta ?@)] 'cycle-thing-region) ; vs `mark-word'
-    (global-set-key [(control meta shift ?u)] 'mark-enclosing-sexp)
+    (global-set-key [(control meta shift ?u)] 'mark-enclosing-list)
     (global-set-key [(control meta shift ?b)] ; Alternative to consider: [(control meta ?()]
-                    'mark-enclosing-sexp-backward)
+                    'mark-enclosing-list-backward)
     (global-set-key [(control meta shift ?f)] ; Alternative to consider: [(control meta ?))]
-                    'mark-enclosing-sexp-forward)
+                    'mark-enclosing-list-forward)
     (when (> emacs-major-version 21)
       (define-key ctl-x-map [down]  'next-visible-thing-repeat)
       (define-key ctl-x-map [up]    'previous-visible-thing-repeat))

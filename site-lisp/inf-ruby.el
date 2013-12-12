@@ -1,4 +1,4 @@
-;;; inf-ruby.el --- Run a ruby process in a buffer
+;;; inf-ruby.el --- Run a Ruby process in a buffer
 
 ;; Copyright (C) 1999-2008 Yukihiro Matsumoto, Nobuyoshi Nakada
 
@@ -10,31 +10,63 @@
 ;; URL: http://github.com/nonsequitur/inf-ruby
 ;; Created: 8 April 1998
 ;; Keywords: languages ruby
-;; Version: 2.3.0
+;; Version: 2.3.2
+
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;; This file is not part of GNU Emacs.
 
 ;;; Commentary:
 ;;
-;; inf-ruby.el provides a REPL buffer connected to an IRB subprocess.
+;; inf-ruby provides a REPL buffer connected to a Ruby subprocess.
 ;;
 ;; If you're installing manually, you'll need to:
 ;; * drop the file somewhere on your load path (perhaps ~/.emacs.d)
 ;; * Add the following lines to your .emacs file:
 ;;
 ;;    (autoload 'inf-ruby "inf-ruby" "Run an inferior Ruby process" t)
-;;    (autoload 'inf-ruby-setup-keybindings "inf-ruby" "" t)
-;;    (eval-after-load 'ruby-mode
-;;      '(add-hook 'ruby-mode-hook 'inf-ruby-setup-keybindings))
+;;    (add-hook 'ruby-mode-hook 'inf-ruby-minor-mode)
+;;
+;; Or, for enh-ruby-mode:
+;;
+;;    (add-hook 'enh-ruby-mode-hook 'inf-ruby-minor-mode)
+;;
+;; Installation via ELPA interface does the above for you
+;; automatically.
 ;;
 ;; Additionally, consider adding
 ;;
-;;    (inf-ruby-switch-setup)
+;;    (add-hook 'after-init-hook 'inf-ruby-switch-setup)
 ;;
 ;; to your init file to easily switch from common Ruby compilation
 ;; modes to interact with a debugger.
 
+;;; Code:
+
 (require 'comint)
 (require 'compile)
 (require 'ruby-mode)
+(require 'thingatpt)
+
+(defgroup inf-ruby nil
+  "Run Ruby process in a buffer"
+  :group 'languages)
+
+(defcustom inf-ruby-prompt-read-only t
+  "If non-nil, the prompt will be read-only.
+
+Also see the description of `ielm-prompt-read-only'.")
 
 (defvar inf-ruby-default-implementation "ruby"
   "Which Ruby implementation to use if none is specified.")
@@ -63,24 +95,27 @@ graphical char in all other prompts.")
   "Prompt regex pattern of Ruby interpreter.")
 
 (defvar inf-ruby-mode-hook nil
-  "Hook for customizing inf-ruby mode.")
+  "Hook for customizing `inf-ruby-mode'.")
 
 (defvar inf-ruby-mode-map
   (let ((map (copy-keymap comint-mode-map)))
     (define-key map (kbd "C-c C-l") 'ruby-load-file)
     (define-key map (kbd "C-x C-e") 'ruby-send-last-sexp)
     (define-key map (kbd "TAB") 'inf-ruby-complete)
+    (define-key map (kbd "C-x C-q") 'inf-ruby-maybe-switch-to-compilation)
     map)
-  "Mode map for inf-ruby-mode")
+  "Mode map for `inf-ruby-mode'.")
 
 (defvar inf-ruby-implementations
   '(("ruby"     . "irb --prompt default -r irb/completion")
     ("jruby"    . "jruby -S irb --prompt default -r irb/completion")
     ("rubinius" . "rbx -r irb/completion")
     ("yarv"     . "irb1.9 -r irb/completion")
-    ("macruby"  . "macirb -r irb/completion"))
+    ("macruby"  . "macirb -r irb/completion")
+    ("pry"      . "pry"))
   "An alist of ruby implementations to irb executable names.")
 
+;;;###autoload
 (defvar ruby-source-modes '(ruby-mode enh-ruby-mode)
   "Used to determine if a buffer contains Ruby source code.
 If it's loaded into a buffer that is in one of these major modes, it's
@@ -89,7 +124,7 @@ Used by these commands to determine defaults.")
 
 (defvar ruby-prev-l/c-dir/file nil
   "Caches the last (directory . file) pair.
-Caches the last pair used in the last ruby-load-file command.
+Caches the last pair used in the last `ruby-load-file' command.
 Used for determining the default in the
 next one.")
 
@@ -102,8 +137,10 @@ next one.")
 ;;;###autoload
 (defun inf-ruby-setup-keybindings ()
   "Hook up `inf-ruby-minor-mode' to each of `ruby-source-modes'."
-  (dolist (mode ruby-source-modes)
-    (add-hook (intern (format "%s-hook" mode)) 'inf-ruby-minor-mode)))
+  (warn "`inf-ruby-setup-keybindings' is deprecated, please don't use it anymore.")
+  (warn "If you're using `inf-ruby' from Git, please look up the new usage instructions."))
+
+(make-obsolete 'inf-ruby-setup-keybindings 'add-hook "2.3.1")
 
 (defvar inf-ruby-minor-mode-map
   (let ((map (make-sparse-keymap)))
@@ -122,23 +159,29 @@ next one.")
 
 ;;;###autoload
 (define-minor-mode inf-ruby-minor-mode
-  "Minor mode for interacting with the inferior process buffer."
-  :lighter "" :keymap inf-ruby-minor-mode-map)
-
-(defvar inf-ruby-buffer nil "Current irb process buffer.")
-
-(defun inf-ruby-mode ()
-  "Major mode for interacting with an inferior Ruby (irb) process.
+  "Minor mode for interacting with the inferior process buffer.
 
 The following commands are available:
-\\{inf-ruby-mode-map}
 
-A Ruby process can be fired up with M-x inf-ruby.
+\\{inf-ruby-minor-mode-map}"
+  :lighter "" :keymap inf-ruby-minor-mode-map)
+
+(defvar inf-ruby-buffer nil "Current Ruby process buffer.")
+
+(defun inf-ruby-mode ()
+  "Major mode for interacting with an inferior Ruby REPL process.
+
+A simple IRB process can be fired up with \\[inf-ruby].
+
+To launch a REPL with project-specific console instead, type
+\\[inf-ruby-console-auto].  It recognizes several
+project types, including Rails, gems and anything with `racksh'
+in their Gemfile.
 
 Customization: When entered, this mode runs `comint-mode-hook' and
 `inf-ruby-mode-hook' (in that order).
 
-You can send text to the inferior ruby process from other buffers containing
+You can send text to the inferior Ruby process from other buffers containing
 Ruby source.
 
     `ruby-switch-to-inf' switches the current buffer to the ruby process buffer.
@@ -148,36 +191,42 @@ Ruby source.
         switch to the ruby process buffer after sending their text.
 
 Commands:
-Return after the end of the process' output sends the text from the
+`RET' after the end of the process' output sends the text from the
     end of process to point.
-Return before the end of the process' output copies the sexp ending at point
+`RET' before the end of the process' output copies the sexp ending at point
     to the end of the process' output, and sends it.
-Delete converts tabs to spaces as it moves back.
-Tab indents for ruby; with argument, shifts rest
-    of expression rigidly with the current line.
-C-M-q does Tab on each line starting within following expression.
+`DEL' converts tabs to spaces as it moves back.
+`TAB' completes the input at point. IRB, Pry and Bond completion is supported.
+`C-M-q' does `TAB' on each line starting within following expression.
 Paragraphs are separated only by blank lines.  # start comments.
 If you accidentally suspend your process, use \\[comint-continue-subjob]
-to continue it."
+to continue it.
+
+The following commands are available:
+
+\\{inf-ruby-mode-map}"
   (interactive)
-  (comint-mode)
+  (let ((orig-mode-line-process mode-line-process))
+    (comint-mode)
+    (when orig-mode-line-process
+      (setq mode-line-process orig-mode-line-process)))
   (setq comint-prompt-regexp inf-ruby-prompt-pattern)
   (ruby-mode-variables)
   (setq major-mode 'inf-ruby-mode)
   (setq mode-name "Inf-Ruby")
-  (setq mode-line-process '(":%s"))
   (use-local-map inf-ruby-mode-map)
   (add-hook 'comint-output-filter-functions 'inf-ruby-output-filter nil t)
-  (setq comint-get-old-input (function inf-ruby-get-old-input))
-  (make-local-variable 'compilation-error-regexp-alist)
-  (setq compilation-error-regexp-alist inf-ruby-error-regexp-alist)
+  (setq comint-get-old-input 'inf-ruby-get-old-input)
+  (set (make-local-variable 'compilation-error-regexp-alist)
+       inf-ruby-error-regexp-alist)
+  (set (make-local-variable 'comint-prompt-read-only) inf-ruby-prompt-read-only)
   (when (eq system-type 'windows-nt)
     (setq comint-process-echoes t))
   (compilation-shell-minor-mode t)
   (run-hooks 'inf-ruby-mode-hook))
 
 (defun inf-ruby-output-filter (output)
-  "Check if the current prompt is a top-level prompt"
+  "Check if the current prompt is a top-level prompt."
   (unless (zerop (length output))
     (setq inf-ruby-at-top-level-prompt-p
           (string-match inf-ruby-first-prompt-pattern
@@ -194,7 +243,7 @@ to continue it."
     (concat rtn-str (substring str start))))
 
 (defun inf-ruby-get-old-input ()
-  "Snarf the sexp ending at point"
+  "Snarf the sexp ending at point."
   (save-excursion
     (let ((end (point)))
       (re-search-backward inf-ruby-first-prompt-pattern)
@@ -205,7 +254,7 @@ to continue it."
 (defun inf-ruby (&optional impl)
   "Run an inferior Ruby process in a buffer.
 With prefix argument, prompts for which Ruby implementation
-\(from the list `inf-ruby-implementations') to use. Runs the
+\(from the list `inf-ruby-implementations') to use.  Runs the
 hooks `inf-ruby-mode-hook' \(after the `comint-mode-hook' is
 run)."
 
@@ -222,9 +271,6 @@ run)."
 (defun run-ruby (&optional command name)
   "Run an inferior Ruby process, input and output via buffer *ruby*.
 If there is a process already running in `*ruby*', switch to that buffer.
-With argument, allows you to edit the command line (default is value
-of `ruby-program-name').  Runs the hooks `inferior-ruby-mode-hook'
-\(after the `comint-mode-hook' is run).
 \(Type \\[describe-mode] in the process buffer for a list of commands.)"
 
   (interactive)
@@ -233,14 +279,19 @@ of `ruby-program-name').  Runs the hooks `inferior-ruby-mode-hook'
   (setq name (or name "ruby"))
 
   (if (not (comint-check-proc inf-ruby-buffer))
-      (let ((commandlist (split-string-and-unquote command)))
+      (let ((commandlist (split-string-and-unquote command))
+            (process-environment process-environment))
+        ;; http://debbugs.gnu.org/15775
+        (setenv "PAGER" (executable-find "cat"))
         (set-buffer (apply 'make-comint name (car commandlist)
                            nil (cdr commandlist)))
         (inf-ruby-mode)))
   (pop-to-buffer (setq inf-ruby-buffer (format "*%s*" name))))
 
 (defun inf-ruby-proc ()
-  "Returns the current IRB process. See variable inf-ruby-buffer."
+  "Return the current inferior Ruby process.
+
+See variable `inf-ruby-buffer'."
   (or (get-buffer-process (if (eq major-mode 'inf-ruby-mode)
                               (current-buffer)
                             inf-ruby-buffer))
@@ -252,7 +303,9 @@ of `ruby-program-name').  Runs the hooks `inferior-ruby-mode-hook'
   "Template for irb here document terminator.
 Must not contain ruby meta characters.")
 
-(defconst inf-ruby-eval-binding "IRB.conf[:MAIN_CONTEXT].workspace.binding")
+(defconst inf-ruby-eval-binding
+  (concat "(IRB.conf[:MAIN_CONTEXT] && IRB.conf[:MAIN_CONTEXT].workspace.binding) || "
+          "(defined?(Pry) && Pry.toplevel_binding)"))
 
 (defconst ruby-eval-separator "")
 
@@ -310,9 +363,9 @@ Must not contain ruby meta characters.")
   "Switch to the ruby process buffer.
 With argument, positions cursor at end of buffer."
   (interactive "P")
-  (if (get-buffer inf-ruby-buffer)
+  (if (and inf-ruby-buffer (get-buffer inf-ruby-buffer))
       (pop-to-buffer inf-ruby-buffer)
-    (error "No current process buffer. See variable inf-ruby-buffer."))
+    (error "No current process buffer, see variable inf-ruby-buffer"))
   (cond (eob-p
          (push-mark)
          (goto-char (point-max)))))
@@ -350,59 +403,61 @@ Then switch to the process buffer."
                                               "\"\)\n")))
 
 (defun ruby-escape-single-quoted (str)
+  "Escape single quotes, double quotes and newlines in STR."
   (replace-regexp-in-string "'" "\\\\'"
     (replace-regexp-in-string "\n" "\\\\n"
       (replace-regexp-in-string "\\\\" "\\\\\\\\" str))))
-
-(defsubst inf-ruby-fix-completions-on-windows (completions)
-  "On Windows, the string received by `accept-process-output'
-starts with the last line that was sent to the Ruby process.
-The reason for this is unknown. Remove this line from `completions'."
-  (if (eq system-type 'windows-nt)
-      (cdr completions)
-    completions))
 
 (defun inf-ruby-completions (expr)
   "Return a list of completions for the Ruby expression starting with EXPR."
   (let* ((proc (inf-ruby-proc))
          (line (buffer-substring (save-excursion (beginning-of-thing 'line))
                                  (point)))
-	 (comint-filt (process-filter proc))
-	 (kept "") completions)
+         (comint-filt (process-filter proc))
+         (kept "") completions
+         ;; Guard against running completions in parallel:
+         inf-ruby-at-top-level-prompt-p)
     (set-process-filter proc (lambda (proc string) (setq kept (concat kept string))))
-    (process-send-string
-     proc
-     (format (concat "if defined?(Pry.config) then "
-                     "completor = Pry.config.completer"
-                     ".build_completion_proc(binding, defined?(_pry_) ? _pry_ : Pry.new)"
-                     " elsif defined?(Bond.agent) && Bond.started? then "
-                     "completor = Bond.agent"
-                     " elsif defined?(IRB::InputCompletor::CompletionProc) then "
-                     "completor = IRB::InputCompletor::CompletionProc "
-                     "end and "
-                     "puts completor.call('%s', '%s').compact\n")
-             (ruby-escape-single-quoted expr)
-             (ruby-escape-single-quoted line)))
-    (while (and (not (string-match inf-ruby-prompt-pattern kept))
-                (accept-process-output proc 2)))
-    (setq completions (butlast (split-string kept "\r?\n") 2))
-    (setq completions (inf-ruby-fix-completions-on-windows completions))
-    (set-process-filter proc comint-filt)
+    (unwind-protect
+        (let ((completion-snippet
+               (format (concat "if defined?(Pry.config) then "
+                           "completor = Pry.config.completer"
+                           ".build_completion_proc(binding, defined?(_pry_) ? _pry_ : Pry.new)"
+                           " elsif defined?(Bond.agent) && Bond.started? then "
+                           "completor = Bond.agent"
+                           " elsif defined?(IRB::InputCompletor::CompletionProc) then "
+                           "completor = IRB::InputCompletor::CompletionProc "
+                           "end and "
+                           "puts completor.call('%s', '%s').compact\n")
+                   (ruby-escape-single-quoted expr)
+                   (ruby-escape-single-quoted line))))
+          (process-send-string proc completion-snippet)
+          (while (and (not (string-match inf-ruby-prompt-pattern kept))
+                      (accept-process-output proc 2)))
+          (setq completions (butlast (split-string kept "\r?\n") 2))
+          ;; Subprocess echoes output on Windows and OS X.
+          (when (and completions (string= (concat (car completions) "\n") completion-snippet))
+            (setq completions (cdr completions))))
+      (set-process-filter proc comint-filt))
     completions))
 
 (defconst inf-ruby-ruby-expr-break-chars " \t\n\"\'`><,;|&{(")
 
 (defun inf-ruby-completion-bounds-of-expr-at-point ()
+  "Return bounds of expression at point to complete."
   (save-excursion
     (let ((end (point)))
       (skip-chars-backward (concat "^" inf-ruby-ruby-expr-break-chars))
       (cons (point) end))))
 
 (defun inf-ruby-completion-expr-at-point ()
+  "Return expression at point to complete."
   (let ((bounds (inf-ruby-completion-bounds-of-expr-at-point)))
     (buffer-substring (car bounds) (cdr bounds))))
 
 (defun inf-ruby-completion-at-point ()
+  "Retrieve the list of completions and prompt the user.
+Returns the selected completion or nil."
   (if inf-ruby-at-top-level-prompt-p
       (let* ((expr (inf-ruby-completion-expr-at-point))
              (completions (inf-ruby-completions expr)))
@@ -414,23 +469,34 @@ The reason for this is unknown. Remove this line from `completions'."
     (message "Completion aborted: Not at a top-level prompt")
     nil))
 
-(defun inf-ruby-complete (command)
+(defun inf-ruby-complete ()
   "Complete the Ruby code at point.
 Uses the first one available of Pry, Bond and the default IRB
 completion."
-  (interactive (list (inf-ruby-completion-at-point)))
-  (when command
-    (let ((bounds (inf-ruby-completion-bounds-of-expr-at-point)))
-      (delete-region (car bounds) (cdr bounds)))
-    (insert command)))
+  (interactive)
+  (let ((replacement (inf-ruby-completion-at-point)))
+    (when replacement
+      (inf-ruby-complete-replace-expr replacement))))
 
-(defun inf-ruby-complete-or-tab (&optional command)
-  "Either complete the ruby code at point or call
-`indent-for-tab-command' if no completion is available."
-  (interactive (list (inf-ruby-completion-at-point)))
-  (if (not command)
-      (call-interactively 'indent-for-tab-command)
-    (inf-ruby-complete command)))
+(defun inf-ruby-complete-replace-expr (str)
+  "Replace expression at point with STR."
+  (let ((bounds (inf-ruby-completion-bounds-of-expr-at-point)))
+    (delete-region (car bounds) (cdr bounds)))
+  (insert str))
+
+(defun inf-ruby-complete-or-tab ()
+  "Complete the Ruby code at point or call `indent-for-tab-command'."
+  (interactive)
+  (let ((replacement (inf-ruby-completion-at-point)))
+    (if (not replacement)
+        (call-interactively 'indent-for-tab-command)
+      (inf-ruby-complete-replace-expr replacement))))
+
+(defvar inf-ruby-orig-compilation-mode nil
+  "Original compilation mode before switching to `inf-ruby-mode'.")
+
+(defvar inf-ruby-orig-process-filter nil
+  "Original process filter before switching to `inf-ruby-mode`.")
 
 (defun inf-ruby-switch-from-compilation ()
   "Make the buffer writable and switch to `inf-ruby-mode'.
@@ -439,13 +505,34 @@ interactive mode, i.e. hits a debugger breakpoint."
   (interactive)
   (setq buffer-read-only nil)
   (buffer-enable-undo)
-  (inf-ruby-mode)
+  (let ((mode major-mode))
+    (inf-ruby-mode)
+    (make-local-variable 'inf-ruby-orig-compilation-mode)
+    (setq inf-ruby-orig-compilation-mode mode))
   (let ((proc (get-buffer-process (current-buffer))))
-    (set-process-filter proc 'comint-output-filter)
+    (when proc
+      (make-local-variable 'inf-ruby-orig-process-filter)
+      (setq inf-ruby-orig-process-filter (process-filter proc))
+      (set-process-filter proc 'comint-output-filter))
     (when (looking-back inf-ruby-prompt-pattern (line-beginning-position))
       (let ((line (match-string 0)))
         (delete-region (match-beginning 0) (point))
         (comint-output-filter proc line)))))
+
+(defun inf-ruby-maybe-switch-to-compilation ()
+  "Switch to compilation mode this buffer was in before
+`inf-ruby-switch-from-compilation' was called, if it was.
+Otherwise, just toggle read-only status."
+  (interactive)
+  (if inf-ruby-orig-compilation-mode
+      (let ((orig-mode-line-process mode-line-process)
+            (proc (get-buffer-process (current-buffer)))
+            (filter inf-ruby-orig-process-filter))
+        (funcall inf-ruby-orig-compilation-mode)
+        (setq mode-line-process orig-mode-line-process)
+        (when proc
+          (set-process-filter proc filter)))
+    (toggle-read-only)))
 
 ;;;###autoload
 (defun inf-ruby-switch-setup ()
@@ -468,6 +555,7 @@ one of the patterns matches, then calls `inf-ruby-console-NAME',
 passing it the found directory.")
 
 (defun inf-ruby-console-match (dir)
+  "Find matching console command for DIR, if any."
   (catch 'type
     (dolist (pair inf-ruby-console-patterns-alist)
       (let ((default-directory dir))
@@ -476,8 +564,9 @@ passing it the found directory.")
 
 ;;;###autoload
 (defun inf-ruby-console-auto ()
-  "Automatically determine the appropriate Ruby console command
-and the directory to run it from."
+  "Run the appropriate Ruby console command.
+The command and and the directory to run it from are detected
+automatically."
   (interactive)
   (let* ((dir (locate-dominating-file default-directory
                                       #'inf-ruby-console-match))
@@ -496,7 +585,7 @@ and the directory to run it from."
 ;;;###autoload
 (defun inf-ruby-console-gem (dir)
   "Run IRB console for the gem in DIR.
-The main module should be loaded automatically. If DIR contains a
+The main module should be loaded automatically.  If DIR contains a
 Gemfile, it should use the `gemspec' instruction."
   (interactive "D")
   (let* ((default-directory dir)
@@ -534,9 +623,9 @@ Gemfile, it should use the `gemspec' instruction."
      ((file-exists-p "console.rb")
       (run-ruby "ruby console.rb" "console.rb"))
      (t
-      (run-ruby "bundle exec irb")))))
+      (run-ruby "bundle console")))))
 
-;;;###autoload (inf-ruby-setup-keybindings)
+;;;###autoload (dolist (mode ruby-source-modes) (add-hook (intern (format "%s-hook" mode)) 'inf-ruby-minor-mode))
 
 (provide 'inf-ruby)
 ;;; inf-ruby.el ends here

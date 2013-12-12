@@ -18,7 +18,7 @@ SITE_ELCFILES := $(SITE_ELFILES:%.el=%.elc)
 ELFILES := init.el site-lisp/my-loaddefs.el $(SITE_ELFILES)
 ELCFILES := init.elc $(SITE_ELCFILES)
 
-ORG_VERSION := 8.0.1
+ORG_VERSION := 8.2.4
 ORG_PKGNAME := org-$(ORG_VERSION)
 ORG_TARBALL := $(ORG_PKGNAME).tar.gz
 ORG_DOWNLOAD_URL := http://orgmode.org/$(ORG_TARBALL)

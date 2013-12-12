@@ -879,14 +879,14 @@ Capture template
 (define-module org-capture
   (require-module org-basic)
 
-  ;; Sparrow does not support getting current selected mail through Apple
-  ;; Script, but the message can be dragged. If the dragging message is
+  ;; Sparrow/Airmail does not support getting current selected mail through
+  ;; Apple Script, but the message can be dragged. If the dragging message is
   ;; dropped as text, the text contains subject and the URL to the message. So
   ;; add around advice on ns-insert-text to monitor any Sparrow drop.
   (defadvice ns-insert-text (around monitor-sparrow-drop activate)
-    (if (string-match "\\(.*\\) (\\(x-sparrow:.*\\))$" ns-input-text)
+    (if (string-match "\\(.*\\)[ \n]*(?\\(\\(?:x-sparrow\\|airmail\\):.*\\))?$" ns-input-text)
         (let* ((subject (match-string 1 ns-input-text))
-               (link (match-string 2 ns-input-text))
+               (link (concat "open:" (match-string 2 ns-input-text)))
                (orglink (org-make-link-string link subject))
                (org-capture-link-is-already-stored t))
           (org-store-link-props :type "open"
@@ -1933,10 +1933,11 @@ If there is none yet, so that it is run asynchronously."
           helm-source-file-name-history
           helm-source-bookmarks))
 
-  (defun my-helm-go ()
+  (defun my-helm-go (arg)
     "Preconfigured `helm' to fidn fiels"
-    (interactive)
-    (helm-other-buffer my-helm-sources "*helm go*"))
+    (interactive "P")
+    (let ((helm-ff-transformer-show-only-basename arg))
+     (helm-other-buffer my-helm-sources "*helm go*")))
 
   (autoload 'helm-command-prefix "helm-config" nil nil 'keymap)
 

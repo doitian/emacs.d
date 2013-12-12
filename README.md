@@ -1878,6 +1878,7 @@ If there is none yet, so that it is run asynchronously."
   (require-module projectile)
   (require-package 'helm)
   (require-package 'helm-projectile)
+  (require-package 'imenu-anywhere)
   (require 'helm-config)
 
   (defvar helm-source-alternative-files nil)
@@ -1946,11 +1947,13 @@ If there is none yet, so that it is run asynchronously."
   (define-key helm-command-map (kbd "r") 'helm-register)
   (define-key helm-command-map (kbd "R") 'helm-regexp)
   (define-key helm-command-map (kbd "b") 'helm-c-pp-bookmarks)
+  (define-key helm-command-map (kbd "I") 'helm-imenu-anywhere)
   (define-key helm-command-map (kbd "<SPC>") 'helm-all-mark-rings)
 
   (global-set-key (kbd "M-X") 'my-helm-go)
   (define-key my-keymap (kbd "M-s") 'my-helm-go)
   (define-key my-keymap (kbd "s") 'helm-command-prefix)
+  (define-key my-keymap (kbd "M-.") 'imenu-anywhere)
 
   ;; 1. Quote the string
   ;; 2. If we didn't input any typically regexp characters, convert spaces to .*,

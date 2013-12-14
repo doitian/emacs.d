@@ -611,7 +611,6 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   (custom-set-variables
    '(projectile-enable-caching t)
    '(projectile-keymap-prefix (kbd "M-s p")))
-  (setq projectile-mode-line-lighter " ")
 
   (defun projectile+-open-project (&optional force)
     (interactive "P")
@@ -652,6 +651,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
       (visit-tags-table project-root t)))
 
   (projectile-global-mode)
+  (setq projectile-mode-line-lighter " ")
   (define-key projectile-mode-map (kbd "M-s p a") 'projectile-ag)
   (define-key projectile-mode-map (kbd "M-s p A") 'projectile-ack)
   (define-key projectile-mode-map (kbd "M-s p x") 'projectile-test-project)

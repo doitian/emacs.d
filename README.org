@@ -1764,7 +1764,7 @@ Auto revert, and helper functions to revert without confirmation.
             helm-source-files-in-current-dir
             helm-source-buffers-list
             helm-source-file-cache
-            helm-source-recentf
+            ;; helm-source-recentf
             helm-source-file-name-history
             helm-source-bookmarks))
   

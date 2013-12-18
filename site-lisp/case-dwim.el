@@ -26,8 +26,6 @@
 (defun case-dwim--funcall (func &rest body)
   "Call command and remember the command for mc if it is active"
   (apply func body)
-    ;; (when (case-dwim--mc-active-p)
-  ;;   )
   (when (case-dwim--mc-active-p)
     (setq mc--this-command `(lambda ()
                               (interactive)

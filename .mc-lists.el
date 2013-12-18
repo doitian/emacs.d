@@ -33,6 +33,7 @@
         paredit-open-round
         paredit-splice-sexp
         ruby-end-space
+        upcase-region
         whole-line-or-region-kill-region
         whole-line-or-region-kill-ring-save
         whole-line-or-region-yank

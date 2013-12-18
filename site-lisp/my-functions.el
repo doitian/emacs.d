@@ -265,5 +265,15 @@ Calling this command 3 times will always result in no whitespaces around cursor.
   (interactive "p")
   (mf-join-following-line (- n)))
 
+;;;###autoload
+(defun copy-as-rtf (lexer)
+  (interactive "Mlexer: ")
+  (let ((start (point-min))
+        (end (point-max)))
+    (when (region-active-p)
+      (setq start (point))
+      (setq start (mark)))
+    (shell-command-on-region start end (format "pygmentize -l %s -f rtf | pbcopy" lexer))))
+
 (provide 'my-functions)
 ;;; my-functions.el ends here

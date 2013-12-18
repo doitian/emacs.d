@@ -1971,7 +1971,7 @@ If there is none yet, so that it is run asynchronously."
           helm-source-files-in-current-dir
           helm-source-buffers-list
           helm-source-file-cache
-          helm-source-recentf
+          ;; helm-source-recentf
           helm-source-file-name-history
           helm-source-bookmarks))
 

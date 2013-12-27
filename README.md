@@ -868,8 +868,11 @@ Install latest org by running `make org`. Othewise system bundled version is use
   (add-hook 'org-mode-hook 'init--org-mode)
 
   (autoload 'org-footnote-action "org-footnote" nil t)
+  (autoload 'org-mac-grab-link "org-mac-link"
+    "Prompt the user for an application to grab a link from, then go grab the link, and insert it at point" t)
 
   (global-set-key (kbd "C-c l") 'org-store-link)
+  (global-set-key (kbd "C-c M-l") 'org-mac-grab-link)
   (global-set-key (kbd "C-c L") 'org-insert-link-global)
   (global-set-key (kbd "C-c o") 'org-open-at-point-global)
   (global-set-key (kbd "C-c a") 'org-agenda)

@@ -266,7 +266,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
   (mf-join-following-line (- n)))
 
 ;;;###autoload
-(defun copy-as-rtf (lexer)
+(defun mf-copy-as-rtf (lexer)
   (interactive "Mlexer: ")
   (let ((start (point-min))
         (end (point-max)))
@@ -274,6 +274,26 @@ Calling this command 3 times will always result in no whitespaces around cursor.
       (setq start (point))
       (setq start (mark)))
     (shell-command-on-region start end (format "pygmentize -l %s -f rtf | pbcopy" lexer))))
+(defalias 'copy-as-rtf 'mf-copy-as-rtf)
+
+;;;###autoload
+(defun mf-devon (&optional file)
+  "Copy current file to DevonThink."
+  (interactive (list
+                (let ((ido-hacks-completing-read-recursive t)
+                      (default-file
+                       (cond
+                        ((eq major-mode 'dired-mode) (dired-get-filename 'no-dir t))
+                        ((buffer-file-name (current-buffer))))))
+                  (ido-read-file-name "File: "
+                                      (and default-file (file-name-directory default-file))
+                                      nil
+                                      t
+                                      (and default-file (file-name-nondirectory default-file))))))
+  (copy-file
+   (expand-file-name file)
+   (expand-file-name "~/Library/Application Support/DEVONthink Pro 2/Inbox")))
+(defalias 'devon 'mf-devon)
 
 (provide 'my-functions)
 ;;; my-functions.el ends here

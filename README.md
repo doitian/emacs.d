@@ -823,8 +823,13 @@ Install latest org by running `make org`. Othewise system bundled version is use
    '(org-special-ctrl-k t)
    '(org-yank-adjusted-subtrees nil)
    '(org-use-fast-todo-selection t)
-   '(org-file-apps '((t . emacs)
+   '(org-file-apps '(("\\.x?html?\\'" . system)
+                     ("\\.pdf\\'" . system)
+                     (t . emacs)
                      (system . "open %s")))
+   '(org-html-head-include-default-style t)
+   '(org-html-head "<style type=\"text/css\">body{font-size:16px;line-height:24px;font-family:\"Helvetica Neue\",Helvetica,Arial,sans-serif;}#content{max-width:60em;margin:60px auto;}</style>")
+   '(org-html-postamble nil)
    '(org-fontify-done-headline t)
    '(org-src-window-setup 'current-window))
 
@@ -851,10 +856,18 @@ Install latest org by running `make org`. Othewise system bundled version is use
   (defun init--org-call-process-open (path)
     "Open PATH using system open command."
     (call-process "open" nil nil nil path))
+  (defun init--org-open-chrome-extension (path)
+    "Open PATH in Chrome as extension."
+    (do-applescript
+     (format "tell application \"Google Chrome\"
+  activate
+  open location \"chrome-extension:%s\"
+end tell" path)))
 
   (defun init--org-load ()
     (wl-org-column-view-uses-fixed-width-face)
     (org-add-link-type "open" 'init--org-call-process-open)
+    (org-add-link-type "chrome-extension" 'init--org-open-chrome-extension)
     (remove-hook 'org-mode-hook 'init--org-load))
   (add-hook 'org-mode-hook 'init--org-load)
 
@@ -1414,10 +1427,12 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
         (call-interactively 'mc/edit-lines)
       ad-do-it))
 
+  (autoload 'multiple-cursors-core "multiple-cursors-core" "Delete overlay with state, including dependent overlays and markers.")
   (define-key ctl-x-r-map (kbd "C-r") 'mc/edit-lines)
   (define-key ctl-x-r-map (kbd ",") 'mc/edit-lines)
   (define-key ctl-x-r-map (kbd "C-,") 'mc/edit-lines)
   (define-key ctl-x-r-map (kbd "a") 'mc/mark-all-like-this)
+  (define-key ctl-x-r-map (kbd "A") 'vr/mc-mark)
   (define-key ctl-x-r-map (kbd "C-n") 'mc/mark-next-like-this)
   (define-key ctl-x-r-map (kbd "M-f") 'mc/mark-next-word-like-this)
   (define-key ctl-x-r-map (kbd "M-F") 'mc/mark-next-symbol-like-this)

@@ -4057,13 +4057,14 @@ Functions to manage site iany.me
 
 ```cl
 (define-module erlang
-  (custom-set-variables
-   '(erlang-indent-level 2)
-   '(erlang-root-dir "/usr/lib/erlang"))
-
   (defun init--erlang-mode ()
     (run-hooks 'prog-mode-hook)
-    (electric-pair-mode -1)
+    (setq erlang-indent-level 2)
+    (setq erlang-root-dir
+          (if (eq system-type 'darwin)
+              "/usr/local/Cellar/erlang"
+            "/usr/lib/erlang"))
+
     (local-set-key (kbd "M-s /") 'erlang-man-function)
     (local-set-key (kbd "M-s ?") 'erlang-man-module))
   (add-hook 'erlang-mode-hook 'init--erlang-mode)

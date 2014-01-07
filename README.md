@@ -2159,11 +2159,14 @@ If there is none yet, so that it is run asynchronously."
               (:description . "Compile Objective-C file with gcc and execute"))
      :override t)
     (quickrun-add-command
-     "c#/mono" `((:command . ,(concat mono-bin-dir "/mcs"))
+     "csharp/mono" `((:command . ,(concat mono-bin-dir "/mcs"))
               (:exec    . ("%c %o -out:%e %s"
                            ,(concat mono-bin-dir "/mono %e %a")))
               (:remove  . ("%e"))
-              (:description . "Compile Objective-C file with gcc and execute"))))
+              (:description . "Compile Objective-C file with gcc and execute")))
+    (setq quickrun/major-mode-alist (cons
+                                     '(csharp-mode . "csharp/mono")
+                                     quickrun/major-mode-alist)))
 
   (defun init--new-scratch (&optional extension)
     "Create a temporary file with given EXTENSION."

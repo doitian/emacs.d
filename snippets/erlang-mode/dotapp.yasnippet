@@ -1,0 +1,24 @@
+# -*- mode: snippet -*-
+# name: dotapp
+# key: dotapp
+# expand-env: ((yas-indent-line 'fixed))
+# --
+% -*- erlang -*-
+{application, `(replace-regexp-in-string "\\..*$" ""
+                 (file-name-nondirectory
+                   (or (buffer-file-name)
+                   (buffer-name (current-buffer)))))`,
+ [
+  {description, ""},
+  {vsn, "0.0.1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { `(replace-regexp-in-string "\\..*$" ""
+                 (file-name-nondirectory
+                   (or (buffer-file-name)
+                   (buffer-name (current-buffer)))))`_app, []}},
+  {env, []}
+ ]}.

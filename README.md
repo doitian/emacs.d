@@ -125,8 +125,9 @@
 <li><a href="#sec-7-96">7.96. sgml</a></li>
 <li><a href="#sec-7-97">7.97. sh-mode</a></li>
 <li><a href="#sec-7-98">7.98. haskell-mode</a></li>
-<li><a href="#sec-7-99">7.99. confluence</a></li>
-<li><a href="#sec-7-100">7.100. server</a></li>
+<li><a href="#sec-7-99">7.99. csharp-mode</a></li>
+<li><a href="#sec-7-100">7.100. confluence</a></li>
+<li><a href="#sec-7-101">7.101. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -2144,6 +2145,8 @@ If there is none yet, so that it is run asynchronously."
   (ad-enable-advice 'quickrun 'around 'init--quick-run)
   (ad-activate 'quickrun)
 
+  (defvar mono-bin-dir "/usr/local/bin" "Binary directory containing mcs and mono.")
+
   (defun init--quick-run ()
     (quickrun-add-command
      "objc" '((:command . "gcc")
@@ -2154,7 +2157,13 @@ If there is none yet, so that it is run asynchronously."
                            "%e %a"))
               (:remove  . ("%e"))
               (:description . "Compile Objective-C file with gcc and execute"))
-     :override t))
+     :override t)
+    (quickrun-add-command
+     "c#/mono" `((:command . ,(concat mono-bin-dir "/mcs"))
+              (:exec    . ("%c %o -out:%e %s"
+                           ,(concat mono-bin-dir "/mono %e %a")))
+              (:remove  . ("%e"))
+              (:description . "Compile Objective-C file with gcc and execute"))))
 
   (defun init--new-scratch (&optional extension)
     "Create a temporary file with given EXTENSION."
@@ -4059,7 +4068,7 @@ Functions to manage site iany.me
 (define-module erlang
   (defun init--erlang-mode ()
     (run-hooks 'prog-mode-hook)
-    (setq erlang-indent-level 2)
+    (setq erlang-indent-level 4)
     (setq erlang-root-dir
           (if (eq system-type 'darwin)
               "/usr/local/Cellar/erlang"
@@ -4104,6 +4113,14 @@ Functions to manage site iany.me
 ```
 
 <a name="sec-7-99"></a>
+## csharp-mode
+
+```cl
+(define-module sharp-mode
+  (require-package 'csharp-mode))
+```
+
+<a name="sec-7-100"></a>
 ## confluence
 
 ```cl
@@ -4136,7 +4153,7 @@ Functions to manage site iany.me
 
 ```
 
-<a name="sec-7-100"></a>
+<a name="sec-7-101"></a>
 ## server
 
 Start emacs server.

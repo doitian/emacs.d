@@ -4120,7 +4120,17 @@ Functions to manage site iany.me
 
 ```cl
 (define-module sharp-mode
-  (require-package 'csharp-mode))
+  (require-package 'csharp-mode)
+
+  (defun init--csharp-mode ()
+    (subword-mode +1)
+    (electric-pair-mode -1))
+  (defun init--csharp-mode-load ()
+    (ad-disable-advice 'revert-buffer 'around 'csharp-advise-revert-buffer)
+    (ad-activate 'revert-buffer)
+    (remove-hook 'csharp-mode-hook 'init--csharp-mode-load))
+  (add-hook 'csharp-mode-hook 'init--csharp-mode)
+  (add-hook 'csharp-mode-hook 'init--csharp-mode-load))
 ```
 
 <a name="sec-7-100"></a>

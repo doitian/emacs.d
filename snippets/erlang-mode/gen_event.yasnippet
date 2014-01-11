@@ -1,0 +1,51 @@
+# -*- mode: snippet -*-
+# name: gen_event
+# key: gen_event
+# expand-env: ((yas-indent-line 'fixed))
+# --
+-module(`(file-name-nondirectory
+           (file-name-sans-extension
+             (or (buffer-file-name)
+                 (buffer-name (current-buffer)))))`).
+
+-behaviour(gen_event).
+
+%% API
+-export([]).
+
+%% gen_event callbacks
+-export([init/1, handle_event/2, handle_call/2, handle_info/2,
+         terminate/2, code_change/3]).
+
+-record(state, {}).
+
+%%% ==================================================================
+%%% API
+%%% ==================================================================
+
+%%% ==================================================================
+%%% gen_server callbacks
+%%% ==================================================================
+$0
+init(_Arg) ->
+    {ok, #state{}}.
+
+handle_event(_Event, State) ->
+    {ok, State}.
+
+handle_call(_Request, State) ->
+    Reply = ok,
+    {ok, Reply, State}.
+
+handle_info(_Request, State) ->
+    {ok, State}.
+
+terminate(_Reson, _State) ->
+    ok.
+
+code_change(_OldVsn, State, _Extra) ->
+    {ok, State}.
+
+%%% ==================================================================
+%%% Internal functions
+%%% ==================================================================

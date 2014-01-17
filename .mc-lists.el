@@ -10,6 +10,7 @@
         c-electric-semi&comma
         coffee-dedent-line-backspace
         delete-horizontal-space
+        forward-sexp
         forward-symbol
         indent-region
         iy-go-to-char--command
@@ -22,6 +23,7 @@
         org-beginning-of-line
         org-delete-char
         org-end-of-line
+        org-force-self-insert
         org-open-line
         org-self-insert-command
         paredit-backward-kill-word

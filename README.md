@@ -4135,7 +4135,9 @@ Functions to manage site iany.me
 
   (defun init--csharp-mode ()
     (subword-mode +1)
-    (electric-pair-mode -1))
+    (setq indent-tabs-mode t
+          tab-width 2)
+    (local-set-key (kbd "{") 'c-electric-brace))
   (defun init--csharp-mode-load ()
     (ad-disable-advice 'revert-buffer 'around 'csharp-advise-revert-buffer)
     (ad-activate 'revert-buffer)

@@ -127,7 +127,8 @@
 <li><a href="#sec-7-98">7.98. haskell-mode</a></li>
 <li><a href="#sec-7-99">7.99. csharp-mode</a></li>
 <li><a href="#sec-7-100">7.100. confluence</a></li>
-<li><a href="#sec-7-101">7.101. server</a></li>
+<li><a href="#sec-7-101">7.101. puppet</a></li>
+<li><a href="#sec-7-102">7.102. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -4180,6 +4181,14 @@ Functions to manage site iany.me
 ```
 
 <a name="sec-7-101"></a>
+## puppet
+
+```cl
+(define-module puppet
+  (require-package 'puppet-mode))
+```
+
+<a name="sec-7-102"></a>
 ## server
 
 Start emacs server.

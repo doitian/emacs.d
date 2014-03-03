@@ -3874,6 +3874,13 @@ Functions to manage site iany.me
   
 #+END_SRC
 
+** puppet
+
+#+BEGIN_SRC emacs-lisp
+  (define-module puppet
+    (require-package 'puppet-mode))
+#+END_SRC
+
 ** server
 
 Start emacs server.

@@ -5,6 +5,7 @@
       '(
         back-to-indentation-or-beginning
         backward-delete-char
+        backward-sexp
         c-electric-delete-forward
         c-electric-paren
         c-electric-semi&comma
@@ -47,5 +48,6 @@
 
 (setq mc/cmds-to-run-once
       '(
+        markdown-exdent-or-delete
         rectangle-number-lines
         ))

@@ -677,6 +677,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   (ido-load-history)
 
   (define-key ido-file-completion-map [(meta ?l)] nil)
+  (setq completion-ignored-extensions (cons ".meta" completion-ignored-extensions))
   (custom-set-variables
    '(ido-save-directory-list-file
      (expand-file-name ".ido.last" user-emacs-directory))))
@@ -1482,7 +1483,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   (setq dired-user-omit-extensions
         '(".auxbbl.make" ".auxdvi.make" ".aux.make" ".fls" ".ilg" ".ind" ".out" ".out.make" ".prv"
           ".temp" ".toc.make" ".gpi.log" ".ps.log" ".pdf.log" ".bak" ".mp.log" ".mp.make" ".mpx"
-          ".sdb" ".nav" ".snm" ".fdb_latexmk"))
+          ".sdb" ".nav" ".snm" ".fdb_latexmk" ".meta"))
 
   (setq dired-guess-shell-alist-user
         '(("\\.pdf\\'" "zathura" "evince")
@@ -1508,9 +1509,9 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
 
     (dired-details-install)
 
-    (setq dired-omit-extensions
-          (append dired-user-omit-extensions
-                  dired-omit-extensions))
+    ;; (setq dired-omit-extensions (remove-duplicates dired-omit-extensions))
+    (setq dired-omit-extensions (append dired-user-omit-extensions
+                                        dired-omit-extensions))
 
     (define-key dired-mode-map "E" 'wdired-change-to-wdired-mode)
     (define-key dired-mode-map (kbd "`") 'dired-clean-directory)
@@ -3580,14 +3581,17 @@ Install `emacs-rails` using `make vendor`
                                      )))
     "My C/C++ Programming Style")
 
+  (defun init--c-c++-mode ()
+    (c-set-style "cust")
+    (setq tab-width 2))
+
+  (defun init--c-mode-common-load ()
+    (c-add-style "cust" my-c-style t)
+    (remove-hook 'c-mode-common-hook 'init--c-mode-common-load))
+
   ;; Customizations for all modes in CC Mode.
   (defun init--c-mode-common ()
-    (c-add-style "cust" my-c-style t)
-
-    (c-set-style "cust")
-
-    (setq tab-width 2
-          indent-tabs-mode nil)
+    (setq indent-tabs-mode nil)
     (c-toggle-auto-hungry-state 1)
 
     (hs-minor-mode t)
@@ -3616,7 +3620,10 @@ Install `emacs-rails` using `make vendor`
                   (c++-mode)))))))
 
   (add-hook 'find-file-hook 'bh-choose-header-mode)
-  (add-hook 'c-mode-common-hook 'init--c-mode-common))
+  (add-hook 'c-mode-common-hook 'init--c-mode-common)
+  (add-hook 'c-mode-common-hook 'init--c-mode-common-load)
+  (add-hook 'c-mode-hook 'init--c-c++-mode)
+  (add-hook 'c++-mode-hook 'init--c-c++-mode))
 ```
 
 <a name="sec-7-85"></a>
@@ -4135,11 +4142,33 @@ Functions to manage site iany.me
   (require-package 'csharp-mode)
 
   (defun init--csharp-mode ()
+    (c-set-style "SharpDevelop")
     (subword-mode +1)
     (setq indent-tabs-mode t
-          tab-width 2)
-    (local-set-key (kbd "{") 'c-electric-brace))
+          tab-width 2
+          c-basic-offset 2)
+    (local-set-key (kbd "{") 'c-electric-brace)
+    (c-toggle-auto-hungry-state +1))
   (defun init--csharp-mode-load ()
+    (c-add-style "SharpDevelop"
+                 '("C#"
+                   (c-hanging-braces-alist . ((defun-open after)
+                                              (defun-close before)
+                                              (class-open after)
+                                              (class-close before)
+                                              (block-open after)
+                                              (block-close before)
+                                              (topmost-intro)
+                                              (brace-list-open)
+                                              (brace-list-close)
+                                              (do-while-closure after)
+                                              (substatement-open after)
+                                              (else-clause after)
+                                              (access-label after)
+                                              (catch-clause  after)
+                                              (inline-open after)
+                                              (namespace-open)))))
+
     (ad-disable-advice 'revert-buffer 'around 'csharp-advise-revert-buffer)
     (ad-activate 'revert-buffer)
     (remove-hook 'csharp-mode-hook 'init--csharp-mode-load))

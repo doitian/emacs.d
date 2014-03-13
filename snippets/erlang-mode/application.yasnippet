@@ -1,7 +1,6 @@
-# -*- mode: snippet -*-
-# name: application
 # key: application
-# expand-env: ((yas-indent-line 'fixed))
+# name: application
+# expand-env: ((yas-indent-line (quote fixed)))
 # --
 -module(`(file-name-nondirectory
            (file-name-sans-extension
@@ -18,7 +17,11 @@
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
-    tr_server_sup:start_link().
+    `(replace-regexp-in-string "_app" ""
+        (file-name-nondirectory
+           (file-name-sans-extension
+             (or (buffer-file-name)
+                 (buffer-name (current-buffer))))))`_sup:start_link().
 
 stop(_State) ->
     ok.

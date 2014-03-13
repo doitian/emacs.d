@@ -6,11 +6,13 @@
         back-to-indentation-or-beginning
         backward-delete-char
         backward-sexp
+        c-electric-colon
         c-electric-delete-forward
         c-electric-paren
         c-electric-semi&comma
         coffee-dedent-line-backspace
         delete-horizontal-space
+        erlang-electric-comma
         forward-sexp
         forward-symbol
         indent-region

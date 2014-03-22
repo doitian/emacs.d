@@ -183,6 +183,7 @@ site-lisp-update:
 	curl -k -L -o site-lisp/thing-cmds.el http://www.emacswiki.org/emacs-en/download/thing-cmds.el
 	curl -k -L -o site-lisp/winring.el https://launchpadlibrarian.net/43687812/winring.el
 	curl -k -L -o site-lisp/windata.el http://www.emacswiki.org/emacs/download/windata.el
+	curl -k -L -o site-lisp/orgbox.el https://raw.githubusercontent.com/yasuhito/orgbox/develop/orgbox.el
 	$(MAKE)
 
 update: site-lisp-update

@@ -615,7 +615,7 @@ Install latest org by running =make org=. Othewise system bundled version is use
   
     (setq org-modules '(org-bibtex org-bookmark org-expiry org-habit org-id org-info
                                    org-inlinetask org-man org-w3m org-clock org-timer
-                                   org-protocol org-drill org-mu4e))
+                                   org-protocol org-drill org-mu4e orgbox))
     (when (eq system-type 'darwin)
       (setq org-modules (append org-modules '(org-mac-link-grabber))))
   

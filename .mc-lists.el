@@ -46,10 +46,10 @@
         yaml-electric-dash-and-dot
         yas-expand
         zap-up-to-char
+        markdown-exdent-or-delete
         ))
 
 (setq mc/cmds-to-run-once
       '(
-        markdown-exdent-or-delete
         rectangle-number-lines
         ))

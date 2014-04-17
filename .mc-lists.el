@@ -6,6 +6,7 @@
         back-to-indentation-or-beginning
         backward-delete-char
         backward-sexp
+        c-electric-brace
         c-electric-colon
         c-electric-delete-forward
         c-electric-paren
@@ -13,6 +14,7 @@
         coffee-dedent-line-backspace
         delete-horizontal-space
         erlang-electric-comma
+        erlang-electric-gt
         forward-sexp
         forward-symbol
         indent-region
@@ -22,6 +24,7 @@
         iy-go-to-char-kill-ring-save
         iy-go-to-char-quit
         kill-region
+        markdown-exdent-or-delete
         mf-shrink-whitespaces
         org-beginning-of-line
         org-delete-char
@@ -38,6 +41,8 @@
         paredit-open-round
         paredit-splice-sexp
         ruby-end-space
+        sgml-slash
+        transpose-words
         upcase-region
         whole-line-or-region-kill-region
         whole-line-or-region-kill-ring-save
@@ -46,7 +51,6 @@
         yaml-electric-dash-and-dot
         yas-expand
         zap-up-to-char
-        markdown-exdent-or-delete
         ))
 
 (setq mc/cmds-to-run-once

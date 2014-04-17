@@ -3619,6 +3619,9 @@ Functions to manage site iany.me
           'system-move-file-to-trash
           'system-move-file-to-trash--using-rm-trash))
   
+      (require-package 'reveal-in-finder)
+      (global-set-key (kbd "s-R") 'reveal-in-finder)
+  
       ))
 #+END_SRC
 ** cscope
@@ -3799,6 +3802,9 @@ Functions to manage site iany.me
       (local-set-key (kbd "M-s /") 'erlang-man-function)
       (local-set-key (kbd "M-s ?") 'erlang-man-module))
     (add-hook 'erlang-mode-hook 'init--erlang-mode)
+    (add-to-list 'auto-mode-alist '("rebar\\.config\\'" . erlang-mode))
+    (add-to-list 'auto-mode-alist '("\\.app\\.src\\'" . erlang-mode))
+  
     (require-package 'erlang))
 #+END_SRC
 

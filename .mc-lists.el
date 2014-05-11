@@ -42,6 +42,7 @@
         paredit-splice-sexp
         ruby-end-space
         sgml-slash
+        slim-electric-backspace
         transpose-words
         upcase-region
         whole-line-or-region-kill-region

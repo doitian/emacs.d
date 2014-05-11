@@ -3889,10 +3889,6 @@ Functions to manage site iany.me
     (defalias 'cgp 'confluence-get-page )
     (defalias 'cs 'confluence-search)
   
-    (custom-set-variables
-     '(confluence-url "http://localhost:8090/rpc/xmlrpc")
-     '(confluence-default-space-alist (list (cons confluence-url "Wiki"))))
-  
     (defun init--confluence-common ()
       (longlines-mode +1)
   

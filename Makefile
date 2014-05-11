@@ -38,10 +38,10 @@ YAS_DIR := $(firstword $(wildcard elpa/yasnippet-*))
 YAS_SUBDIRS = $(wildcard snippets/*)
 YAS_COMPILED = $(YAS_SUBDIRS:%=%/.yas-compiled-snippets.el)
 
-CONFLUENCE_VERSION := 1.6
+CONFLUENCE_VERSION := 1.7
 CONFLUENCE_PKGNAME := confluence-el
 CONFLUENCE_TARBALL := $(CONFLUENCE_PKGNAME)-$(CONFLUENCE_VERSION).tar.gz
-CONFLUENCE_DOWNLOAD_URL := https://confluence-el.googlecode.com/files/$(CONFLUENCE_TARBALL)
+CONFLUENCE_DOWNLOAD_URL := "http://jaist.dl.sourceforge.net/project/confluence-el/$(CONFLUENCE_TARBALL)"
 
 all: init.elc
 
@@ -155,7 +155,7 @@ confluence: vendor/$(CONFLUENCE_PKGNAME)/confluence.elc
 confluence-clean:
 	rm -rf tmp/confluence-* vendor/confluence-*
 
-vendor/$(CONFLUENCE_PKGNAME)/confluence.el:
+vendor/$(CONFLUENCE_PKGNAME)/confluence.el: tmp/${CONFLUENCE_TARBALL}
 	tar -xzf $< -C vendor
 
 tmp/${CONFLUENCE_TARBALL}:

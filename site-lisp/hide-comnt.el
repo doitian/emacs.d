@@ -3,14 +3,14 @@
 ;; Filename: hide-comnt.el
 ;; Description: Hide/show comments in code.
 ;; Author: Drew Adams
-;; Maintainer: Drew Adams
-;; Copyright (C) 2011-2013, Drew Adams, all rights reserved.
+;; Maintainer: Drew Adams (concat "drew.adams" "@" "oracle" ".com")
+;; Copyright (C) 2011-2014, Drew Adams, all rights reserved.
 ;; Created: Wed May 11 07:11:30 2011 (-0700)
 ;; Version: 0
 ;; Package-Requires: ()
-;; Last-Updated: Thu Jul 25 08:43:40 2013 (-0700)
+;; Last-Updated: Thu Feb  6 10:25:29 2014 (-0800)
 ;;           By: dradams
-;;     Update #: 54
+;;     Update #: 126
 ;; URL: http://www.emacswiki.org/hide-comnt.el
 ;; Doc URL: http://www.emacswiki.org/HideOrIgnoreComments
 ;; Keywords: comment, hide, show
@@ -37,7 +37,7 @@
 ;;
 ;;  User options defined here:
 ;;
-;;    `ignore-comments-flag'.
+;;    `hide-whitespace-before-comment-flag', `ignore-comments-flag'.
 ;;
 ;;
 ;;  Put this in your init file (`~/.emacs'):
@@ -45,16 +45,26 @@
 ;;   (require 'hide-comnt)
 ;;
 ;;
-;;  Note for Emacs 20: The commands and option defined here do nothing
-;;  in Emacs 20.  Nevertheless, the library can be byte-compiled in
-;;  Emacs 20 and `imenu+.elc' can be loaded in later Emacs versions
-;;  and used there.  This is the only real use of this library for
-;;  Emacs 20: it provides macro `with-comments-hidden'.
+;;  Note for Emacs 20: The commands and option defined here DO NOTHING
+;;  IN EMACS 20.  Nevertheless, the library can be byte-compiled in
+;;  Emacs 20 and `hide-comnt.elc' can be loaded in later Emacs
+;;  versions and used there.  This is the only real use of this
+;;  library for Emacs 20: it provides macro `with-comments-hidden'.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Change Log:
 ;;
+;; 2014/02/06 dadams
+;;     Added: hide-whitespace-before-comment-flag.
+;;     hide/show-comments:
+;;       Go to start of comment before calling comment-forward.
+;;       Hide whitespace preceding comment, if hide-whitespace-before-comment-flag.
+;; 2013/12/26 dadams
+;;     hide/show-comments: Update START to comment end or END.
+;; 2013/10/09 dadams
+;;     hide/show-comments: Use save-excursion.  If empty comment-end go to CBEG.
+;;                         Use comment-forward if available.
 ;; 2012/10/06 dadams
 ;;     hide/show-comments: Call comment-normalize-vars first.  Thx to Stefan Monnier.
 ;;     hide/show-comments-toggle: Do nothing if newcomment.el not available.
@@ -86,10 +96,16 @@
 ;;
 ;;; Code:
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;###autoload
 (defcustom ignore-comments-flag t
-  "Non-nil means macro `with-comments-hidden' hides comments."
+  "*Non-nil means macro `with-comments-hidden' hides comments."
+  :type 'boolean :group 'matching)
+
+;;;###autoload
+(defcustom hide-whitespace-before-comment-flag t
+  "*Non-nil means `hide/show-comments' hides whitespace preceding a comment."
   :type 'boolean :group 'matching)
 
 
@@ -117,13 +133,18 @@ Note that prior to Emacs 21, this never hides comments."
 (defun hide/show-comments (&optional hide/show start end)
   "Hide or show comments from START to END.
 Interactively, hide comments, or show them if you use a prefix arg.
+\(This is thus *NOT* a toggle command.)
+
+If option `hide-whitespace-before-comment-flag' is non-nil, then hide
+also any whitespace preceding a comment.
+
 Interactively, START and END default to the region limits, if active.
 Otherwise, including non-interactively, they default to `point-min'
 and `point-max'.
 
 Uses `save-excursion', restoring point.
 
-Be aware that using this command to show invisible text shows *all*
+Be aware that using this command to show invisible text shows *ALL*
 such text, regardless of how it was hidden.  IOW, it does not just
 show invisible text that you previously hid using this command.
 
@@ -134,7 +155,7 @@ This command does nothing in Emacs versions prior to Emacs 21, because
 it needs `comment-search-forward'."
   (interactive
    (cons (if current-prefix-arg 'show 'hide)
-         (if (or (not mark-active) (null (mark)) (= (point) (mark)))
+         (if (or (not mark-active)  (null (mark))  (= (point) (mark)))
              (list (point-min) (point-max))
            (if (< (point) (mark)) (list (point) (mark)) (list (mark) (point))))))
   (when (require 'newcomment nil t)     ; `comment-search-forward', Emacs 21+.
@@ -148,14 +169,34 @@ it needs `comment-search-forward'."
       (unwind-protect
            (save-excursion
              (goto-char start)
-             (while (and (< start end) (setq cbeg  (comment-search-forward end 'NOERROR)))
+             (while (and (< start end)
+                         (save-excursion
+                           (setq cbeg  (comment-search-forward end 'NOERROR))
+                           cbeg))
+               (when hide-whitespace-before-comment-flag ; Hide preceding whitespace.
+                 (save-excursion
+                   (goto-char cbeg)
+                   (if (not (fboundp 'looking-back)) ; Emacs 21
+                       (while (memq (char-before cbeg) '(?\   ?\t ?\n ?\f))
+                         (setq cbeg  (1- cbeg)))
+                     (looking-back "\\(\n\\|\\s-+\\)" nil 'GREEDY) ; Emacs 22+
+                     (setq cbeg  (match-beginning 0)))))
+               (when (string= "" comment-end) (goto-char cbeg))
                (setq cend  (if (string= "" comment-end)
                                (min (1+ (line-end-position)) (point-max))
-                             (search-forward comment-end end 'NOERROR)))
-               (when (and cbeg cend)
+                             (cond ((fboundp 'comment-forward) ; Emacs 22+
+                                    (goto-char cbeg)
+                                    (and (comment-forward 1)  (point)))
+                                   ((goto-char cbeg)
+                                    (search-forward comment-end end 'NOERROR)))))
+               (when (and hide-whitespace-before-comment-flag ; Hide also newline at end.
+                          (= (char-after cend) ?\n))
+                 (setq cend  (min (1+ cend) (point-max))))
+               (when (and cbeg  cend)
                  (if (eq 'hide hide/show)
                      (put-text-property cbeg cend 'invisible t)
-                   (put-text-property cbeg cend 'invisible nil)))))
+                   (put-text-property cbeg cend 'invisible nil)))
+               (goto-char (setq start  (or cend  end)))))
         (set-buffer-modified-p bufmodp)))))
 
 (defun hide/show-comments-toggle (&optional start end)

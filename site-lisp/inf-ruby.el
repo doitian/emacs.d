@@ -77,6 +77,7 @@ Also see the description of `ielm-prompt-read-only'.")
     #'identity
     '("\\(^%s> *\\)"                      ; Simple
       "\\(^(rdb:1) *\\)"                  ; Debugger
+      "\\(^(byebug) *\\)"                 ; byebug
       "\\(^\\(irb([^)]+)"                 ; IRB default
       "\\([[0-9]+] \\)?[Pp]ry ?([^)]+)"   ; Pry
       "\\(jruby-\\|JRUBY-\\)?[1-9]\\.[0-9]\\.[0-9]+\\(-?p?[0-9]+\\)?" ; RVM
@@ -103,6 +104,7 @@ graphical char in all other prompts.")
     (define-key map (kbd "C-x C-e") 'ruby-send-last-sexp)
     (define-key map (kbd "TAB") 'inf-ruby-complete)
     (define-key map (kbd "C-x C-q") 'inf-ruby-maybe-switch-to-compilation)
+    (define-key map (kbd "C-c C-z") 'ruby-switch-to-last-ruby-buffer)
     map)
   "Mode map for `inf-ruby-mode'.")
 
@@ -129,6 +131,10 @@ Used for determining the default in the
 next one.")
 
 (defvar inf-ruby-at-top-level-prompt-p t)
+(make-variable-buffer-local 'inf-ruby-at-top-level-prompt-p)
+
+(defvar inf-ruby-last-prompt nil)
+(make-variable-buffer-local 'inf-ruby-last-prompt)
 
 (defconst inf-ruby-error-regexp-alist
   '(("SyntaxError: \\(?:compile error\n\\)?\\([^\(].*\\):\\([1-9][0-9]*\\):" 1 2)
@@ -228,9 +234,10 @@ The following commands are available:
 (defun inf-ruby-output-filter (output)
   "Check if the current prompt is a top-level prompt."
   (unless (zerop (length output))
-    (setq inf-ruby-at-top-level-prompt-p
+    (setq inf-ruby-last-prompt (car (last (split-string output "\n")))
+          inf-ruby-at-top-level-prompt-p
           (string-match inf-ruby-first-prompt-pattern
-                        (car (last (split-string output "\n")))))))
+                        inf-ruby-last-prompt))))
 
 ;; adapted from replace-in-string in XEmacs (subr.el)
 (defun inf-ruby-remove-in-string (str regexp)
@@ -269,9 +276,13 @@ run)."
 
 ;;;###autoload
 (defun run-ruby (&optional command name)
-  "Run an inferior Ruby process, input and output via buffer *ruby*.
-If there is a process already running in `*ruby*', switch to that buffer.
-\(Type \\[describe-mode] in the process buffer for a list of commands.)"
+  "Run an inferior Ruby process, input and output via buffer `*NAME*'.
+If there is a process already running in `*NAME*', switch to that buffer.
+
+NAME defaults to \"ruby\". COMMAND defaults to the default entry
+in `inf-ruby-implementations'.
+
+\(Type \\[describe-mode] in the process buffer for the list of commands.)"
 
   (interactive)
   (setq command (or command (cdr (assoc inf-ruby-default-implementation
@@ -280,12 +291,14 @@ If there is a process already running in `*ruby*', switch to that buffer.
 
   (if (not (comint-check-proc inf-ruby-buffer))
       (let ((commandlist (split-string-and-unquote command))
+            (buffer (current-buffer))
             (process-environment process-environment))
         ;; http://debbugs.gnu.org/15775
         (setenv "PAGER" (executable-find "cat"))
         (set-buffer (apply 'make-comint name (car commandlist)
                            nil (cdr commandlist)))
-        (inf-ruby-mode)))
+        (inf-ruby-mode)
+        (ruby-remember-ruby-buffer buffer)))
   (pop-to-buffer (setq inf-ruby-buffer (format "*%s*" name))))
 
 (defun inf-ruby-proc ()
@@ -359,16 +372,33 @@ Must not contain ruby meta characters.")
       (ruby-beginning-of-block)
       (ruby-send-region (point) end))))
 
+(defvar ruby-last-ruby-buffer nil
+  "The last buffer we switched to `inf-ruby' from.")
+
+(defun ruby-remember-ruby-buffer (buffer)
+  (setq ruby-last-ruby-buffer buffer))
+
 (defun ruby-switch-to-inf (eob-p)
   "Switch to the ruby process buffer.
 With argument, positions cursor at end of buffer."
   (interactive "P")
-  (if (and inf-ruby-buffer (get-buffer inf-ruby-buffer))
-      (pop-to-buffer inf-ruby-buffer)
-    (error "No current process buffer, see variable inf-ruby-buffer"))
+  (let ((buffer (current-buffer)))
+    (if (and inf-ruby-buffer (get-buffer inf-ruby-buffer))
+        (progn
+          (pop-to-buffer inf-ruby-buffer)
+          (ruby-remember-ruby-buffer buffer))
+      (error "No current process buffer, see variable inf-ruby-buffer")))
   (cond (eob-p
          (push-mark)
          (goto-char (point-max)))))
+
+(defun ruby-switch-to-last-ruby-buffer ()
+  "Switch back to the last Ruby buffer."
+  (interactive)
+  (if (and ruby-last-ruby-buffer
+           (buffer-live-p ruby-last-ruby-buffer))
+      (pop-to-buffer ruby-last-ruby-buffer)
+    (message "Don't know the original Ruby buffer")))
 
 (defun ruby-send-region-and-go (start end)
   "Send the current region to the inferior Ruby process.
@@ -411,34 +441,50 @@ Then switch to the process buffer."
 (defun inf-ruby-completions (expr)
   "Return a list of completions for the Ruby expression starting with EXPR."
   (let* ((proc (inf-ruby-proc))
-         (line (buffer-substring (save-excursion (beginning-of-thing 'line))
+         (line (buffer-substring (save-excursion (move-beginning-of-line 1)
+                                                 (point))
                                  (point)))
          (comint-filt (process-filter proc))
          (kept "") completions
          ;; Guard against running completions in parallel:
          inf-ruby-at-top-level-prompt-p)
-    (set-process-filter proc (lambda (proc string) (setq kept (concat kept string))))
-    (unwind-protect
-        (let ((completion-snippet
-               (format (concat "if defined?(Pry.config) then "
-                           "completor = Pry.config.completer"
-                           ".build_completion_proc(binding, defined?(_pry_) ? _pry_ : Pry.new)"
-                           " elsif defined?(Bond.agent) && Bond.started? then "
-                           "completor = Bond.agent"
-                           " elsif defined?(IRB::InputCompletor::CompletionProc) then "
-                           "completor = IRB::InputCompletor::CompletionProc "
-                           "end and "
-                           "puts completor.call('%s', '%s').compact\n")
-                   (ruby-escape-single-quoted expr)
-                   (ruby-escape-single-quoted line))))
-          (process-send-string proc completion-snippet)
-          (while (and (not (string-match inf-ruby-prompt-pattern kept))
-                      (accept-process-output proc 2)))
-          (setq completions (butlast (split-string kept "\r?\n") 2))
-          ;; Subprocess echoes output on Windows and OS X.
-          (when (and completions (string= (concat (car completions) "\n") completion-snippet))
-            (setq completions (cdr completions))))
-      (set-process-filter proc comint-filt))
+    (unless (equal "(rdb:1) " inf-ruby-last-prompt)
+      (set-process-filter proc (lambda (proc string) (setq kept (concat kept string))))
+      (unwind-protect
+          (let ((completion-snippet
+                 (format
+                  (concat
+                   "proc { |expr, line|"
+                   "  require 'ostruct';"
+                   "  old_wp = defined?(Bond) && Bond.started? && Bond.agent.weapon;"
+                   "  begin"
+                   "    Bond.agent.instance_variable_set('@weapon',"
+                   "      OpenStruct.new(line_buffer: line)) if old_wp;"
+                   "    if defined?(_pry_.complete) then"
+                   "      puts _pry_.complete(expr)"
+                   "    else"
+                   "      completer = if defined?(_pry_) then"
+                   "        Pry.config.completer.build_completion_proc(binding, _pry_)"
+                   "      elsif old_wp then"
+                   "        Bond.agent"
+                   "      elsif defined?(IRB::InputCompletor::CompletionProc) then"
+                   "        IRB::InputCompletor::CompletionProc"
+                   "      end and puts completer.call(expr).compact"
+                   "    end"
+                   "  ensure"
+                   "    Bond.agent.instance_variable_set('@weapon', old_wp) if old_wp "
+                   "  end "
+                   "}.call('%s', '%s')\n")
+                  (ruby-escape-single-quoted expr)
+                  (ruby-escape-single-quoted line))))
+            (process-send-string proc completion-snippet)
+            (while (and (not (string-match inf-ruby-prompt-pattern kept))
+                        (accept-process-output proc 2)))
+            (setq completions (butlast (split-string kept "\r?\n") 2))
+            ;; Subprocess echoes output on Windows and OS X.
+            (when (and completions (string= (concat (car completions) "\n") completion-snippet))
+              (setq completions (cdr completions))))
+        (set-process-filter proc comint-filt)))
     completions))
 
 (defconst inf-ruby-ruby-expr-break-chars " \t\n\"\'`><,;|&{(")
@@ -496,7 +542,7 @@ completion."
   "Original compilation mode before switching to `inf-ruby-mode'.")
 
 (defvar inf-ruby-orig-process-filter nil
-  "Original process filter before switching to `inf-ruby-mode`.")
+  "Original process filter before switching to `inf-ruby-mode'.")
 
 (defun inf-ruby-switch-from-compilation ()
   "Make the buffer writable and switch to `inf-ruby-mode'.

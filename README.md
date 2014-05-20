@@ -127,8 +127,9 @@
 <li><a href="#sec-7-98">7.98. haskell-mode</a></li>
 <li><a href="#sec-7-99">7.99. csharp-mode</a></li>
 <li><a href="#sec-7-100">7.100. confluence</a></li>
-<li><a href="#sec-7-101">7.101. puppet</a></li>
-<li><a href="#sec-7-102">7.102. server</a></li>
+<li><a href="#sec-7-101">7.101. jira</a></li>
+<li><a href="#sec-7-102">7.102. puppet</a></li>
+<li><a href="#sec-7-103">7.103. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -2451,7 +2452,8 @@ Compile all snippets into `snippets.el` and load it. After change or and any sni
         :isearch t
         ) yas-popup-remember-pattern)))
 
-  (defadvice yas--menu-keymap-get-create (around ignore (mode) activate))
+  (defadvice yas--menu-keymap-get-create (around ignore (mode &optional parents) activate)
+    (setq ad-return-value (make-sparse-keymap)))
 
   (define-key my-keymap (kbd "<tab>") 'yas-insert-snippet)
 
@@ -3916,7 +3918,15 @@ Functions to manage site iany.me
         'system-move-file-to-trash--using-rm-trash))
 
     (require-package 'reveal-in-finder)
-    (global-set-key (kbd "s-R") 'reveal-in-finder)
+    (defun open-in-iterm ()
+      (interactive)
+      (flet ((reveal-in-finder-as
+              (dir file)
+              (call-process "open" nil nil nil "-a" "iTerm.app" dir)))
+        (call-interactively 'reveal-in-finder)))
+
+    (global-set-key (kbd "s-r") 'reveal-in-finder)
+    (global-set-key (kbd "s-t") 'open-in-iterm)
 
     ))
 ```
@@ -4212,6 +4222,68 @@ Functions to manage site iany.me
 ```
 
 <a name="sec-7-101"></a>
+## jira
+
+```cl
+(define-module jira
+  (require-package 'jira)
+
+  (autoload 'jira-mode "jira" nil t)
+
+  (defun org-capture-jira-issue ()
+    (interactive)
+    (unless (equal (face-at-point) 'jira-link-issue-face)
+      (jira-next-issue))
+    (when (equal (face-at-point) 'jira-link-issue-face)
+      (let* ((issue (jira-get-issue (thing-at-point 'sexp)))
+             (key (cdr (assoc "key" issue)))
+             (summary (cdr (assoc "summary" issue))))
+        (org-protocol-capture
+         (concat "b/"
+                 (url-hexify-string (replace-regexp-in-string "rpc/xmlrpc$" (concat "browse/" key) jira-url))
+                 "/"
+                 (url-hexify-string (concat "[" key "] " summary " :jira:"
+                                            (nth 1 (reverse (split-string (nth 2 (split-string jira-url "/")) "\\.")))
+                                            ":"))
+                 "/")))))
+
+  (defun jira-next-issue ()
+    (interactive)
+
+    (let (pos)
+      (save-excursion
+        (forward-line)
+        (while (and (not (equal (face-at-point) 'jira-link-issue-face)) (not (eobp)))
+          (forward-line))
+        (when (equal (face-at-point) 'jira-link-issue-face)
+          (setq pos (point))))
+      (when pos (goto-char pos))))
+
+  (defun jira-prev-issue ()
+    (interactive)
+
+    (let (pos)
+      (save-excursion
+        (if (bolp)
+            (forward-line -1)
+          (beginning-of-line))
+        (while (and (not (equal (face-at-point) 'jira-link-issue-face)) (not (eobp)))
+          (forward-line -1))
+        (when (equal (face-at-point) 'jira-link-issue-face)
+          (setq pos (point))))
+      (when pos (goto-char pos))))
+
+  (defun init--jira-mode ()
+    (define-key jira-mode-map "A" 'org-capture-jira-issue)
+    (define-key jira-mode-map (kbd "C-c C-n") 'jira-next-issue)
+    (define-key jira-mode-map (kbd "C-c C-p") 'jira-prev-issue))
+
+  (add-hook 'jira-mode-hook 'init--jira-mode)
+
+  )
+```
+
+<a name="sec-7-102"></a>
 ## puppet
 
 ```cl
@@ -4219,7 +4291,7 @@ Functions to manage site iany.me
   (require-package 'puppet-mode))
 ```
 
-<a name="sec-7-102"></a>
+<a name="sec-7-103"></a>
 ## server
 
 Start emacs server.

@@ -585,6 +585,7 @@
 
  `(which-func ((t (:foreground ,zenburn-yellow))))
 
+ '(jira-issue-info-face ((t (:inherit zenburn-primary-1))))
  ;; (string 12 24 12 24 12 24 12 24 12 24 12 24 12 24 12 24 0 0 0 0)
  `(highlight-indentation-face ((t (:background ,zenburn-bg+1))))
  `(highlight-indentation-current-column-face ((t (:background ,zenburn-bg+3))))

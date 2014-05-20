@@ -43,6 +43,7 @@
         ruby-end-space
         sgml-slash
         slim-electric-backspace
+        thing-actions-mark-thing
         transpose-words
         upcase-region
         whole-line-or-region-kill-region

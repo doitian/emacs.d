@@ -2230,7 +2230,8 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
           :isearch t
           ) yas-popup-remember-pattern)))
   
-    (defadvice yas--menu-keymap-get-create (around ignore (mode) activate))
+    (defadvice yas--menu-keymap-get-create (around ignore (mode &optional parents) activate)
+      (setq ad-return-value (make-sparse-keymap)))
   
     (define-key my-keymap (kbd "<tab>") 'yas-insert-snippet)
   
@@ -3620,7 +3621,15 @@ Functions to manage site iany.me
           'system-move-file-to-trash--using-rm-trash))
   
       (require-package 'reveal-in-finder)
-      (global-set-key (kbd "s-R") 'reveal-in-finder)
+      (defun open-in-iterm ()
+        (interactive)
+        (flet ((reveal-in-finder-as
+                (dir file)
+                (call-process "open" nil nil nil "-a" "iTerm.app" dir)))
+          (call-interactively 'reveal-in-finder)))
+  
+      (global-set-key (kbd "s-r") 'reveal-in-finder)
+      (global-set-key (kbd "s-t") 'open-in-iterm)
   
       ))
 #+END_SRC
@@ -3905,6 +3914,65 @@ Functions to manage site iany.me
   
 #+END_SRC
 
+** jira
+#+BEGIN_SRC emacs-lisp
+  (define-module jira
+    (require-package 'jira)
+  
+    (autoload 'jira-mode "jira" nil t)
+  
+    (defun org-capture-jira-issue ()
+      (interactive)
+      (unless (equal (face-at-point) 'jira-link-issue-face)
+        (jira-next-issue))
+      (when (equal (face-at-point) 'jira-link-issue-face)
+        (let* ((issue (jira-get-issue (thing-at-point 'sexp)))
+               (key (cdr (assoc "key" issue)))
+               (summary (cdr (assoc "summary" issue))))
+          (org-protocol-capture
+           (concat "b/"
+                   (url-hexify-string (replace-regexp-in-string "rpc/xmlrpc$" (concat "browse/" key) jira-url))
+                   "/"
+                   (url-hexify-string (concat "[" key "] " summary " :jira:"
+                                              (nth 1 (reverse (split-string (nth 2 (split-string jira-url "/")) "\\.")))
+                                              ":"))
+                   "/")))))
+  
+    (defun jira-next-issue ()
+      (interactive)
+  
+      (let (pos)
+        (save-excursion
+          (forward-line)
+          (while (and (not (equal (face-at-point) 'jira-link-issue-face)) (not (eobp)))
+            (forward-line))
+          (when (equal (face-at-point) 'jira-link-issue-face)
+            (setq pos (point))))
+        (when pos (goto-char pos))))
+  
+    (defun jira-prev-issue ()
+      (interactive)
+  
+      (let (pos)
+        (save-excursion
+          (if (bolp)
+              (forward-line -1)
+            (beginning-of-line))
+          (while (and (not (equal (face-at-point) 'jira-link-issue-face)) (not (eobp)))
+            (forward-line -1))
+          (when (equal (face-at-point) 'jira-link-issue-face)
+            (setq pos (point))))
+        (when pos (goto-char pos))))
+  
+    (defun init--jira-mode ()
+      (define-key jira-mode-map "A" 'org-capture-jira-issue)
+      (define-key jira-mode-map (kbd "C-c C-n") 'jira-next-issue)
+      (define-key jira-mode-map (kbd "C-c C-p") 'jira-prev-issue))
+  
+    (add-hook 'jira-mode-hook 'init--jira-mode)
+  
+    )
+#+END_SRC
 ** puppet
 
 #+BEGIN_SRC emacs-lisp

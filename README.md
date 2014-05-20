@@ -3201,18 +3201,12 @@ css, sass, scss, stylus
 <a name="sec-7-71"></a>
 ## rails
 
-Install `emacs-rails` using `make vendor`
-
 ```cl
 (define-module rails
-  (setq load-path (cons (concat my-vendor-dir "emacs-rails") load-path))
+  (require-module projectile)
+  (require-package 'projectile-rails)
 
-  (custom-set-variables
-   '(rails-always-use-text-menus t)
-   '(rails-browse-api-with-w3m t)
-   '(rails-ui:show-mode-line nil))
-
-  (require 'emacs-rails-hacks))
+  (add-hook 'projectile-mode-hook 'projectile-rails-on))
 ```
 
 <a name="sec-7-72"></a>

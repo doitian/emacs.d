@@ -15,6 +15,7 @@
         delete-horizontal-space
         erlang-electric-comma
         erlang-electric-gt
+        erlang-electric-lt
         forward-sexp
         forward-symbol
         indent-region

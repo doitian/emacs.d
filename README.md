@@ -472,9 +472,10 @@ Load package on demand
 ## powerline
 
 ```cl
-(define-module powerline
-  (require-package 'powerline)
-  (powerline-default-theme))
+;; (define-module powerline
+;;   (require-package 'powerline)
+;;   (require 'powerline)
+;;   (powerline-default-theme))
 ```
 
 <a name="sec-7-2"></a>
@@ -969,8 +970,13 @@ Capture template
      '(("r" "Notes" entry (file+headline (concat org-directory "/inbox.org") "Notes")
         "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n%i"
         :prepend t)
+       ("R" "Notes" entry (file+headline (concat org-directory "/inbox.org") "Notes")
+        "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n%i\n%c"
+        :prepend t)
        ("t" "TODO" entry (file+headline (concat org-directory "/inbox.org") "Tasks")
         "* TODO %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n%i")
+       ("T" "TODO" entry (file+headline (concat org-directory "/inbox.org") "Tasks")
+        "* TODO %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n%i%n%c")
        ("j" "Journal" plain (file+datetree (concat org-directory "/journal.org"))
         "\n%?\n" :empty-lines 1)
        ("d" "Dump" plain (file+olp (concat org-directory "/inbox.org") "Quick Notes" "Plain")
@@ -979,11 +985,11 @@ Capture template
        ("s" "SOMEDAY" entry (file+headline (concat org-directory "/inbox.org") "Someday")
         "* SOMEDAY %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n%i")
        ("x" "Clipboard" entry (file+headline (concat org-directory "/inbox.org") "Notes")
-        "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %x"
+        "* %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %c"
         :prepend t :empty-lines 1)
 
        ("b" "Default template" entry (file+headline (concat org-directory "/inbox.org") "Tasks")
-        "* TODO %:description\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n%a"
+        "* TODO %:description\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n%a\n%c"
         :prepend t :empty-lines 1 :immediate-finish t)))))
 ```
 
@@ -1503,6 +1509,8 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
      (dired-get-marked-files t current-prefix-arg)))
 
   (defun init--dired-load ()
+    (remove-hook 'dired-mode-hook 'init--dired-load)
+
     (require 'dired-x)
     (require 'dired-details)
     (require 'dired-details+)
@@ -1530,8 +1538,8 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   (global-set-key (kbd "C-x C-j") 'dired-jump)
   (global-set-key (kbd "C-x M-j") (lambda () (interactive)
                                     (call-process "open" nil nil nil default-directory)))
-  (add-hook 'dired-load-hook 'init--dired-load)
   (add-hook 'dired-mode-hook 'init--dired-mode)
+  (add-hook 'dired-mode-hook 'init--dired-load)
   )
 ```
 

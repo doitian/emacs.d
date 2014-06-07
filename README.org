@@ -739,7 +739,7 @@ Store org agenda files in dropbox directory
            (lambda (e)
              (concat my-dropbox-dir "g/org/" e))
            (list "inbox.org" "personal.org" "someday.org" "habit.org" "journal.org" "projects")))
-    (setq org-mobile-directory (concat my-dropbox-dir "MobileOrg"))
+    (setq org-mobile-directory (concat my-dropbox-dir "Apps/MobileOrg"))
     (setq org-default-notes-file (concat org-directory "/inbox.org"))
     (setq org-mobile-inbox-for-pull (concat my-dropbox-dir "g/org/from_mobile.org"))
   

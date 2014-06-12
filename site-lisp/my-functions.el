@@ -295,5 +295,28 @@ Calling this command 3 times will always result in no whitespaces around cursor.
    (expand-file-name "~/Library/Application Support/DEVONthink Pro 2/Inbox")))
 (defalias 'devon 'mf-devon)
 
+;;;###autoload
+(defun mf-replace-camel-and-underscore (from to)
+  (interactive "sSearch: \nsReplace: ")
+  (let* ((from_s (pluralize-string from))
+         (from_c (replace-regexp-in-string "_" "" (capitalize from)))
+         (from_cs (pluralize-string from_c))
+         (to_s (pluralize-string to))
+         (to_c (replace-regexp-in-string "_" "" (capitalize to)))
+         (to_cs (pluralize-string to_c))
+         (pairs (list
+                 (cons from_cs to_cs)
+                 (cons from_c to_c)
+                 (cons from_s to_s)
+                 (cons from to))))
+    (save-excursion
+      (mapc
+       (lambda (pair)
+         (goto-char (point-min))
+         (while (search-forward (car pair) nil t)
+           (replace-match (cdr pair))))
+       pairs))))
+(defalias 'replace-camel-and-underscore 'mf-replace-camel-and-underscore)
+
 (provide 'my-functions)
 ;;; my-functions.el ends here

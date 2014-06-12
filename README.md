@@ -3009,7 +3009,13 @@ This functions should be added to the hooks of major modes for programming."
   (require-package 'handlebars-mode)
   (require-package 'web-mode)
   (add-to-list 'auto-mode-alist '("\\.handlebars$" . handlebars-mode))
-  (add-to-list 'auto-mode-alist '("\\.hbs$" . handlebars-mode)))
+  (add-to-list 'auto-mode-alist '("\\.hbs$" . handlebars-mode))
+
+  (defun init--slim-mode ()
+    (setq electric-indent-inhibit t))
+  (add-hook 'slim-mode-hook 'init--slim-mode)
+
+  )
 ```
 
 <a name="sec-7-65"></a>

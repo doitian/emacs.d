@@ -2757,7 +2757,13 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
     (require-package 'handlebars-mode)
     (require-package 'web-mode)
     (add-to-list 'auto-mode-alist '("\\.handlebars$" . handlebars-mode))
-    (add-to-list 'auto-mode-alist '("\\.hbs$" . handlebars-mode)))
+    (add-to-list 'auto-mode-alist '("\\.hbs$" . handlebars-mode))
+  
+    (defun init--slim-mode ()
+      (setq electric-indent-inhibit t))
+    (add-hook 'slim-mode-hook 'init--slim-mode)
+  
+    )
 #+END_SRC
 
 ** css

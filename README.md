@@ -340,7 +340,7 @@ custom.el if you prefer it.
 ```cl
 (custom-set-variables
  '(default-major-mode (quote text-mode) t)
-
+ '(ad-redefinition-action 'accept)
  '(enable-recursive-minibuffers t)
  '(minibuffer-depth-indicate-mode t)
 

@@ -1159,12 +1159,14 @@ Autoload babel languages.
 #+BEGIN_SRC emacs-lisp
   (define-module org-drill
     (require-module org-basic)
-
+  
     (defun init--org-drill-on-dired-load ()
       (define-key dired-mode-map (kbd "C-c SPC") 'my-dired-do-drill))
   
-    (add-hook 'dired-load-hook 'init--org-drill-on-dired-load)
-    
+    (if (featurep 'dired)
+        (init--org-drill-on-dired-load)
+      (add-hook 'dired-load-hook 'init--org-drill-on-dired-load))
+  
     (defun my-dired-do-drill (&optional arg)
       (interactive "P")
       (org-drill
@@ -1238,14 +1240,18 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
 #+BEGIN_SRC emacs-lisp
   (define-module multiple-cursors
     (require-package 'multiple-cursors)
-    (setq mc/cursor-specific-vars
-          '(iy-go-to-char-start-pos autopair-action autopair-wrap-action transient-mark-mode er/history))
+  
+    (defun init--multiple-cursors-mode ()
+      (remove-hook 'multiple-cursors-mode-hook 'init--multiple-cursors-mode)
+      (setq mc/cursor-specific-vars
+            (cons 'iy-go-to-char-start-pos mc/cursor-specific-vars)))
+    (add-hook 'multiple-cursors-mode-hook 'init--multiple-cursors-mode)
   
     (defadvice set-rectangular-region-anchor (around edit-lines-when-region-is-active activate)
       (if (region-active-p)
           (call-interactively 'mc/edit-lines)
         ad-do-it))
-
+  
     (autoload 'multiple-cursors-core "multiple-cursors-core" "Delete overlay with state, including dependent overlays and markers.")
     (define-key ctl-x-r-map (kbd "C-r") 'mc/edit-lines)
     (define-key ctl-x-r-map (kbd ",") 'mc/edit-lines)
@@ -1263,10 +1269,10 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
     (define-key ctl-x-r-map (kbd "C-SPC") 'mc/mark-all-in-region)
     (define-key ctl-x-r-map (kbd "C-f") 'mc/mark-sgml-tag-pair)
     (define-key ctl-x-r-map (kbd "#") 'mc/insert-numbers)
-    
+  
     (global-unset-key (kbd "C-<down-mouse-1>"))
     (global-set-key (kbd "C-<mouse-1>") 'mc/add-cursor-on-click)
-    
+  
     (global-set-key (kbd "C-3") 'mc/mark-all-like-this)
     (define-key ctl-x-r-map [return] 'set-rectangular-region-anchor))
 #+END_SRC
@@ -1317,8 +1323,6 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
        (dired-get-marked-files t current-prefix-arg)))
   
     (defun init--dired-load ()
-      (remove-hook 'dired-mode-hook 'init--dired-load)
-  
       (require 'dired-x)
       (require 'dired-details)
       (require 'dired-details+)
@@ -1347,7 +1351,9 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
     (global-set-key (kbd "C-x M-j") (lambda () (interactive)
                                       (call-process "open" nil nil nil default-directory)))
     (add-hook 'dired-mode-hook 'init--dired-mode)
-    (add-hook 'dired-mode-hook 'init--dired-load)
+    (if (featurep 'dired)
+        (init--dired-load)
+      (add-hook 'dired-load-hook 'init--dired-load))
     )
 #+END_SRC
 
@@ -1996,8 +2002,8 @@ Misc editing config
     (custom-set-variables
      '(kill-whole-line t))
   
-    ;; (require-package 'whole-line-or-region)
-    ;; (whole-line-or-region-mode +1)
+    (require-package 'whole-line-or-region)
+    (whole-line-or-region-mode +1)
   
     (global-set-key (kbd "C-S-k") 'mf-smart-kill-whole-line)
   
@@ -2025,8 +2031,8 @@ Misc editing config
     (custom-set-variables
      '(kill-ring-max 500))
   
-    (require-package 'browse-kill-ring)
-    (require-package 'kill-ring-search)
+    ;; (require-package 'browse-kill-ring)
+    ;; (require-package 'kill-ring-search)
   
     (global-set-key (kbd "C-M-y") 'browse-kill-ring)
   

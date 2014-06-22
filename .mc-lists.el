@@ -20,11 +20,6 @@
         forward-symbol
         indent-region
         iy-go-to-char--command
-        iy-go-to-char-done
-        iy-go-to-char-kill-region
-        iy-go-to-char-kill-ring-save
-        iy-go-to-char-quit
-        kill-region
         markdown-exdent-or-delete
         mf-shrink-whitespaces
         org-beginning-of-line
@@ -35,9 +30,11 @@
         org-self-insert-command
         paredit-backward-kill-word
         paredit-doublequote
+        paredit-forward
         paredit-forward-delete
         paredit-forward-kill-word
         paredit-forward-slurp-sexp
+        paredit-kill
         paredit-meta-doublequote
         paredit-open-round
         paredit-splice-sexp

@@ -1349,7 +1349,9 @@ Autoload babel languages.
   (defun init--org-drill-on-dired-load ()
     (define-key dired-mode-map (kbd "C-c SPC") 'my-dired-do-drill))
 
-  (add-hook 'dired-load-hook 'init--org-drill-on-dired-load)
+  (if (featurep 'dired)
+      (init--org-drill-on-dired-load)
+    (add-hook 'dired-load-hook 'init--org-drill-on-dired-load))
 
   (defun my-dired-do-drill (&optional arg)
     (interactive "P")
@@ -1429,8 +1431,12 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
 ```cl
 (define-module multiple-cursors
   (require-package 'multiple-cursors)
-  (setq mc/cursor-specific-vars
-        '(iy-go-to-char-start-pos autopair-action autopair-wrap-action transient-mark-mode er/history))
+
+  (defun init--multiple-cursors-mode ()
+    (remove-hook 'multiple-cursors-mode-hook 'init--multiple-cursors-mode)
+    (setq mc/cursor-specific-vars
+          (cons 'iy-go-to-char-start-pos mc/cursor-specific-vars)))
+  (add-hook 'multiple-cursors-mode-hook 'init--multiple-cursors-mode)
 
   (defadvice set-rectangular-region-anchor (around edit-lines-when-region-is-active activate)
     (if (region-active-p)
@@ -1509,8 +1515,6 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
      (dired-get-marked-files t current-prefix-arg)))
 
   (defun init--dired-load ()
-    (remove-hook 'dired-mode-hook 'init--dired-load)
-
     (require 'dired-x)
     (require 'dired-details)
     (require 'dired-details+)
@@ -1539,7 +1543,9 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
   (global-set-key (kbd "C-x M-j") (lambda () (interactive)
                                     (call-process "open" nil nil nil default-directory)))
   (add-hook 'dired-mode-hook 'init--dired-mode)
-  (add-hook 'dired-mode-hook 'init--dired-load)
+  (if (featurep 'dired)
+      (init--dired-load)
+    (add-hook 'dired-load-hook 'init--dired-load))
   )
 ```
 
@@ -2208,8 +2214,8 @@ Misc editing config
   (custom-set-variables
    '(kill-whole-line t))
 
-  ;; (require-package 'whole-line-or-region)
-  ;; (whole-line-or-region-mode +1)
+  (require-package 'whole-line-or-region)
+  (whole-line-or-region-mode +1)
 
   (global-set-key (kbd "C-S-k") 'mf-smart-kill-whole-line)
 
@@ -2238,8 +2244,8 @@ Misc editing config
   (custom-set-variables
    '(kill-ring-max 500))
 
-  (require-package 'browse-kill-ring)
-  (require-package 'kill-ring-search)
+  ;; (require-package 'browse-kill-ring)
+  ;; (require-package 'kill-ring-search)
 
   (global-set-key (kbd "C-M-y") 'browse-kill-ring)
 

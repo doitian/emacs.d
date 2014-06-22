@@ -308,13 +308,14 @@ Calling this command 3 times will always result in no whitespaces around cursor.
                  (cons from_cs to_cs)
                  (cons from_c to_c)
                  (cons from_s to_s)
-                 (cons from to))))
+                 (cons from to)))
+         (case-fold-search nil))
     (save-excursion
       (mapc
        (lambda (pair)
          (goto-char (point-min))
          (while (search-forward (car pair) nil t)
-           (replace-match (cdr pair))))
+           (replace-match (cdr pair) t)))
        pairs))))
 (defalias 'replace-camel-and-underscore 'mf-replace-camel-and-underscore)
 

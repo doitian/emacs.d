@@ -1996,8 +1996,8 @@ Misc editing config
     (custom-set-variables
      '(kill-whole-line t))
   
-    (require-package 'whole-line-or-region)
-    (whole-line-or-region-mode +1)
+    ;; (require-package 'whole-line-or-region)
+    ;; (whole-line-or-region-mode +1)
   
     (global-set-key (kbd "C-S-k") 'mf-smart-kill-whole-line)
   

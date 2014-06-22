@@ -3226,6 +3226,8 @@ css, sass, scss, stylus
   (require-module projectile)
   (require-package 'projectile-rails)
 
+  (custom-set-variables
+   '(projectile-rails-expand-snippet nil))
   (add-hook 'projectile-mode-hook 'projectile-rails-on))
 ```
 
@@ -3923,6 +3925,7 @@ Functions to manage site iany.me
     (defun system-move-file-to-trash--using-rm-trash (filename)
       "Remove file specified by FILENAME using rm-trash"
       (call-process "ruby" nil nil nil
+                    "-W0" "-KU"
                     (expand-file-name "~/.rm-trash/rm.rb")
                     "-rf"
                     filename))
@@ -3930,6 +3933,7 @@ Functions to manage site iany.me
       (defalias
         'system-move-file-to-trash
         'system-move-file-to-trash--using-rm-trash))
+
 
     (require-package 'reveal-in-finder)
     (defun open-in-iterm ()

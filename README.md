@@ -1330,13 +1330,19 @@ Autoload babel languages.
 (define-module org-babel
   (require-module org-basic)
 
+  (defun org-babel-execute:mongo (body params)
+    "org-babel mongo hook."
+    (let* ((db (cdr (assoc :db params)))
+           (cmd (mapconcat 'identity (list "mongo" "--quiet" db) " ")))
+      (org-babel-eval cmd body)))
+
   (mapc
    (lambda (lang)
      (autoload
        (intern (concat "org-babel-execute:" lang))
        (concat "ob-" lang)
        (format "Execute %s src block" lang)))
-   '("ruby" "sh" "awk" "R" "ditaa" "dot")))
+   '("ruby" "sh" "awk" "R" "ditaa" "dot" "mongo")))
 ```
 
 <a name="sec-7-24"></a>
@@ -3468,6 +3474,7 @@ css, sass, scss, stylus
    '(inf-mongo-command "mongo"))
 
   (require-package 'inf-mongo)
+  (require-package 'web-beautify)
 
   (defun moz-eval-statement-or-region ()
     "Send the previous statement to the inferior Mongo process."
@@ -3499,6 +3506,16 @@ css, sass, scss, stylus
       (define-key map (kbd "C-M-x") 'mongo-eval-statement-or-region)
       (define-key map (kbd "C-x C-e") 'mongo-eval-statement-or-region)
       map))
+
+  (defun init--web-beautify-js ()
+    (local-set-key (kbd "C-c b") 'web-beautify-js))
+  (defun init--web-beautify-css ()
+    (local-set-key (kbd "C-c b") 'web-beautify-css))
+  (defun init--web-beautify-html ()
+    (local-set-key (kbd "C-c b") 'web-beautify-html))
+  (add-hook 'js-mode-hook 'init--web-beautify-js)
+  (add-hook 'css-mode-hook 'init--web-beautify-css)
+  (add-hook 'sgml-mode-hook 'init--web-beautify-html)
 
   (define-minor-mode mongo-minor-mode
     "Eval commands in mongo shell"
@@ -3900,7 +3917,7 @@ Functions to manage site iany.me
                       (if (zerop (length w)) wap w))))
       (start-process "dict" nil "open" (concat "dict:///" the-word)))
 
-    (global-set-key (kbd "H-SPC") 'mac--open-dictionary)
+    (global-set-key (kbd "s-SPC") 'mac--open-dictionary)
     (global-set-key (kbd "H-v") 'scroll-down-command)
     (global-set-key (kbd "M-v") 'scroll-down-command)
     (global-set-key (kbd "C-S-v") 'scroll-down-command)

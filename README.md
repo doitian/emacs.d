@@ -663,7 +663,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   (define-key projectile-mode-map (kbd "M-s p P") 'projectile+-open-project)
   (define-key projectile-mode-map (kbd "M-s p e") 'projectile+-eshell-toggle)
   (define-key projectile-mode-map (kbd "M-s p E") 'projectile+-eshell-here)
-  (define-key projectile-mode-map (kbd "M-s p R") 'projectile-recentf)
+  (define-key projectile-mode-map (kbd "M-s p r") 'projectile-recentf)
   (define-key projectile-mode-map (kbd "M-s p <f2>") 'projectile-recentf)
   (define-key projectile-mode-map (kbd "M-s p G") 'projectile+-git-grep)
   (define-key projectile-mode-map (kbd "M-s p !") 'projectile+-shell-command)

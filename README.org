@@ -3069,6 +3069,18 @@ css, sass, scss, stylus
 #+BEGIN_SRC emacs-lisp
   (define-module flycheck
     (require-package 'flycheck)
+    (require 'flycheck)
+    ;; Include pa for rebar project
+    (put 'erlang :flycheck-command
+         '("erlc" (eval
+                   (if (projectile-project-p)
+                       (cons "-pa"
+                             (cons (concat (projectile-project-root) "ebin")
+                                   (apply 'append (mapcar
+                                                   (lambda (dir) (list "-pa" dir))
+                                                   (file-expand-wildcards (concat (projectile-project-root) "deps/*/ebin"))))))
+                          nil))
+           "-o" temporary-directory "-Wall" source))
     (global-flycheck-mode)
     (setq flycheck-mode-line-lighter " fC")
   

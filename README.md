@@ -645,14 +645,16 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
           (desktop-change-dir dir))
         (dired dir))))
 
-  (defun projectile+-open-projectregenerate-tags ()
-    "Regenerate the project's etags."
-    (interactive)
+  (defadvice projectile-regenerate-tags (around call-script activate)
     (let* ((project-root (projectile-project-root))
-           (tags-exclude (projectile-tags-exclude-patterns))
-           (default-directory project-root))
-      (shell-command (format projectile-tags-command tags-exclude))
-      (visit-tags-table project-root t)))
+           (default-directory project-root)
+           (script (concat project-root ".generate-ctags"))
+           (tags-file (expand-file-name projectile-tags-file-name)))
+      (if (file-executable-p script)
+          (progn
+            (call-process script)
+            (setq ad-return-value (visit-tags-table tags-file)))
+        ad-do-it)))
 
   (projectile-global-mode)
   (setq projectile-mode-line-lighter " ")
@@ -1205,7 +1207,8 @@ Opinioned GTD config based on org
           ("X" "Archive search" search ""
            ((org-agenda-files (file-expand-wildcards (concat org-directory "/*.org_archive" )))))
 
-          ("g" "open dropbox/g" dired-g))))
+          ("g" "open dropbox/g" dired-g)
+          ("b" "org-ido-switchb" org-ido-switchb))))
 
 ```
 
@@ -1498,19 +1501,13 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
                               (seq bol "GTAGS" eol)
                               ))))
 
+  (require-package 'dired+)
+
   (defvar dired-user-omit-extensions nil)
   (setq dired-user-omit-extensions
         '(".auxbbl.make" ".auxdvi.make" ".aux.make" ".fls" ".ilg" ".ind" ".out" ".out.make" ".prv"
           ".temp" ".toc.make" ".gpi.log" ".ps.log" ".pdf.log" ".bak" ".mp.log" ".mp.make" ".mpx"
           ".sdb" ".nav" ".snm" ".fdb_latexmk" ".meta"))
-
-  (setq dired-guess-shell-alist-user
-        '(("\\.pdf\\'" "zathura" "evince")
-          ))
-
-  (require-package 'dired+)
-  (require-package 'dired-details)
-  (require-package 'dired-details+)
 
   (autoload 'wdired-change-to-wdired-mode "wdired")
 
@@ -1522,11 +1519,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
 
   (defun init--dired-load ()
     (require 'dired-x)
-    (require 'dired-details)
-    (require 'dired-details+)
     (require 'dired+)
-
-    (dired-details-install)
 
     ;; (setq dired-omit-extensions (remove-duplicates dired-omit-extensions))
     (setq dired-omit-extensions (append dired-user-omit-extensions
@@ -1535,11 +1528,7 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
     (define-key dired-mode-map "E" 'wdired-change-to-wdired-mode)
     (define-key dired-mode-map (kbd "`") 'dired-clean-directory)
     (define-key dired-mode-map (kbd ".") 'dired-omit-mode)
-    (define-key dired-mode-map "(" 'dired-details-toggle)
-    (define-key dired-mode-map ")" 'dired-details-toggle)
-    (define-key dired-mode-map (kbd "/") 'diredp-omit-marked)
     (define-key dired-mode-map (kbd "M-<return>") 'dired-open))
-
   (defun init--dired-mode ()
     (dired-omit-mode +1))
 
@@ -3914,6 +3903,7 @@ Functions to manage site iany.me
     (define-key key-translation-map (kbd "H-<tab>") (kbd "M-TAB"))
 
     (require-package 'applescript-mode)
+    (add-to-list 'auto-mode-alist '("\\.applescript$" . applescript-mode))
 
     (require-package 'dash-at-point)
     (define-key my-keymap "?" 'dash-at-point)

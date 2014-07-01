@@ -541,12 +541,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   (global-set-key (kbd "C->") 'scroll-left)
   (global-set-key (kbd "C-<") 'scroll-right)
   (global-set-key (kbd "C-x >") 'scroll-left)
-  (global-set-key (kbd "C-x <") 'scroll-right)
-
-  (global-set-key (kbd "C-<left>") 'scroll-right)
-  (global-set-key (kbd "C-<right>") 'scroll-left)
-  (global-set-key (kbd "C-<up>") 'scroll-down)
-  (global-set-key (kbd "C-<down>") 'scroll-up))
+  (global-set-key (kbd "C-x <") 'scroll-right))
 ```
 
 <a name="sec-7-6"></a>

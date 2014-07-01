@@ -98,10 +98,10 @@ Remove annoying UI
     ".emacs.d/extra")
   (defvar my-vendor-dir (expand-file-name "vendor/" user-emacs-directory)
     ".emacs.d/vendor")
-  
+
   (setq load-path (cons my-extra-dir load-path))
   (setq load-path (cons my-site-lisp-dir load-path))
-  
+
   ;; load loaddefs if generated, otherwise load all files in site-lisp
   (let ((loaddefs (concat my-site-lisp-dir "my-loaddefs.el")))
     (if (file-exists-p loaddefs)
@@ -114,7 +114,7 @@ Remove annoying UI
               (require (intern (file-name-sans-extension
                                 (file-name-nondirectory it)))))
             (file-expand-wildcards (concat my-site-lisp-dir "*.el")))))
-  
+
   ;; Require Macros for byte compile
   (eval-when-compile
     (progn (require 'cl)
@@ -143,17 +143,17 @@ custom.el if you prefer it.
     (set-frame-font my-frame-font)
     (set-fontset-font "fontset-default" 'chinese-gbk my-frame-font-chinese))
   (init--theme)
-  
+
   (setq frame-title-format '(buffer-file-name "Emacs: %b (%f)" "Emacs: %b"))
-  
+
   ;; prefer fringe
   (setq next-error-highlight 'fringe-arrow)
-  
+
   (defvar after-make-console-frame-hooks '()
     "Hooks to run after creating a new TTY frame")
   (defvar after-make-window-system-frame-hooks '()
     "Hooks to run after creating a new window-system frame")
-  
+
   (defun run-after-make-frame-hooks (frame)
     "Selectively run either `after-make-console-frame-hooks' or
     `after-make-window-system-frame-hooks'"
@@ -161,10 +161,10 @@ custom.el if you prefer it.
     (run-hooks (if window-system
                    'after-make-window-system-frame-hooks
                  'after-make-console-frame-hooks)))
-  
+
   (add-hook 'after-make-frame-functions 'run-after-make-frame-hooks)
   (add-hook 'after-make-window-system-frame-hooks 'init--theme)
-  
+
   (custom-set-variables
    '(blink-cursor-mode t)
    '(blink-cursor-delay 2)
@@ -183,7 +183,7 @@ custom.el if you prefer it.
    '(ps-default-fg nil)
    '(ps-default-bg nil)
    '(ps-print-color-p nil))
-  
+
   (global-hl-line-mode)
 #+END_SRC
 
@@ -197,19 +197,19 @@ custom.el if you prefer it.
    '(ad-redefinition-action 'accept)
    '(enable-recursive-minibuffers t)
    '(minibuffer-depth-indicate-mode t)
-  
+
    '(tab-width 2)
    '(indent-tabs-mode nil)
    '(show-paren-mode t)
    '(fill-column 78)
-  
+
    ;; '(delete-active-region 'kill)
    ;; '(delete-selection-mode t)
-  
+
    '(tags-add-tables nil)
-  
+
    '(set-mark-command-repeat-pop t)
-  
+
    '(max-specpdl-size 2500)
    '(max-lisp-eval-depth 1200))
 #+END_SRC
@@ -236,7 +236,7 @@ custom.el if you prefer it.
   (custom-set-variables
    '(current-language-environment "UTF-8")
    '(locale-coding-system 'utf-8))
-  
+
   (set-terminal-coding-system 'utf-8)
   (set-keyboard-coding-system 'utf-8)
   (set-selection-coding-system 'utf-8)
@@ -302,11 +302,11 @@ Load package on demand
         (progn
           (package-refresh-contents)
           (require-package package min-version t)))))
-  
+
   (package-initialize)
   (unless (package-installed-p 'dash)
     (package-install-file (concat my-site-lisp-dir "dash.el")))
-  
+
   (setq package-archives
         '(("melpa" . "http://melpa.milkbox.net/packages/")
           ("gnu" . "http://elpa.gnu.org/packages/")))
@@ -371,12 +371,12 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
     (global-set-key (kbd "M-g") 'goto-line)
     (define-key my-keymap (kbd "M-g") 'what-line)
     (global-set-key (kbd "M-C-g") 'move-to-window-line-top-bottom)
-  
+
     (global-set-key (kbd "M-F") 'forward-symbol)
     (global-set-key (kbd "M-B") (lambda (arg)
                                   (interactive "p")
                                   (forward-symbol (- arg))))
-  
+
     (global-set-key (kbd "C->") 'scroll-left)
     (global-set-key (kbd "C-<") 'scroll-right)
     (global-set-key (kbd "C-x >") 'scroll-left)
@@ -388,44 +388,44 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
 #+BEGIN_SRC emacs-lisp
   (define-module char-motion
     "Move by char"
-  
+
     (custom-set-variables
      '(iy-go-to-char-key-backward ?:))
-  
+
     ;; Save binding M-m for iy-go-to-char
     (defun back-to-indentation-or-beginning ()
       (interactive)
       (if (= (point) (save-excursion (back-to-indentation) (point)))
           (beginning-of-line)
         (back-to-indentation)))
-  
+
     (require-package 'iy-go-to-char)
     (autoload 'zap-up-to-char "misc" "kill up to but not including char" t)
-  
+
     (defun zap-back-to-char (arg char)
       (interactive "p\ncZap back to char: ")
       (zap-to-char (- arg) char))
-  
+
     (defun zap-back-up-to-char (arg char)
       (interactive "p\ncZap back up to char: ")
       (zap-up-to-char (- arg) char))
-  
+
     (global-set-key (kbd "M-m") 'iy-go-up-to-char)
     (global-set-key (kbd "M-M") 'iy-go-up-to-char-backward)
     (define-key my-keymap (kbd "z") 'iy-go-to-char)
     (define-key my-keymap (kbd "Z") 'iy-go-to-char-backward)
     (define-key my-keymap (kbd ";") 'iy-go-to-or-up-to-continue)
     (define-key my-keymap (kbd ":") 'iy-go-to-or-up-to-continue-backward)
-  
+
     (global-set-key (kbd "C-z") 'zap-up-to-char)
     (global-set-key (kbd "C-S-z") 'zap-back-up-to-char)
     (global-set-key (kbd "C-Z") 'zap-back-up-to-char)
-  
+
     (global-set-key (kbd "M-Z") 'zap-back-up-to-char)
-  
+
     (define-key my-keymap "d" 'zap-up-to-char)
     (define-key my-keymap "D" 'zap-back-up-to-char)
-  
+
     (global-set-key "\C-a" 'back-to-indentation-or-beginning))
 #+END_SRC
 
@@ -475,6 +475,10 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
             (desktop-change-dir dir))
           (dired dir))))
   
+    (defun projectile+-org ()
+      (interactive)
+      (find-file (concat (projectile-project-root) "project.org")))
+  
     (defadvice projectile-regenerate-tags (around call-script activate)
       (let* ((project-root (projectile-project-root))
              (default-directory project-root)
@@ -489,6 +493,7 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
     (projectile-global-mode)
     (setq projectile-mode-line-lighter " ")
     (define-key projectile-mode-map (kbd "M-s p a") 'projectile-ag)
+    (define-key projectile-mode-map (kbd "M-s p SPC") 'projectile+-org)
     (define-key projectile-mode-map (kbd "M-s p A") 'projectile-ack)
     (define-key projectile-mode-map (kbd "M-s p x") 'projectile-test-project)
     (define-key projectile-mode-map (kbd "M-s p p") 'projectile-switch-project)
@@ -506,7 +511,7 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
   (define-module ido
     (ido-mode +1)
     (ido-load-history)
-  
+
     (define-key ido-file-completion-map [(meta ?l)] nil)
     (setq completion-ignored-extensions (cons ".meta" completion-ignored-extensions))
     (custom-set-variables
@@ -517,9 +522,9 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
 #+BEGIN_SRC emacs-lisp
   (define-module ido-plus
     "Enable ido globally, and use it everywhere"
-  
+
     (require-module ido)
-  
+
     (custom-set-variables
      '(ido-enable-regexp nil)
      '(ido-enable-flex-matching nil)
@@ -527,16 +532,16 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
      '(ido-read-file-name-as-directory-commands nil)
      '(ido-use-filename-at-point nil)
      '(flx-ido-threshhold 8000))
-  
+
     (require-package 'flx)
     (require-package 'flx-ido)
     (require-package 'ido-hacks)
     (require-package 'ido-complete-space-or-hyphen)
     (put 'bookmark-set 'ido 'ignore)
     (put 'ido-exit-minibuffer 'ido 'ignore)
-  
+
     (ido-complete-space-or-hyphen-enable)
-  
+
     (require 'ido-hacks)
     (ido-hacks-mode +1)
     ;; Use flx in flex matching
@@ -544,15 +549,15 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
     (ad-activate 'ido-set-matches-1)
     (mapc (lambda (s) (put s 'ido-hacks-fix-default t))
           '(bookmark-set))
-  
+
     (require 'flx-ido)
     (setq ido-use-faces nil)
     (flx-ido-mode +1)
-  
+
     (defun init--ido-setup ()
       (define-key ido-completion-map (kbd "M-m") 'ido-merge-work-directories)
       (define-key ido-completion-map "\C-c" 'ido-toggle-case))
-  
+
     (add-hook 'ido-setup-hook 'init--ido-setup))
 #+END_SRC
 
@@ -570,37 +575,37 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
 #+BEGIN_SRC emacs-lisp
   (define-module magit
     "Git GUI for Emacs"
-  
+
     (custom-set-variables
      '(magit-process-popup-time 60)
      '(magit-repo-dirs (list my-codebase-dir))
      '(magit-repo-dirs-depth 1))
-  
+
     (require-package 'magit)
     (global-magit-wip-save-mode +1)
-  
+
     (defun magit-toggle-whitespace ()
       (interactive)
       (if (member "-w" magit-diff-options)
           (magit-observe-whitespace)
         (magit-ignore-whitespace)))
-  
+
     (defun magit-ignore-whitespace ()
       (interactive)
       (add-to-list 'magit-diff-options "-w")
       (magit-refresh))
-  
+
     (defun magit-observe-whitespace ()
       (interactive)
       (setq magit-diff-options (remove "-w" magit-diff-options))
       (magit-refresh))
-  
+
     (defun init--magit-mode ()
       (define-key magit-mode-map (kbd "W") 'magit-toggle-whitespace)
       (local-set-key [f12] 'magit-mode-quit-window))
-  
+
     (add-hook 'magit-mode-hook 'init--magit-mode)
-  
+
     (global-set-key [f12] 'magit-status))
 #+END_SRC
 ** org-basic
@@ -610,13 +615,13 @@ Install latest org by running =make org=. Othewise system bundled version is use
 #+BEGIN_SRC emacs-lisp
   (define-module org-basic
     "Basic orgmode setup"
-  
+
     (setq org-modules '(org-bibtex org-bookmark org-expiry org-habit org-id org-info
                                    org-inlinetask org-man org-w3m org-clock org-timer
                                    org-protocol org-drill org-mu4e orgbox))
     (when (eq system-type 'darwin)
       (setq org-modules (append org-modules '(org-mac-link-grabber))))
-  
+
     (custom-set-variables
      '(org-modules org-modules)
      '(org-global-properties '(("STYLE_ALL" . "habit")))
@@ -659,19 +664,19 @@ Install latest org by running =make org=. Othewise system bundled version is use
      '(org-html-postamble nil)
      '(org-fontify-done-headline t)
      '(org-src-window-setup 'current-window))
-  
+
     (let ((org-load-path
            (car (nreverse (file-expand-wildcards (concat my-vendor-dir "org-*"))))))
       (when org-load-path
         ;; remove system org
         (setq load-path
               (--remove (string= "org" (file-name-nondirectory it)) load-path))
-        (setq load-path 
+        (setq load-path
               (cons (concat org-load-path "/lisp")
                     (cons (concat org-load-path "/contrib/lisp")
                           load-path)))
         (or (require 'org-loaddefs nil t) (require 'org nil t))))
-  
+
     (defun wl-org-column-view-uses-fixed-width-face ()
       ;; copy from org-faces.el
       (when (or t (fboundp 'set-face-attribute))
@@ -679,7 +684,7 @@ Install latest org by running =make org=. Othewise system bundled version is use
         (set-face-attribute 'org-column nil
                             :height (face-attribute 'default :height)
                             :family (face-attribute 'default :family))))
-  
+
     (defun init--org-call-process-open (path)
       "Open PATH using system open command."
       (call-process "open" nil nil nil path))
@@ -690,27 +695,27 @@ Install latest org by running =make org=. Othewise system bundled version is use
     activate
     open location \"chrome-extension:%s\"
   end tell" path)))
-  
+
     (defun init--org-load ()
       (wl-org-column-view-uses-fixed-width-face)
       (org-add-link-type "open" 'init--org-call-process-open)
       (org-add-link-type "chrome-extension" 'init--org-open-chrome-extension)
       (remove-hook 'org-mode-hook 'init--org-load))
     (add-hook 'org-mode-hook 'init--org-load)
-  
+
     (defun init--org-mode ()
       (when (daemonp)
         (wl-org-column-view-uses-fixed-width-face))
-  
+
       (define-key org-mode-map (kbd "C-,") nil)
       (define-key org-mode-map (kbd "C-c ,") 'org-cycle-agenda-files))
-  
+
     (add-hook 'org-mode-hook 'init--org-mode)
-  
+
     (autoload 'org-footnote-action "org-footnote" nil t)
     (autoload 'org-mac-grab-link "org-mac-link"
       "Prompt the user for an application to grab a link from, then go grab the link, and insert it at point" t)
-  
+
     (global-set-key (kbd "C-c l") 'org-store-link)
     (global-set-key (kbd "C-c M-l") 'org-mac-grab-link)
     (global-set-key (kbd "C-c L") 'org-insert-link-global)
@@ -739,7 +744,7 @@ Store org agenda files in dropbox directory
     (setq org-mobile-directory (concat my-dropbox-dir "Apps/MobileOrg"))
     (setq org-default-notes-file (concat org-directory "/inbox.org"))
     (setq org-mobile-inbox-for-pull (concat my-dropbox-dir "g/org/from_mobile.org"))
-  
+
     (defun org ()
       (interactive)
       (ido-find-file-in-dir org-directory))
@@ -812,7 +817,6 @@ Capture template
           "* TODO %:description\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n%a"
           :prepend t :empty-lines 1 :immediate-finish t)))))
 #+END_SRC
-
 ** org-clock
 
 #+BEGIN_SRC emacs-lisp
@@ -821,7 +825,7 @@ Capture template
 
     (defun my-org-clock-display (msg)
       (notify "Org Notification" msg :icon "appointment-reminder"))
-  
+
     (defun org-gtd-clock-out-if-pause ()
       "Clock out when the task is marked PAUSE."
       (when (and (string= org-state "PAUSE")
@@ -841,17 +845,17 @@ Capture template
               'org-gtd-clock-in-if-starting)
     (add-hook 'org-after-todo-state-change-hook
               'org-gtd-clock-out-if-pause)
-  
+
     (custom-set-variables
      '(org-clock-in-resume nil)
      '(org-clock-in-switch-to-state "GOING")
      '(org-clock-out-switch-to-state
        (function org-gtd-clock-out-switch-to-pause-if-going))
      '(org-clock-out-when-done t))
-  
+
     (when (fboundp 'notify)
       (setq org-show-notification-handler (function my-org-clock-display))))
-  
+
 #+END_SRC
 
 ** org-gtd
@@ -861,7 +865,7 @@ Opinioned GTD config based on org
 #+BEGIN_SRC emacs-lisp
   (define-module org-gtd
     (require-module org-basic)
-  
+
     (custom-set-variables
      '(org-extend-today-until 2)
      '(org-agenda-time-grid
@@ -912,14 +916,14 @@ Opinioned GTD config based on org
   (define-module org-agenda
     (require-module org-basic)
     (require-module org-files)
-  
+
     (defun sacha/org-agenda-done (&optional arg)
       "Mark current TODO as done.
       This changes the line at point, all other lines in the agenda referring to
       the same tree node, and the headline of the tree node in the Org-mode file."
       (interactive "P")
       (org-agenda-todo "DONE"))
-  
+
     (defun sacha/org-agenda-mark-done-and-add-followup ()
       "Mark the current TODO as done and add another task after it.
       Creates it at the same level as the previous task, so it's better to use
@@ -928,7 +932,7 @@ Opinioned GTD config based on org
       (org-agenda-todo "DONE")
       (org-agenda-switch-to)
       (org-capture 0 "t"))
-  
+
     (defun sacha/org-agenda-new ()
       "Create a new note or task at the current agenda item.
       Creates it at the same level as the previous task, so it's better to use
@@ -936,7 +940,7 @@ Opinioned GTD config based on org
       (interactive)
       (org-agenda-switch-to)
       (org-capture 0))
-  
+
     (defun org-agenda-3-days-view (&optional day-of-year)
       "Switch to 3-days (yesterday, today, tomorrow) view for agenda."
       (interactive "P")
@@ -954,7 +958,7 @@ Opinioned GTD config based on org
         (org-agenda-find-same-or-today-or-agenda))
       (org-agenda-set-mode-name)
       (message "Switched to %s view" 3))
-  
+
     (defun init--org-agenda-mode ()
       (define-key org-agenda-mode-map "D" 'org-agenda-3-days-view)
       (define-key org-agenda-mode-map "M" 'org-agenda-month-view)
@@ -962,7 +966,7 @@ Opinioned GTD config based on org
       (define-key org-agenda-mode-map "X" 'sacha/org-agenda-mark-done-and-add-followup)
       (define-key org-agenda-mode-map "N" 'sacha/org-agenda-new))
     (add-hook 'org-agenda-mode-hook 'init--org-agenda-mode)
-  
+
     (setq org-agenda-custom-commands
           '(("l" . "Context List")
             ("lh" "Home"
@@ -996,7 +1000,7 @@ Opinioned GTD config based on org
               (todo "SOMEDAY"))
              ((org-agenda-todo-ignore-with-date nil)))
             ("i" "Inbox" tags "inbox-CONTAINER=\"true\"")
-  
+
             ("d" "Daily Action List"
              ((agenda "" ((org-agenda-span 'day)
                           (org-agenda-sorting-strategy
@@ -1004,7 +1008,7 @@ Opinioned GTD config based on org
                           (org-deadline-warning-days 0)))
               (todo "GOING|PAUSE|TODO"))
              ((org-agenda-todo-ignore-with-date t)))
-  
+
             ("r" "Review"
              ((agenda "" ((org-agenda-span 'day)
                           (org-agenda-sorting-strategy
@@ -1014,17 +1018,17 @@ Opinioned GTD config based on org
                           (org-agenda-skip-timestamp-if-done nil)
                           (org-agenda-skip-scheduled-if-done nil)))
               (todo "GOING|PAUSE|TODO")))
-  
+
             ("p" "Projects" ((tags "project/-DONE-CANCELED") (stuck "")))
-  
+
             ("x" "Archive tags search" tags ""
              ((org-agenda-files (file-expand-wildcards (concat org-directory "/*.org_archive" )))))
             ("X" "Archive search" search ""
              ((org-agenda-files (file-expand-wildcards (concat org-directory "/*.org_archive" )))))
-  
+
             ("g" "open dropbox/g" dired-g)
             ("b" "org-ido-switchb" org-ido-switchb))))
-  
+
 #+END_SRC
 
 ** org-export
@@ -1032,7 +1036,7 @@ Opinioned GTD config based on org
 #+BEGIN_SRC emacs-lisp
   (define-module org-export
     (require-module org-basic)
-  
+
     (custom-set-variables
      '(org-latex-listings t)
      '(org-latex-packages-alist nil)
@@ -1043,7 +1047,7 @@ Opinioned GTD config based on org
      '(org-icalendar-use-scheduled '(todo-start event-if-todo))
      '(org-icalendar-store-UID t)
      '(org-combined-agenda-icalendar-file (concat my-dropbox-dir "g/ical/org.ics")))
-  
+
     (defun iy-org-ical-verify (backend)
       "Select tasks by adding export tag."
       (when (eq backend 'icalendar)
@@ -1053,18 +1057,18 @@ Opinioned GTD config based on org
              (if (and (member "@errands" tags) (not (member "noexport" tags)))
                  (org-set-tags-to (append tags '("export")))
                (org-set-tags-to (append tags '("noexport")))))))))
-  
+
     (defvar org-md-fanced-code-block-language-alist nil)
     (setq org-md-fanced-code-block-language-alist
           '(("emacs-lisp" . "cl")))
-  
+
     (defadvice org-md-example-block (around fenced-code-block (example-block contents info) activate)
       (let ((lang (or (org-element-property :language example-block) "")))
         (setq ad-return-value
               (concat "```" (or (assoc-default lang org-md-fanced-code-block-language-alist) lang) "\n"
                       (org-remove-indentation (org-element-property :value example-block))
                       "```\n"))))
-  
+
     (add-hook 'org-export-before-parsing-hook 'iy-org-ical-verify))
 #+END_SRC
 
@@ -1080,12 +1084,12 @@ Opinioned GTD config based on org
             ("X" . org-speed-mark-done-and-add-followup)
             ("N" . org-speed-new)))
     (setq org-use-speed-commands t) ; press ? at beginning of header
-  
+
     (defun org-speed-done (&optional arg)
       "Mark current TODO as done."
       (interactive "P")
       (org-todo "DONE"))
-  
+
     (defun org-speed-mark-done-and-add-followup ()
       "Mark the current TODO as done and add another task after it.
   Creates it at the same level as the previous task, so it's better to use
@@ -1093,7 +1097,7 @@ Opinioned GTD config based on org
       (interactive)
       (org-todo "DONE")
       (org-capture 0 "t"))
-  
+
     (defun org-speed-new ()
       "Create a new note or task at the current agenda item.
   Creates it at the same level as the previous task, so it's better to use
@@ -1118,16 +1122,16 @@ Opinioned GTD config based on org
 #+BEGIN_SRC emacs-lisp
   (define-module org-appt
     (require-module org-basic)
-  
+
     (appt-activate 1)
     (add-hook 'org-finalize-agenda-hook 'org-agenda-to-appt)
-  
+
     (defun my-appt-display (min-to-app new-time msg)
       (let ((title (format "Appointment in %d minute(s)" min-to-app)))
         (notify title msg :icon "appointment-reminder")))
     (when (fboundp 'notify)
       (setq appt-disp-window-function (function my-appt-display)))
-  
+
     (custom-set-variables
      '(appt-display-format (quote window))
      '(appt-message-warning-time 10)
@@ -1142,13 +1146,13 @@ Autoload babel languages.
 #+BEGIN_SRC emacs-lisp
   (define-module org-babel
     (require-module org-basic)
-  
+
     (defun org-babel-execute:mongo (body params)
       "org-babel mongo hook."
       (let* ((db (cdr (assoc :db params)))
              (cmd (mapconcat 'identity (list "mongo" "--quiet" db) " ")))
         (org-babel-eval cmd body)))
-  
+
     (mapc
      (lambda (lang)
        (autoload
@@ -1163,14 +1167,14 @@ Autoload babel languages.
 #+BEGIN_SRC emacs-lisp
   (define-module org-drill
     (require-module org-basic)
-  
+
     (defun init--org-drill-on-dired-load ()
       (define-key dired-mode-map (kbd "C-c SPC") 'my-dired-do-drill))
-  
+
     (if (featurep 'dired)
         (init--org-drill-on-dired-load)
       (add-hook 'dired-load-hook 'init--org-drill-on-dired-load))
-  
+
     (defun my-dired-do-drill (&optional arg)
       (interactive "P")
       (org-drill
@@ -1203,11 +1207,11 @@ These commands are also =multiple-cursors= compatible.
     (global-set-key (kbd "M-U") 'case-dwim-upcase)
     (global-set-key (kbd "M-c") 'case-dwim-capitalize)
     (global-set-key (kbd "M-C") 'case-dwim-capitalize)
-    
+
     (define-key isearch-mode-map (kbd "M-l") 'case-dwim-isearch-dash)
     (define-key isearch-mode-map (kbd "M-u") 'case-dwim-isearch-underscore)
-  
-  
+
+
     (defadvice helm-unmark-all (around helm-unmark-all-or-underscore () activate)
       (if (zerop (with-helm-window (length helm-marked-candidates)))
           (call-interactively 'case-dwim-underscore)
@@ -1230,11 +1234,11 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
      '(kept-old-versions 2)
      '(vc-make-backup-files t)
      '(version-control t))
-  
+
     (defun init--force-backup ()
       "Reset backed up flag."
       (setq buffer-backed-up nil))
-  
+
     ;; Make a backup after save whenever the file
     ;; is auto saved. Otherwise Emacs only make one backup after opening the file.
     (add-hook 'auto-save-hook 'init--force-backup))
@@ -1244,18 +1248,18 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
 #+BEGIN_SRC emacs-lisp
   (define-module multiple-cursors
     (require-package 'multiple-cursors)
-  
+
     (defun init--multiple-cursors-mode ()
       (remove-hook 'multiple-cursors-mode-hook 'init--multiple-cursors-mode)
       (setq mc/cursor-specific-vars
             (cons 'iy-go-to-char-start-pos mc/cursor-specific-vars)))
     (add-hook 'multiple-cursors-mode-hook 'init--multiple-cursors-mode)
-  
+
     (defadvice set-rectangular-region-anchor (around edit-lines-when-region-is-active activate)
       (if (region-active-p)
           (call-interactively 'mc/edit-lines)
         ad-do-it))
-  
+
     (autoload 'multiple-cursors-core "multiple-cursors-core" "Delete overlay with state, including dependent overlays and markers.")
     (define-key ctl-x-r-map (kbd "C-r") 'mc/edit-lines)
     (define-key ctl-x-r-map (kbd ",") 'mc/edit-lines)
@@ -1273,10 +1277,10 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
     (define-key ctl-x-r-map (kbd "C-SPC") 'mc/mark-all-in-region)
     (define-key ctl-x-r-map (kbd "C-f") 'mc/mark-sgml-tag-pair)
     (define-key ctl-x-r-map (kbd "#") 'mc/insert-numbers)
-  
+
     (global-unset-key (kbd "C-<down-mouse-1>"))
     (global-set-key (kbd "C-<mouse-1>") 'mc/add-cursor-on-click)
-  
+
     (global-set-key (kbd "C-3") 'mc/mark-all-like-this)
     (define-key ctl-x-r-map [return] 'set-rectangular-region-anchor))
 #+END_SRC
@@ -1290,7 +1294,7 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
      '(dired-dwim-target t)
      '(dired-recursive-copies (quote top))
      '(dired-recursive-deletes (quote top))
-  
+
      '(dired-omit-files (rx (or (seq bol "#")
                                 (seq bol ".")
                                 (seq "~" eol)
@@ -1303,40 +1307,40 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
                                 (seq bol "GSYMS" eol)
                                 (seq bol "GTAGS" eol)
                                 ))))
-  
+
     (require-package 'dired+)
-  
+
     (defvar dired-user-omit-extensions nil)
     (setq dired-user-omit-extensions
           '(".auxbbl.make" ".auxdvi.make" ".aux.make" ".fls" ".ilg" ".ind" ".out" ".out.make" ".prv"
             ".temp" ".toc.make" ".gpi.log" ".ps.log" ".pdf.log" ".bak" ".mp.log" ".mp.make" ".mpx"
             ".sdb" ".nav" ".snm" ".fdb_latexmk" ".meta"))
-  
+
     (autoload 'wdired-change-to-wdired-mode "wdired")
-  
+
     (defun dired-open ()
       (interactive)
       (dired-do-shell-command
        "open" nil
        (dired-get-marked-files t current-prefix-arg)))
-  
+
     (defun init--dired-load ()
       (require 'dired-x)
       (require 'dired+)
-  
+
       ;; (setq dired-omit-extensions (remove-duplicates dired-omit-extensions))
       (setq dired-omit-extensions (append dired-user-omit-extensions
                                           dired-omit-extensions))
-  
+
       (define-key dired-mode-map "E" 'wdired-change-to-wdired-mode)
       (define-key dired-mode-map (kbd "`") 'dired-clean-directory)
       (define-key dired-mode-map (kbd ".") 'dired-omit-mode)
       (define-key dired-mode-map (kbd "M-<return>") 'dired-open))
     (defun init--dired-mode ()
       (dired-omit-mode +1))
-  
+
     (autoload 'dired-jump "dired-x" "Jump to dired buffer corresponding to current buffer." t)
-  
+
     (global-set-key (kbd "C-x C-j") 'dired-jump)
     (global-set-key (kbd "C-x M-j") (lambda () (interactive)
                                       (call-process "open" nil nil nil default-directory)))
@@ -1353,16 +1357,16 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
     (defvar init--windows-keymap (make-sparse-keymap))
     (define-key my-minor-mode-map (kbd "M-o") 'other-window)
     (define-key my-minor-mode-map (kbd "M-O") 'other-frame)
-  
+
     (winner-mode 1)
     (define-key winner-mode-map [(control c)] nil)
-  
+
     (defvar init--winner-undo-redo-map
       (let ((map (make-sparse-keymap)))
         (define-key map "," 'winner-undo)
         (define-key map "." 'winner-redo)
         map))
-  
+
     (defun display-compilation-buffer ()
       (interactive)
       (let ((buffer next-error-last-buffer)
@@ -1379,7 +1383,7 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
             (select-window
              (display-buffer next-error-last-buffer))
           (message "No compilation buffers"))))
-  
+
     (temporary-mode-define-keys init--windows-keymap 'init--winner-undo-redo)
     (define-key init--windows-keymap (kbd "s") 'split-window-below)
     (define-key init--windows-keymap (kbd "d") 'mf-indirect-region-or-buffer)
@@ -1388,7 +1392,7 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
     (define-key init--windows-keymap (kbd "o") 'delete-other-windows)
     (define-key init--windows-keymap (kbd "x") 'mf-kill-buffer-and-window)
     (define-key init--windows-keymap (kbd "SPC") 'display-compilation-buffer)
-  
+
     (define-key my-keymap "w" init--windows-keymap))
 #+END_SRC
 ** winring
@@ -1397,11 +1401,11 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
     (require-module windows-commands)
     (custom-set-variables
      '(winring-show-names t))
-  
+
     (require 'winring)
     (defun winring-create-frame-hook (frame)
       (winring-set-name "W" frame))
-  
+
     (defun winring-jump-or-create (&optional name)
       "Jump to or create configuration by name"
       (interactive)
@@ -1430,9 +1434,9 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
             (setq item (ring-remove ring index))
             (winring-save-current-configuration)
             (winring-restore-configuration item)))))
-  
+
     (winring-initialize)
-  
+
     (define-key init--windows-keymap "2" 'winring-duplicate-configuration)
     (define-key init--windows-keymap "0" 'winring-delete-configuration)
     (define-key init--windows-keymap "r" 'winring-rename-configuration)
@@ -1447,7 +1451,7 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
 #+BEGIN_SRC emacs-lisp
   (define-module display-buffer
     ;; Manage display-buffer-alist
-  
+
     (defun init--windata-display-buffer (buffer alist)
       (let (win buf newwin)
         (setq win (selected-window))
@@ -1467,12 +1471,12 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
                                           win buf))
               (set-window-prev-buffers newwin nil)
               newwin))))
-  
+
     (defun init--display-buffer-compilation-p (buffer alist)
       (with-current-buffer (get-buffer buffer)
         (or (derived-mode-p 'compilation-mode)
             (and (boundp 'compilation-shell-minor-mode) compilation-shell-minor-mode))))
-  
+
     (custom-set-variables
      '(display-buffer-alist
        '((init--display-buffer-compilation-p
@@ -1480,7 +1484,7 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
           (dir . bottom)
           (size . 0.3)
           (frame-p . t)))))
-  
+
     (defun init--display-dired ()
       (interactive)
       (let ((first-window (car (window-list))))
@@ -1495,7 +1499,7 @@ See commands in =site-lisp/pick-backup.el= to diff or restore a backup.
             '((dir . left)
               (size . 0.3)
               (frame-p . t)))))))
-  
+
     (define-key my-keymap (kbd "n") 'init--display-dired))
 #+END_SRC
 
@@ -1529,29 +1533,29 @@ add changes interactively using =ediff=.
   (define-module vc
     (require-package 'git-messenger)
     (require-package 'git-gutter+)
-  
+
     (custom-set-variables
      '(git-state-modeline-decoration (quote git-state-decoration-large-dot))
      '(vc-follow-symlinks t))
-  
+
     (mapc (lambda (pattern)
             (unless (member pattern revert-without-query)
               (setq revert-without-query (cons pattern revert-without-query))))
           '("COMMIT_EDITMSG\\'" "MERGE_MSG\\'" "git-rebase-todo"))
-  
+
     (let ((git-emacs-dir (concat my-vendor-dir "git-emacs")))
       (when (file-exists-p (concat git-emacs-dir "/git-emacs.el"))
         (setq load-path (cons git-emacs-dir load-path))
         (require 'git-emacs)
         (define-key git-global-map "s" 'magit-status)
         (define-key git-global-map "S" 'git-status)))
-  
+
     (add-to-list 'auto-mode-alist '("\\.gitconfig\\'" . conf-mode))
     (add-to-list 'auto-mode-alist '("\\.git/config\\'" . conf-mode))
-  
+
     (global-set-key (kbd "C-<f12>") 'git-status)
     (global-set-key (kbd "<ESC> <f12>") 'git-status)
-  
+
     (global-set-key (kbd "C-x v w") 'git-messenger:popup-message)
     (global-set-key (kbd "C-x v SPC") 'git-gutter+-mode)
     (global-set-key (kbd "C-x v n") 'git-gutter+-next-hunk)
@@ -1561,7 +1565,7 @@ add changes interactively using =ediff=.
     (global-set-key (kbd "C-x v j") 'git-gutter+-stage-hunks)
     (global-set-key (kbd "C-x v k") 'git-gutter+-commit)
     (global-set-key (kbd "C-x v K") 'git-gutter+-commit)
-  
+
     )
 #+END_SRC
 
@@ -1571,7 +1575,7 @@ add changes interactively using =ediff=.
   (define-module isearch
     ;; Activate occur easily inside isearch
     (define-key isearch-mode-map (kbd "C-o") 'isearch-occur)
-  
+
     ;; http://www.emacswiki.org/emacs/ZapToISearch
     (defun isearch-exit-other-end (rbeg rend)
       "Exit isearch, but at the other end of the search string.
@@ -1579,16 +1583,16 @@ add changes interactively using =ediff=.
       (interactive "r")
       (isearch-exit)
       (goto-char isearch-other-end))
-  
+
     (define-key isearch-mode-map [(control return)] 'isearch-exit-other-end)
-  
+
     (defvar isearch-initial-string nil)
-  
+
     (defun isearch-set-initial-string ()
       (remove-hook 'isearch-mode-hook 'isearch-set-initial-string)
       (setq isearch-string isearch-initial-string)
       (isearch-search-and-update))
-  
+
     (defun isearch-forward-at-point (&optional regexp-p no-recursive-edit)
       "Interactive search forward for the symbol at point."
       (interactive "P\np")
@@ -1600,7 +1604,7 @@ add changes interactively using =ediff=.
             (setq isearch-initial-string (buffer-substring begin end))
             (add-hook 'isearch-mode-hook 'isearch-set-initial-string)
             (isearch-forward regexp-p no-recursive-edit)))))
-  
+
     (define-key my-keymap "*" 'isearch-forward-at-point)
     (define-key my-keymap "8" 'isearch-forward-at-point))
 #+END_SRC
@@ -1614,10 +1618,10 @@ Auto revert, and helper functions to revert without confirmation.
     (defun revert-buffer-no-confirm ()
       "Revert buffer without confirmation."
       (interactive) (flet ((yes-or-no-p (prompt) t)) (revert-buffer)))
-  
+
     ;; Auto refresh buffers
     (global-auto-revert-mode +1)
-  
+
     ;; Also auto refresh dired, but be quiet about it
     (setq global-auto-revert-non-file-buffers t)
     (setq auto-revert-verbose nil))
@@ -1628,12 +1632,12 @@ Auto revert, and helper functions to revert without confirmation.
 #+BEGIN_SRC emacs-lisp
   (define-module terminal
     (autoload 'term-check-proc "term")
-  
+
     (defun terminal-eshell-named (&optional name)
       "Get or create eshell buffer with specified name"
       (let ((eshell-buffer-name (or name eshell-buffer-name)))
         (save-window-excursion (eshell))))
-  
+
     (defun terminal-term-named (&optional name)
       "Get or create term buffer with specified name"
       (let ((buffer (get-buffer-create (or name "*term*"))))
@@ -1644,11 +1648,11 @@ Auto revert, and helper functions to revert without confirmation.
             (term-char-mode)
             (goto-char (point-max))))
         buffer))
-  
+
     (defvar terminal--kind-alist
       '((eshell terminal-eshell-named eshell-send-input)
         (term terminal-term-named term-send-input)))
-  
+
     (defun terminal--toggle (kind name)
       "Toggle terminal buffer with the name.
   hide -> show -> full screen -> hide
@@ -1664,7 +1668,7 @@ Auto revert, and helper functions to revert without confirmation.
               (delete-other-windows))
           ;; activate the buffer
           (switch-to-buffer-other-window buffer))))
-  
+
     (defun terminal--here (kind name)
       "Get or create in current directory."
       (let* ((dir default-directory)
@@ -1675,23 +1679,23 @@ Auto revert, and helper functions to revert without confirmation.
           (goto-char (point-max))
           (insert (format "cd '%s'" dir))
           (funcall (cadr kind-info)))))
-  
+
     (defun eshell-toggle (&optional name)
       (interactive)
       (terminal--toggle 'eshell name))
-  
+
     (defun eshell-here (&optional name)
       (interactive)
       (terminal--here 'eshell name))
-  
+
     (defun term-toggle (&optional name)
       (interactive)
       (terminal--toggle 'term name))
-  
+
     (defun term-here (&optional name)
       (interactive)
       (terminal--here 'term name))
-  
+
     (defun init--term-exec ()
       "Close buffer when terminal exists."
       (let* ((buff (current-buffer))
@@ -1700,7 +1704,7 @@ Auto revert, and helper functions to revert without confirmation.
           (set-process-sentinel proc (lambda (process event)
                                        (if (string= event "finished\n")
                                            (kill-buffer buff)))))))
-  
+
     ;; Advice `dired-run-shell-command' with asynchronously.
     (defadvice dired-run-shell-command (around dired-run-shell-command-async activate)
       "Postfix COMMAND argument of `dired-run-shell-command' with an ampersand.
@@ -1713,14 +1717,14 @@ Auto revert, and helper functions to revert without confirmation.
         (unless (string= last-cmd-char "&")
           (ad-set-arg 0 (concat cmd "&")))
         (save-window-excursion ad-do-it)))
-  
+
     (defun init--term-mode ()
       (when (fboundp 'yas-minor-mode)
         (yas-minor-mode -1)))
-  
+
     (add-hook 'term-exec-hook 'init--term-exec)
     (add-hook 'term-mode-hook 'init--term-mode)
-  
+
     (define-key my-keymap (kbd "t") 'term-toggle)
     (define-key my-keymap (kbd "T") 'term-here)
     (define-key my-keymap (kbd "e") 'eshell-toggle)
@@ -1737,11 +1741,11 @@ Auto revert, and helper functions to revert without confirmation.
     (require-package 'helm-projectile)
     (require-package 'imenu-anywhere)
     (require 'helm-config)
-  
+
     (defvar helm-source-alternative-files nil)
-  
+
     (defvar helm--project-root nil)
-  
+
     (setq helm-source-alternative-files
           '((name . "Alternative Files")
             (init . (lambda () (setq helm--project-root (with-helm-current-buffer (projectile-project-p)))))
@@ -1751,7 +1755,7 @@ Auto revert, and helper functions to revert without confirmation.
                                  (with-helm-current-buffer
                                    (file-relative-name e helm--project-root))))
             (type . file)))
-  
+
     (custom-set-variables
      '(helm-command-prefix-key "M-S")
      '(helm-input-idle-delay 0)
@@ -1760,7 +1764,7 @@ Auto revert, and helper functions to revert without confirmation.
      '(helm-c-use-standard-keys t)
      '(helm-quick-update nil)
      '(helm-enable-shortcuts 'prefix))
-  
+
     (defun init--helm-load ()
       (require 'helm-mode)
       (require 'helm-config)
@@ -1773,11 +1777,11 @@ Auto revert, and helper functions to revert without confirmation.
       (require 'helm-projectile-files-candidates-in-buffer)
       (define-key projectile-mode-map (kbd "C-c p h") nil)
       (define-key projectile-mode-map (kbd "M-s p h") 'helm-projectile)
-  
+
       (remove-hook 'helm-before-initialize-hook 'init--helm-load))
-  
+
     (add-hook 'helm-before-initialize-hook 'init--helm-load)
-  
+
     ;;; Sources
     (defvar my-helm-sources nil)
     (setq my-helm-sources
@@ -1790,15 +1794,15 @@ Auto revert, and helper functions to revert without confirmation.
             ;; helm-source-recentf
             helm-source-file-name-history
             helm-source-bookmarks))
-  
+
     (defun my-helm-go (arg)
       "Preconfigured `helm' to fidn fiels"
       (interactive "P")
       (let ((helm-ff-transformer-show-only-basename arg))
        (helm-other-buffer my-helm-sources "*helm go*")))
-  
+
     (autoload 'helm-command-prefix "helm-config" nil nil 'keymap)
-  
+
     (define-key helm-command-map (kbd "g") 'helm-do-grep)
     (define-key helm-command-map (kbd "o") 'helm-occur)
     (define-key helm-command-map (kbd "r") 'helm-register)
@@ -1806,12 +1810,12 @@ Auto revert, and helper functions to revert without confirmation.
     (define-key helm-command-map (kbd "b") 'helm-c-pp-bookmarks)
     (define-key helm-command-map (kbd "I") 'helm-imenu-anywhere)
     (define-key helm-command-map (kbd "<SPC>") 'helm-all-mark-rings)
-  
+
     (global-set-key (kbd "M-X") 'my-helm-go)
     (define-key my-keymap (kbd "M-s") 'my-helm-go)
     (define-key my-keymap (kbd "s") 'helm-command-prefix)
     (define-key my-keymap (kbd "M-.") 'imenu-anywhere)
-  
+
     ;; 1. Quote the string
     ;; 2. If we didn't input any typically regexp characters, convert spaces to .*,
     ;;    however, it is still order related.
@@ -1830,7 +1834,7 @@ Auto revert, and helper functions to revert without confirmation.
                  ;; thus it will slow down locate a lot. This means you have to type in order
                  (mapconcat 'regexp-quote parts ".*")))))
         string))
-  
+
     ;; Hack
     ;; Convert helm pattern to regexp for locate
     (defadvice helm-locate-init (around helm-pattern-to-regexp () activate)
@@ -1844,32 +1848,32 @@ Auto revert, and helper functions to revert without confirmation.
 #+BEGIN_SRC emacs-lisp
   (define-module compile-and-run
     (require-package 'quickrun)
-  
+
     (custom-set-variables
      '(compilation-auto-jump-to-first-error nil)
      '(compilation-context-lines 5)
      '(compilation-scroll-output (quote first-error)))
-  
+
     (defun init--compile-load (&rest ignore)
       (require 'ansi-color)
       (define-key compilation-mode-map "l" 'compilation-restore-mode-line)
       (define-key compilation-mode-map "c" 'compilation-clear-screen)
       (remove-hook 'compilation-start-hook 'init--compile-load))
     (add-hook 'compilation-start-hook 'init--compile-load)
-  
+
     (defun colorize-compilation-buffer ()
       (toggle-read-only)
       (ansi-color-apply-on-region (point-min) (point-max))
       (toggle-read-only))
     (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
-  
+
     (defcustom compilation-defualt-mode-line-background "#1e2320"
       "Default mode line background"
       :group 'compilation)
     (defcustom compilation-error-mode-line-background "#310602"
       "Error mode line background"
       :group 'compilation)
-  
+
     (defun compilation-notify-result (buffer message)
       (unless (member major-mode '(ag-mode))
         (setq message (s-trim message))
@@ -1879,21 +1883,21 @@ Auto revert, and helper functions to revert without confirmation.
           (if pass
               (set-face-attribute 'mode-line nil :background compilation-defualt-mode-line-background)
             (set-face-attribute 'mode-line nil :background compilation-error-mode-line-background)))))
-  
+
     (defun compilation-restore-mode-line ()
       (interactive)
       (setq compilation-in-progress nil)
       (set-face-attribute 'mode-line nil :background compilation-defualt-mode-line-background))
-  
+
     (defun compilation-clear-screen ()
       (interactive)
       (toggle-read-only)
       (erase-buffer)
       (toggle-read-only))
-  
+
     (when (fboundp 'notify)
       (add-hook 'compilation-finish-functions 'compilation-notify-result))
-  
+
     (defvar run-or-replace-template-history nil "History for `run-or-replace-template'")
     (defun run-or-replace-template-fill (command &optional src)
       (let* ((case-fold-search  nil)
@@ -1909,7 +1913,7 @@ Auto revert, and helper functions to revert without confirmation.
                 (setq str (replace-regexp-in-string (car holder) (cdr holder) str t)))
               info)
         str))
-  
+
     (defun run-or-replace-template (command &optional remember)
       (interactive (list (if (minibufferp)
                              (buffer-substring (minibuffer-prompt-end) (point-max))
@@ -1932,7 +1936,7 @@ Auto revert, and helper functions to revert without confirmation.
                                                  (compile ,command)))))
             (global-set-key (kbd "M-s v") map)))
         (compile command)))
-  
+
     (defadvice quickrun (around init--quick-run)
       (init--quick-run)
       ad-do-it
@@ -1940,9 +1944,9 @@ Auto revert, and helper functions to revert without confirmation.
       (ad-activate 'quickrun))
     (ad-enable-advice 'quickrun 'around 'init--quick-run)
     (ad-activate 'quickrun)
-  
+
     (defvar mono-bin-dir "/usr/local/bin" "Binary directory containing mcs and mono.")
-  
+
     (defun init--quick-run ()
       (quickrun-add-command
        "objc" '((:command . "gcc")
@@ -1963,17 +1967,17 @@ Auto revert, and helper functions to revert without confirmation.
       (setq quickrun/major-mode-alist (cons
                                        '(csharp-mode . "csharp/mono")
                                        quickrun/major-mode-alist)))
-  
+
     (defun init--new-scratch (&optional extension)
       "Create a temporary file with given EXTENSION."
       (interactive "sextension: ")
       (find-file-other-window (make-temp-file "scratch-" nil
                                               (concat "." (or extension "txt")))))
-    
+
     (global-set-key [f5] 'compile)
     (define-key my-keymap (kbd "5") 'compile)
     (define-key my-keymap (kbd "M-c") 'recompile)
-    
+
     (define-key my-keymap (kbd "c") 'quickrun-compile-only)
     (define-key my-keymap (kbd "x") 'quickrun)
     (define-key my-keymap (kbd "M-x") 'init--new-scratch)
@@ -1991,19 +1995,19 @@ Misc editing config
   (define-module editing
     (custom-set-variables
      '(kill-whole-line t))
-  
+
     (require-package 'whole-line-or-region)
     (whole-line-or-region-mode +1)
-  
+
     (global-set-key (kbd "C-S-k") 'mf-smart-kill-whole-line)
-  
+
     (define-key my-keymap (kbd "q u") 'mf-insert-user)
     (define-key my-keymap (kbd "q t") 'mf-insert-time)
     (define-key my-keymap (kbd "q s") 'mf-insert-timestamp)
     (define-key my-keymap (kbd "q d") 'mf-insert-date)
     (define-key my-keymap (kbd "q f") 'mf-insert-file-name)
     (define-key my-keymap (kbd "q b") 'mf-jared/insert-file-or-buffer-name)
-  
+
     (define-key global-map "\C-j" 'newline)
     (define-key global-map "\C-m" 'newline-and-indent)
     (global-set-key (kbd "M-<return>") 'mf-next-line-and-open-it-if-not-empty)
@@ -2020,12 +2024,12 @@ Misc editing config
   (define-module kill-ring
     (custom-set-variables
      '(kill-ring-max 500))
-  
+
     ;; (require-package 'browse-kill-ring)
     ;; (require-package 'kill-ring-search)
-  
+
     (global-set-key (kbd "C-M-y") 'browse-kill-ring)
-  
+
     (defadvice yank-pop (around kill-ring-search-maybe (arg) activate)
       "If last action was not a yank, run `kill-ring-search' instead."
       (interactive "p")
@@ -2044,9 +2048,9 @@ Misc editing config
      '(recentf-exclude (quote ("semantic\\.cache" "COMMIT_EDITMSG" "git-emacs-tmp.*" "\\.breadcrumb" "\\.ido\\.last" "\\.projects.ede" "/g/org/")))
      '(recentf-menu-filter (quote recentf-arrange-by-rule))
      '(recentf-max-saved-items 200))
-  
+
     (recentf-mode +1)
-  
+
     (global-set-key [f2] 'recentf-open-files))
 #+END_SRC
 
@@ -2064,12 +2068,12 @@ Misc editing config
                                             "\\*Org Agenda\\*" ".*\\.org"))
      ;; Quietly load safe variables, otherwise it hang up Emacs when starting as daemon.
      '(enable-local-variables :safe))
-  
+
     (defadvice desktop-clear (around init--bookmark-save-around-desktop-clear activate)
       (and (fboundp 'bookmark-save) (bookmark-save))
       ad-do-it
       (and (fboundp 'bookmark-load) (bookmark-load bookmark-default-file)))
-  
+
     (desktop-save-mode +1)
     (setq history-length 250)
     (add-to-list 'desktop-globals-to-save 'file-name-history)
@@ -2084,13 +2088,13 @@ Misc editing config
 #+BEGIN_SRC emacs-lisp
   (define-module mark
     (require-package 'expand-region)
-  
+
     (global-set-key (kbd "M-SPC") 'thing-actions-mark-thing)
     (global-set-key (kbd "C-2") 'er/expand-region)
     (global-set-key [(meta ?@)] 'mark-word)
     (global-set-key [(control meta ? )] 'mark-sexp)
     (global-set-key [(control meta shift ?u)] 'mark-enclosing-sexp)
-  
+
     ;; diactivate mark after narrow
     (defadvice narrow-to-region (after deactivate-mark (start end) activate)
       (deactivate-mark)))
@@ -2131,13 +2135,13 @@ Misc editing config
   (define-module spell
     (custom-set-variables
      '(flyspell-use-meta-tab nil))
-  
+
     (defun init--flyspell-mode ()
       (define-key flyspell-mode-map [(control ?\,)] nil)
       (define-key flyspell-mode-map [(control ?\.)] nil))
-  
+
     (add-hook 'flyspell-mode-hook 'init--flyspell-mode)
-    
+
     (add-hook 'prog-mode-hook 'flyspell-prog-mode)
     (add-hook 'message-mode-hook 'flyspell-mode)
     (add-hook 'org-mode-hook 'flyspell-mode)
@@ -2154,12 +2158,12 @@ Misc editing config
       (let ((binding (assoc 'tab map)))
         (when binding
           (setcar binding 9))))
-  
+
     (defun tab-fix-org-mode ()
       (tab-fix-keymap org-mode-map)
       (remove-hook 'org-mode-hook 'tab-fix-org-mode))
     (add-hook 'org-mode-hook 'tab-fix-org-mode)
-  
+
     (defun tab-fix-markdown-mode ()
       (tab-fix-keymap markdown-mode-map)
       (remove-hook 'markdown-mode-hook 'tab-fix-org-mode))
@@ -2184,7 +2188,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
       (define-key popup-menu-keymap (kbd "<tab>") 'popup-next)
       (define-key popup-menu-keymap (kbd "<backtab>") 'popup-previous)
       (define-key popup-menu-keymap (kbd "M-p") 'popup-previous))
-  
+
     (custom-set-variables
      '(yas-trigger-key "TAB")
      ;; Add yas-expand itself, so when auto-complete completes and retry, yas-expand can work.
@@ -2197,27 +2201,27 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
      '(yas-wrap-around-region nil)
      '(yas-use-menu nil)
      '(yas-triggers-in-field t))
-  
+
     (defun yas-buffer-name-stub ()
       (let ((name (or (buffer-file-name)
                       (buffer-name))))
         (replace-regexp-in-string
          "^t_\\|_?\\(test\\|spec\\)$" ""
          (file-name-sans-extension (file-name-nondirectory name)))))
-  
+
     (defun yas-safer-expand ()
       (let ((yas-fallback-behavior 'return-nil))
         (call-interactively 'yas-expand)))
-  
+
     (defun yas-ido-insert-snippets (&optional no-condition)
       (interactive "P")
       (let ((yas-prompt-functions '(yas-ido-prompt)))
         (yas-insert-snippet)))
-  
+
     (defvar yas-popup-remember-pattern nil)
     (defadvice popup-isearch-prompt (after remember-pattern (popup pattern) activate)
       (setq yas-popup-remember-pattern pattern))
-  
+
     (defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
       (when (featurep 'popup)
         (setq yas-popup-remember-pattern nil)
@@ -2233,12 +2237,12 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
           :prompt prompt
           :isearch t
           ) yas-popup-remember-pattern)))
-  
+
     (defadvice yas--menu-keymap-get-create (around ignore (mode &optional parents) activate)
       (setq ad-return-value (make-sparse-keymap)))
-  
+
     (define-key my-keymap (kbd "<tab>") 'yas-insert-snippet)
-  
+
     (let ((map (make-sparse-keymap)))
       (define-key map (kbd "M-/") 'yas-ido-insert-snippets)
       (define-key map (kbd "/") 'yas-ido-insert-snippets)
@@ -2247,12 +2251,12 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
       (define-key map (kbd "i") 'auto-insert)
       (define-key map (kbd "RET") 'zencoding-expand-yas)
       (define-key my-keymap (kbd "M-/") map))
-  
+
     (setq yas-snippet-dirs (list (expand-file-name "snippets" user-emacs-directory)))
     (yas-global-mode +1)
     (defadvice yas-reload-all (before yas-recompile-all-before-reload activate)
       (yas-recompile-all)))
-  
+
 #+END_SRC
 
 ** auto-complete
@@ -2262,7 +2266,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
     (require-package 'pos-tip)
     (require-module yasnippet)
     (require 'pos-tip)
-  
+
     (custom-set-variables
      '(ac-use-fuzzy nil)
      '(ac-trigger-key "TAB")
@@ -2280,11 +2284,11 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
                              paredit-backward-delete paredit-backward-kill-word))
      '(ac-modes nil)
      '(ac-disable-inline t))
-    
+
     (require 'auto-complete)
     (require 'auto-complete-config)
     (global-auto-complete-mode -1)
-    
+
     (defun ac-update-greedy-command ()
       (interactive)
       (if (or (eq last-command 'ac-update-greedy-command)
@@ -2294,16 +2298,16 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
             (ac-expand)
             (setq this-command 'ac-expand))
         (ac-update-greedy t)))
-    
+
     (define-key ac-complete-mode-map (kbd "M-SPC") 'ac-complete)
     (define-key ac-complete-mode-map (kbd "M-<tab>") 'ac-complete)
     (define-key ac-complete-mode-map (kbd "C-g") 'ac-stop)
     (define-key ac-complete-mode-map "\t" 'ac-update-greedy-command)
     (define-key ac-complete-mode-map [tab] 'ac-update-greedy-command)
-    
+
     (add-hook 'prog-mode-hook 'auto-complete-mode)
     (add-hook 'nxml-mode-hook 'auto-complete-mode)
-    
+
     (setq-default
      ac-sources '(ac-source-yasnippet
                   ac-source-abbrev
@@ -2313,7 +2317,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
                   ac-source-words-in-same-mode-buffers
                   ;; ac-source-words-in-all-buffer
                   ))
-    
+
     (defun init--ac-emacs-lisp-mode ()
       (setq ac-sources
             '(
@@ -2334,15 +2338,15 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
   (define-module prog-mode-generic
     (add-hook 'prog-mode-hook 'subword-mode)
     (add-hook 'prog-mode-hook 'electric-pair-mode)
-  
+
     (defun font-lock-comment-annotations ()
       "Highlight a bunch of well known comment annotations.
-  
+
   This functions should be added to the hooks of major modes for programming."
       (font-lock-add-keywords
        nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|OPTIMIZE\\|HACK\\|REFACTOR\\):"
               1 font-lock-warning-face t))))
-  
+
     (add-hook 'prog-mode-hook 'font-lock-comment-annotations))
 #+END_SRC
 ** auto-insert
@@ -2350,12 +2354,12 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
   (define-module auto-insert
     (require 'autoinsert)
     (define-key my-keymap (kbd "C-n") 'auto-insert)
-  
+
     (custom-set-variables
      '(auto-insert-directory (expand-file-name "insert/" user-emacs-directory)))
-  
+
     (defvar auto-insert-alist-default auto-insert-alist)
-  
+
     (setq auto-insert-alist
           (append
            '((("\\.erl\\'" . "Erlang Module")
@@ -2372,7 +2376,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
   (define-module ediff-mode
     (custom-set-variables
      '(ediff-split-window-function (quote split-window-horizontally)))
-  
+
     (defun ediff-main ()
       "Show ediff registry"
       (interactive)
@@ -2384,7 +2388,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
   (define-module ediff-winring
     (require-module winring)
     (require-module windows-commands)
-    
+
     (defun init--ediff-before-setup-winring-jump ()
       (winring-jump-or-create "*ediff*"))
     (defun init--ediff-after-setup-save-register ()
@@ -2394,7 +2398,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
         (set-register 'ediff nil)
         (let ((prev (ring-remove (winring-get-ring) 0)))
           (winring-restore-configuration prev))))
-  
+
     (defun winring-toggle-ediff ()
       (interactive)
       (if (string= (winring-name-of-current) "*ediff*")
@@ -2405,12 +2409,12 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
              (winring-jump-or-create "*ediff*")
              (jump-to-register 'ediff))
           (error "No active ediff window configuration"))))
-  
+
     (add-hook 'ediff-before-setup-hook 'init--ediff-before-setup-winring-jump)
     (add-hook 'ediff-after-setup-windows-hook 'init--ediff-after-setup-save-register
               'append)
     (add-hook 'ediff-quit-hook 'init--ediff-quit-winring-delete)
-  
+
     (define-key init--windows-keymap "e" 'winring-toggle-ediff))
 #+END_SRC
 ** time-stamp
@@ -2428,7 +2432,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
     (require-package 'highlight-symbol)
     (require-package 'highlight-parentheses)
     (require-package 'highlight-indentation)
-  
+
     (custom-set-variables
      '(highlight-symbol-idle-delay 1)
      '(highlight-symbol-on-navigation-p t)
@@ -2436,7 +2440,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
      '(pulse-delay 0.03)
      '(pulse-flag nil)
      '(pulse-iterations 5))
-  
+
     (defun toggle-highlight-indentation ()
       (interactive)
       (if (and (boundp 'highlight-indentation-mode) highlight-indentation-mode)
@@ -2445,30 +2449,30 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
             (call-interactively 'highlight-indentation-current-column-mode +1))
         (call-interactively 'highlight-indentation-mode -1)
         (call-interactively 'highlight-indentation-current-column-mode -1)))
-  
+
     (defun enable-highlight-indentation ()
       (interactive)
       (call-interactively 'highlight-indentation-mode +1)
       (call-interactively 'highlight-indentation-current-column-mode +1))
-  
+
     (add-hook 'coffee-mode-hook 'enable-highlight-indentation)
     (add-hook 'python-mode-hook 'enable-highlight-indentation)
-  
+
     (defvar highlight-symbol-navigation-map
       (let ((map (make-sparse-keymap)))
         (define-key map "9" 'highlight-symbol-prev)
         (define-key map "0" 'highlight-symbol-next)
         map))
-  
+
     (temporary-mode-define-keys my-keymap 'highlight-symbol-navigation)
-  
+
     (define-key my-keymap (kbd "+") 'highlight-symbol-query-replace)
     (define-key my-keymap (kbd "=") 'highlight-symbol-at-point)
     (define-key my-keymap (kbd "-") 'highlight-symbol-remove-all)
     (define-key my-keymap (kbd "_") 'highlight-symbol-mode)
     (define-key my-keymap (kbd "\\") 'toggle-highlight-indentation)
     (define-key my-keymap (kbd "|") 'highlight-indentation-set-offset)
-  
+
     (add-hook 'c-mode-common-hook 'highlight-parentheses-mode)
     (add-hook 'emacs-lisp-mode-hook 'highlight-parentheses-mode)
     (add-hook 'ruby-mode-hook 'highlight-parentheses-mode))
@@ -2481,9 +2485,9 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
     ;; Exclude very large buffers from dabbrev
     (defun sanityinc/dabbrev-friend-buffer (other-buffer)
       (< (buffer-size other-buffer) (* 1 1024 1024)))
-  
+
     (setq dabbrev-friend-buffer-function 'sanityinc/dabbrev-friend-buffer)
-  
+
     (setq hippie-expand-try-functions-list
           '(
             try-expand-dabbrev
@@ -2495,8 +2499,8 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
             try-complete-lisp-symbol-partially
             try-complete-lisp-symbol
             try-expand-list))
-  
-    (global-set-key (kbd "M-/") 'hippie-expand))  
+
+    (global-set-key (kbd "M-/") 'hippie-expand))
 #+END_SRC
 
 ** abbrev
@@ -2514,7 +2518,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
   (define-module search-files
     (require-package 'ag)
     (require-package 'wgrep-ag)
-  
+
     (define-key my-keymap (kbd "o") 'occur)
     (define-key my-keymap (kbd "O") 'multi-occur)
     (define-key my-keymap (kbd "C-o") 'multi-occur-in-matching-buffers)
@@ -2535,7 +2539,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
                 (name (match-string 2 file)))
             (list
              (concat root "/spec/factories/" (alternative-files--pluralize-string name) ".rb"))))
-  
+
          ((string-match "^\\(.*\\)/spec/factories/\\(.+\\)\\.rb$" file)
           (let* ((root (match-string 1 file))
                  (name (match-string 2 file))
@@ -2548,7 +2552,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
              (concat root "/app/helpers/" name "_helper.rb")
              (concat root "/spec/helpers/" name "_helper.rb")
              (concat root "/app/views/" name "/")))))))
-  
+
     (defun alternative-files-go-finder (&optional file)
       (let ((file (or file (alternative-files--detect-file-name))))
         (cond
@@ -2556,12 +2560,12 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
           (let ((base (match-string 1 file)))
             (list
              (concat base ".go"))))
-  
+
          ((string-match "^\\(.*\\)\\.go$" file)
           (let* ((base (match-string 1 file)))
             (list
              (concat base "_test.go")))))))
-  
+
     (defun alternative-files-maven-finder (&optional file)
       (let ((file (or file (alternative-files--detect-file-name))))
         (cond
@@ -2580,13 +2584,13 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
             (list
              (concat root "/main/" name "." ext)
              (concat root "/app/" name "." ext)))))))
-  
+
     (setq alternative-files-user-functions
           '(alternative-files-factories-finder
             alternative-files-go-finder
             alternative-files-maven-finder))
     (setq alternative-files-root-dir-function 'projectile-project-p)
-  
+
     (define-key my-keymap "a" 'alternative-files-find-file)
     (define-key my-keymap (kbd "M-a") 'alternative-files-find-file)
     (define-key my-keymap (kbd "A") 'alternative-files-create-file))
@@ -2596,20 +2600,20 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
 #+BEGIN_SRC emacs-lisp
   (define-module ibuffer-mode
     (global-set-key (kbd "C-x C-b") 'ibuffer)
-  
+
     (custom-set-variables
      '(ibuffer-always-show-last-buffer :nomini)
      '(ibuffer-default-shrink-to-minimum-size t)
      '(ibuffer-jump-offer-only-visible-buffers nil)
      '(ibuffer-show-empty-filter-groups nil))
-  
+
     (defun init--ibuffer-load ()
       (define-ibuffer-sorter filename-or-dired
         "Sort the buffers by their pathname."
         (:description "filenames plus dired")
         (string-lessp
          (with-current-buffer (car a)
-  
+
            (or buffer-file-name
                (if (eq major-mode 'dired-mode)
                    (expand-file-name dired-directory))
@@ -2621,17 +2625,17 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
                    (expand-file-name dired-directory))
                ;; so that all non pathnames are at the end
                "~"))))
-  
+
       ;; add another sorting method for ibuffer (allow the grouping of
       ;; filenames and dired buffers
       (define-key ibuffer-mode-map (kbd "s p") 'ibuffer-do-sort-by-filename-or-dired)
-  
+
       (defun ibuffer-filter-by-extname (qualifier)
         (interactive "sFilter by extname: ")
         (ibuffer-filter-by-filename (concat "\\." qualifier "$")))
-  
+
       (define-key ibuffer-mode-map (kbd "/ .") 'ibuffer-filter-by-extname)
-  
+
       (setq ibuffer-saved-filter-groups
             '(("default"
                ("dired" (mode . dired-mode))
@@ -2676,18 +2680,18 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
                           (name      . "^\\*.*\\*$")
                           (filename . "\.emacs\.d")
                           (mode     . custom-mode))))))
-  
+
       (remove-hook 'ibuffer-mode-hook 'init--ibuffer-load))
-  
+
     (defun init--ibuffer-mode ()
       (ibuffer-switch-to-saved-filter-groups "default"))
-  
+
     (add-hook 'ibuffer-mode-hook 'init--ibuffer-mode)
     ;; ibuffer is a autoloads file, ibufer-load-hook is already ran.  So use
     ;; run-once trick. It must ran before 'init--buffer-mode, so it is added
     ;; after that.
     (add-hook 'ibuffer-mode-hook 'init--ibuffer-load))
-  
+
 #+END_SRC
 ** deft
 
@@ -2699,18 +2703,18 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
      '(deft-directory (concat my-dropbox-dir "g/cards"))
      '(deft-use-filename-as-title t)
      '(deft-text-mode 'org-mode))
-  
+
     (defun init--deft-mode ()
       (define-key deft-mode-map (kbd "C-c SPC") 'org-drill-deft)
       (remove-hook 'deft-mode-hook 'init--deft-mode))
     (add-hook 'deft-mode-hook 'init--deft-mode)
-  
+
     (defun org-drill-deft ()
       "Run org-drill in deft-directory"
       (interactive)
       (with-current-buffer (find-file-noselect (concat deft-directory "/.timestamp"))
         (org-drill 'directory)))
-  
+
     (define-key my-keymap "m" 'deft))
 #+END_SRC
 
@@ -2720,7 +2724,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
   (define-module mail
     (custom-set-variables
      '(compose-mail-user-agent-warnings nil))
-  
+
     (defun init--mutt-compose ()
       (when (and
              (buffer-file-name)
@@ -2729,14 +2733,14 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
               (file-name-nondirectory (buffer-file-name))))
         (message-mode)
         (message-goto-body)))
-  
+
     (add-hook 'server-visit-hook 'init--mutt-compose)
-  
+
     (autoload 'external-abook-try-expand "external-abook" nil t)
     (defun init--message-mode ()
       (local-set-key "\C-c\t" 'external-abook-try-expand))
       (add-hook 'message-mode-hook 'init--message-mode)
-  
+
     (when (eq system-type 'darwin)
       (custom-set-variables
        '(external-abook-command "contacts -lSf '%%e\t\"%%n\"' '%s'")
@@ -2754,11 +2758,11 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
     (require-package 'web-mode)
     (add-to-list 'auto-mode-alist '("\\.handlebars$" . handlebars-mode))
     (add-to-list 'auto-mode-alist '("\\.hbs$" . handlebars-mode))
-  
+
     (defun init--slim-mode ()
       (setq electric-indent-inhibit t))
     (add-hook 'slim-mode-hook 'init--slim-mode)
-  
+
     )
 #+END_SRC
 
@@ -2772,11 +2776,11 @@ css, sass, scss, stylus
     (require-package 'scss-mode)
     (require-package 'sass-mode)
     (require-package 'stylus-mode)
-  
+
     (custom-set-variables
      '(scss-compile-at-save nil)
      '(css-indent-offset 2))
-  
+
     (defun init--sass-load ()
       ;; do not indent after CSS attribute
       (setq sass-non-block-openers
@@ -2784,7 +2788,7 @@ css, sass, scss, stylus
              "^ *[-a-zA-Z0-9]+: "
              sass-non-block-openers))
       (remove-hook 'sass-mode-hook 'init--sass-load))
-  
+
     (add-hook 'sass-mode-hook 'init--sass-load))
 #+END_SRC
 
@@ -2800,7 +2804,7 @@ css, sass, scss, stylus
 #+BEGIN_SRC emacs-lisp
   (define-module rainbow-mode
     (require-package 'rainbow-mode)
-  
+
     (add-hook 'css-mode-hook 'rainbow-mode)
     (add-hook 'sass-mode-hook 'rainbow-mode)
     (add-hook 'scss-mode-hook 'rainbow-mode))
@@ -2811,10 +2815,10 @@ css, sass, scss, stylus
 #+BEGIN_SRC emacs-lisp
   (define-module markdown-mode
     (require-package 'markdown-mode)
-  
+
     (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
     (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-  
+
     (defun markdown-demote-all ()
       (interactive)
       (ignore-errors
@@ -2823,19 +2827,19 @@ css, sass, scss, stylus
       (while (not (eobp))
         (markdown-demote)
         (outline-next-visible-heading)))
-  
+
     (defun markdown-preview-in-marked (&optional file)
       "Preview FILE in Marked.app"
       (interactive)
       (setq file (or file (buffer-file-name)))
       (start-process "*marked" nil "open" "-a" "Marked" file))
-  
+
     (defun init--markdown-mode-mac ()
       (local-set-key (kbd "C-c C-c p") 'markdown-preview-in-marked))
-  
+
     (when (eq system-type 'darwin)
       (add-hook 'markdown-mode-hook 'init--markdown-mode-mac))
-  
+
     (add-hook 'markdown-mode-hook 'auto-fill-mode))
 #+END_SRC
 
@@ -2844,38 +2848,34 @@ css, sass, scss, stylus
 #+BEGIN_SRC emacs-lisp
   (define-module lisp-mode
     (require-package 'paredit)
-  
+
     (defun paredit-wrap-round-from-behind ()
       (interactive)
-  
+
       (forward-sexp -1)
       (paredit-wrap-round)
       (insert " ")
       (forward-char -1))
-  
+
     (defun conditionally-enable-paredit-mode ()
       "Enable `paredit-mode' in the minibuffer, during `eval-expression'."
       (when (eq this-command 'eval-expression)
         (paredit-mode +1)))
-  
+
     (defun init--emacs-lisp-load ()
       (define-key emacs-lisp-mode-map (kbd "M-s /") 'describe-function)
       (remove-hook 'emacs-lisp-mode-hook 'init--emacs-lisp-load))
-  
+
     (defun init--paredit-load ()
       (define-key paredit-mode-map (kbd "M-)") 'paredit-wrap-round-from-behind)
       (define-key paredit-mode-map (kbd "M-s") nil)
       (define-key paredit-mode-map (kbd "M-S") nil)
-      (define-key paredit-mode-map [C-left] nil)
-      (define-key paredit-mode-map [C-right] nil)
-      (define-key paredit-mode-map [C-up] nil)
-      (define-key paredit-mode-map [C-down] nil)
       (define-key paredit-mode-map (kbd "M-N") 'paredit-split-sexp)
       (remove-hook 'paredit-mode-hook 'init--paredit-load))
-  
+
     (defun init--lisp-mode ()
       (paredit-mode +1))
-  
+
     (defun init--paredit-mode ()
       (if (minibufferp)
           (progn
@@ -2883,11 +2883,11 @@ css, sass, scss, stylus
             (local-set-key (kbd "M-n") 'next-history-element))
         (local-set-key (kbd "M-p") 'paredit-raise-sexp)
         (local-set-key (kbd "M-n") 'paredit-splice-sexp)))
-  
+
     (add-hook 'paredit-mode-hook 'init--paredit-mode)
     (add-hook 'emacs-lisp-mode-hook 'init--lisp-mode)
     (add-hook 'minibuffer-setup-hook 'conditionally-enable-paredit-mode)
-  
+
     (add-hook 'paredit-mode-hook 'init--paredit-load)
     (add-hook 'emacs-lisp-mode-hook 'init--emacs-lisp-load))
 #+END_SRC
@@ -2898,20 +2898,20 @@ css, sass, scss, stylus
   (define-module ruby-mode
     (custom-set-variables
      '(ruby-deep-indent-paren nil))
-  
+
     (require-package 'ruby-end)
     (require-package 'yari)
     (defalias 'ri 'yari)
-  
+
     (defun init--ruby-mode ()
       (local-set-key (kbd "M-s /") 'yari)
-  
+
       (ruby-end-mode +1)
       (hs-minor-mode +1)
       (turn-on-auto-fill)
-  
+
       (setq autopair-extra-pairs '(:code ((?` . ?`)))))
-  
+
     ;;https://gist.github.com/dgutov/1274520
     (defadvice ruby-indent-line (after unindent-closing-paren activate)
       (let ((column (current-column))
@@ -2927,13 +2927,13 @@ css, sass, scss, stylus
         (when indent
           (indent-line-to indent)
           (when (> offset 0) (forward-char offset)))))
-  
+
     ;; Only expand when last command is self-insert
     (defadvice ruby-end-expand-p (around no-duplicate-end activate)
       (if (eq last-command 'self-insert-command)
           ad-do-it
         (setq ad-return-value nil)))
-  
+
     (add-to-list 'auto-mode-alist '("Rakefile\\'" . ruby-mode))
     (add-to-list 'auto-mode-alist '("Gemfile\\'" . ruby-mode))
     (add-to-list 'auto-mode-alist '("\\.rake\\'" . ruby-mode))
@@ -2946,7 +2946,7 @@ css, sass, scss, stylus
     (add-to-list 'auto-mode-alist '("\\.rabl\\'" . ruby-mode))
     (add-to-list 'auto-mode-alist '("\\.jbuilder\\'" . ruby-mode))
     (add-to-list 'auto-mode-alist '("\\.tokamak\\'" . ruby-mode))
-  
+
     (add-hook 'ruby-mode-hook 'init--ruby-mode))
 #+END_SRC
 
@@ -2956,7 +2956,7 @@ css, sass, scss, stylus
   (define-module rails
     (require-module projectile)
     (require-package 'projectile-rails)
-  
+
     (custom-set-variables
      '(projectile-rails-expand-snippet nil))
     (add-hook 'projectile-mode-hook 'projectile-rails-on))
@@ -2971,14 +2971,14 @@ css, sass, scss, stylus
       "Peform body-form from the specified directory"
       `(let ((default-directory ,directory))
          ,body-form))
-  
+
     (defmacro rspec-from-project-root (body-form)
       "Peform body-form from the project root directory"
       `(rspec-from-directory (or (rspec-project-root) default-directory)
                             ,body-form))
-  
+
     (require-package 'rspec-mode)
-  
+
     (custom-set-variables
      ;; already handled by ~/bin/rspec
      '(rspec-use-bundler-when-possible nil)
@@ -2992,16 +2992,16 @@ css, sass, scss, stylus
 #+BEGIN_SRC emacs-lisp
   (define-module mmm-mode
     (require-package 'mmm-mode)
-  
+
     ;; fix font lock when started as daemon
     (add-hook 'after-make-window-system-frame-hooks
               '(lambda ()
                  (setq mmm-font-lock-available-p t)))
-  
+
     (defvar mmm-fenced-code-block-mode-alist nil)
     (setq mmm-fenced-code-block-mode-alist
           '(("javascript" . js-mode)))
-  
+
     (defun mmm-fenced-code-block-get-mode (string)
       (string-match "[a-zA-Z_-]+" string)
       (setq string (match-string 0 string))
@@ -3009,19 +3009,19 @@ css, sass, scss, stylus
        (mmm-ensure-modename (or (cdr (assoc string mmm-fenced-code-block-mode-alist))
                                 (intern (concat string "-mode"))))
        (signal 'mmm-no-matching-submode nil)))
-  
+
     (setq mmm-global-mode 'maybe)
     (setq mmm-submode-decoration-level 2)
     (setq mmm-parse-when-idle t)
     (require 'mmm-auto)
-  
+
     (mmm-add-classes
      '((yaml-header-matters
         :submode yaml-mode
         :face mmm-code-submode-face
         :front "\\`---$"
         :back "^---$")))
-  
+
     (mmm-add-classes
      '((fenced-code-block
         :front "^\\(```\\)\\(\\w+\\)$"
@@ -3032,7 +3032,7 @@ css, sass, scss, stylus
         :match-submode mmm-fenced-code-block-get-mode
         :insert ((?s fenced-code-block "Code Type: " @ "```" str "\n" _
                      @ "\n" @ "```\n" @)))))
-  
+
     (mmm-add-mode-ext-class 'html-erb-mode "\\.html\\.erb\\'" 'erb)
     (mmm-add-mode-ext-class 'html-erb-mode "\\.rhtml\\'" 'erb)
     (mmm-add-mode-ext-class 'html-erb-mode "\\.jst\\.ejs\\'" 'ejs)
@@ -3042,7 +3042,7 @@ css, sass, scss, stylus
     (mmm-add-mode-ext-class 'markdown-mode nil 'fenced-code-block)
     (mmm-add-mode-ext-class 'gfm-mode nil 'yaml-header-matters)
     (mmm-add-mode-ext-class 'gfm-mode nil 'fenced-code-block)
-  
+
     (add-to-list 'auto-mode-alist '("\\.html\\.erb\\'" . html-erb-mode))
     (add-to-list 'auto-mode-alist '("\\.rhtml\\'" . html-erb-mode))
     (add-to-list 'auto-mode-alist '("\\.jst\\.ejs\\'"  . html-erb-mode)))
@@ -3067,13 +3067,13 @@ css, sass, scss, stylus
            "-o" temporary-directory "-Wall" source))
     (global-flycheck-mode)
     (setq flycheck-mode-line-lighter " fC")
-  
+
     (defun init--disable-emacs-lisp-checkdoc-in-org-src-mode ()
       (make-local-variable 'flycheck-checkers)
       (setq flycheck-checkers (delq 'emacs-lisp-checkdoc flycheck-checkers)))
-  
+
     (add-hook 'org-src-mode-hook 'init--disable-emacs-lisp-checkdoc-in-org-src-mode)
-  
+
     (define-key my-keymap (kbd "`") 'flycheck-next-error)
     (define-key my-keymap (kbd "~") 'flycheck-previous-error)
     (define-key my-keymap (kbd "M-`") 'flycheck-next-error)
@@ -3099,7 +3099,7 @@ css, sass, scss, stylus
 #+BEGIN_SRC emacs-lisp
   (define-module speedbar
     (global-set-key (kbd "<f8>") 'speedbar-get-focus)
-    
+
     (custom-set-variables
      '(speedbar-frame-parameters '((minibuffer . nil)
                                    (width . 20)
@@ -3144,10 +3144,10 @@ css, sass, scss, stylus
              (diminish ',mode ,to-what)
              (remove-hook ',hook ',func))
            (add-hook ',hook ',func))))
-  
+
     (define-module diminish
       (require-package 'diminish)
-      
+
       (diminish-on-load highlight-parentheses-mode-hook highlight-parentheses-mode)
       (diminish-on-load yas-minor-mode-hook yas-minor-mode)
       (diminish-on-load whitespace-mode-hook global-whitespace-mode)
@@ -3194,10 +3194,10 @@ css, sass, scss, stylus
      '(js-expr-indent-offset 2)
      '(js-enabled-frameworks nil)
      '(inf-mongo-command "mongo"))
-  
+
     (require-package 'inf-mongo)
     (require-package 'web-beautify)
-  
+
     (defun moz-eval-statement-or-region ()
       "Send the previous statement to the inferior Mongo process."
       (interactive)
@@ -3212,7 +3212,7 @@ css, sass, scss, stylus
       (define-key moz-minor-mode-map (kbd "C-x C-e") 'moz-eval-statement-or-region)
       (remove-hook 'moz-minor-mode-hook 'init--moz-minor-mode-load))
     (add-hook 'moz-minor-mode-hook 'init--moz-minor-mode-load)
-  
+
     (defun mongo-eval-statement-or-region ()
       "Send the previous statement to the inferior Mongo process."
       (interactive)
@@ -3222,13 +3222,13 @@ css, sass, scss, stylus
             (thing-region "sentence"))
           (mongo-send-region (mark) (point))))
       (display-buffer inf-mongo-buffer))
-  
+
     (defvar mongo-minor-mode-map
       (let ((map (make-sparse-keymap)))
         (define-key map (kbd "C-M-x") 'mongo-eval-statement-or-region)
         (define-key map (kbd "C-x C-e") 'mongo-eval-statement-or-region)
         map))
-  
+
     (defun init--web-beautify-js ()
       (local-set-key (kbd "C-c b") 'web-beautify-js))
     (defun init--web-beautify-css ()
@@ -3238,7 +3238,7 @@ css, sass, scss, stylus
     (add-hook 'js-mode-hook 'init--web-beautify-js)
     (add-hook 'css-mode-hook 'init--web-beautify-css)
     (add-hook 'sgml-mode-hook 'init--web-beautify-html)
-  
+
     (define-minor-mode mongo-minor-mode
       "Eval commands in mongo shell"
       nil " mongo" mongo-minor-mode-map))
@@ -3259,7 +3259,7 @@ css, sass, scss, stylus
     (defvar wcy-cancel-auto-new-line-command-list
       '(next-line previous-line)
       "a list of command which will trigger the cancel.")
-  
+
     (defun wcy-cancel-auto-new-line ()
       (interactive)
       (save-excursion
@@ -3269,7 +3269,7 @@ css, sass, scss, stylus
               (if (and (boundp c-auto-newline) c-auto-newline)
                   (progn
                     (delete-blank-lines)))))))
-  
+
     (defun init--autopair-open-braces (action pair pos-before)
       (when (and (eq 'opening action)
                  (eq ?\} pair)
@@ -3277,7 +3277,7 @@ css, sass, scss, stylus
         (save-excursion
           (newline)
           (indent-according-to-mode))))
-  
+
     (defconst my-c-style
       '((c-basic-offset             . 2)
         (c-comment-only-line-offset . (0 . 0))
@@ -3334,30 +3334,30 @@ css, sass, scss, stylus
                                        (inher-intro . 0)
                                        )))
       "My C/C++ Programming Style")
-  
+
     (defun init--c-c++-mode ()
       (c-set-style "cust")
       (setq tab-width 2))
-  
+
     (defun init--c-mode-common-load ()
       (c-add-style "cust" my-c-style t)
       (remove-hook 'c-mode-common-hook 'init--c-mode-common-load))
-  
+
     ;; Customizations for all modes in CC Mode.
     (defun init--c-mode-common ()
       (setq indent-tabs-mode nil)
       (c-toggle-auto-hungry-state 1)
-  
+
       (hs-minor-mode t)
       (set (make-local-variable 'comment-auto-fill-only-comments) t)
       (turn-on-auto-fill)
       (setq autopair-handle-action-fns '(autopair-default-handle-action
                                          init--autopair-open-braces))
       (add-hook 'pre-command-hook 'wcy-cancel-auto-new-line nil t)
-  
+
       (local-set-key (kbd "C-M-a") 'c-beginning-of-defun)
       (local-set-key (kbd "C-M-e") 'c-end-of-defun))
-  
+
     (defun bh-choose-header-mode ()
       (interactive)
       (if (string-equal (substring (buffer-file-name) -2) ".h")
@@ -3372,7 +3372,7 @@ css, sass, scss, stylus
                     )
                 (if (file-exists-p dot-cpp-file)
                     (c++-mode)))))))
-  
+
     (add-hook 'find-file-hook 'bh-choose-header-mode)
     (add-hook 'c-mode-common-hook 'init--c-mode-common)
     (add-hook 'c-mode-common-hook 'init--c-mode-common-load)
@@ -3386,15 +3386,15 @@ css, sass, scss, stylus
   (define-module win-move-resize
     (require-module windows-commands)
     (require-package 'buffer-move)
-    (global-set-key [C-up] 'buf-move-up)
-    (global-set-key [C-down] 'buf-move-down)
-    (global-set-key [C-left] 'buf-move-left)
-    (global-set-key [C-right] 'buf-move-right)
-  
+    (global-set-key [s-up] 'buf-move-up)
+    (global-set-key [s-down] 'buf-move-down)
+    (global-set-key [s-left] 'buf-move-left)
+    (global-set-key [s-right] 'buf-move-right)
+
     (windmove-default-keybindings 'meta)
-  
+
     (require 'win-resize)
-  
+
     (defvar win-move-resize-map
       (let ((map (make-sparse-keymap)))
         (define-key map "h" 'windmove-left)
@@ -3413,7 +3413,7 @@ css, sass, scss, stylus
         (define-key map "K" 'win-resize-enlarge-horiz)
         (define-key map "L" 'win-resize-minimize-vert)
         map))
-  
+
     (temporary-mode-define-keys my-keymap 'win-move-resize))
 #+END_SRC
 
@@ -3421,7 +3421,7 @@ css, sass, scss, stylus
 #+BEGIN_SRC emacs-lisp
   (define-module scala-mode
     (require-package 'scala-mode2)
-  
+
     (defun init--scala-mode ()
       (setq imenu-generic-expression
             '(
@@ -3435,7 +3435,7 @@ css, sass, scss, stylus
               ("case class" "^[ \\t]*\\(case class +\\)\\([^(): ]+\\)" 2)
               ("object" "\\(object +\\)\\([^(): ]+\\)" 2)
               )))
-  
+
     (add-hook 'scala-mode-hook 'init--scala-mode))
 #+END_SRC
 ** visual-regexp
@@ -3451,12 +3451,12 @@ css, sass, scss, stylus
 #+BEGIN_SRC emacs-lisp
   (define-module eclim
     (require-package 'emacs-eclim)
-  
+
     (custom-set-variables
      '(eclim-use-yasnippet nil))
-  
+
     (autoload 'start-eclimd "eclimd" nil t)
-  
+
     (defun projectile-maybe-turn-on-eclim ()
       (when (and buffer-file-name
                  (file-exists-p (concat (projectile-project-p) ".project"))
@@ -3472,12 +3472,12 @@ css, sass, scss, stylus
       (define-key eclim-mode-map (kbd "C-c C-e C-n") 'eclim-problems-next)
       (define-key eclim-mode-map (kbd "C-c C-e C-p") 'eclim-problems-previous))
     (add-hook 'eclim-mode-hook 'init--eclim-mode)
-  
+
     (defun eclim-enable ()
       (interactive)
       (require 'eclim)
       (require 'ac-emacs-eclim-source)
-  
+
       (add-hook 'projectile-mode-hook 'projectile-maybe-turn-on-eclim)
       (mapc (lambda (buffer)
               (with-current-buffer buffer
@@ -3513,17 +3513,17 @@ Install [[https://github.com/aemoncannon/ensime][ensime]] using =make vendor=
         (setq load-path
               (nreverse (cons (concat path "/elisp")
                               (nreverse load-path))))))
-  
+
     (custom-set-variables
      '(ensime-ac-override-settings nil))
-  
+
     (defun projectile-maybe-turn-on-ensime (&optional buffer)
       (with-current-buffer (or buffer (current-buffer))
         (when (and (buffer-file-name)
                    (eq major-mode 'scala-mode)
                    (file-exists-p (concat (projectile-project-p) ".ensime")))
           (ensime-mode +1))))
-  
+
     (defun init--ensime-mode ()
       (when (boundp 'ac-sources)
         (if (eq (car ac-sources) 'ac-source-yasnippet)
@@ -3531,7 +3531,7 @@ Install [[https://github.com/aemoncannon/ensime][ensime]] using =make vendor=
           (setq ac-sources (cons 'ac-source-ensime-completions ac-sources))))
       (local-set-key (kbd "M-s /") 'ensime-inspect-type-at-point))
     (add-hook 'ensime-mode-hook 'init--ensime-mode)
-  
+
     (defun ensime-enable ()
       (interactive)
       (require 'ensime)
@@ -3539,7 +3539,7 @@ Install [[https://github.com/aemoncannon/ensime][ensime]] using =make vendor=
       (add-hook 'projectile-mode-hook 'projectile-maybe-turn-on-ensime)
       (mapc 'projectile-maybe-turn-on-ensime (buffer-list))
       )
-  
+
     (defun ensime-disable ()
       (interactive)
       (remove-hook 'projectile-mode-hook 'projectile-maybe-turn-on-ensime)
@@ -3560,7 +3560,7 @@ Install [[https://github.com/aemoncannon/ensime][ensime]] using =make vendor=
         (setq load-path (cons path load-path))
         (autoload 'R-mode "ess-site" nil t)
         (autoload 'Rnw-mode "ess-site" nil t)
-  
+
         (setq auto-mode-alist
               (append
                '(("\\.[rR]\\'"        . R-mode)
@@ -3595,17 +3595,17 @@ Functions to manage site iany.me
                             '(ns-pop-up-frames nil)
                             '(helm-locate-command "mdfind %s %s")
                             '(locate-command "mdfind"))
-  
+
       (defalias 'mdfind 'locate)
-  
+
       (define-key key-translation-map (kbd "H-<tab>") (kbd "M-TAB"))
-  
+
       (require-package 'applescript-mode)
       (add-to-list 'auto-mode-alist '("\\.applescript$" . applescript-mode))
-  
+
       (require-package 'dash-at-point)
       (define-key my-keymap "?" 'dash-at-point)
-  
+
       (defvar mac--open-dictionary-hist)
       (defun mac--open-dictionary (the-word)
         "Open Dictionary.app for the-word"
@@ -3616,12 +3616,12 @@ Functions to manage site iany.me
                                  nil nil nil 'mac--open-dictionary-hist)))
                         (if (zerop (length w)) wap w))))
         (start-process "dict" nil "open" (concat "dict:///" the-word)))
-  
+
       (global-set-key (kbd "s-SPC") 'mac--open-dictionary)
       (global-set-key (kbd "H-v") 'scroll-down-command)
       (global-set-key (kbd "M-v") 'scroll-down-command)
       (global-set-key (kbd "C-S-v") 'scroll-down-command)
-  
+
       (defadvice case-dwim-capitalize (around ns-copy activate)
         (if (region-active-p)
             (ns-copy-including-secondary)
@@ -3630,15 +3630,15 @@ Functions to manage site iany.me
         (if (< (prefix-numeric-value arg) 0)
             (yank)
           ad-do-it))
-  
+
       ;; for DEVONThink
       (add-to-list 'auto-mode-alist '("\\.scala\\.txt\\'" . scala-mode))
       (add-to-list 'auto-mode-alist '("\\.xml\\.txt\\'" . xml-mode))
-  
+
       (if (file-executable-p "/usr/local/bin/gls")
           (setq insert-directory-program "/usr/local/bin/gls")
         (setq dired-use-ls-dired nil))
-  
+
       (defun system-move-file-to-trash--using-rm-trash (filename)
         "Remove file specified by FILENAME using rm-trash"
         (call-process "ruby" nil nil nil
@@ -3650,8 +3650,8 @@ Functions to manage site iany.me
         (defalias
           'system-move-file-to-trash
           'system-move-file-to-trash--using-rm-trash))
-  
-  
+
+
       (require-package 'reveal-in-finder)
       (defun open-in-iterm ()
         (interactive)
@@ -3659,10 +3659,10 @@ Functions to manage site iany.me
                 (dir file)
                 (call-process "open" nil nil nil "-a" "iTerm.app" dir)))
           (call-interactively 'reveal-in-finder)))
-  
+
       (global-set-key (kbd "s-r") 'reveal-in-finder)
       (global-set-key (kbd "s-t") 'open-in-iterm)
-  
+
       ))
 #+END_SRC
 ** cscope
@@ -3674,7 +3674,7 @@ Functions to manage site iany.me
         "*Whether to ignore case while searching."
         :group 'cscope
         :type 'boolean)
-  
+
       (defun cscope-toggle-case ()
         (interactive)
         (setq cscope-ignore-case (not cscope-ignore-case))
@@ -3683,12 +3683,12 @@ Functions to manage site iany.me
         (interactive)
         (message "Cscope Ignore Case (%s)"
                  (if cscope-ignore-case "Enable" "Disable")))
-  
+
       (define-key cscope:map "\C-csv" 'cscope-toggle-case)
       (define-key cscope:map "\C-csV" 'cscope-tell-ignore-case)
       (define-key cscope-list-entry-keymap "v" 'cscope-toggle-case)
       (define-key cscope-list-entry-keymap "V" 'cscope-tell-ignore-case)
-  
+
       (defadvice cscope-call (before ignore-case activate)
         "ignore case in cscope search"
         (when cscope-ignore-case
@@ -3702,14 +3702,14 @@ Functions to manage site iany.me
     (require-package 'fold-dwim)
     (require 'fold-dwim)
     (require 'hideshow)
-  
+
     (define-key my-keymap (kbd "M-i") 'fold-dwim-toggle)
     (define-key my-keymap (kbd "I") 'fold-dwim-show-all)
     (define-key my-keymap (kbd "C-i") 'fold-dwim-hide-all)
-  
+
     ;; Outline-minor-mode key map
     (define-prefix-command 'my-outline-map nil "Outline-")
-  
+
     ;; HIDE
     (define-key my-outline-map "q" 'hide-sublevels) ; Hide everything but the top-level headings
     (define-key my-outline-map "t" 'hide-body) ; Hide everything but headings (all body lines)
@@ -3717,45 +3717,45 @@ Functions to manage site iany.me
     (define-key my-outline-map "c" 'hide-entry) ; Hide this entry's body
     (define-key my-outline-map "l" 'hide-leaves) ; Hide body lines in this entry and sub-entries
     (define-key my-outline-map "d" 'hide-subtree) ; Hide everything in this entry and sub-entries
-  
+
     ;; SHOW
     (define-key my-outline-map "a" 'show-all)  ; Show (expand) everything
     (define-key my-outline-map "e" 'show-entry) ; Show this heading's body
     (define-key my-outline-map "i" 'show-children) ; Show this heading's immediate child sub-headings
     (define-key my-outline-map "k" 'show-branches) ; Show all sub-headings under this heading
     (define-key my-outline-map "s" 'show-subtree) ; Show (expand) everything in this heading & below
-  
+
     ;; MOVE
     (define-key my-outline-map "u" 'outline-up-heading)              ; Up
     (define-key my-outline-map "n" 'outline-next-visible-heading)    ; Next
     (define-key my-outline-map "p" 'outline-previous-visible-heading) ; Previous
     (define-key my-outline-map "f" 'outline-forward-same-level) ; Forward - same level
     (define-key my-outline-map "b" 'outline-backward-same-level) ; Backward - same level
-  
+
     (define-key my-outline-map "i" 'fold-dwim-toggle)
     (define-key my-outline-map (kbd "TAB") 'toggle-selective-display)
-  
+
     (define-key my-keymap (kbd "i") my-outline-map)
-  
+
     ;; Folding
     (defvar fringe-face 'fringe)
     (defface collapsed-face '((t (:background "#2e3330" :foreground "#57705c"))) "Collapsed Overlay")
     (defvar collapsed-face 'collapsed-face)
-  
+
     (add-hook 'lisp-mode-hook 'hs-minor-mode)
     (add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
     (add-hook 'ruby-mode-hook 'hs-minor-mode)
-  
+
     (defun toggle-selective-display (column)
         (interactive "P")
         (set-selective-display
          (or column
              (unless selective-display
                (1+ (current-column))))))
-  
+
     ;; http://code.google.com/p/bamanzi-misc/source/browse/trunk/_emacs.d/site-lisp/common/fold_/hideshow-fringe.el?r=122&spec=svn448
     (define-fringe-bitmap 'hs-marker [0 24 24 126 126 24 24 0])
-  
+
     (defun display-code-line-counts (ov)
       (when (eq 'code (overlay-get ov 'hs))
         (let* ((marker-string "*fringe-dummy*")
@@ -3767,14 +3767,14 @@ Functions to manage site iany.me
           (put-text-property 1 (length display-string) 'face 'collapsed-face display-string)
           (overlay-put ov 'display display-string)
           (overlay-put ov 'evaporate t))))
-  
+
     (setq hs-set-up-overlay 'display-code-line-counts)
-  
+
     (add-to-list 'hs-special-modes-alist
                  '(ruby-mode
                    "\\(def\\|do\\|{\\)" "\\(end\\|}\\)" "#"
                    (lambda (arg) (ruby-end-of-block)) nil))
-  
+
     (defadvice outline-flag-region (after display-code-line-counts (from to flag) activate)
       (when flag
         (dolist (ov (overlays-in from to))
@@ -3788,9 +3788,9 @@ Functions to manage site iany.me
               (put-text-property 0 (length display-string) 'face 'collapsed-face display-string)
               (overlay-put ov 'display display-string)
               (overlay-put ov 'evaporate t))))))
-  
+
     (defvar iy-forward-comment-stop-at-outline-header t)
-  
+
     (defun iy-forward-one-comment ()
       (let ((iy-forward-comment-stop-at-outline-header nil))
         ;; stop if at the begining of outline heading
@@ -3803,7 +3803,7 @@ Functions to manage site iany.me
                   nil
                 (goto-char pos)
                 t))))))
-  
+
     (defun iy-backward-one-comment ()
       (let ((iy-forward-comment-stop-at-outline-header nil))
         (when (forward-comment -1)
@@ -3812,7 +3812,7 @@ Functions to manage site iany.me
                 (end-of-line)
                 nil)
             t))))
-  
+
     ;; Fix outline-minor-mode conflicts with fold-dwim
     (defadvice forward-comment (around stop-at-outline-header (count) activate)
       (if (and (or outline-minor-mode (eq major-mode 'outline-mode))
@@ -3825,7 +3825,7 @@ Functions to manage site iany.me
             (setq ad-return-value (zerop count)))
         ad-do-it))
     )
-  
+
 #+END_SRC
 
 ** erlang
@@ -3839,13 +3839,13 @@ Functions to manage site iany.me
             (if (eq system-type 'darwin)
                 "/usr/local/Cellar/erlang"
               "/usr/lib/erlang"))
-  
+
       (local-set-key (kbd "M-s /") 'erlang-man-function)
       (local-set-key (kbd "M-s ?") 'erlang-man-module))
     (add-hook 'erlang-mode-hook 'init--erlang-mode)
     (add-to-list 'auto-mode-alist '("rebar\\.config\\'" . erlang-mode))
     (add-to-list 'auto-mode-alist '("\\.app\\.src\\'" . erlang-mode))
-  
+
     (require-package 'erlang))
 #+END_SRC
 
@@ -3882,7 +3882,7 @@ Functions to manage site iany.me
 #+BEGIN_SRC emacs-lisp
     (define-module sharp-mode
       (require-package 'csharp-mode)
-  
+
       (defun init--csharp-mode ()
         (c-set-style "SharpDevelop")
         (subword-mode +1)
@@ -3910,7 +3910,7 @@ Functions to manage site iany.me
                                                   (catch-clause  after)
                                                   (inline-open after)
                                                   (namespace-open)))))
-  
+
         (ad-disable-advice 'revert-buffer 'around 'csharp-advise-revert-buffer)
         (ad-activate 'revert-buffer)
         (remove-hook 'csharp-mode-hook 'init--csharp-mode-load))
@@ -3924,35 +3924,35 @@ Functions to manage site iany.me
   (define-module confluence
     (concat my-vendor-dir )
     (setq load-path (cons (concat my-vendor-dir "confluence-el") load-path))
-  
+
     (autoload 'confluence-get-page "confluence" nil t)
     (autoload 'confluence-search "confluence" nil t)
     (defalias 'cgp 'confluence-get-page )
     (defalias 'cs 'confluence-search)
-  
+
     (defun init--confluence-common ()
       (longlines-mode +1)
-  
+
       (local-set-key (kbd "C-c C-c") 'confluence-toggle-page-content-type))
-  
+
     (defun init--confluence-mode ()
       (local-set-key "\C-c" confluence-prefix-map)
       (local-set-key "\C-m" 'confluence-newline-and-indent)
       (local-set-key "\M-;" 'confluence-list-indent-dwim))
-  
+
     (add-hook 'confluence-mode-hook 'init--confluence-common)
     (add-hook 'confluence-mode-hook 'init--confluence-mode)
     (add-hook 'confluence-xml-edit-mode-hook 'init--confluence-common))
-  
+
 #+END_SRC
 
 ** jira
 #+BEGIN_SRC emacs-lisp
   (define-module jira
     (require-package 'jira)
-  
+
     (autoload 'jira-mode "jira" nil t)
-  
+
     (defun org-capture-jira-issue ()
       (interactive)
       (unless (equal (face-at-point) 'jira-link-issue-face)
@@ -3969,10 +3969,10 @@ Functions to manage site iany.me
                                               (nth 1 (reverse (split-string (nth 2 (split-string jira-url "/")) "\\.")))
                                               ":"))
                    "/")))))
-  
+
     (defun jira-next-issue ()
       (interactive)
-  
+
       (let (pos)
         (save-excursion
           (forward-line)
@@ -3981,10 +3981,10 @@ Functions to manage site iany.me
           (when (equal (face-at-point) 'jira-link-issue-face)
             (setq pos (point))))
         (when pos (goto-char pos))))
-  
+
     (defun jira-prev-issue ()
       (interactive)
-  
+
       (let (pos)
         (save-excursion
           (if (bolp)
@@ -3995,14 +3995,14 @@ Functions to manage site iany.me
           (when (equal (face-at-point) 'jira-link-issue-face)
             (setq pos (point))))
         (when pos (goto-char pos))))
-  
+
     (defun init--jira-mode ()
       (define-key jira-mode-map "A" 'org-capture-jira-issue)
       (define-key jira-mode-map (kbd "C-c C-n") 'jira-next-issue)
       (define-key jira-mode-map (kbd "C-c C-p") 'jira-prev-issue))
-  
+
     (add-hook 'jira-mode-hook 'init--jira-mode)
-  
+
     )
 #+END_SRC
 ** puppet
@@ -4018,7 +4018,7 @@ Start emacs server.
 
 #+BEGIN_SRC emacs-lisp
   (define-module server
-  
+
     (defcustom server-delete-frame-functions
       '(anything-c-adaptive-save-history
         bookmark-exit-hook-internal
@@ -4036,28 +4036,28 @@ Start emacs server.
       "List of functions that should be called when a OS window is closed"
       :group 'server
       :type '(repeat symbol))
-  
+
     (defun server--last-frontend-frame-p ()
       (= 2 (length (frame-list))))
-  
+
     (defun server--run-delete-frame-functions (frame)
       (when (server--last-frontend-frame-p)
         (mapc (lambda (f)
                 (when (fboundp f)
                   (funcall f)))
               server-delete-frame-functions)))
-  
+
     ;; Buggy to run the functions in MacOS X
     (when (daemonp)
       (add-hook 'delete-frame-functions 'server--run-delete-frame-functions))
-  
+
     (define-minor-mode server-edit-minor-mode
       "Allow C-c C-c to run server-edit without change major modes keymap"
       nil ""
       (let ((map (make-sparse-keymap)))
         (define-key map (kbd "C-c C-c") 'server-edit)
         map))
-  
+
     (defun init--server-visit ()
       (when (and
              (buffer-file-name)
@@ -4067,17 +4067,17 @@ Start emacs server.
         (sh-mode)
         (sh-set-shell "zsh"))
       (server-edit-minor-mode +1))
-  
+
     ;; run last to run on the minor mode for any enabled major modes
     (add-hook 'server-visit-hook 'init--server-visit t)
-  
+
     (require-package 'edit-server)
     (custom-set-variables
      '(edit-server-default-major-mode 'markdown-mode)
      '(edit-server-url-major-mode-alist
        '(("wiki\\.groupondev\\.com" . mediawiki-mode)))
      '(edit-server-new-frame nil))
-  
+
     (server-start)
     (edit-server-start))
 #+END_SRC
@@ -4095,7 +4095,7 @@ Start emacs server.
      (basic minimal delete-keys-hacks char-motion
             ido-plus magit case-dwim server backup
             multiple-cursors isearch)
-  
+
      ;; org-group: org modules
      (org org-basic org-files org-capture org-clock org-gtd
           org-agenda org-agenda-splash org-export org-speed org-pomodoro

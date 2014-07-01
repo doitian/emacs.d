@@ -640,6 +640,10 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
           (desktop-change-dir dir))
         (dired dir))))
 
+  (defun projectile+-org ()
+    (interactive)
+    (find-file (concat (projectile-project-root) "project.org")))
+
   (defadvice projectile-regenerate-tags (around call-script activate)
     (let* ((project-root (projectile-project-root))
            (default-directory project-root)
@@ -654,6 +658,7 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   (projectile-global-mode)
   (setq projectile-mode-line-lighter " ")
   (define-key projectile-mode-map (kbd "M-s p a") 'projectile-ag)
+  (define-key projectile-mode-map (kbd "M-s p SPC") 'projectile+-org)
   (define-key projectile-mode-map (kbd "M-s p A") 'projectile-ack)
   (define-key projectile-mode-map (kbd "M-s p x") 'projectile-test-project)
   (define-key projectile-mode-map (kbd "M-s p p") 'projectile-switch-project)
@@ -841,7 +846,7 @@ Install latest org by running `make org`. Othewise system bundled version is use
       ;; remove system org
       (setq load-path
             (--remove (string= "org" (file-name-nondirectory it)) load-path))
-      (setq load-path 
+      (setq load-path
             (cons (concat org-load-path "/lisp")
                   (cons (concat org-load-path "/contrib/lisp")
                         load-path)))
@@ -2739,7 +2744,7 @@ This functions should be added to the hooks of major modes for programming."
           try-complete-lisp-symbol
           try-expand-list))
 
-  (global-set-key (kbd "M-/") 'hippie-expand))  
+  (global-set-key (kbd "M-/") 'hippie-expand))
 ```
 
 <a name="sec-7-58"></a>
@@ -3123,10 +3128,6 @@ css, sass, scss, stylus
     (define-key paredit-mode-map (kbd "M-)") 'paredit-wrap-round-from-behind)
     (define-key paredit-mode-map (kbd "M-s") nil)
     (define-key paredit-mode-map (kbd "M-S") nil)
-    (define-key paredit-mode-map [C-left] nil)
-    (define-key paredit-mode-map [C-right] nil)
-    (define-key paredit-mode-map [C-up] nil)
-    (define-key paredit-mode-map [C-down] nil)
     (define-key paredit-mode-map (kbd "M-N") 'paredit-split-sexp)
     (remove-hook 'paredit-mode-hook 'init--paredit-load))
 
@@ -3664,10 +3665,10 @@ css, sass, scss, stylus
 (define-module win-move-resize
   (require-module windows-commands)
   (require-package 'buffer-move)
-  (global-set-key [C-up] 'buf-move-up)
-  (global-set-key [C-down] 'buf-move-down)
-  (global-set-key [C-left] 'buf-move-left)
-  (global-set-key [C-right] 'buf-move-right)
+  (global-set-key [s-up] 'buf-move-up)
+  (global-set-key [s-down] 'buf-move-down)
+  (global-set-key [s-left] 'buf-move-left)
+  (global-set-key [s-right] 'buf-move-right)
 
   (windmove-default-keybindings 'meta)
 

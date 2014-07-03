@@ -64,7 +64,7 @@ finish () {
       kill "$MPLAYER"
     fi
     if [ -n "$SOUND" ]; then
-      mplayer ~/Dropbox/resources/audio/ring.mp3 &> /dev/null &
+      mplayer ~/Dropbox/Documents/Sounds/ring.mp3 &> /dev/null &
     fi
   fi
   exit 0
@@ -73,7 +73,7 @@ finish () {
 [ -z "$DEBUG" ] && exec > >(dzen2 -x -201 -y 1 -fn "WenQuanYi Micro Hei-20" -w 200 -h 30 -fg "$FG" -bg "$BG")
 
 if [ -n "$SOUND" ]; then
-  mplayer -loop 0 ~/Dropbox/resources/audio/dita.mp3 &> /dev/null &
+  mplayer -loop 0 ~/Dropbox/Documents/Sounds/dita.mp3 &> /dev/null &
   MPLAYER=$!
 fi
 

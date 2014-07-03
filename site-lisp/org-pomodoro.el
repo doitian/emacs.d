@@ -96,7 +96,7 @@
   (when (org-clock-is-active)
     (org-clock-out)
     (unless org-pomodoro-is-mac
-      (start-process-shell-command "pomodoro-ring" nil "mplayer ~/Dropbox/resources/audio/ring.mp3")
+      (start-process-shell-command "pomodoro-ring" nil "mplayer ~/Dropbox/Documents/Sounds/ring.mp3")
       (start-process-shell-command "pomodoro-osd" nil "echo Pomodoro Break | dzen2 -p 100 -geometry +0-0 -h 1080 -fn Sans-60 -ta l"))))
 
 (defun org-pomodoro-cancel-timer-safe ()

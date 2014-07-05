@@ -83,9 +83,9 @@ snippets-clean:
 clean:
 	rm -rf init.el site-lisp/my-loaddefs.el $(ELCFILES)
 
-vendor-clean: org-clean git-emacs-clean emacs-rails-clean ensime-clean ess-clean confluence-clean
+vendor-clean: org-clean git-emacs-clean emacs-rails-clean ensime-clean ess-clean confluence-clean distel-clean
 
-vendor: org git-emacs emacs-rails ensime ess confluence
+vendor: org git-emacs emacs-rails ensime ess confluence distel
 
 org: vendor/$(ORG_PKGNAME)/lisp/org-loaddefs.el
 
@@ -133,6 +133,14 @@ git-emacs-clean:
 
 vendor/git-emacs/git-emacs.elc: vendor/git-emacs/git-emacs.el
 	cd vendor/git-emacs && VC_GIT_PATH="$(VC_GIT_PATH)" EMACS=$(EMACS) $(MAKE)
+
+distel: vendor/distel/ebin/distel.beam
+
+distel-clean:
+	rm -rf vendor/distel/elisp/*.elc vendor/distel/ebin
+
+vendor/distel/ebin/distel.beam: vendor/distel/src/distel.erl
+	which erlc &> /dev/null && cd vendor/distel && $(MAKE)
 
 emacs-rails: vendor/emacs-rails/rails.elc
 
@@ -188,8 +196,8 @@ site-lisp-update:
 
 update: site-lisp-update
 
-.PHONY: all doc verify clean vendor vendor-clean org git-emacs emacs-rails
-.PHONY: org-cleanup git-emacs-cleanup emacs-rails-cleanup
+.PHONY: all doc verify clean vendor vendor-clean org git-emacs distel emacs-rails
+.PHONY: org-clean git-emacs-clean distel-clean emacs-rails-clean
 .PHONY: snippets snippets-clean
 .PHONY: elpa site-lisp-update update
 .PHONY: ensime-clean ensime ess ess-clean

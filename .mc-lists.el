@@ -16,6 +16,7 @@
         erlang-electric-comma
         erlang-electric-gt
         erlang-electric-lt
+        erlang-electric-semicolon
         forward-sexp
         forward-symbol
         indent-region

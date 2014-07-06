@@ -3902,7 +3902,8 @@ Functions to manage site iany.me
     (add-to-list 'auto-mode-alist '("\\.applescript$" . applescript-mode))
 
     (require-package 'dash-at-point)
-    (define-key my-keymap "?" 'dash-at-point)
+    (define-key my-keymap "?" 'dash-at-point-with-docset)
+    (define-key my-keymap (kbd "C-/") 'dash-at-point)
 
     (defvar mac--open-dictionary-hist)
     (defun mac--open-dictionary (the-word)
@@ -4135,20 +4136,31 @@ Functions to manage site iany.me
 ```cl
 (define-module erlang
   (defun init--erlang-mode ()
-    (run-hooks 'prog-mode-hook)
+    (run-hooks 'prog-mode-hook))
+
+  (defun init--erlang-load ()
+    (remove-hook 'erlang-mode-hook 'init--erlang-load)
     (setq erlang-indent-level 4)
     (setq erlang-root-dir
           (if (eq system-type 'darwin)
               "/usr/local/Cellar/erlang"
             "/usr/lib/erlang"))
 
-    (local-set-key (kbd "M-s /") 'erlang-man-function)
-    (local-set-key (kbd "M-s ?") 'erlang-man-module))
+    (define-key erlang-mode-map (kbd "M-s / f") 'erlang-man-function)
+    (define-key erlang-mode-map (kbd "M-s / m") 'erlang-man-module)
+
+    (when (locate-file "erl" exec-path)
+      (add-to-list 'load-path (concat my-vendor-dir "distel/elisp"))
+      (require 'distel)
+      (distel-setup)))
+
   (add-hook 'erlang-mode-hook 'init--erlang-mode)
+  (add-hook 'erlang-mode-hook 'init--erlang-load)
   (add-to-list 'auto-mode-alist '("rebar\\.config\\'" . erlang-mode))
   (add-to-list 'auto-mode-alist '("\\.app\\.src\\'" . erlang-mode))
 
-  (require-package 'erlang))
+  (require-package 'erlang)
+  (require-package 'elixir-mode))
 ```
 
 <a name="sec-7-96"></a>

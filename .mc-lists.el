@@ -13,6 +13,7 @@
         c-electric-semi&comma
         coffee-dedent-line-backspace
         delete-horizontal-space
+        erl-openparen
         erlang-electric-comma
         erlang-electric-gt
         erlang-electric-lt

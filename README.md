@@ -2214,6 +2214,10 @@ Misc editing config
 
   (global-set-key (kbd "C-S-k") 'mf-smart-kill-whole-line)
 
+  (define-key my-keymap (kbd "M-j") 'mf-next-line-and-open-it-if-not-empty)
+  (define-key my-keymap (kbd "M-k") 'mf-previous-line-and-open-it-if-not-empty)
+  (global-set-key (kbd "C-M-;") 'mf-append-line-delimter-then-next-line-and-open-it-if-not-empty)
+
   (define-key my-keymap (kbd "q u") 'mf-insert-user)
   (define-key my-keymap (kbd "q t") 'mf-insert-time)
   (define-key my-keymap (kbd "q s") 'mf-insert-timestamp)
@@ -2223,10 +2227,6 @@ Misc editing config
 
   (define-key global-map "\C-j" 'newline)
   (define-key global-map "\C-m" 'newline-and-indent)
-  (global-set-key (kbd "M-<return>") 'mf-next-line-and-open-it-if-not-empty)
-  (global-set-key (kbd "C-M-<return>") 'mf-append-line-delimter-then-next-line-and-open-it-if-not-empty)
-  (global-set-key (kbd "C-M-;") 'mf-append-line-delimter-then-next-line-and-open-it-if-not-empty)
-  (global-set-key (kbd "s-<return>") 'mf-next-line-and-open-it-if-not-empty)
   (global-set-key (kbd "C-x C-o") 'mf-shrink-whitespaces)
   (global-set-key (kbd "C-8") 'pop-tag-mark))
 ```

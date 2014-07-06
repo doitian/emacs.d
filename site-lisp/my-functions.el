@@ -1,12 +1,34 @@
 ;;; my-functions.el --- My functions
+;;;
+;;; Commentary:
+;;;
+;;; Misc functions
+;;;
+;;; Code:
 
 ;;;###autoload
 (defun mf-next-line-and-open-it-if-not-empty ()
-  "Go to next line. Open it unless the line is empty"
+  "Go to next line.  Open it unless the line is empty."
   (interactive)
-  (forward-line)
-  (unless (looking-at "[  ]*$")
-    (open-line 1))
+  (end-of-line)
+  (if (eobp)
+      (newline)
+    (forward-line)
+    (unless (looking-at "[  ]*$")
+      (open-line 1)))
+  (indent-according-to-mode))
+
+;;;###autoload
+(defun mf-previous-line-and-open-it-if-not-empty ()
+  "Go to previous line.  Open it unless the line is empty."
+  (interactive)
+  (beginning-of-line)
+  (if (bobp)
+      (open-line 1)
+    (forward-line -1)
+    (unless (looking-at "[  ]*$")
+      (forward-line)
+      (open-line 1)))
   (indent-according-to-mode))
 
 (defvar mf-new-line-delimeter ";")
@@ -24,17 +46,25 @@ Open next line if it is not empty."
 
 ;;;###autoload
 (defun mf-shrink-whitespaces (&optional remove-all)
-  "Remove white spaces around cursor to just one or none.
-If current line does not contain non-white space chars, then remove blank lines to just one.
-If current line contains non-white space chars, then shrink any whitespace char surrounding cursor to just one space.
+  "Remove spaces around cursor to just one or none if repeated or REMOVE-ALL.
+
+If current line does not contain non-white space chars, then
+remove blank lines to just one.
+
+If current line contains non-white space chars, then shrink any
+whitespace char surrounding cursor to just one space.
+
 If current line is a single space, remove that space.
 
-Calling this command 3 times will always result in no whitespaces around cursor."
-  (interactive "p")
+Calling this command 3 times or with REMOVE-ALL will always
+result in no whitespaces around cursor."
+  (interactive "P")
   (if remove-all
       (progn
         (delete-blank-lines)
-        (delete-horizontal-space))
+        (delete-horizontal-space)
+        (when (looking-at "^$")
+          (delete-blank-lines)))
     (let (cursor-point
           line-has-meat-p  ; current line contains non-white space chars
           spaceTabNeighbor-p
@@ -86,7 +116,9 @@ Calling this command 3 times will always result in no whitespaces around cursor.
 ;;http://emacsredux.com/blog/2013/04/09/kill-whole-line/
 ;;;###autoload
 (defun mf-smart-kill-whole-line (&optional arg)
-  "A simple wrapper around `kill-whole-line' that respects indentation."
+  "Kill one or ARG lines.
+
+A simple wrapper around function `kill-whole-line' that respects indentation."
   (interactive "p")
   (kill-whole-line arg)
   (back-to-indentation))
@@ -97,6 +129,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
 (make-variable-buffer-local 'mf-indirect-mode)
 
 (defun mf-indirect-completing-read-mode ()
+  "Prompt to read major mode."
   (intern
    (completing-read
     "Mode: "
@@ -106,15 +139,16 @@ Calling this command 3 times will always result in no whitespaces around cursor.
     nil t)))
 
 (defun mf-indirect-completing-read-name (current-buffer-name mode)
+  "Prompt to read buffer name which is indirect of CURRENT-BUFFER-NAME with MODE."
   (let* ((name (generate-new-buffer-name
                 (format "*indirect %s[ %s ]*"
-                        (buffer-name) (replace-regexp-in-string "-mode$" "" (symbol-name mode)))))
+                        current-buffer-name (replace-regexp-in-string "-mode$" "" (symbol-name mode)))))
          (result (read-from-minibuffer (format "Buffer name (%s): " name))))
     (if (zerop (length result)) name result)))
 
 ;;;###autoload
 (defun mf-indirect-region (start end mode name)
-  "Edit the current region in another buffer."
+  "Edit the region in START and END using major mode MODE and name NAME."
   (interactive (let* ((mode (or (and (not current-prefix-arg) mf-indirect-mode)
                                 (mf-indirect-completing-read-mode)))
                       (name (mf-indirect-completing-read-name
@@ -130,6 +164,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
 
 ;;;###autoload
 (defun mf-indirect-buffer (mode name)
+  "Edit current buffer using major mode MODE and buffer name NAME."
   (interactive (let* ((mode (or (and (not current-prefix-arg) major-mode)
                                 (mf-indirect-completing-read-mode)))
                       (name (mf-indirect-completing-read-name (buffer-name) mode)))
@@ -139,6 +174,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
 
 ;;;###autoload
 (defun mf-indirect-region-or-buffer ()
+  "Edit current buffer or region in indirect buffer."
   (interactive)
   (call-interactively
    (if (region-active-p)
@@ -147,6 +183,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
 
 ;;;###autoload
 (defun mf-switch-to-previous-buffer ()
+  "Toggle betwee current and previous buffer."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) t)))
 
@@ -175,7 +212,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
 
 ;;;###autoload
 (defun mf-xsteve-save-current-directory ()
-  "Save the current directory to the file ~/.emacs.d/data/pwd"
+  "Save the current directory to the file ~/.emacs.d/data/pwd ."
   (interactive)
   (let ((dir default-directory))
     (with-current-buffer (find-file-noselect "~/.emacs.d/data/pwd")
@@ -186,6 +223,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
 
 ;;;###autoload
 (defun mf-find-alternative-file-with-sudo ()
+  "Open current file with sudo."
   (interactive)
   (when buffer-file-name
     (find-alternate-file
@@ -194,26 +232,31 @@ Calling this command 3 times will always result in no whitespaces around cursor.
 
 ;;;###autoload
 (defun mf-insert-user ()
+  "Insert user full name."
   (interactive)
   (insert (user-full-name)))
 
 ;;;###autoload
 (defun mf-insert-time ()
+  "Insert date time."
   (interactive)
   (insert (format-time-string "%Y-%m-%d %H:%M:%S")))
 
 ;;;###autoload
 (defun mf-insert-timestamp ()
+  "Insert timestamp."
   (interactive)
   (insert (format-time-string "%s")))
 
 ;;;###autoload
 (defun mf-insert-date ()
+  "Insert date."
   (interactive)
   (insert (format-time-string "%Y-%m-%d")))
 
 ;;;###autoload
 (defun mf-insert-file-name ()
+  "Insert file name."
   (interactive)
   (insert (file-name-nondirectory
            (buffer-file-name
@@ -223,6 +266,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
 
 ;; http://curiousprogrammer.wordpress.com/2009/05/14/inserting-buffer-filename/
 (defun mf-jared/get-files-and-buffers ()
+  "Get a list with both file and buffer."
   (let ((res '()))
     (dolist (buffer (buffer-list) res)
       (let ((buffername (buffer-name buffer))
@@ -234,6 +278,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
 
 ;;;###autoload
 (defun mf-jared/insert-file-or-buffer-name (&optional initial)
+  "Insert file or buffer name.  Set INITIAL to default search string."
   (interactive)
   (let ((name (ido-completing-read "File/Buffer Name: "
                                    (mf-jared/get-files-and-buffers)
@@ -243,6 +288,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
 
 ;;;###autoload
 (defun mf-kill-buffer-and-window ()
+  "Kill buffer and close the window."
   (interactive)
   (if (< (length (window-list)) 2)
       (kill-buffer)
@@ -250,6 +296,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
 
 ;;;###autoload
 (defun mf-join-following-line (n)
+  "Join following N lines."
   (interactive "p")
   (if (>= n 0)
       (while (> n 0)
@@ -262,11 +309,13 @@ Calling this command 3 times will always result in no whitespaces around cursor.
 
 ;;;###autoload
 (defun mf-join-previous-line (n)
+  "Join previous N lines."
   (interactive "p")
   (mf-join-following-line (- n)))
 
 ;;;###autoload
 (defun mf-copy-as-rtf (lexer)
+  "Copy syntax highlighted code using LEXER as RTF."
   (interactive "Mlexer: ")
   (let ((start (point-min))
         (end (point-max)))
@@ -278,7 +327,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
 
 ;;;###autoload
 (defun mf-devon (&optional file)
-  "Copy current file to DevonThink."
+  "Copy current file FILE to DevonThink."
   (interactive (list
                 (let ((ido-hacks-completing-read-recursive t)
                       (default-file
@@ -297,6 +346,7 @@ Calling this command 3 times will always result in no whitespaces around cursor.
 
 ;;;###autoload
 (defun mf-replace-camel-and-underscore (from to)
+  "Replace FROM with TO with variants of camel, underscore and plural."
   (interactive "sSearch: \nsReplace: ")
   (let* ((from_s (pluralize-string from))
          (from_c (replace-regexp-in-string "_" "" (capitalize from)))

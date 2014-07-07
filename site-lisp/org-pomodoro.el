@@ -6,8 +6,8 @@
 (defvar org-pomodoro-command (locate-file "pomodoro" exec-path))
 
 (defvar org-pomodoro-is-mac (eq system-type 'darwin))
-(defvar org-pomodoro-start-scpt (expand-file-name "~/Library/Scripts/Vitamin-R 2/Start.scpt"))
-(defvar org-pomodoro-stop-scpt (expand-file-name "~/Library/Scripts/Vitamin-R 2/Stop.scpt"))
+(defvar org-pomodoro-start-scpt (expand-file-name "~/Library/Scripts/Applications/Vitamin-R 2/Start.scpt"))
+(defvar org-pomodoro-stop-scpt (expand-file-name "~/Library/Scripts/Applications/Vitamin-R 2/Stop.scpt"))
 
 ;;;###autoload
 (defun org-pomodoro-on-org-load ()

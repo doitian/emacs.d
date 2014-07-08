@@ -4152,7 +4152,8 @@ Functions to manage site iany.me
     (when (locate-file "erl" exec-path)
       (add-to-list 'load-path (concat my-vendor-dir "distel/elisp"))
       (require 'distel)
-      (distel-setup)))
+      (distel-setup)
+      (distel-erlang-mode-hook)))
 
   (add-hook 'erlang-mode-hook 'init--erlang-mode)
   (add-hook 'erlang-mode-hook 'init--erlang-load)

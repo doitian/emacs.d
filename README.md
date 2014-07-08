@@ -4251,7 +4251,6 @@ Functions to manage site iany.me
   (defalias 'cs 'confluence-search)
 
   (defun init--confluence-common ()
-    (longlines-mode +1)
 
     (local-set-key (kbd "C-c C-c") 'confluence-toggle-page-content-type))
 

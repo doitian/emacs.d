@@ -1950,7 +1950,6 @@ If there is none yet, so that it is run asynchronously."
   (require-module projectile)
   (require-package 'helm)
   (require-package 'helm-projectile)
-  (require-package 'imenu-anywhere)
   (require 'helm-config)
 
   (defvar helm-source-alternative-files nil)
@@ -2019,13 +2018,12 @@ If there is none yet, so that it is run asynchronously."
   (define-key helm-command-map (kbd "r") 'helm-register)
   (define-key helm-command-map (kbd "R") 'helm-regexp)
   (define-key helm-command-map (kbd "b") 'helm-c-pp-bookmarks)
-  (define-key helm-command-map (kbd "I") 'helm-imenu-anywhere)
   (define-key helm-command-map (kbd "<SPC>") 'helm-all-mark-rings)
 
   (global-set-key (kbd "M-X") 'my-helm-go)
   (define-key my-keymap (kbd "M-s") 'my-helm-go)
   (define-key my-keymap (kbd "s") 'helm-command-prefix)
-  (define-key my-keymap (kbd "M-.") 'imenu-anywhere)
+  (define-key my-keymap (kbd "M-.") 'imenu)
 
   ;; 1. Quote the string
   ;; 2. If we didn't input any typically regexp characters, convert spaces to .*,
@@ -3321,11 +3319,15 @@ css, sass, scss, stylus
   (put 'erlang :flycheck-command
        '("erlc" (eval
                  (if (projectile-project-p)
-                     (cons "-pa"
-                           (cons (concat (projectile-project-root) "ebin")
-                                 (apply 'append (mapcar
-                                                 (lambda (dir) (list "-pa" dir))
-                                                 (file-expand-wildcards (concat (projectile-project-root) "deps/*/ebin"))))))
+                     (cons
+                      "-I"
+                      (cons
+                       (concat (projectile-project-root) "include")
+                       (cons "-pa"
+                             (cons (concat (projectile-project-root) "ebin")
+                                   (apply 'append (mapcar
+                                                   (lambda (dir) (list "-pa" dir))
+                                                   (file-expand-wildcards (concat (projectile-project-root) "deps/*/ebin"))))))))
                         nil))
          "-o" temporary-directory "-Wall" source))
   (global-flycheck-mode)
@@ -4140,6 +4142,7 @@ Functions to manage site iany.me
 
   (defun init--erlang-load ()
     (remove-hook 'erlang-mode-hook 'init--erlang-load)
+    (setq inferior-erlang-machine-options '("-sname" "emacs"))
     (setq erlang-indent-level 4)
     (setq erlang-root-dir
           (if (eq system-type 'darwin)

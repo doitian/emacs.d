@@ -64,7 +64,9 @@ Otherwise do case transformation on following words.
     (setq seq-store-count arg)
     (case-dwim--funcall case-word arg))
    ((region-active-p)
-    (case-dwim--call-interactively case-region))
+    ;; (case-dwim--call-interactively case-region)
+    (call-interactively case-region)
+    )
    (t (case-dwim--funcall case-word
                           (case-dwim--seq-count arg)))))
 

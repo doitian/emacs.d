@@ -11,6 +11,8 @@
         c-electric-delete-forward
         c-electric-paren
         c-electric-semi&comma
+        case-dwim-capitalize
+        case-dwim-downcase
         coffee-dedent-line-backspace
         comment-dwim
         delete-horizontal-space

@@ -154,7 +154,7 @@ vendor/emacs-rails/rails.elc: vendor/emacs-rails/rails.el
 	$(BATCH) $(EMACS_RAILS_LIBS) -f batch-byte-compile \
 		$(filter-out $(EMACS_RAILS_IGNORE),$(wildcard vendor/emacs-rails/*.el))
 
-vendor/git-emacs/git-emacs.el vendor/emacs-rails/rails.el:
+vendor/git-emacs/git-emacs.el vendor/distel/src/distel.erl:
 	git submodule init
 	git submodule update
 

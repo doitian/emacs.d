@@ -12,6 +12,7 @@
         c-electric-paren
         c-electric-semi&comma
         coffee-dedent-line-backspace
+        comment-dwim
         delete-horizontal-space
         erl-openparen
         erlang-electric-comma

@@ -582,7 +582,6 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
      '(magit-repo-dirs-depth 1))
 
     (require-package 'magit)
-    (global-magit-wip-save-mode +1)
 
     (defun magit-toggle-whitespace ()
       (interactive)
@@ -804,9 +803,9 @@ Capture template
           "* TODO %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n%i%n%c")
          ("j" "Journal" plain (file+datetree (concat org-directory "/journal.org"))
           "\n%?\n" :empty-lines 1)
-         ("d" "Dump" plain (file+olp (concat org-directory "/inbox.org") "Quick Notes" "Plain")
+         ("d" "Dump" plain (file+headline (concat org-directory "/notes.org") "Plain")
           "\n--%U--------------------------------------------------\n%?\n" :empty-lines 1)
-         ("l" "List" item (file+olp (concat org-directory "/inbox.org") "Quick Notes" "List") "%?\n" :empty-lines 1)
+         ("l" "List" item (file+headline (concat org-directory "/notes.org")  "List") "%?\n" :empty-lines 0)
          ("s" "SOMEDAY" entry (file+headline (concat org-directory "/inbox.org") "Someday")
           "* SOMEDAY %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n%i")
          ("x" "Clipboard" entry (file+headline (concat org-directory "/inbox.org") "Notes")
@@ -1807,6 +1806,7 @@ Auto revert, and helper functions to revert without confirmation.
     (define-key helm-command-map (kbd "r") 'helm-register)
     (define-key helm-command-map (kbd "R") 'helm-regexp)
     (define-key helm-command-map (kbd "b") 'helm-c-pp-bookmarks)
+    (define-key helm-command-map (kbd "2") 'helm-recentf)
     (define-key helm-command-map (kbd "<SPC>") 'helm-all-mark-rings)
 
     (global-set-key (kbd "M-X") 'my-helm-go)
@@ -2042,9 +2042,9 @@ Misc editing config
 #+BEGIN_SRC emacs-lisp
   (define-module recentf
     (custom-set-variables
-     '(recentf-arrange-rules (quote (("Elisp files (%d)" ".\\.el\\'") ("Java files (%d)" ".\\.java\\'") ("C/C++ files (%d)" ".\\.c\\(pp\\)?\\'" ".\\.h\\(pp\\)?\\'") ("Org files (%d)" ".\\.org\\'"))))
+     '(recentf-arrange-rules (quote ()))
      '(recentf-exclude (quote ("semantic\\.cache" "COMMIT_EDITMSG" "git-emacs-tmp.*" "\\.breadcrumb" "\\.ido\\.last" "\\.projects.ede" "/g/org/")))
-     '(recentf-menu-filter (quote recentf-arrange-by-rule))
+     '(recentf-menu-filter (quote recentf-arrange-by-mode))
      '(recentf-max-saved-items 200))
 
     (recentf-mode +1)
@@ -2598,20 +2598,20 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
 #+BEGIN_SRC emacs-lisp
   (define-module ibuffer-mode
     (global-set-key (kbd "C-x C-b") 'ibuffer)
-
+  
     (custom-set-variables
      '(ibuffer-always-show-last-buffer :nomini)
      '(ibuffer-default-shrink-to-minimum-size t)
      '(ibuffer-jump-offer-only-visible-buffers nil)
      '(ibuffer-show-empty-filter-groups nil))
-
+  
     (defun init--ibuffer-load ()
       (define-ibuffer-sorter filename-or-dired
         "Sort the buffers by their pathname."
         (:description "filenames plus dired")
         (string-lessp
          (with-current-buffer (car a)
-
+  
            (or buffer-file-name
                (if (eq major-mode 'dired-mode)
                    (expand-file-name dired-directory))
@@ -2623,20 +2623,19 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
                    (expand-file-name dired-directory))
                ;; so that all non pathnames are at the end
                "~"))))
-
+  
       ;; add another sorting method for ibuffer (allow the grouping of
       ;; filenames and dired buffers
       (define-key ibuffer-mode-map (kbd "s p") 'ibuffer-do-sort-by-filename-or-dired)
-
+  
       (defun ibuffer-filter-by-extname (qualifier)
         (interactive "sFilter by extname: ")
         (ibuffer-filter-by-filename (concat "\\." qualifier "$")))
-
+  
       (define-key ibuffer-mode-map (kbd "/ .") 'ibuffer-filter-by-extname)
-
+  
       (setq ibuffer-saved-filter-groups
             '(("default"
-               ("dired" (mode . dired-mode))
                ("source" (or
                           (mode . c-mode)
                           (mode . c++-mode)
@@ -2644,6 +2643,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
                           (mode . cperl-mode)
                           (mode . perl-mode)
                           (mode . java-mode)
+                          (mode . erlang-mode)
                           (filename . "\\.rb\\'")))
                ("web" (or
                        (filename . "\\.js\\'")
@@ -2662,8 +2662,10 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
                        (mode   . markdown-mode)))
                ("build" (or
                          (mode . cmake-mode)
+                         (mode . yaml-mode)
                          (mode . makefile-mode)
                          (mode . makefile-gmake-mode)
+                         (filename . "rebar\\.config\\'")
                          (filename . "Gemfile\\'")
                          (filename . "Gemfile\\.lock\\'")
                          (filename . "[Rr]akefile\\'")))
@@ -2671,6 +2673,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
                        (name    . "^\\*Calendar\\*$")
                        (name    . "^diary$")
                        (mode    . org-mode)))
+               ("dired" (mode . dired-mode))
                ("system" (or
                           (mode       . help-mode)
                           (mode       . completion-list-mode)
@@ -2678,18 +2681,18 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
                           (name      . "^\\*.*\\*$")
                           (filename . "\.emacs\.d")
                           (mode     . custom-mode))))))
-
+  
       (remove-hook 'ibuffer-mode-hook 'init--ibuffer-load))
-
+  
     (defun init--ibuffer-mode ()
       (ibuffer-switch-to-saved-filter-groups "default"))
-
+  
     (add-hook 'ibuffer-mode-hook 'init--ibuffer-mode)
     ;; ibuffer is a autoloads file, ibufer-load-hook is already ran.  So use
     ;; run-once trick. It must ran before 'init--buffer-mode, so it is added
     ;; after that.
     (add-hook 'ibuffer-mode-hook 'init--ibuffer-load))
-
+  
 #+END_SRC
 ** deft
 

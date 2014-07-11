@@ -755,7 +755,6 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
    '(magit-repo-dirs-depth 1))
 
   (require-package 'magit)
-  (global-magit-wip-save-mode +1)
 
   (defun magit-toggle-whitespace ()
     (interactive)
@@ -981,9 +980,9 @@ Capture template
         "* TODO %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n%i%n%c")
        ("j" "Journal" plain (file+datetree (concat org-directory "/journal.org"))
         "\n%?\n" :empty-lines 1)
-       ("d" "Dump" plain (file+olp (concat org-directory "/inbox.org") "Quick Notes" "Plain")
+       ("d" "Dump" plain (file+headline (concat org-directory "/notes.org") "Plain")
         "\n--%U--------------------------------------------------\n%?\n" :empty-lines 1)
-       ("l" "List" item (file+olp (concat org-directory "/inbox.org") "Quick Notes" "List") "%?\n" :empty-lines 1)
+       ("l" "List" item (file+headline (concat org-directory "/notes.org")  "List") "%?\n" :empty-lines 0)
        ("s" "SOMEDAY" entry (file+headline (concat org-directory "/inbox.org") "Someday")
         "* SOMEDAY %?\n  :PROPERTIES:\n  :CREATED: %U\n  :END:\n  %a\n%i")
        ("x" "Clipboard" entry (file+headline (concat org-directory "/inbox.org") "Notes")
@@ -2018,6 +2017,7 @@ If there is none yet, so that it is run asynchronously."
   (define-key helm-command-map (kbd "r") 'helm-register)
   (define-key helm-command-map (kbd "R") 'helm-regexp)
   (define-key helm-command-map (kbd "b") 'helm-c-pp-bookmarks)
+  (define-key helm-command-map (kbd "2") 'helm-recentf)
   (define-key helm-command-map (kbd "<SPC>") 'helm-all-mark-rings)
 
   (global-set-key (kbd "M-X") 'my-helm-go)
@@ -2257,9 +2257,9 @@ Misc editing config
 ```cl
 (define-module recentf
   (custom-set-variables
-   '(recentf-arrange-rules (quote (("Elisp files (%d)" ".\\.el\\'") ("Java files (%d)" ".\\.java\\'") ("C/C++ files (%d)" ".\\.c\\(pp\\)?\\'" ".\\.h\\(pp\\)?\\'") ("Org files (%d)" ".\\.org\\'"))))
+   '(recentf-arrange-rules (quote ()))
    '(recentf-exclude (quote ("semantic\\.cache" "COMMIT_EDITMSG" "git-emacs-tmp.*" "\\.breadcrumb" "\\.ido\\.last" "\\.projects.ede" "/g/org/")))
-   '(recentf-menu-filter (quote recentf-arrange-by-rule))
+   '(recentf-menu-filter (quote recentf-arrange-by-mode))
    '(recentf-max-saved-items 200))
 
   (recentf-mode +1)
@@ -2885,7 +2885,6 @@ This functions should be added to the hooks of major modes for programming."
 
     (setq ibuffer-saved-filter-groups
           '(("default"
-             ("dired" (mode . dired-mode))
              ("source" (or
                         (mode . c-mode)
                         (mode . c++-mode)
@@ -2893,6 +2892,7 @@ This functions should be added to the hooks of major modes for programming."
                         (mode . cperl-mode)
                         (mode . perl-mode)
                         (mode . java-mode)
+                        (mode . erlang-mode)
                         (filename . "\\.rb\\'")))
              ("web" (or
                      (filename . "\\.js\\'")
@@ -2911,8 +2911,10 @@ This functions should be added to the hooks of major modes for programming."
                      (mode   . markdown-mode)))
              ("build" (or
                        (mode . cmake-mode)
+                       (mode . yaml-mode)
                        (mode . makefile-mode)
                        (mode . makefile-gmake-mode)
+                       (filename . "rebar\\.config\\'")
                        (filename . "Gemfile\\'")
                        (filename . "Gemfile\\.lock\\'")
                        (filename . "[Rr]akefile\\'")))
@@ -2920,6 +2922,7 @@ This functions should be added to the hooks of major modes for programming."
                      (name    . "^\\*Calendar\\*$")
                      (name    . "^diary$")
                      (mode    . org-mode)))
+             ("dired" (mode . dired-mode))
              ("system" (or
                         (mode       . help-mode)
                         (mode       . completion-list-mode)

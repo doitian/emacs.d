@@ -23,6 +23,7 @@
         erlang-electric-semicolon
         forward-sexp
         forward-symbol
+        indent-new-comment-line
         indent-region
         iy-go-to-char--command
         markdown-exdent-or-delete
@@ -61,5 +62,6 @@
 
 (setq mc/cmds-to-run-once
       '(
+        erl-find-source-unwind
         rectangle-number-lines
         ))

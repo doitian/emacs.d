@@ -1373,31 +1373,17 @@ Autoload babel languages.
 <a name="sec-7-25"></a>
 ## case-dwim
 
-Ease inserting dash `-` and undersocre `_`.
-
 To downcase, upcase, capitalize words backword, start with nagative
 prefix, and then repeat. For example, upcase 3 words before point:
 <kbd>M&#x2013; M-u M-u M-u</kbd>
-
-If the last command is case transformation (if region is action or
-using <kbd>M-U</kbd>, <kbd>M-L</kbd>, <kbd>M-C</kbd>), dash or
-underscore will not be inserted, and these commands will do case
-transformations.
 
 These commands are also `multiple-cursors` compatible.
 
 ```cl
 (define-module case-dwim
-  (global-set-key (kbd "M-l") 'case-dwim-dash)
-  (global-set-key (kbd "M-u") 'case-dwim-underscore)
-  (global-set-key (kbd "M-L") 'case-dwim-downcase)
-  (global-set-key (kbd "M-U") 'case-dwim-upcase)
+  (global-set-key (kbd "M-l") 'case-dwim-downcase)
+  (global-set-key (kbd "M-u") 'case-dwim-upcase)
   (global-set-key (kbd "M-c") 'case-dwim-capitalize)
-  (global-set-key (kbd "M-C") 'case-dwim-capitalize)
-
-  (define-key isearch-mode-map (kbd "M-l") 'case-dwim-isearch-dash)
-  (define-key isearch-mode-map (kbd "M-u") 'case-dwim-isearch-underscore)
-
 
   (defadvice helm-unmark-all (around helm-unmark-all-or-underscore () activate)
     (if (zerop (with-helm-window (length helm-marked-candidates)))

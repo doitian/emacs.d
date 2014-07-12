@@ -13,6 +13,7 @@
         c-electric-semi&comma
         case-dwim-capitalize
         case-dwim-downcase
+        case-dwim-upcase
         coffee-dedent-line-backspace
         comment-dwim
         delete-horizontal-space
@@ -21,11 +22,13 @@
         erlang-electric-gt
         erlang-electric-lt
         erlang-electric-semicolon
+        eval-last-sexp
         forward-sexp
         forward-symbol
         indent-new-comment-line
         indent-region
         iy-go-to-char--command
+        iy-go-up-to-char
         markdown-exdent-or-delete
         mf-shrink-whitespaces
         org-beginning-of-line

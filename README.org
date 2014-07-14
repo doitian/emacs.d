@@ -477,7 +477,9 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
   
     (defun projectile+-org ()
       (interactive)
-      (find-file (concat (projectile-project-root) "project.org")))
+      (let ((source (concat my-dropbox-dir "Documents/ProjectNotes/" (projectile-project-name) ".org")))
+        (make-symbolic-link source (concat (projectile-project-root) "project.org") t)
+        (find-file source)))
   
     (defadvice projectile-regenerate-tags (around call-script activate)
       (let* ((project-root (projectile-project-root))
@@ -1135,7 +1137,7 @@ Opinioned GTD config based on org
      '(appt-display-format (quote window))
      '(appt-message-warning-time 10)
      '(calendar-week-start-day 1)
-     '(diary-file (concat my-dropbox-dir "diary"))))
+     '(diary-file (concat my-dropbox-dir "Documents/diary"))))
 #+END_SRC
 
 ** org-babel
@@ -3056,6 +3058,7 @@ css, sass, scss, stylus
                                                      (file-expand-wildcards (concat (projectile-project-root) "deps/*/ebin"))))))))
                           nil))
            "-o" temporary-directory "-Wall" source))
+    (put 'erlang :flycheck-predicate '(lambda () (and (buffer-file-name) (string-match-p "\\.erl\\'" (buffer-file-name)))))
     (global-flycheck-mode)
     (setq flycheck-mode-line-lighter " fC")
   
@@ -4016,6 +4019,13 @@ Functions to manage site iany.me
     (require-package 'puppet-mode))
 #+END_SRC
 
+** fasd
+#+BEGIN_SRC emacs-lisp
+  (define-module fasd
+    (require-package 'fasd)
+    (define-key my-keymap (kbd "f") 'fasd-find-file)
+    (global-fasd-mode 1))
+#+END_SRC
 ** server
 
 Start emacs server.
@@ -4085,6 +4095,7 @@ Start emacs server.
     (server-start)
     (edit-server-start))
 #+END_SRC
+
 
 * Module Groups
 

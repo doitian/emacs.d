@@ -129,7 +129,8 @@
 <li><a href="#sec-7-100">7.100. confluence</a></li>
 <li><a href="#sec-7-101">7.101. jira</a></li>
 <li><a href="#sec-7-102">7.102. puppet</a></li>
-<li><a href="#sec-7-103">7.103. server</a></li>
+<li><a href="#sec-7-103">7.103. fasd</a></li>
+<li><a href="#sec-7-104">7.104. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -642,7 +643,9 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
 
   (defun projectile+-org ()
     (interactive)
-    (find-file (concat (projectile-project-root) "project.org")))
+    (let ((source (concat my-dropbox-dir "Documents/ProjectNotes/" (projectile-project-name) ".org")))
+      (make-symbolic-link source (concat (projectile-project-root) "project.org") t)
+      (find-file source)))
 
   (defadvice projectile-regenerate-tags (around call-script activate)
     (let* ((project-root (projectile-project-root))
@@ -1320,7 +1323,7 @@ this with to-do items than with projects or headings."
    '(appt-display-format (quote window))
    '(appt-message-warning-time 10)
    '(calendar-week-start-day 1)
-   '(diary-file (concat my-dropbox-dir "diary"))))
+   '(diary-file (concat my-dropbox-dir "Documents/diary"))))
 ```
 
 <a name="sec-7-23"></a>
@@ -3319,6 +3322,7 @@ css, sass, scss, stylus
                                                    (file-expand-wildcards (concat (projectile-project-root) "deps/*/ebin"))))))))
                         nil))
          "-o" temporary-directory "-Wall" source))
+  (put 'erlang :flycheck-predicate '(lambda () (and (buffer-file-name) (string-match-p "\\.erl\\'" (buffer-file-name)))))
   (global-flycheck-mode)
   (setq flycheck-mode-line-lighter " fC")
 
@@ -4329,6 +4333,16 @@ Functions to manage site iany.me
 ```
 
 <a name="sec-7-103"></a>
+## fasd
+
+```cl
+(define-module fasd
+  (require-package 'fasd)
+  (define-key my-keymap (kbd "f") 'fasd-find-file)
+  (global-fasd-mode 1))
+```
+
+<a name="sec-7-104"></a>
 ## server
 
 Start emacs server.

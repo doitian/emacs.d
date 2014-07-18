@@ -516,12 +516,14 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
   (define-module ido
     (ido-mode +1)
     (ido-load-history)
-
+  
     (define-key ido-file-completion-map [(meta ?l)] nil)
     (setq completion-ignored-extensions (cons ".meta" completion-ignored-extensions))
     (custom-set-variables
      '(ido-save-directory-list-file
-       (expand-file-name ".ido.last" user-emacs-directory))))
+       (expand-file-name ".ido.last" user-emacs-directory))
+     '(ido-default-file-method 'selected-window)
+     '(ido-default-buffer-method 'selected-window)))
 #+END_SRC
 ** ido-plus
 #+BEGIN_SRC emacs-lisp
@@ -2635,6 +2637,7 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
                           (mode . perl-mode)
                           (mode . java-mode)
                           (mode . erlang-mode)
+                          (mode . csharp-mode)
                           (filename . "\\.rb\\'")))
                ("web" (or
                        (filename . "\\.js\\'")

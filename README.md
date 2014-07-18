@@ -690,7 +690,9 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   (setq completion-ignored-extensions (cons ".meta" completion-ignored-extensions))
   (custom-set-variables
    '(ido-save-directory-list-file
-     (expand-file-name ".ido.last" user-emacs-directory))))
+     (expand-file-name ".ido.last" user-emacs-directory))
+   '(ido-default-file-method 'selected-window)
+   '(ido-default-buffer-method 'selected-window)))
 ```
 
 <a name="sec-7-10"></a>
@@ -2885,6 +2887,7 @@ This functions should be added to the hooks of major modes for programming."
                         (mode . perl-mode)
                         (mode . java-mode)
                         (mode . erlang-mode)
+                        (mode . csharp-mode)
                         (filename . "\\.rb\\'")))
              ("web" (or
                      (filename . "\\.js\\'")

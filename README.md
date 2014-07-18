@@ -1509,6 +1509,11 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
     (dired-do-shell-command
      "open" nil
      (dired-get-marked-files t current-prefix-arg)))
+  (defun dired-find-file-and-close ()
+    (interactive)
+    (let ((w (selected-window)))
+      (dired-find-file-other-window)
+      (delete-window w)))
 
   (defun init--dired-load ()
     (require 'dired-x)
@@ -1521,6 +1526,8 @@ See commands in `site-lisp/pick-backup.el` to diff or restore a backup.
     (define-key dired-mode-map "E" 'wdired-change-to-wdired-mode)
     (define-key dired-mode-map (kbd "`") 'dired-clean-directory)
     (define-key dired-mode-map (kbd ".") 'dired-omit-mode)
+    (define-key dired-mode-map (kbd "f") 'dired-find-file-and-close)
+    (define-key dired-mode-map (kbd "<return>") 'dired-find-file-and-close)
     (define-key dired-mode-map (kbd "M-<return>") 'dired-open))
   (defun init--dired-mode ()
     (dired-omit-mode +1))

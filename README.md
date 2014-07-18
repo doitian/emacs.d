@@ -643,9 +643,12 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
 
   (defun projectile+-org ()
     (interactive)
-    (let ((source (concat my-dropbox-dir "Documents/ProjectNotes/" (projectile-project-name) ".org")))
-      (make-symbolic-link source (concat (projectile-project-root) "project.org") t)
-      (find-file source)))
+    (let ((source (concat my-dropbox-dir "Documents/ProjectNotes/" (projectile-project-name) ".org"))
+          (link (concat (projectile-project-root) "project.org")))
+      (unless (file-exists-p source)
+        (with-temp-file source (insert "")))
+      (make-symbolic-link source link t)
+      (find-file link)))
 
   (defadvice projectile-regenerate-tags (around call-script activate)
     (let* ((project-root (projectile-project-root))
@@ -3921,9 +3924,12 @@ Functions to manage site iany.me
           (ns-copy-including-secondary)
         ad-do-it))
     (defadvice scroll-down-command (around ns-paste (arg) activate)
-      (if (< (prefix-numeric-value arg) 0)
-          (yank)
-        ad-do-it))
+      (if (region-active-p)
+          (progn (delete-region (point) (mark))
+                 (yank))
+        (if (< (prefix-numeric-value arg) 0)
+            (yank)
+          ad-do-it)))
 
     ;; for DEVONThink
     (add-to-list 'auto-mode-alist '("\\.scala\\.txt\\'" . scala-mode))

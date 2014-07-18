@@ -477,9 +477,12 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
   
     (defun projectile+-org ()
       (interactive)
-      (let ((source (concat my-dropbox-dir "Documents/ProjectNotes/" (projectile-project-name) ".org")))
-        (make-symbolic-link source (concat (projectile-project-root) "project.org") t)
-        (find-file source)))
+      (let ((source (concat my-dropbox-dir "Documents/ProjectNotes/" (projectile-project-name) ".org"))
+            (link (concat (projectile-project-root) "project.org")))
+        (unless (file-exists-p source)
+          (with-temp-file source (insert "")))
+        (make-symbolic-link source link t)
+        (find-file link)))
   
     (defadvice projectile-regenerate-tags (around call-script activate)
       (let* ((project-root (projectile-project-root))
@@ -3589,18 +3592,18 @@ Functions to manage site iany.me
                             '(ns-pop-up-frames nil)
                             '(helm-locate-command "mdfind %s %s")
                             '(locate-command "mdfind"))
-
+  
       (defalias 'mdfind 'locate)
-
+  
       (define-key key-translation-map (kbd "H-<tab>") (kbd "M-TAB"))
-
+  
       (require-package 'applescript-mode)
       (add-to-list 'auto-mode-alist '("\\.applescript$" . applescript-mode))
-
+  
       (require-package 'dash-at-point)
       (define-key my-keymap "?" 'dash-at-point-with-docset)
       (define-key my-keymap (kbd "C-/") 'dash-at-point)
-
+  
       (defvar mac--open-dictionary-hist)
       (defun mac--open-dictionary (the-word)
         "Open Dictionary.app for the-word"
@@ -3611,29 +3614,32 @@ Functions to manage site iany.me
                                  nil nil nil 'mac--open-dictionary-hist)))
                         (if (zerop (length w)) wap w))))
         (start-process "dict" nil "open" (concat "dict:///" the-word)))
-
+  
       (global-set-key (kbd "s-SPC") 'mac--open-dictionary)
       (global-set-key (kbd "H-v") 'scroll-down-command)
       (global-set-key (kbd "M-v") 'scroll-down-command)
       (global-set-key (kbd "C-S-v") 'scroll-down-command)
-
+  
       (defadvice case-dwim-capitalize (around ns-copy activate)
         (if (region-active-p)
             (ns-copy-including-secondary)
           ad-do-it))
       (defadvice scroll-down-command (around ns-paste (arg) activate)
-        (if (< (prefix-numeric-value arg) 0)
-            (yank)
-          ad-do-it))
-
+        (if (region-active-p)
+            (progn (delete-region (point) (mark))
+                   (yank))
+          (if (< (prefix-numeric-value arg) 0)
+              (yank)
+            ad-do-it)))
+  
       ;; for DEVONThink
       (add-to-list 'auto-mode-alist '("\\.scala\\.txt\\'" . scala-mode))
       (add-to-list 'auto-mode-alist '("\\.xml\\.txt\\'" . xml-mode))
-
+  
       (if (file-executable-p "/usr/local/bin/gls")
           (setq insert-directory-program "/usr/local/bin/gls")
         (setq dired-use-ls-dired nil))
-
+  
       (defun system-move-file-to-trash--using-rm-trash (filename)
         "Remove file specified by FILENAME using rm-trash"
         (call-process "ruby" nil nil nil
@@ -3645,8 +3651,8 @@ Functions to manage site iany.me
         (defalias
           'system-move-file-to-trash
           'system-move-file-to-trash--using-rm-trash))
-
-
+  
+  
       (require-package 'reveal-in-finder)
       (defun open-in-iterm ()
         (interactive)
@@ -3654,10 +3660,10 @@ Functions to manage site iany.me
                 (dir file)
                 (call-process "open" nil nil nil "-a" "iTerm.app" dir)))
           (call-interactively 'reveal-in-finder)))
-
+  
       (global-set-key (kbd "s-r") 'reveal-in-finder)
       (global-set-key (kbd "s-t") 'open-in-iterm)
-
+  
       ))
 #+END_SRC
 ** cscope

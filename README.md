@@ -105,7 +105,7 @@
 <li><a href="#sec-7-76">7.76. clean-buffer</a></li>
 <li><a href="#sec-7-77">7.77. uniquify-buffer</a></li>
 <li><a href="#sec-7-78">7.78. diminish</a></li>
-<li><a href="#sec-7-79">7.79. dtrt-indent</a></li>
+<li><a href="#sec-7-79">7.79. editorconfig</a></li>
 <li><a href="#sec-7-80">7.80. undo-tree</a></li>
 <li><a href="#sec-7-81">7.81. js-mode</a></li>
 <li><a href="#sec-7-82">7.82. coffee-mode</a></li>
@@ -552,7 +552,8 @@ This is an opinioned config, disable it by adding it to `module-black-list`.
   "Move by char"
 
   (custom-set-variables
-   '(iy-go-to-char-key-backward ?:))
+   '(iy-go-to-char-key-backward ?\§)
+   '(iy-go-to-char-key-forward ?\§))
 
   ;; Save binding M-m for iy-go-to-char
   (defun back-to-indentation-or-beginning ()
@@ -3279,8 +3280,11 @@ css, sass, scss, stylus
 
 ```cl
 (define-module flycheck
+  (custom-set-variables
+   '(flycheck-standard-error-navigation nil))
   (require-package 'flycheck)
   (require 'flycheck)
+
   ;; Include pa for rebar project
   (put 'erlang :flycheck-command
        '("erlc" (eval
@@ -3408,12 +3412,11 @@ css, sass, scss, stylus
 ```
 
 <a name="sec-7-79"></a>
-## dtrt-indent
+## editorconfig
 
 ```cl
-(define-module dtrt-indent
-  (require 'dtrt-indent)
-  (dtrt-indent-mode 1))
+(define-module editorconfig
+  (require-package 'editorconfig))
 ```
 
 <a name="sec-7-80"></a>
@@ -3895,12 +3898,9 @@ Functions to manage site iany.me
           (ns-copy-including-secondary)
         ad-do-it))
     (defadvice scroll-down-command (around ns-paste (arg) activate)
-      (if (region-active-p)
-          (progn (delete-region (point) (mark))
-                 (yank))
-        (if (< (prefix-numeric-value arg) 0)
-            (yank)
-          ad-do-it)))
+      (if (< (prefix-numeric-value arg) 0)
+          (yank)
+        ad-do-it))
 
     ;; for DEVONThink
     (add-to-list 'auto-mode-alist '("\\.scala\\.txt\\'" . scala-mode))

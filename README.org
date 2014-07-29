@@ -388,44 +388,45 @@ This is an opinioned config, disable it by adding it to =module-black-list=.
 #+BEGIN_SRC emacs-lisp
   (define-module char-motion
     "Move by char"
-
+  
     (custom-set-variables
-     '(iy-go-to-char-key-backward ?:))
-
+     '(iy-go-to-char-key-backward ?\§)
+     '(iy-go-to-char-key-forward ?\§))
+  
     ;; Save binding M-m for iy-go-to-char
     (defun back-to-indentation-or-beginning ()
       (interactive)
       (if (= (point) (save-excursion (back-to-indentation) (point)))
           (beginning-of-line)
         (back-to-indentation)))
-
+  
     (require-package 'iy-go-to-char)
     (autoload 'zap-up-to-char "misc" "kill up to but not including char" t)
-
+  
     (defun zap-back-to-char (arg char)
       (interactive "p\ncZap back to char: ")
       (zap-to-char (- arg) char))
-
+  
     (defun zap-back-up-to-char (arg char)
       (interactive "p\ncZap back up to char: ")
       (zap-up-to-char (- arg) char))
-
+  
     (global-set-key (kbd "M-m") 'iy-go-up-to-char)
     (global-set-key (kbd "M-M") 'iy-go-up-to-char-backward)
     (define-key my-keymap (kbd "z") 'iy-go-to-char)
     (define-key my-keymap (kbd "Z") 'iy-go-to-char-backward)
     (define-key my-keymap (kbd ";") 'iy-go-to-or-up-to-continue)
     (define-key my-keymap (kbd ":") 'iy-go-to-or-up-to-continue-backward)
-
+  
     (global-set-key (kbd "C-z") 'zap-up-to-char)
     (global-set-key (kbd "C-S-z") 'zap-back-up-to-char)
     (global-set-key (kbd "C-Z") 'zap-back-up-to-char)
-
+  
     (global-set-key (kbd "M-Z") 'zap-back-up-to-char)
-
+  
     (define-key my-keymap "d" 'zap-up-to-char)
     (define-key my-keymap "D" 'zap-back-up-to-char)
-
+  
     (global-set-key "\C-a" 'back-to-indentation-or-beginning))
 #+END_SRC
 
@@ -3019,8 +3020,11 @@ css, sass, scss, stylus
 
 #+BEGIN_SRC emacs-lisp
   (define-module flycheck
+    (custom-set-variables
+     '(flycheck-standard-error-navigation nil))
     (require-package 'flycheck)
     (require 'flycheck)
+  
     ;; Include pa for rebar project
     (put 'erlang :flycheck-command
          '("erlc" (eval
@@ -3141,11 +3145,10 @@ css, sass, scss, stylus
       (diminish 'auto-fill-function " F"))
 #+END_SRC
 
-** dtrt-indent
+** editorconfig
 #+BEGIN_SRC emacs-lisp
-  (define-module dtrt-indent
-    (require 'dtrt-indent)
-    (dtrt-indent-mode 1))
+  (define-module editorconfig
+    (require-package 'editorconfig))
 #+END_SRC
 ** undo-tree
 
@@ -3600,12 +3603,9 @@ Functions to manage site iany.me
             (ns-copy-including-secondary)
           ad-do-it))
       (defadvice scroll-down-command (around ns-paste (arg) activate)
-        (if (region-active-p)
-            (progn (delete-region (point) (mark))
-                   (yank))
-          (if (< (prefix-numeric-value arg) 0)
-              (yank)
-            ad-do-it)))
+        (if (< (prefix-numeric-value arg) 0)
+            (yank)
+          ad-do-it))
   
       ;; for DEVONThink
       (add-to-list 'auto-mode-alist '("\\.scala\\.txt\\'" . scala-mode))

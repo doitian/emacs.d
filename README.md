@@ -1739,6 +1739,7 @@ add changes interactively using `ediff`.
 (define-module vc
   (require-package 'git-messenger)
   (require-package 'git-gutter+)
+  (require-package 'git-timemachine)
 
   (custom-set-variables
    '(git-state-modeline-decoration (quote git-state-decoration-large-dot))

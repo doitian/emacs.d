@@ -2483,7 +2483,17 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
   (define-module search-files
     (require-package 'ag)
     (require-package 'wgrep-ag)
-
+  
+    (defun agcase (string directory)
+      "Search using ag in a given DIRECTORY for a given search STRING,
+  with STRING defaulting to the symbol under point.
+  
+  If called with a prefix, prompts for flags to pass to ag."
+      (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
+                         (read-directory-name "Directory: ")))
+      (let ((ag-arguments (list "--nogroup" "--column" "--")))
+        (ag/search string directory)))
+  
     (define-key my-keymap (kbd "o") 'occur)
     (define-key my-keymap (kbd "O") 'multi-occur)
     (define-key my-keymap (kbd "C-o") 'multi-occur-in-matching-buffers)

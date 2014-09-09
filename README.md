@@ -1184,7 +1184,8 @@ Opinioned GTD config based on org
            ((todo "DONE|CANCELED"))
            ((org-agenda-todo-ignore-with-date nil)))
           ("M" "Maybe"
-           ((todo "WAITING|LATER")
+           ((todo "WAITING")
+            (todo "LATER")
             (todo "SOMEDAY"))
            ((org-agenda-todo-ignore-with-date nil)))
           ("i" "Inbox" tags "inbox-CONTAINER=\"true\"")
@@ -1194,7 +1195,8 @@ Opinioned GTD config based on org
                         (org-agenda-sorting-strategy
                          (quote ((agenda time-up priority-down tag-up) )))
                         (org-deadline-warning-days 0)))
-            (todo "GOING|PAUSE|TODO"))
+            (todo "GOING|PAUSE|TODO")
+            (todo "WAITING"))
            ((org-agenda-todo-ignore-with-date t)))
 
           ("r" "Review"
@@ -3297,7 +3299,7 @@ css, sass, scss, stylus
   (require 'flycheck)
 
   ;; Include pa for rebar project
-  (put 'erlang :flycheck-command
+  (put 'erlang 'flycheck-command
        '("erlc" (eval
                  (if (projectile-project-p)
                      (cons
@@ -3311,9 +3313,9 @@ css, sass, scss, stylus
                                                    (file-expand-wildcards (concat (projectile-project-root) "deps/*/ebin"))))))))
                         nil))
          "-o" temporary-directory "-Wall" source))
-  (put 'erlang :flycheck-predicate '(lambda () (and (buffer-file-name) (string-match-p "\\.erl\\'" (buffer-file-name)))))
-  (global-flycheck-mode)
+  (put 'erlang 'flycheck-predicate '(lambda () (and (buffer-file-name) (string-match-p "\\.erl\\'" (buffer-file-name)))))
   (setq flycheck-mode-line-lighter " fC")
+  (global-flycheck-mode)
 
   (defun init--disable-emacs-lisp-checkdoc-in-org-src-mode ()
     (make-local-variable 'flycheck-checkers)

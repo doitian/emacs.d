@@ -3067,7 +3067,7 @@ css, sass, scss, stylus
     "Preview FILE in Marked.app"
     (interactive)
     (setq file (or file (buffer-file-name)))
-    (start-process "*marked" nil "open" "-a" "Marked" file))
+    (start-process "*marked" nil "open" "-a" "Marked 2" file))
 
   (defun init--markdown-mode-mac ()
     (local-set-key (kbd "C-c C-c p") 'markdown-preview-in-marked))

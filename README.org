@@ -1052,20 +1052,7 @@ Opinioned GTD config based on org
      '(org-latex-minted-options '(("linenos") ("framesep=2mm")))
      '(org-latex-pdf-process '("xelatex -interaction nonstopmode -shell-escape -output-directory %o %f"
                                "xelatex -interaction nonstopmode -shell-escape -output-directory %o %f"))
-     '(org-export-backends '(md html icalendar latex beamer freemind confluence))
-     '(org-icalendar-use-scheduled '(todo-start event-if-todo))
-     '(org-icalendar-store-UID t)
-     '(org-combined-agenda-icalendar-file (concat my-dropbox-dir "g/ical/org.ics")))
-
-    (defun iy-org-ical-verify (backend)
-      "Select tasks by adding export tag."
-      (when (eq backend 'icalendar)
-        (org-map-entries
-         (lambda ()
-           (let ((tags (org-get-tags)))
-             (if (and (member "@errands" tags) (not (member "noexport" tags)))
-                 (org-set-tags-to (append tags '("export")))
-               (org-set-tags-to (append tags '("noexport")))))))))
+     '(org-export-backends '(md html latex beamer freemind confluence)))
 
     (defvar org-md-fanced-code-block-language-alist nil)
     (setq org-md-fanced-code-block-language-alist
@@ -1076,9 +1063,7 @@ Opinioned GTD config based on org
         (setq ad-return-value
               (concat "```" (or (assoc-default lang org-md-fanced-code-block-language-alist) lang) "\n"
                       (org-remove-indentation (org-element-property :value example-block))
-                      "```\n"))))
-
-    (add-hook 'org-export-before-parsing-hook 'iy-org-ical-verify))
+                      "```\n")))))
 #+END_SRC
 
 ** org-speed
@@ -2674,31 +2659,6 @@ Compile all snippets into =snippets.el= and load it. After change or and any sni
     (add-hook 'ibuffer-mode-hook 'init--ibuffer-load))
   
 #+END_SRC
-** deft
-
-#+BEGIN_SRC emacs-lisp
-  (define-module deft
-    (require-package 'deft)
-    (custom-set-variables
-     '(deft-extension "org")
-     '(deft-directory (concat my-dropbox-dir "g/cards"))
-     '(deft-use-filename-as-title t)
-     '(deft-text-mode 'org-mode))
-
-    (defun init--deft-mode ()
-      (define-key deft-mode-map (kbd "C-c SPC") 'org-drill-deft)
-      (remove-hook 'deft-mode-hook 'init--deft-mode))
-    (add-hook 'deft-mode-hook 'init--deft-mode)
-
-    (defun org-drill-deft ()
-      "Run org-drill in deft-directory"
-      (interactive)
-      (with-current-buffer (find-file-noselect (concat deft-directory "/.timestamp"))
-        (org-drill 'directory)))
-
-    (define-key my-keymap "m" 'deft))
-#+END_SRC
-
 ** mail
 
 #+BEGIN_SRC emacs-lisp
@@ -3053,6 +3013,14 @@ css, sass, scss, stylus
                                                      (file-expand-wildcards (concat (projectile-project-root) "deps/*/ebin"))))))))
                           nil))
            "-o" temporary-directory "-Wall" source))
+    (put 'elixir 'flycheck-command
+         '("elixirc" (eval
+                   (if (projectile-project-p)
+                       (apply 'append (mapcar
+                                       (lambda (dir) (list "-pa" dir))
+                                       (file-expand-wildcards (concat (projectile-project-root) "_build/dev/lib/*/ebin"))))
+                          nil))
+           "-o" temporary-directory "--ignore-module-conflict" source))
     (put 'erlang 'flycheck-predicate '(lambda () (and (buffer-file-name) (string-match-p "\\.erl\\'" (buffer-file-name)))))
     (setq flycheck-mode-line-lighter " fC")
     (global-flycheck-mode)
@@ -3824,6 +3792,9 @@ Functions to manage site iany.me
     (defun init--erlang-mode ()
       (run-hooks 'prog-mode-hook))
   
+    (defun init--elixir-mode ()
+      (ruby-end-mode +1))
+  
     (defun init--erlang-load ()
       (remove-hook 'erlang-mode-hook 'init--erlang-load)
       (setq inferior-erlang-machine-options '("-sname" "emacs"))
@@ -3844,6 +3815,7 @@ Functions to manage site iany.me
   
     (add-hook 'erlang-mode-hook 'init--erlang-mode)
     (add-hook 'erlang-mode-hook 'init--erlang-load)
+    (add-hook 'elixir-mode-hook 'init--elixir-mode)
     (add-to-list 'auto-mode-alist '("rebar\\.config\\'" . erlang-mode))
     (add-to-list 'auto-mode-alist '("\\.app\\.src\\'" . erlang-mode))
   

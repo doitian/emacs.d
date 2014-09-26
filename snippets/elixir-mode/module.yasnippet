@@ -1,0 +1,12 @@
+# name: defmodule X do ... end
+# key: module
+# --
+defmodule ${1:`(let ((fn (capitalize (file-name-nondirectory
+                                 (file-name-sans-extension
+				 (or (buffer-file-name)
+				     (buffer-name (current-buffer))))))))
+           (cond
+             ((string-match "_" fn) (s-upper-camel-case fn))
+              (t fn)))`} do
+  $0
+end

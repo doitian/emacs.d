@@ -87,49 +87,48 @@
 <li><a href="#sec-7-58">7.58. search-files</a></li>
 <li><a href="#sec-7-59">7.59. alternative-files</a></li>
 <li><a href="#sec-7-60">7.60. ibuffer-mode</a></li>
-<li><a href="#sec-7-61">7.61. deft</a></li>
-<li><a href="#sec-7-62">7.62. mail</a></li>
-<li><a href="#sec-7-63">7.63. html-template-modes</a></li>
-<li><a href="#sec-7-64">7.64. css</a></li>
-<li><a href="#sec-7-65">7.65. yaml-mode</a></li>
-<li><a href="#sec-7-66">7.66. rainbow-mode</a></li>
-<li><a href="#sec-7-67">7.67. markdown-mode</a></li>
-<li><a href="#sec-7-68">7.68. lisp-mode</a></li>
-<li><a href="#sec-7-69">7.69. ruby-mode</a></li>
-<li><a href="#sec-7-70">7.70. rails</a></li>
-<li><a href="#sec-7-71">7.71. rspec-mode</a></li>
-<li><a href="#sec-7-72">7.72. mmm-mode</a></li>
-<li><a href="#sec-7-73">7.73. flycheck</a></li>
-<li><a href="#sec-7-74">7.74. tmux-send</a></li>
-<li><a href="#sec-7-75">7.75. speedbar</a></li>
-<li><a href="#sec-7-76">7.76. clean-buffer</a></li>
-<li><a href="#sec-7-77">7.77. uniquify-buffer</a></li>
-<li><a href="#sec-7-78">7.78. diminish</a></li>
-<li><a href="#sec-7-79">7.79. editorconfig</a></li>
-<li><a href="#sec-7-80">7.80. undo-tree</a></li>
-<li><a href="#sec-7-81">7.81. js-mode</a></li>
-<li><a href="#sec-7-82">7.82. coffee-mode</a></li>
-<li><a href="#sec-7-83">7.83. c-mode</a></li>
-<li><a href="#sec-7-84">7.84. win-move-resize</a></li>
-<li><a href="#sec-7-85">7.85. scala-mode</a></li>
-<li><a href="#sec-7-86">7.86. visual-regexp</a></li>
-<li><a href="#sec-7-87">7.87. eclim</a></li>
-<li><a href="#sec-7-88">7.88. ensime</a></li>
-<li><a href="#sec-7-89">7.89. ess</a></li>
-<li><a href="#sec-7-90">7.90. ianyme</a></li>
-<li><a href="#sec-7-91">7.91. mac</a></li>
-<li><a href="#sec-7-92">7.92. cscope</a></li>
-<li><a href="#sec-7-93">7.93. folding</a></li>
-<li><a href="#sec-7-94">7.94. erlang</a></li>
-<li><a href="#sec-7-95">7.95. sgml</a></li>
-<li><a href="#sec-7-96">7.96. sh-mode</a></li>
-<li><a href="#sec-7-97">7.97. haskell-mode</a></li>
-<li><a href="#sec-7-98">7.98. csharp-mode</a></li>
-<li><a href="#sec-7-99">7.99. confluence</a></li>
-<li><a href="#sec-7-100">7.100. jira</a></li>
-<li><a href="#sec-7-101">7.101. puppet</a></li>
-<li><a href="#sec-7-102">7.102. fasd</a></li>
-<li><a href="#sec-7-103">7.103. server</a></li>
+<li><a href="#sec-7-61">7.61. mail</a></li>
+<li><a href="#sec-7-62">7.62. html-template-modes</a></li>
+<li><a href="#sec-7-63">7.63. css</a></li>
+<li><a href="#sec-7-64">7.64. yaml-mode</a></li>
+<li><a href="#sec-7-65">7.65. rainbow-mode</a></li>
+<li><a href="#sec-7-66">7.66. markdown-mode</a></li>
+<li><a href="#sec-7-67">7.67. lisp-mode</a></li>
+<li><a href="#sec-7-68">7.68. ruby-mode</a></li>
+<li><a href="#sec-7-69">7.69. rails</a></li>
+<li><a href="#sec-7-70">7.70. rspec-mode</a></li>
+<li><a href="#sec-7-71">7.71. mmm-mode</a></li>
+<li><a href="#sec-7-72">7.72. flycheck</a></li>
+<li><a href="#sec-7-73">7.73. tmux-send</a></li>
+<li><a href="#sec-7-74">7.74. speedbar</a></li>
+<li><a href="#sec-7-75">7.75. clean-buffer</a></li>
+<li><a href="#sec-7-76">7.76. uniquify-buffer</a></li>
+<li><a href="#sec-7-77">7.77. diminish</a></li>
+<li><a href="#sec-7-78">7.78. editorconfig</a></li>
+<li><a href="#sec-7-79">7.79. undo-tree</a></li>
+<li><a href="#sec-7-80">7.80. js-mode</a></li>
+<li><a href="#sec-7-81">7.81. coffee-mode</a></li>
+<li><a href="#sec-7-82">7.82. c-mode</a></li>
+<li><a href="#sec-7-83">7.83. win-move-resize</a></li>
+<li><a href="#sec-7-84">7.84. scala-mode</a></li>
+<li><a href="#sec-7-85">7.85. visual-regexp</a></li>
+<li><a href="#sec-7-86">7.86. eclim</a></li>
+<li><a href="#sec-7-87">7.87. ensime</a></li>
+<li><a href="#sec-7-88">7.88. ess</a></li>
+<li><a href="#sec-7-89">7.89. ianyme</a></li>
+<li><a href="#sec-7-90">7.90. mac</a></li>
+<li><a href="#sec-7-91">7.91. cscope</a></li>
+<li><a href="#sec-7-92">7.92. folding</a></li>
+<li><a href="#sec-7-93">7.93. erlang</a></li>
+<li><a href="#sec-7-94">7.94. sgml</a></li>
+<li><a href="#sec-7-95">7.95. sh-mode</a></li>
+<li><a href="#sec-7-96">7.96. haskell-mode</a></li>
+<li><a href="#sec-7-97">7.97. csharp-mode</a></li>
+<li><a href="#sec-7-98">7.98. confluence</a></li>
+<li><a href="#sec-7-99">7.99. jira</a></li>
+<li><a href="#sec-7-100">7.100. puppet</a></li>
+<li><a href="#sec-7-101">7.101. fasd</a></li>
+<li><a href="#sec-7-102">7.102. server</a></li>
 </ul>
 </li>
 <li><a href="#sec-8">8. Module Groups</a></li>
@@ -1234,20 +1233,7 @@ Opinioned GTD config based on org
    '(org-latex-minted-options '(("linenos") ("framesep=2mm")))
    '(org-latex-pdf-process '("xelatex -interaction nonstopmode -shell-escape -output-directory %o %f"
                              "xelatex -interaction nonstopmode -shell-escape -output-directory %o %f"))
-   '(org-export-backends '(md html icalendar latex beamer freemind confluence))
-   '(org-icalendar-use-scheduled '(todo-start event-if-todo))
-   '(org-icalendar-store-UID t)
-   '(org-combined-agenda-icalendar-file (concat my-dropbox-dir "g/ical/org.ics")))
-
-  (defun iy-org-ical-verify (backend)
-    "Select tasks by adding export tag."
-    (when (eq backend 'icalendar)
-      (org-map-entries
-       (lambda ()
-         (let ((tags (org-get-tags)))
-           (if (and (member "@errands" tags) (not (member "noexport" tags)))
-               (org-set-tags-to (append tags '("export")))
-             (org-set-tags-to (append tags '("noexport")))))))))
+   '(org-export-backends '(md html latex beamer freemind confluence)))
 
   (defvar org-md-fanced-code-block-language-alist nil)
   (setq org-md-fanced-code-block-language-alist
@@ -1258,9 +1244,7 @@ Opinioned GTD config based on org
       (setq ad-return-value
             (concat "```" (or (assoc-default lang org-md-fanced-code-block-language-alist) lang) "\n"
                     (org-remove-indentation (org-element-property :value example-block))
-                    "```\n"))))
-
-  (add-hook 'org-export-before-parsing-hook 'iy-org-ical-verify))
+                    "```\n")))))
 ```
 
 <a name="sec-7-20"></a>
@@ -2922,32 +2906,6 @@ If called with a prefix, prompts for flags to pass to ag."
 ```
 
 <a name="sec-7-61"></a>
-## deft
-
-```cl
-(define-module deft
-  (require-package 'deft)
-  (custom-set-variables
-   '(deft-extension "org")
-   '(deft-directory (concat my-dropbox-dir "g/cards"))
-   '(deft-use-filename-as-title t)
-   '(deft-text-mode 'org-mode))
-
-  (defun init--deft-mode ()
-    (define-key deft-mode-map (kbd "C-c SPC") 'org-drill-deft)
-    (remove-hook 'deft-mode-hook 'init--deft-mode))
-  (add-hook 'deft-mode-hook 'init--deft-mode)
-
-  (defun org-drill-deft ()
-    "Run org-drill in deft-directory"
-    (interactive)
-    (with-current-buffer (find-file-noselect (concat deft-directory "/.timestamp"))
-      (org-drill 'directory)))
-
-  (define-key my-keymap "m" 'deft))
-```
-
-<a name="sec-7-62"></a>
 ## mail
 
 ```cl
@@ -2978,7 +2936,7 @@ If called with a prefix, prompts for flags to pass to ag."
      '(message-send-mail-function 'message-send-mail-with-mailclient))))
 ```
 
-<a name="sec-7-63"></a>
+<a name="sec-7-62"></a>
 ## html-template-modes
 
 ```cl
@@ -2997,7 +2955,7 @@ If called with a prefix, prompts for flags to pass to ag."
   )
 ```
 
-<a name="sec-7-64"></a>
+<a name="sec-7-63"></a>
 ## css
 
 css, sass, scss, stylus
@@ -3024,7 +2982,7 @@ css, sass, scss, stylus
   (add-hook 'sass-mode-hook 'init--sass-load))
 ```
 
-<a name="sec-7-65"></a>
+<a name="sec-7-64"></a>
 ## yaml-mode
 
 ```cl
@@ -3032,7 +2990,7 @@ css, sass, scss, stylus
   (require-package 'yaml-mode))
 ```
 
-<a name="sec-7-66"></a>
+<a name="sec-7-65"></a>
 ## rainbow-mode
 
 ```cl
@@ -3044,7 +3002,7 @@ css, sass, scss, stylus
   (add-hook 'scss-mode-hook 'rainbow-mode))
 ```
 
-<a name="sec-7-67"></a>
+<a name="sec-7-66"></a>
 ## markdown-mode
 
 ```cl
@@ -3078,7 +3036,7 @@ css, sass, scss, stylus
   (add-hook 'markdown-mode-hook 'auto-fill-mode))
 ```
 
-<a name="sec-7-68"></a>
+<a name="sec-7-67"></a>
 ## lisp-mode
 
 ```cl
@@ -3128,7 +3086,7 @@ css, sass, scss, stylus
   (add-hook 'emacs-lisp-mode-hook 'init--emacs-lisp-load))
 ```
 
-<a name="sec-7-69"></a>
+<a name="sec-7-68"></a>
 ## ruby-mode
 
 ```cl
@@ -3187,7 +3145,7 @@ css, sass, scss, stylus
   (add-hook 'ruby-mode-hook 'init--ruby-mode))
 ```
 
-<a name="sec-7-70"></a>
+<a name="sec-7-69"></a>
 ## rails
 
 ```cl
@@ -3200,7 +3158,7 @@ css, sass, scss, stylus
   (add-hook 'projectile-mode-hook 'projectile-rails-on))
 ```
 
-<a name="sec-7-71"></a>
+<a name="sec-7-70"></a>
 ## rspec-mode
 
 ```cl
@@ -3226,7 +3184,7 @@ css, sass, scss, stylus
    '(rspec-key-command-prefix (kbd "M-s v"))))
 ```
 
-<a name="sec-7-72"></a>
+<a name="sec-7-71"></a>
 ## mmm-mode
 
 ```cl
@@ -3288,7 +3246,7 @@ css, sass, scss, stylus
   (add-to-list 'auto-mode-alist '("\\.jst\\.ejs\\'"  . html-erb-mode)))
 ```
 
-<a name="sec-7-73"></a>
+<a name="sec-7-72"></a>
 ## flycheck
 
 ```cl
@@ -3313,6 +3271,14 @@ css, sass, scss, stylus
                                                    (file-expand-wildcards (concat (projectile-project-root) "deps/*/ebin"))))))))
                         nil))
          "-o" temporary-directory "-Wall" source))
+  (put 'elixir 'flycheck-command
+       '("elixirc" (eval
+                 (if (projectile-project-p)
+                     (apply 'append (mapcar
+                                     (lambda (dir) (list "-pa" dir))
+                                     (file-expand-wildcards (concat (projectile-project-root) "_build/dev/lib/*/ebin"))))
+                        nil))
+         "-o" temporary-directory "--ignore-module-conflict" source))
   (put 'erlang 'flycheck-predicate '(lambda () (and (buffer-file-name) (string-match-p "\\.erl\\'" (buffer-file-name)))))
   (setq flycheck-mode-line-lighter " fC")
   (global-flycheck-mode)
@@ -3330,7 +3296,7 @@ css, sass, scss, stylus
   (global-set-key (kbd "M-~") 'flycheck-previous-error))
 ```
 
-<a name="sec-7-74"></a>
+<a name="sec-7-73"></a>
 ## tmux-send
 
 ```cl
@@ -3344,7 +3310,7 @@ css, sass, scss, stylus
   (global-set-key (kbd "C-<f6>") 'tmux-select))
 ```
 
-<a name="sec-7-75"></a>
+<a name="sec-7-74"></a>
 ## speedbar
 
 ```cl
@@ -3365,7 +3331,7 @@ css, sass, scss, stylus
                                  (left . 0)))))
 ```
 
-<a name="sec-7-76"></a>
+<a name="sec-7-75"></a>
 ## clean-buffer
 
 ```cl
@@ -3377,7 +3343,7 @@ css, sass, scss, stylus
    '(midnight-mode t nil (midnight))))
 ```
 
-<a name="sec-7-77"></a>
+<a name="sec-7-76"></a>
 ## uniquify-buffer
 
 ```cl
@@ -3387,7 +3353,7 @@ css, sass, scss, stylus
    '(uniquify-strip-common-suffix nil)))
 ```
 
-<a name="sec-7-78"></a>
+<a name="sec-7-77"></a>
 ## diminish
 
 ```cl
@@ -3424,7 +3390,7 @@ css, sass, scss, stylus
   (diminish 'auto-fill-function " F"))
 ```
 
-<a name="sec-7-79"></a>
+<a name="sec-7-78"></a>
 ## editorconfig
 
 ```cl
@@ -3432,7 +3398,7 @@ css, sass, scss, stylus
   (require-package 'editorconfig))
 ```
 
-<a name="sec-7-80"></a>
+<a name="sec-7-79"></a>
 ## undo-tree
 
 ```cl
@@ -3444,7 +3410,7 @@ css, sass, scss, stylus
   (define-key ctl-x-r-map "U" 'undo-tree-restore-state-from-register))
 ```
 
-<a name="sec-7-81"></a>
+<a name="sec-7-80"></a>
 ## js-mode
 
 ```cl
@@ -3504,7 +3470,7 @@ css, sass, scss, stylus
     nil " mongo" mongo-minor-mode-map))
 ```
 
-<a name="sec-7-82"></a>
+<a name="sec-7-81"></a>
 ## coffee-mode
 
 ```cl
@@ -3512,7 +3478,7 @@ css, sass, scss, stylus
   (require-package 'coffee-mode))
 ```
 
-<a name="sec-7-83"></a>
+<a name="sec-7-82"></a>
 ## c-mode
 
 ```cl
@@ -3643,7 +3609,7 @@ css, sass, scss, stylus
   (add-hook 'c++-mode-hook 'init--c-c++-mode))
 ```
 
-<a name="sec-7-84"></a>
+<a name="sec-7-83"></a>
 ## win-move-resize
 
 ```cl
@@ -3681,7 +3647,7 @@ css, sass, scss, stylus
   (temporary-mode-define-keys my-keymap 'win-move-resize))
 ```
 
-<a name="sec-7-85"></a>
+<a name="sec-7-84"></a>
 ## scala-mode
 
 ```cl
@@ -3705,7 +3671,7 @@ css, sass, scss, stylus
   (add-hook 'scala-mode-hook 'init--scala-mode))
 ```
 
-<a name="sec-7-86"></a>
+<a name="sec-7-85"></a>
 ## visual-regexp
 
 ```cl
@@ -3716,7 +3682,7 @@ css, sass, scss, stylus
   (define-key my-keymap (kbd "v q") 'vr/query-replace))
 ```
 
-<a name="sec-7-87"></a>
+<a name="sec-7-86"></a>
 ## eclim
 
 ```cl
@@ -3766,7 +3732,7 @@ css, sass, scss, stylus
           (buffer-list))))
 ```
 
-<a name="sec-7-88"></a>
+<a name="sec-7-87"></a>
 ## ensime
 
 Add [ENSIME-sbt-cmd](https://github.com/aemoncannon/ensime-sbt-cmd) in `~/.sbt/plugins/plugins.sbt`
@@ -3825,7 +3791,7 @@ Install [ensime](https://github.com/aemoncannon/ensime) using `make vendor`
       (ensime-shutdown))))
 ```
 
-<a name="sec-7-89"></a>
+<a name="sec-7-88"></a>
 ## ess
 
 ```cl
@@ -3844,7 +3810,7 @@ Install [ensime](https://github.com/aemoncannon/ensime) using `make vendor`
              auto-mode-alist)))))
 ```
 
-<a name="sec-7-90"></a>
+<a name="sec-7-89"></a>
 ## ianyme
 
 Functions to manage site iany.me
@@ -3866,7 +3832,7 @@ Functions to manage site iany.me
       (set-visited-file-name newname))))
 ```
 
-<a name="sec-7-91"></a>
+<a name="sec-7-90"></a>
 ## mac
 
 ```cl
@@ -3950,7 +3916,7 @@ Functions to manage site iany.me
     ))
 ```
 
-<a name="sec-7-92"></a>
+<a name="sec-7-91"></a>
 ## cscope
 
 ```cl
@@ -3981,7 +3947,7 @@ Functions to manage site iany.me
         (ad-set-arg 1 (cons "-C" (ad-get-arg 1)))))))
 ```
 
-<a name="sec-7-93"></a>
+<a name="sec-7-92"></a>
 ## folding
 
 ```cl
@@ -4115,13 +4081,16 @@ Functions to manage site iany.me
 
 ```
 
-<a name="sec-7-94"></a>
+<a name="sec-7-93"></a>
 ## erlang
 
 ```cl
 (define-module erlang
   (defun init--erlang-mode ()
     (run-hooks 'prog-mode-hook))
+
+  (defun init--elixir-mode ()
+    (ruby-end-mode +1))
 
   (defun init--erlang-load ()
     (remove-hook 'erlang-mode-hook 'init--erlang-load)
@@ -4143,6 +4112,7 @@ Functions to manage site iany.me
 
   (add-hook 'erlang-mode-hook 'init--erlang-mode)
   (add-hook 'erlang-mode-hook 'init--erlang-load)
+  (add-hook 'elixir-mode-hook 'init--elixir-mode)
   (add-to-list 'auto-mode-alist '("rebar\\.config\\'" . erlang-mode))
   (add-to-list 'auto-mode-alist '("\\.app\\.src\\'" . erlang-mode))
 
@@ -4150,7 +4120,7 @@ Functions to manage site iany.me
   (require-package 'elixir-mode))
 ```
 
-<a name="sec-7-95"></a>
+<a name="sec-7-94"></a>
 ## sgml
 
 ```cl
@@ -4164,7 +4134,7 @@ Functions to manage site iany.me
   (add-hook 'sgml-mode-hook 'init--sgml-mode))
 ```
 
-<a name="sec-7-96"></a>
+<a name="sec-7-95"></a>
 ## sh-mode
 
 ```cl
@@ -4172,7 +4142,7 @@ Functions to manage site iany.me
   (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode)))
 ```
 
-<a name="sec-7-97"></a>
+<a name="sec-7-96"></a>
 ## haskell-mode
 
 ```cl
@@ -4182,7 +4152,7 @@ Functions to manage site iany.me
    '(haskell-mode-hook '(turn-on-haskell-indentation))))
 ```
 
-<a name="sec-7-98"></a>
+<a name="sec-7-97"></a>
 ## csharp-mode
 
 ```cl
@@ -4224,7 +4194,7 @@ Functions to manage site iany.me
   (add-hook 'csharp-mode-hook 'init--csharp-mode-load))
 ```
 
-<a name="sec-7-99"></a>
+<a name="sec-7-98"></a>
 ## confluence
 
 ```cl
@@ -4252,7 +4222,7 @@ Functions to manage site iany.me
 
 ```
 
-<a name="sec-7-100"></a>
+<a name="sec-7-99"></a>
 ## jira
 
 ```cl
@@ -4314,7 +4284,7 @@ Functions to manage site iany.me
   )
 ```
 
-<a name="sec-7-101"></a>
+<a name="sec-7-100"></a>
 ## puppet
 
 ```cl
@@ -4322,7 +4292,7 @@ Functions to manage site iany.me
   (require-package 'puppet-mode))
 ```
 
-<a name="sec-7-102"></a>
+<a name="sec-7-101"></a>
 ## fasd
 
 ```cl
@@ -4332,7 +4302,7 @@ Functions to manage site iany.me
   (global-fasd-mode 1))
 ```
 
-<a name="sec-7-103"></a>
+<a name="sec-7-102"></a>
 ## server
 
 Start emacs server.

@@ -3031,9 +3031,7 @@ css, sass, scss, stylus
     (local-set-key (kbd "C-c C-c p") 'markdown-preview-in-marked))
 
   (when (eq system-type 'darwin)
-    (add-hook 'markdown-mode-hook 'init--markdown-mode-mac))
-
-  (add-hook 'markdown-mode-hook 'auto-fill-mode))
+    (add-hook 'markdown-mode-hook 'init--markdown-mode-mac)))
 ```
 
 <a name="sec-7-67"></a>
@@ -3103,7 +3101,6 @@ css, sass, scss, stylus
 
     (ruby-end-mode +1)
     (hs-minor-mode +1)
-    (turn-on-auto-fill)
 
     (setq autopair-extra-pairs '(:code ((?` . ?`)))))
 
@@ -3579,7 +3576,6 @@ css, sass, scss, stylus
 
     (hs-minor-mode t)
     (set (make-local-variable 'comment-auto-fill-only-comments) t)
-    (turn-on-auto-fill)
     (setq autopair-handle-action-fns '(autopair-default-handle-action
                                        init--autopair-open-braces))
     (add-hook 'pre-command-hook 'wcy-cancel-auto-new-line nil t)

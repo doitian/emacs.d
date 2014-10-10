@@ -4,6 +4,30 @@
 (scroll-bar-mode -1)
 (setq inhibit-splash-screen t)
 
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+;; (load custom-file t)
+
+;; @purcell https://github.com/purcell/emacs.d/blob/master/init-elpa.el
+(defun require-package (package &optional min-version no-refresh)
+  "Install given PACKAGE, optionally requiring MIN-VERSION.
+  If NO-REFRESH is non-nil, the available package lists will not be
+  re-downloaded in order to locate PACKAGE."
+  (if (package-installed-p package min-version)
+      t
+    (if (or (assoc package package-archive-contents) no-refresh)
+        (package-install package)
+      (progn
+        (package-refresh-contents)
+        (require-package package min-version t)))))
+
+(package-initialize)
+
+(setq package-archives
+      '(("melpa" . "http://melpa.milkbox.net/packages/")
+        ("gnu" . "http://elpa.gnu.org/packages/")))
+
+(require 'cl)
+
 (defun init--theme ()
   (set-frame-font "Inconsolate for Powerline:pixelsize=16")
   (set-fontset-font "fontset-default" 'chinese-gbk "Hiragino Sans GB:pixelsize=20"))
@@ -48,30 +72,79 @@
  '(use-dialog-box nil)
  '(ps-default-fg nil)
  '(ps-default-bg nil)
- '(ps-print-color-p nil))
+ '(ps-print-color-p nil)
+ '(custom-safe-themes
+   (quote
+    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))))
 
 (global-hl-line-mode)
+(require-package 'solarized-theme)
+(load-theme 'solarized-light)
 
-;; @purcell https://github.com/purcell/emacs.d/blob/master/init-elpa.el
-(defun require-package (package &optional min-version no-refresh)
-  "Install given PACKAGE, optionally requiring MIN-VERSION.
-  If NO-REFRESH is non-nil, the available package lists will not be
-  re-downloaded in order to locate PACKAGE."
-  (if (package-installed-p package min-version)
-      t
-    (if (or (assoc package package-archive-contents) no-refresh)
-        (package-install package)
-      (progn
-        (package-refresh-contents)
-        (require-package package min-version t)))))
+(custom-set-variables
+ '(default-major-mode (quote text-mode) t)
+ '(ad-redefinition-action 'accept)
+ '(enable-recursive-minibuffers t)
+ '(minibuffer-depth-indicate-mode t)
 
-(package-initialize)
+ '(tab-width 2)
+ '(indent-tabs-mode nil)
+ '(show-paren-mode t)
+ '(fill-column 78)
 
-(setq package-archives
-      '(("melpa" . "http://melpa.milkbox.net/packages/")
-        ("gnu" . "http://elpa.gnu.org/packages/")))
+ '(tags-add-tables nil)
 
-(require 'cl)
+ '(set-mark-command-repeat-pop t)
+
+ '(max-specpdl-size 2500)
+ '(max-lisp-eval-depth 1200))
+
+(custom-set-variables
+ '(delete-by-moving-to-trash t)
+ '(tramp-default-method-alist (quote (("\\`localhost\\'" "\\`root\\'" "sudo")))))
+
+(custom-set-variables
+ '(mouse-yank-at-point t)
+ '(x-select-enable-clipboard t))
+
+(custom-set-variables
+ '(current-language-environment "UTF-8")
+ '(locale-coding-system 'utf-8))
+
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+
+(put 'narrow-to-region 'disabled nil)
+(put 'set-goal-column 'disabled nil)
+(put 'scroll-left 'disabled nil)
+(put 'scroll-right 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+
+(custom-set-variables
+ '(safe-local-variable-values '((encoding . utf-8)
+                                (outline-minor-mode . t))))
+
+(fset 'yes-or-no-p 'y-or-n-p)
+(defalias 'save-pwd 'mf-xsteve-save-current-directory)
+(defalias 'qrr 'query-replace-regexp)
+(defalias 'rr 'replace-regexp)
+(defalias 'rb 'revert-buffer-no-confirm)
+(defalias 'occ 'occur)
+(defalias 'mocc 'multi-occur)
+(defalias 'moccr 'multi-occur-in-matching-buffers)
+(defalias 'aa 'helm-apropos)
+(defalias 'wc 'whitespace-cleanup)
+(defalias 'flb 'add-file-local-variable)
+(defalias 'fll 'add-file-local-variable-prop-line)
+(defalias 'fl 'add-file-local-variable-prop-line)
+(defalias 'dl 'add-dir-local-variable)
+(defalias 'ack 'agap)
+(defalias 'sudo 'mf-find-alternativefooe-with-sudo)
+(defalias 'af 'auto-fill-mode)
+(defalias 'vi 'toggle-viper-mode)
 
 (ido-mode +1)
 (ido-load-history)
@@ -168,7 +241,7 @@
 
 (custom-set-variables
  '(magit-process-popup-time 60)
- '(magit-repo-dirs (list my-codebase-dir))
+ '(magit-repo-dirs (expand-file-name "~/codebase"))
  '(magit-repo-dirs-depth 1))
 
 (require-package 'magit)

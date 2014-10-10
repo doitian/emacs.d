@@ -2,7 +2,7 @@
 
 Generate init.el
 
-Use `make` or eval following lisp code. Move to the end of the expression, and press <kbd>Ctrl-X Ctrl-E</kbd>.
+Use =make= or eval following lisp code. Move to the end of the expression, and press ~Ctrl-X Ctrl-E~.
 
 #+BEGIN_EXAMPLE
   (progn
@@ -350,7 +350,7 @@ Remove annoying UI
     ";" 'evil-repeat-find-char)
   (define-key evil-normal-state-map (kbd ";") 'evil-ex)
 
-  ;; (setq evil-default-state 'emacs) 
+  ;; (setq evil-default-state 'emacs)
   (define-key evil-emacs-state-map (kbd "C-o") 'evil-execute-in-normal-state)
 #+END_SRC
 

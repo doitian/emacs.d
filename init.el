@@ -270,7 +270,7 @@
   ";" 'evil-repeat-find-char)
 (define-key evil-normal-state-map (kbd ";") 'evil-ex)
 
-;; (setq evil-default-state 'emacs) 
+;; (setq evil-default-state 'emacs)
 (define-key evil-emacs-state-map (kbd "C-o") 'evil-execute-in-normal-state)
 
 (require-package 'projectile)

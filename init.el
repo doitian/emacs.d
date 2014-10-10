@@ -3,9 +3,26 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 (setq inhibit-splash-screen t)
+(set-background-color "#002b36")
+(set-foreground-color "#839496")
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 ;; (load custom-file t)
+
+(defvar my-lisp-dir (expand-file-name "lisp/" user-emacs-directory)
+  ".emacs.d/lisp")
+
+(setq load-path (cons my-lisp-dir load-path))
+
+;; load loaddefs if generated, otherwise load all files in lisp
+(let ((loaddefs (concat my-lisp-dir "my-loaddefs.el")))
+  (if (file-exists-p loaddefs)
+      (progn
+        (require 'my-loaddefs))
+    (mapc (lambda (file)
+            (require (intern (file-name-sans-extension
+                              (file-name-nondirectory it)))))
+          (file-expand-wildcards (concat my-lisp-dir "*.el")))))
 
 ;; @purcell https://github.com/purcell/emacs.d/blob/master/init-elpa.el
 (defun require-package (package &optional min-version no-refresh)
@@ -74,11 +91,11 @@
  '(ps-print-color-p nil)
  '(custom-safe-themes
    (quote
-    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))))
+    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))))
 
 (global-hl-line-mode)
 (require-package 'solarized-theme)
-(load-theme 'solarized-light)
+(load-theme 'solarized-dark)
 
 (custom-set-variables
  '(default-major-mode (quote text-mode) t)
@@ -143,11 +160,49 @@
 (defalias 'ack 'agap)
 (defalias 'sudo 'mf-find-alternativefooe-with-sudo)
 (defalias 'af 'auto-fill-mode)
-(defalias 'vi 'toggle-viper-mode)
+
+(when (eq system-type 'darwin)
+  (custom-set-variables '(mac-command-modifier 'super)
+                        '(mac-right-command-modifier 'meta)
+                        '(mac-option-modifier 'meta)
+                        '(ns-pop-up-frames nil)
+                        '(helm-locate-command "mdfind %s %s")
+                        '(locate-command "mdfind"))
+
+  (defalias 'mdfind 'locate)
+
+  (define-key key-translation-map (kbd "H-<tab>") (kbd "M-TAB"))
+
+  (if (file-executable-p "/usr/local/bin/gls")
+      (setq insert-directory-program "/usr/local/bin/gls")
+    (setq dired-use-ls-dired nil))
+
+  (defun system-move-file-to-trash--using-rm-trash (filename)
+    "Remove file specified by FILENAME using rm-trash"
+    (call-process "ruby" nil nil nil
+                  "-W0" "-KU"
+                  (expand-file-name "~/.rm-trash/rm.rb")
+                  "-rf"
+                  filename))
+  (unless (fboundp 'system-move-file-to-trash)
+    (defalias
+      'system-move-file-to-trash
+      'system-move-file-to-trash--using-rm-trash))
+
+  (require-package 'reveal-in-finder)
+  (defun open-in-iterm ()
+    (interactive)
+    (cl-flet ((reveal-in-finder-as
+            (dir file)
+            (call-process "open" nil nil nil "-a" "iTerm.app" dir)))
+          (call-interactively 'reveal-in-finder)))
+
+  (global-set-key (kbd "s-r") 'reveal-in-global)
+  (global-set-key (kbd "s-t") 'open-in-iterm))
 
 (ido-mode +1)
 (ido-load-history)
-  
+
 (define-key ido-file-completion-map [(meta ?l)] nil)
 (setq completion-ignored-extensions (cons ".meta" completion-ignored-extensions))
 (custom-set-variables
@@ -194,44 +249,29 @@
 (require-package 'ido-vertical-mode)
 (ido-vertical-mode +1)
 
-(when (eq system-type 'darwin)
-  (custom-set-variables '(mac-command-modifier 'super)
-                        '(mac-right-command-modifier 'meta)
-                        '(mac-option-modifier 'meta)
-                        '(ns-pop-up-frames nil)
-                        '(helm-locate-command "mdfind %s %s")
-                        '(locate-command "mdfind"))
+(require-package 'undo-tree)
+(global-undo-tree-mode)
+(define-key undo-tree-map (kbd "C-x r") nil)
+(define-key ctl-x-r-map "u" 'undo-tree-save-state-to-register)
+(define-key ctl-x-r-map "U" 'undo-tree-restore-state-from-register)
 
-  (defalias 'mdfind 'locate)
+(custom-set-variables
+ '(evil-shift-width 2)
+ '(evil-leader/leader ","))
+(require-package 'evil)
+(require-package 'evil-surround)
+(require-package 'evil-indent-textobject)
+(require-package 'evil-leader)
+(evil-mode 1)
+(global-evil-surround-mode 1)
+(global-evil-leader-mode 1)
+(evil-leader/set-key
+  ":" 'evil-repeat-find-char-reverse
+  ";" 'evil-repeat-find-char)
+(define-key evil-normal-state-map (kbd ";") 'evil-ex)
 
-  (define-key key-translation-map (kbd "H-<tab>") (kbd "M-TAB"))
-
-  (if (file-executable-p "/usr/local/bin/gls")
-      (setq insert-directory-program "/usr/local/bin/gls")
-    (setq dired-use-ls-dired nil))
-
-  (defun system-move-file-to-trash--using-rm-trash (filename)
-    "Remove file specified by FILENAME using rm-trash"
-    (call-process "ruby" nil nil nil
-                  "-W0" "-KU"
-                  (expand-file-name "~/.rm-trash/rm.rb")
-                  "-rf"
-                  filename))
-  (unless (fboundp 'system-move-file-to-trash)
-    (defalias
-      'system-move-file-to-trash
-      'system-move-file-to-trash--using-rm-trash))
-
-  (require-package 'reveal-in-finder)
-  (defun open-in-iterm ()
-    (interactive)
-    (flet ((reveal-in-finder-as
-            (dir file)
-            (call-process "open" nil nil nil "-a" "iTerm.app" dir)))
-          (call-interactively 'reveal-in-finder)))
-
-  (global-set-key (kbd "s-r") 'reveal-in-global)
-  (global-set-key (kbd "s-t") 'open-in-iterm))
+;; (setq evil-default-state 'emacs) 
+(define-key evil-emacs-state-map (kbd "C-o") 'evil-execute-in-normal-state)
 
 (require-package 'projectile)
 (custom-set-variables
@@ -268,3 +308,60 @@
 (add-hook 'magit-mode-hook 'init--magit-mode)
 
 (global-set-key [f12] 'magit-status)
+
+(require-package 'ag)
+(require-package 'wgrep-ag)
+
+(defun agcase (string directory)
+  "Search using ag in a given DIRECTORY for a given search STRING,
+with STRING defaulting to the symbol under point.
+
+If called with a prefix, prompts for flags to pass to ag."
+  (interactive (list (read-from-minibuffer "Search string: " (ag/dwim-at-point))
+                     (read-directory-name "Directory: ")))
+  (let ((ag-arguments (list "--nogroup" "--column" "--")))
+    (ag/search string directory)))
+
+(define-key search-map (kbd "O") 'multi-occur)
+(define-key search-map (kbd "C-o") 'multi-occur-in-matching-buffers)
+(global-set-key (kbd "<f9>") 'rgrep)
+(global-set-key (kbd "<f10>") 'find-dired)
+(global-set-key (kbd "<f11>") 'find-grep-dired)
+
+(require-package 'expand-region)
+
+(global-set-key (kbd "C-2") 'er/expand-region)
+(global-set-key [(meta ?@)] 'mark-word)
+(global-set-key [(control meta ? )] 'mark-sexp)
+(global-set-key [(control meta shift ?u)] 'mark-enclosing-sexp)
+
+;; diactivate mark after narrow
+(defadvice narrow-to-region (after deactivate-mark (start end) activate)
+  (deactivate-mark))
+
+(require-package 'editorconfig)
+
+(global-set-key (kbd "C-`") 'next-error)
+(global-set-key (kbd "C-~") 'previous-error)
+
+(defun alternative-files-go-finder (&optional file)
+  (let ((file (or file (alternative-files--detect-file-name))))
+    (cond
+     ((string-match "^\\(.+\\)_test\\.go$" file)
+      (let ((base (match-string 1 file)))
+        (list
+         (concat base ".go"))))
+
+     ((string-match "^\\(.*\\)\\.go$" file)
+      (let* ((base (match-string 1 file)))
+        (list
+         (concat base "_test.go")))))))
+
+(setq alternative-files-user-functions
+      '(alternative-files-go-finder))
+
+(setq alternative-files-root-dir-function 'projectile-project-p)
+
+(define-key search-map "a" 'alternative-files-find-file)
+(define-key search-map (kbd "M-a") 'alternative-files-find-file)
+(define-key search-map (kbd "A") 'alternative-files-create-file)

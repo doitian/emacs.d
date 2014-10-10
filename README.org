@@ -57,9 +57,8 @@ Remove annoying UI
 
 #+BEGIN_SRC emacs-lisp
   (defun init--theme ()
-    (set-frame-font "Inconsolate for Powerline:pixelsize=16")
-    (set-fontset-font "fontset-default" 'chinese-gbk "Hiragino Sans GB:pixelsize=20"))
-
+    (set-frame-font "Source Code Pro for Powerline-18:weight=medium")
+    (set-fontset-font "fontset-default" 'chinese-gbk "Hiragino Sans GB-22:weight=medium"))
   (init--theme)
 
   (setq frame-title-format '(buffer-file-name "Emacs: %b (%f)" "Emacs: %b"))

@@ -223,6 +223,7 @@
 (require-package 'flx-ido)
 (require-package 'ido-hacks)
 (require-package 'ido-complete-space-or-hyphen)
+(require-package 'idomenu)
 (put 'bookmark-set 'ido 'ignore)
 (put 'ido-exit-minibuffer 'ido 'ignore)
 
@@ -269,7 +270,9 @@
 (require 'evil-visualstar)
 (evil-leader/set-key
   ":" 'evil-repeat-find-char-reverse
-  ";" 'evil-repeat-find-char)
+  ";" 'evil-repeat-find-char
+  "i" 'idomenu
+  "," 'projectile-find-file)
 (define-key evil-normal-state-map (kbd ";") 'evil-ex)
 
 ;; (setq evil-default-state 'emacs)

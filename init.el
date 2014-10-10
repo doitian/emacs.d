@@ -262,9 +262,11 @@
 (require-package 'evil-surround)
 (require-package 'evil-indent-textobject)
 (require-package 'evil-leader)
+(require-package 'evil-visualstar)
 (evil-mode 1)
 (global-evil-surround-mode 1)
 (global-evil-leader-mode 1)
+(require 'evil-visualstar)
 (evil-leader/set-key
   ":" 'evil-repeat-find-char-reverse
   ";" 'evil-repeat-find-char)
@@ -272,6 +274,13 @@
 
 ;; (setq evil-default-state 'emacs)
 (define-key evil-emacs-state-map (kbd "C-o") 'evil-execute-in-normal-state)
+(evil-set-initial-state 'magit-log-edit-mode 'emacs)
+(evil-set-initial-state 'ibuffer-mode 'normal)
+
+(define-key evil-normal-state-map (kbd "C-j")  'windmove-down)
+(define-key evil-normal-state-map (kbd "C-k")  'windmove-up)
+(define-key evil-normal-state-map (kbd "C-h")  'windmove-left)
+(define-key evil-normal-state-map (kbd "C-l")  'windmove-right)
 
 (require-package 'projectile)
 (custom-set-variables

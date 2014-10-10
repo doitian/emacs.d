@@ -473,3 +473,7 @@ Remove annoying UI
   (define-key search-map (kbd "M-a") 'alternative-files-find-file)
   (define-key search-map (kbd "A") 'alternative-files-create-file)
 #+END_SRC
+** ibuffer
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+#+END_SRC

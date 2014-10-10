@@ -365,3 +365,5 @@ If called with a prefix, prompts for flags to pass to ag."
 (define-key search-map "a" 'alternative-files-find-file)
 (define-key search-map (kbd "M-a") 'alternative-files-find-file)
 (define-key search-map (kbd "A") 'alternative-files-create-file)
+
+(global-set-key (kbd "C-x C-b") 'ibuffer)

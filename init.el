@@ -303,11 +303,11 @@
   (setq evil-normal-state-cursor '("#839496" box))
   (setq evil-normal-state-tag   (propertize " <N>" 'face '((:foreground "#AFD628")))
         evil-emacs-state-tag    (propertize " <E>" 'face '((:foreground "sienna")))
+        evil-replace-state-tag    (propertize " <R>" 'face '((:foreground "#D4000B")))
         evil-insert-state-tag   (propertize " <I>" 'face '((:foreground "white")))
         evil-motion-state-tag   (propertize " <M>" 'face '((:foreground "#AFD628")))
         evil-visual-state-tag   (propertize " <V>" 'face '((:foreground "#FDAD24")))
         evil-operator-state-tag (propertize " <O>" 'face '((:foreground "#AFD628"))))
-
 
   (define-key evil-normal-state-map (kbd "C-n") nil)
   (define-key evil-normal-state-map (kbd "C-p") nil)

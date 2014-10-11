@@ -94,11 +94,15 @@
  '(ps-print-color-p nil)
  '(custom-safe-themes
    (quote
-    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))))
+    ("3a727bdc09a7a141e58925258b6e873c65ccf393b2240c51553098ca93957723" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))))
 
 (global-hl-line-mode)
 (require-package 'solarized-theme)
 (load-theme 'solarized-dark)
+(setq sml/theme 'respectful)
+(setq sml/mode-width 'right)
+(require-package 'smart-mode-line)
+(sml/setup)
 
 (custom-set-variables
  '(default-major-mode (quote text-mode) t)
@@ -164,6 +168,14 @@
 (defalias 'sudo 'mf-find-alternativefooe-with-sudo)
 (defalias 'af 'auto-fill-mode)
 
+(defun iy-kill-buffer-and-window ()
+  "Kill buffer and close the window."
+  (interactive)
+  (if (< (length (window-list)) 2)
+      (kill-buffer)
+    (kill-buffer-and-window)))
+(global-set-key (kbd "C-x K") 'iy-kill-buffer-and-window)
+
 (when (eq system-type 'darwin)
   (custom-set-variables '(mac-command-modifier 'super)
                         '(mac-right-command-modifier 'meta)
@@ -220,10 +232,17 @@
 (evil-leader/set-key
   ":" 'evil-repeat-find-char-reverse
   ";" 'evil-repeat-find-char
-  "." 'find-file
   "a" 'ag-project-at-point
+  "cc" 'iy-kill-buffer-and-window
   "gh" 'fasd-find-file
+  "gf" 'find-file
+  "gb" 'ido-switch-buffer
   "i" 'idomenu
+  "ll" 'dired-jump
+  "lf" 'dired-jump
+  "lbe" 'ibuffer
+  "lbs" 'ibuffer
+  "lbv" 'ibuffer
   "m" 'next-error
   "M" 'compile
   "tt" 'tmux-repeat
@@ -233,7 +252,8 @@
   "tcd" 'tmux-cd
   "u" 'undo-tree-visualize
   "Y" (kbd "y$")
-  "/" 'evil-ex-nohighlight
+  "n" 'evil-ex-nohighlight
+  "o" 'occur
   "," 'projectile-find-file)
 (define-key evil-normal-state-map (kbd ";") 'evil-ex)
 
@@ -267,7 +287,7 @@
 (define-key evil-operator-state-map " b" 'evil-ace-jump-word-mode)
 (define-key evil-operator-state-map " s" 'evil-ace-jump-char-mode)
 (define-key evil-operator-state-map " f" 'evil-ace-jump-char-mode)
-(define-key evil-visual-state-map " t" 'evil-ace-jump-char-to-mode)
+(define-key evil-operator-state-map " t" 'evil-ace-jump-char-to-mode)
 (define-key evil-visual-state-map " j" 'evil-ace-jump-line-mode)
 (define-key evil-visual-state-map " k" 'evil-ace-jump-line-mode)
 (define-key evil-visual-state-map " w" 'evil-ace-jump-word-mode)
@@ -288,11 +308,17 @@
 (define-key evil-motion-state-map "H" 'beginning-of-line)
 (define-key evil-motion-state-map "L" 'end-of-line)
 
+(define-key evil-normal-state-map "`" 'evil-goto-mark-line)
+(define-key evil-normal-state-map "'" 'evil-goto-mark)
+(define-key evil-operator-state-map "`" 'evil-goto-mark-line)
+(define-key evil-operator-state-map "'" 'evil-goto-mark)
+(define-key evil-motion-state-map "`" 'evil-goto-mark-line)
+(define-key evil-motion-state-map "'" 'evil-goto-mark)
+(define-key evil-visual-state-map "`" 'evil-goto-mark-line)
+(define-key evil-visual-state-map "'" 'evil-goto-mark)
+
 (define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
 (define-key evil-insert-state-map (kbd "C-y") 'yank)
-
-(global-set-key (kbd "M-o") 'other-window)
-(global-set-key (kbd "M-O") 'other-frame)
 
 (ido-mode +1)
 (ido-load-history)
@@ -410,7 +436,6 @@ If called with a prefix, prompts for flags to pass to ag."
 (global-set-key (kbd "C-2") 'er/expand-region)
 (global-set-key [(meta ?@)] 'mark-word)
 (global-set-key [(control meta ? )] 'mark-sexp)
-(global-set-key [(control meta shift ?u)] 'mark-enclosing-sexp)
 
 ;; diactivate mark after narrow
 (defadvice narrow-to-region (after deactivate-mark (start end) activate)
@@ -477,8 +502,6 @@ If called with a prefix, prompts for flags to pass to ag."
 
 (require-package 'yaml-mode)
 
-(defalias 'tcd 'tmux-cd)
-
 (require-package 'fasd)
 (global-fasd-mode 1)
 
@@ -502,3 +525,23 @@ If called with a prefix, prompts for flags to pass to ag."
         try-expand-list))
 
 (global-set-key (kbd "M-/") 'hippie-expand)
+
+;; Place all backup files into this directory
+(custom-set-variables
+ '(auto-save-interval 300)
+ '(auto-save-timeout 10)
+ '(backup-directory-alist (list (cons "." (expand-file-name "backup" user-emacs-directory))))
+ '(backup-by-copying t)
+ '(delete-old-versions t)
+ '(kept-new-versions 20)
+ '(kept-old-versions 2)
+ '(vc-make-backup-files t)
+ '(version-control t))
+
+(defun init--force-backup ()
+  "Reset backed up flag."
+  (setq buffer-backed-up nil))
+
+;; Make a backup after save whenever the file
+;; is auto saved. Otherwise Emacs only make one backup after opening the file.
+(add-hook 'auto-save-hook 'init--force-backup)

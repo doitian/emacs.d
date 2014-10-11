@@ -93,7 +93,7 @@ Remove annoying UI
 
   (defun run-after-make-frame-hooks (frame)
     "Selectively run either `after-make-console-frame-hooks' or
-    `after-make-window-system-frame-hooks'"
+        `after-make-window-system-frame-hooks'"
     (select-frame frame)
     (run-hooks (if window-system
                    'after-make-window-system-frame-hooks
@@ -122,13 +122,25 @@ Remove annoying UI
    '(ps-print-color-p nil)
    '(custom-safe-themes
      (quote
-      ("3a727bdc09a7a141e58925258b6e873c65ccf393b2240c51553098ca93957723" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default))))
+      ("3a727bdc09a7a141e58925258b6e873c65ccf393b2240c51553098ca93957723" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
+
+   '(sml/theme 'respectful)
+   '(sml/mode-width 'right)
+   '(sml/use-projectile-p 'before-prefixes)
+   '(sml/replacer-regexp-list '(("^~/Dropbox/g/org/" ":org:")
+                                ("^~/\\.emacs\\.d/" ":emacs.d:")
+                                ("^/sudo:.*:" ":su:")
+                                ("^~/Documents/" ":doc:")
+                                ("^~/Dropbox/" ":db:")
+                                ("^:\\([^:]*\\):Documento?s/" ":\\1/Doc:")
+                                ("^~/codebase/" ":cb:")
+                                ))
+
+   )
 
   (global-hl-line-mode)
   (require-package 'solarized-theme)
   (load-theme 'solarized-dark)
-  (setq sml/theme 'respectful)
-  (setq sml/mode-width 'right)
   (require-package 'smart-mode-line)
   (sml/setup)
 #+END_SRC
@@ -338,6 +350,13 @@ Remove annoying UI
   (define-key evil-normal-state-map (kbd "C-l")  'windmove-right)
   (setq evil-emacs-state-cursor '("sienna" box))
   (setq evil-normal-state-cursor '("#839496" box))
+  (setq evil-normal-state-tag   (propertize " <N>" 'face '((:foreground "#AFD628")))
+        evil-emacs-state-tag    (propertize " <E>" 'face '((:foreground "sienna")))
+        evil-insert-state-tag   (propertize " <I>" 'face '((:foreground "white")))
+        evil-motion-state-tag   (propertize " <M>" 'face '((:foreground "#AFD628")))
+        evil-visual-state-tag   (propertize " <V>" 'face '((:foreground "#FDAD24")))
+        evil-operator-state-tag (propertize " <O>" 'face '((:foreground "#AFD628"))))
+
 
   (define-key evil-normal-state-map (kbd "C-n") nil)
   (define-key evil-normal-state-map (kbd "C-p") nil)
@@ -466,6 +485,7 @@ Remove annoying UI
   (custom-set-variables
    '(projectile-enable-caching t))
   (projectile-global-mode)
+  (setq projectile-mode-line "")
 #+END_SRC
 
 ** magit
@@ -683,4 +703,38 @@ Remove annoying UI
   ;; Make a backup after save whenever the file
   ;; is auto saved. Otherwise Emacs only make one backup after opening the file.
   (add-hook 'auto-save-hook 'init--force-backup)
+#+END_SRC
+** diminish
+
+#+BEGIN_SRC emacs-lisp
+  (defmacro diminish-on-load (hook mode &optional to-what)
+    (let ((func (intern (concat "diminish-" (symbol-name mode)))))
+      `(if (and (boundp ',mode) ,mode)
+           (diminish ',mode ,to-what)
+         (defun ,func ()
+           (diminish ',mode ,to-what)
+           (remove-hook ',hook ',func))
+         (add-hook ',hook ',func))))
+
+  (require-package 'diminish)
+
+  (diminish-on-load highlight-parentheses-mode-hook highlight-parentheses-mode)
+  (diminish-on-load yas-minor-mode-hook yas-minor-mode)
+  (diminish-on-load whitespace-mode-hook global-whitespace-mode)
+  (diminish-on-load whitespace-mode-hook whitespace-mode)
+  (diminish-on-load whole-line-or-region-on-hook whole-line-or-region-mode)
+  (diminish-on-load hs-minor-mode-hook hs-minor-mode)
+  (diminish-on-load flyspell-mode-hook flyspell-mode " fS")
+  (diminish-on-load paredit-mode-hook paredit-mode)
+  (diminish-on-load undo-tree-mode-hook undo-tree-mode)
+  (diminish-on-load outline-minor-mode-hook outline-minor-mode)
+  (diminish-on-load highlight-indentation-mode-hook highlight-indentation-mode)
+  (diminish-on-load highlight-indentation-current-column-mode-hook highlight-indentation-current-column-mode)
+  (diminish-on-load rspec-mode-hook rspec-mode)
+  (diminish-on-load rails-rspec-model-minor-mode-hook rails-rspec-model-minor-mode)
+  (diminish-on-load rails-model-minor-mode-hook rails-model-minor-mode)
+  (diminish-on-load rails-controller-minor-mode-hook rails-controller-minor-mode)
+  (diminish-on-load ruby-end-mode-hook ruby-end-mode)
+  (diminish 'abbrev-mode)
+  (diminish 'auto-fill-function " F")
 #+END_SRC

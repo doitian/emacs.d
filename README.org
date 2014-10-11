@@ -258,84 +258,16 @@ Remove annoying UI
         'system-move-file-to-trash--using-rm-trash))
 
     (require-package 'reveal-in-finder)
-    (defun open-in-iterm ()
+    (defun open-in-terminal ()
       (interactive)
-      (cl-flet ((reveal-in-finder-as
+      (flet ((reveal-in-finder-as
               (dir file)
-              (call-process "open" nil nil nil "-a" "iTerm.app" dir)))
-            (call-interactively 'reveal-in-finder)))
+              (call-process "open" nil nil nil "-a" "Terminal.app" dir)))
+        (call-interactively 'reveal-in-finder)))
 
-    (global-set-key (kbd "s-r") 'reveal-in-global)
-    (global-set-key (kbd "s-t") 'open-in-iterm))
+    (global-set-key (kbd "s-r") 'reveal-in-finder)
+    (global-set-key (kbd "s-t") 'open-in-terminal))
 #+END_SRC
-** ido
-#+BEGIN_SRC emacs-lisp
-  (ido-mode +1)
-  (ido-load-history)
-
-  (define-key ido-file-completion-map [(meta ?l)] nil)
-  (setq completion-ignored-extensions (cons ".meta" completion-ignored-extensions))
-  (custom-set-variables
-   '(ido-save-directory-list-file
-     (expand-file-name ".ido.last" user-emacs-directory))
-   '(ido-default-file-method 'selected-window)
-   '(ido-default-buffer-method 'selected-window))
-#+END_SRC
-** ido-plus
-#+BEGIN_SRC emacs-lisp
-  (custom-set-variables
-   '(ido-enable-regexp nil)
-   '(ido-enable-flex-matching nil)
-   '(ido-everywhere t)
-   '(ido-read-file-name-as-directory-commands nil)
-   '(ido-use-filename-at-point nil)
-   '(flx-ido-threshhold 8000))
-
-  (require-package 'flx)
-  (require-package 'flx-ido)
-  (require-package 'ido-hacks)
-  (require-package 'ido-complete-space-or-hyphen)
-  (require-package 'idomenu)
-  (put 'bookmark-set 'ido 'ignore)
-  (put 'ido-exit-minibuffer 'ido 'ignore)
-
-  (ido-complete-space-or-hyphen-enable)
-
-  (require 'ido-hacks)
-  (ido-hacks-mode +1)
-  ;; Use flx in flex matching
-  (ad-disable-advice 'ido-set-matches-1 'around 'ido-hacks-ido-set-matches-1)
-  (ad-activate 'ido-set-matches-1)
-  (mapc (lambda (s) (put s 'ido-hacks-fix-default t))
-        '(bookmark-set))
-
-  (require 'flx-ido)
-  (setq ido-use-faces nil)
-  (flx-ido-mode +1)
-
-  (defun init--ido-setup ()
-    (define-key ido-completion-map (kbd "M-m") 'ido-merge-work-directories)
-    (define-key ido-completion-map "\C-c" 'ido-toggle-case))
-
-  (add-hook 'ido-setup-hook 'init--ido-setup)
-#+END_SRC
-
-** ido-vertical-mode
-
-#+BEGIN_SRC emacs-lisp
-  (require-package 'ido-vertical-mode)
-  (ido-vertical-mode +1)
-#+END_SRC
-
-** undo-tree
-#+BEGIN_SRC emacs-lisp
-  (require-package 'undo-tree)
-  (global-undo-tree-mode)
-  (define-key undo-tree-map (kbd "C-x r") nil)
-  (define-key ctl-x-r-map "u" 'undo-tree-save-state-to-register)
-  (define-key ctl-x-r-map "U" 'undo-tree-restore-state-from-register)
-#+END_SRC
-
 ** evil
 
 #+BEGIN_SRC emacs-lisp
@@ -426,6 +358,79 @@ Remove annoying UI
 
   (define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
   (define-key evil-insert-state-map (kbd "C-y") 'yank)
+#+END_SRC
+
+** window-commands
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "M-o") 'other-window)
+(global-set-key (kbd "M-O") 'other-frame)
+#+END_SRC
+** ido
+#+BEGIN_SRC emacs-lisp
+  (ido-mode +1)
+  (ido-load-history)
+
+  (define-key ido-file-completion-map [(meta ?l)] nil)
+  (setq completion-ignored-extensions (cons ".meta" completion-ignored-extensions))
+  (custom-set-variables
+   '(ido-save-directory-list-file
+     (expand-file-name ".ido.last" user-emacs-directory))
+   '(ido-default-file-method 'selected-window)
+   '(ido-default-buffer-method 'selected-window))
+#+END_SRC
+** ido-plus
+#+BEGIN_SRC emacs-lisp
+  (custom-set-variables
+   '(ido-enable-regexp nil)
+   '(ido-enable-flex-matching nil)
+   '(ido-everywhere t)
+   '(ido-read-file-name-as-directory-commands nil)
+   '(ido-use-filename-at-point nil)
+   '(flx-ido-threshhold 8000))
+
+  (require-package 'flx)
+  (require-package 'flx-ido)
+  (require-package 'ido-hacks)
+  (require-package 'ido-complete-space-or-hyphen)
+  (require-package 'idomenu)
+  (put 'bookmark-set 'ido 'ignore)
+  (put 'ido-exit-minibuffer 'ido 'ignore)
+
+  (ido-complete-space-or-hyphen-enable)
+
+  (require 'ido-hacks)
+  (ido-hacks-mode +1)
+  ;; Use flx in flex matching
+  (ad-disable-advice 'ido-set-matches-1 'around 'ido-hacks-ido-set-matches-1)
+  (ad-activate 'ido-set-matches-1)
+  (mapc (lambda (s) (put s 'ido-hacks-fix-default t))
+        '(bookmark-set))
+
+  (require 'flx-ido)
+  (setq ido-use-faces nil)
+  (flx-ido-mode +1)
+
+  (defun init--ido-setup ()
+    (define-key ido-completion-map (kbd "M-m") 'ido-merge-work-directories)
+    (define-key ido-completion-map "\C-c" 'ido-toggle-case))
+
+  (add-hook 'ido-setup-hook 'init--ido-setup)
+#+END_SRC
+
+** ido-vertical-mode
+
+#+BEGIN_SRC emacs-lisp
+  (require-package 'ido-vertical-mode)
+  (ido-vertical-mode +1)
+#+END_SRC
+
+** undo-tree
+#+BEGIN_SRC emacs-lisp
+  (require-package 'undo-tree)
+  (global-undo-tree-mode)
+  (define-key undo-tree-map (kbd "C-x r") nil)
+  (define-key ctl-x-r-map "u" 'undo-tree-save-state-to-register)
+  (define-key ctl-x-r-map "U" 'undo-tree-restore-state-from-register)
 #+END_SRC
 
 ** projectile

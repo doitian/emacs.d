@@ -5,6 +5,9 @@
 (setq inhibit-splash-screen t)
 (set-background-color "#002b36")
 (set-foreground-color "#839496")
+(let ((paths (mapcar 'expand-file-name '("/usr/local/bin" "~/bin" "~/.rbenv/shims"))))
+  (setq exec-path (append paths exec-path))
+  (setenv "PATH" (mapconcat 'identity (append paths (list (getenv "PATH"))) path-separator)))
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 ;; (load custom-file t)
@@ -258,6 +261,8 @@
 
 (custom-set-variables
  '(evil-shift-width 2)
+ '(evil-esc-delay 0)
+ '(evil-search-module 'evil-search)
  '(evil-leader/leader ","))
 (require-package 'evil)
 (require-package 'evil-surround)
@@ -271,7 +276,20 @@
 (evil-leader/set-key
   ":" 'evil-repeat-find-char-reverse
   ";" 'evil-repeat-find-char
+  "." 'find-file
+  "a" 'ag-project-at-point
+  "gh" 'fasd-find-file
   "i" 'idomenu
+  "m" 'next-error
+  "M" 'compile
+  "tt" 'tmux-repeat
+  "to" 'tmux-select
+  "ts" 'tmux-send
+  "tn" 'tmux-toggle-send-next-compile-command
+  "tcd" 'tmux-cd
+  "u" 'undo-tree-visualize
+  "Y" (kbd "y$")
+  "/" 'evil-ex-nohighlight
   "," 'projectile-find-file)
 (define-key evil-normal-state-map (kbd ";") 'evil-ex)
 
@@ -284,6 +302,50 @@
 (define-key evil-normal-state-map (kbd "C-k")  'windmove-up)
 (define-key evil-normal-state-map (kbd "C-h")  'windmove-left)
 (define-key evil-normal-state-map (kbd "C-l")  'windmove-right)
+(setq evil-emacs-state-cursor '("sienna" box))
+(setq evil-normal-state-cursor '("#839496" box))
+
+(define-key evil-normal-state-map (kbd "C-n") nil)
+(define-key evil-normal-state-map (kbd "C-p") nil)
+(define-key evil-normal-state-map "]e"  'next-error)
+(define-key evil-normal-state-map "[e"  'previous-error)
+
+(define-key evil-normal-state-map " j" 'evil-ace-jump-line-mode)
+(define-key evil-normal-state-map " k" 'evil-ace-jump-line-mode)
+(define-key evil-normal-state-map " w" 'evil-ace-jump-word-mode)
+(define-key evil-normal-state-map " b" 'evil-ace-jump-word-mode)
+(define-key evil-normal-state-map " s" 'evil-ace-jump-char-mode)
+(define-key evil-normal-state-map " f" 'evil-ace-jump-char-mode)
+(define-key evil-normal-state-map " t" 'evil-ace-jump-char-to-mode)
+(define-key evil-operator-state-map " j" 'evil-ace-jump-line-mode)
+(define-key evil-operator-state-map " k" 'evil-ace-jump-line-mode)
+(define-key evil-operator-state-map " w" 'evil-ace-jump-word-mode)
+(define-key evil-operator-state-map " b" 'evil-ace-jump-word-mode)
+(define-key evil-operator-state-map " s" 'evil-ace-jump-char-mode)
+(define-key evil-operator-state-map " f" 'evil-ace-jump-char-mode)
+(define-key evil-visual-state-map " t" 'evil-ace-jump-char-to-mode)
+(define-key evil-visual-state-map " j" 'evil-ace-jump-line-mode)
+(define-key evil-visual-state-map " k" 'evil-ace-jump-line-mode)
+(define-key evil-visual-state-map " w" 'evil-ace-jump-word-mode)
+(define-key evil-visual-state-map " b" 'evil-ace-jump-word-mode)
+(define-key evil-visual-state-map " s" 'evil-ace-jump-char-mode)
+(define-key evil-visual-state-map " f" 'evil-ace-jump-char-mode)
+(define-key evil-visual-state-map " t" 'evil-ace-jump-char-to-mode)
+
+(define-key evil-normal-state-map "gH" 'evil-window-top)
+(define-key evil-normal-state-map "gL" 'evil-window-bottom)
+(define-key evil-normal-state-map "gM" 'evil-window-middle)
+(define-key evil-normal-state-map "H" 'beginning-of-line)
+(define-key evil-normal-state-map "L" 'end-of-line)
+(define-key evil-normal-state-map "M" 'back-to-ind)
+(define-key evil-motion-state-map "gH" 'evil-window-top)
+(define-key evil-motion-state-map "gL" 'evil-window-bottom)
+(define-key evil-motion-state-map "gM" 'evil-window-middle)
+(define-key evil-motion-state-map "H" 'beginning-of-line)
+(define-key evil-motion-state-map "L" 'end-of-line)
+
+(define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
+(define-key evil-insert-state-map (kbd "C-y") 'yank)
 
 (require-package 'projectile)
 (custom-set-variables
@@ -379,3 +441,61 @@ If called with a prefix, prompts for flags to pass to ag."
 (define-key search-map (kbd "A") 'alternative-files-create-file)
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
+
+(add-hook 'prog-mode-hook 'electric-pair-mode)
+
+(defun init--erlang-mode ()
+  (run-hooks 'prog-mode-hook))
+
+(defun init--erlang-load ()
+  (remove-hook 'erlang-mode-hook 'init--erlang-load)
+  (setq inferior-erlang-machine-options '("-sname" "emacs"))
+  (setq erlang-indent-level 4)
+  (setq erlang-root-dir
+        (if (eq system-type 'darwin)
+            "/usr/local/Cellar/erlang"
+          "/usr/lib/erlang")))
+
+(add-hook 'erlang-mode-hook 'init--erlang-mode)
+(add-hook 'erlang-mode-hook 'init--erlang-load)
+(add-hook 'elixir-mode-hook 'init--elixir-mode)
+(add-to-list 'auto-mode-alist '("rebar\\.config\\'" . erlang-mode))
+(add-to-list 'auto-mode-alist '("\\.app\\.src\\'" . erlang-mode))
+
+(require-package 'erlang)
+(require-package 'elixir-mode)
+
+(require-package 'slim-mode)
+(require-package 'web-mode)
+
+(defun init--slim-mode ()
+  (setq electric-indent-inhibit t))
+(add-hook 'slim-mode-hook 'init--slim-mode)
+
+(require-package 'yaml-mode)
+
+(defalias 'tcd 'tmux-cd)
+
+(require-package 'fasd)
+(global-fasd-mode 1)
+
+(require-package 'ace-jump-mode)
+
+(defun sanityinc/dabbrev-friend-buffer (other-buffer)
+  (< (buffer-size other-buffer) (* 1 1024 1024)))
+
+(setq dabbrev-friend-buffer-function 'sanityinc/dabbrev-friend-buffer)
+
+(setq hippie-expand-try-functions-list
+      '(
+        try-expand-dabbrev
+        try-expand-dabbrev-visible
+        try-expand-dabbrev-all-buffers
+        try-expand-dabbrev-from-kill
+        try-complete-file-name-partially
+        try-complete-file-name
+        try-complete-lisp-symbol-partially
+        try-complete-lisp-symbol
+        try-expand-list))
+
+(global-set-key (kbd "M-/") 'hippie-expand)

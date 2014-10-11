@@ -286,9 +286,24 @@ Remove annoying UI
     (require-package 'reveal-in-finder)
     (defun open-in-terminal ()
       (interactive)
+      (require 'reveal-in-finder)
       (flet ((reveal-in-finder-as
               (dir file)
               (call-process "open" nil nil nil "-a" "Terminal.app" dir)))
+        (call-interactively 'reveal-in-finder)))
+    (defun open-dir-in-marked-2 ()
+      (interactive)
+      (require 'reveal-in-finder)
+      (flet ((reveal-in-finder-as
+              (dir file)
+              (call-process "open" nil nil nil "-a" "Marked 2.app" dir)))
+        (call-interactively 'reveal-in-finder)))
+    (defun open-in-marked-2 ()
+      (interactive)
+      (flet ((reveal-in-finder-as
+              (dir file)
+              (call-process "open" nil nil nil "-a" "Marked 2.app"
+                            (if file (concat dir file) dir))))
         (call-interactively 'reveal-in-finder)))
 
     (global-set-key (kbd "s-r") 'reveal-in-finder)
@@ -311,6 +326,8 @@ Remove annoying UI
   (global-evil-surround-mode 1)
   (global-evil-leader-mode 1)
   (require 'evil-visualstar)
+  (autoload 'dired-jump "dired" "Jump to Dired buffer corresponding to current buffer.
+")
   (evil-leader/set-key
     ":" 'evil-repeat-find-char-reverse
     ";" 'evil-repeat-find-char
@@ -319,6 +336,7 @@ Remove annoying UI
     "gh" 'fasd-find-file
     "gf" 'find-file
     "gb" 'ido-switch-buffer
+    "go" 'occur
     "i" 'idomenu
     "ll" 'dired-jump
     "lf" 'dired-jump
@@ -327,6 +345,10 @@ Remove annoying UI
     "lbv" 'ibuffer
     "m" 'next-error
     "M" 'compile
+    "ot" 'open-in-terminal
+    "of" 'reveal-in-finder
+    "om" 'open-in-marked-2
+    "oM" 'open-dir-in-marked-2
     "tt" 'tmux-repeat
     "to" 'tmux-select
     "ts" 'tmux-send
@@ -335,7 +357,6 @@ Remove annoying UI
     "u" 'undo-tree-visualize
     "Y" (kbd "y$")
     "n" 'evil-ex-nohighlight
-    "o" 'occur
     "," 'projectile-find-file)
   (define-key evil-normal-state-map (kbd ";") 'evil-ex)
 

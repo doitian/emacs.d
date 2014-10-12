@@ -755,6 +755,8 @@ If called with a prefix, prompts for flags to pass to ag."
 
 (require-package 'rainbow-mode)
 
+(require-package 'markdown-mode)
+
 (defmacro diminish-on-load (hook mode &optional to-what)
   (let ((func (intern (concat "diminish-" (symbol-name mode)))))
     `(if (and (boundp ',mode) ,mode)

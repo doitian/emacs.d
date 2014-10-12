@@ -905,6 +905,10 @@ Remove annoying UI
 #+BEGIN_SRC emacs-lisp
 (require-package 'rainbow-mode)
 #+END_SRC
+** markdown-mode
+#+BEGIN_SRC emacs-lisp
+  (require-package 'markdown-mode)
+#+END_SRC
 ** diminish
 
 #+BEGIN_SRC emacs-lisp

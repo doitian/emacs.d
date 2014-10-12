@@ -47,6 +47,31 @@
         ("gnu" . "http://elpa.gnu.org/packages/")))
 
 (require 'cl)
+(defmacro noflet (bindings &rest body)
+  "Make temporary overriding function definitions."
+  (declare (indent 1) (debug cl-flet))
+  `(letf ,(mapcar
+           (lambda (x)
+             (if (or (and (fboundp (car x))
+                          (eq (car-safe (symbol-function (car x))) 'macro))
+                     (cdr (assq (car x) macroexpand-all-environment)))
+                 (error "Use `labels', not `flet', to rebind macro names"))
+             (let ((func `(cl-function
+                           (lambda ,(cadr x)
+                             (cl-block ,(car x) ,@(cddr x))))))
+               (when (cl--compiling-file)
+                 ;; Bug#411.  It would be nice to fix this.
+                 (and (get (car x) 'byte-compile)
+                      (error "Byte-compiling a redefinition of `%s' \
+will not work - use `labels' instead" (symbol-name (car x))))
+                 ;; FIXME This affects the rest of the file, when it
+                 ;; should be restricted to the flet body.
+                 (and (boundp 'byte-compile-function-environment)
+                      (push (cons (car x) (eval func))
+                            byte-compile-function-environment)))
+               (list `(symbol-function ',(car x)) func)))
+           bindings)
+     ,@body))
 
 (defun init--theme ()
   (set-frame-font "Source Code Pro for Powerline-18:weight=medium")
@@ -190,7 +215,7 @@
 
 (when (eq system-type 'darwin)
   (custom-set-variables '(mac-command-modifier 'super)
-                        '(mac-right-command-modifier 'meta)
+                        ;; '(mac-right-command-modifier 'super)
                         '(mac-option-modifier 'meta)
                         '(ns-pop-up-frames nil)
                         '(helm-locate-command "mdfind %s %s")
@@ -220,20 +245,21 @@
   (defun open-in-terminal ()
     (interactive)
     (require 'reveal-in-finder)
-    (flet ((reveal-in-finder-as
+    (noflet ((reveal-in-finder-as
             (dir file)
             (call-process "open" nil nil nil "-a" "Terminal.app" dir)))
       (call-interactively 'reveal-in-finder)))
   (defun open-dir-in-marked-2 ()
     (interactive)
     (require 'reveal-in-finder)
-    (flet ((reveal-in-finder-as
+    (noflet ((reveal-in-finder-as
             (dir file)
             (call-process "open" nil nil nil "-a" "Marked 2.app" dir)))
       (call-interactively 'reveal-in-finder)))
   (defun open-in-marked-2 ()
     (interactive)
-    (flet ((reveal-in-finder-as
+    (require 'reveal-in-finder)
+    (noflet ((reveal-in-finder-as
             (dir file)
             (call-process "open" nil nil nil "-a" "Marked 2.app"
                           (if file (concat dir file) dir))))
@@ -241,6 +267,42 @@
 
   (global-set-key (kbd "s-r") 'reveal-in-finder)
   (global-set-key (kbd "s-t") 'open-in-terminal))
+
+(custom-set-variables
+ '(recentf-arrange-rules (quote ()))
+ '(recentf-exclude (quote ("semantic\\.cache" "COMMIT_EDITMSG" "git-emacs-tmp.*" "\\.breadcrumb" "\\.ido\\.last" "\\.projects.ede" "/g/org/")))
+ '(recentf-menu-filter (quote recentf-arrange-by-mode))
+ '(recentf-max-saved-items 200))
+
+(recentf-mode +1)
+(defun ido-choose-from-recentf ()
+  "Use ido to select a recently visited file from the `recentf-list'"
+  (interactive)
+  (find-file (ido-completing-read "Open file: " recentf-list nil t)))
+
+(custom-set-variables
+ '(desktop-base-file-name ".emacs.desktop")
+ '(desktop-path (list "." user-emacs-directory))
+ '(desktop-restore-eager 14)
+ '(desktop-save (quote ask-if-new))
+ '(desktop-load-locked-desktop t)
+ '(desktop-clear-preserve-buffers (list "\\*scratch\\*" "\\*Messages\\*" "\\*server\\*" "\\*tramp/.+\\*" "\\*Warnings\\*"
+                                        "\\*Org Agenda\\*" ".*\\.org"))
+ ;; Quietly load safe variables, otherwise it hang up Emacs when starting as daemon.
+ '(enable-local-variables :safe))
+
+(defadvice desktop-clear (around init--bookmark-save-around-desktop-clear activate)
+  (and (fboundp 'bookmark-save) (bookmark-save))
+  ad-do-it
+  (and (fboundp 'bookmark-load) (bookmark-load bookmark-default-file)))
+
+(desktop-save-mode +1)
+(setq history-length 250)
+(add-to-list 'desktop-globals-to-save 'file-name-history)
+(add-to-list 'desktop-globals-to-clear 'bookmark-alist)
+(add-to-list 'desktop-modes-not-to-save 'Info-mode)
+(add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
+(add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
 
 (custom-set-variables
    '(evil-shift-width 2)
@@ -267,6 +329,7 @@
     "gf" 'find-file
     "gb" 'ido-switch-buffer
     "go" 'occur
+    "gr" 'ido-choose-from-recentf
     "i" 'idomenu
     "ll" 'dired-jump
     "lf" 'dired-jump
@@ -275,6 +338,8 @@
     "lbv" 'ibuffer
     "m" 'next-error
     "M" 'compile
+    "f" 'flycheck-next-error
+    "F" 'flycheck-buffer
     "ot" 'open-in-terminal
     "of" 'reveal-in-finder
     "om" 'open-in-marked-2
@@ -313,6 +378,11 @@
   (define-key evil-normal-state-map (kbd "C-p") nil)
   (define-key evil-normal-state-map "]e"  'next-error)
   (define-key evil-normal-state-map "[e"  'previous-error)
+  (define-key evil-normal-state-map "]l"  'flycheck-next-error)
+  (define-key evil-normal-state-map "[l"  'flycheck-previous-error)
+  (define-key evil-normal-state-map "]s"  'flyspell-goto-next-error)
+  (define-key evil-normal-state-map "z="  'ispell-word)
+  (define-key evil-insert-state-map (kbd "C-x s") 'ispell-word)
 
   (define-key evil-normal-state-map " j" 'evil-ace-jump-line-mode)
   (define-key evil-normal-state-map " k" 'evil-ace-jump-line-mode)
@@ -587,6 +657,58 @@ If called with a prefix, prompts for flags to pass to ag."
 ;; is auto saved. Otherwise Emacs only make one backup after opening the file.
 (add-hook 'auto-save-hook 'init--force-backup)
 
+(custom-set-variables
+ '(flycheck-standard-error-navigation nil))
+(require-package 'flycheck)
+(require 'flycheck)
+
+;; Include pa for rebar project
+(put 'erlang 'flycheck-command
+     '("erlc" (eval
+               (if (projectile-project-p)
+                   (cons
+                    "-I"
+                    (cons
+                     (concat (projectile-project-root) "include")
+                     (cons "-pa"
+                           (cons (concat (projectile-project-root) "ebin")
+                                 (apply 'append (mapcar
+                                                 (lambda (dir) (list "-pa" dir))
+                                                 (file-expand-wildcards (concat (projectile-project-root) "deps/*/ebin"))))))))
+                      nil))
+       "-o" temporary-directory "-Wall" source))
+(put 'elixir 'flycheck-command
+     '("elixirc" (eval
+               (if (projectile-project-p)
+                   (apply 'append (mapcar
+                                   (lambda (dir) (list "-pa" dir))
+                                   (file-expand-wildcards (concat (projectile-project-root) "_build/dev/lib/*/ebin"))))
+                      nil))
+       "-o" temporary-directory "--ignore-module-conflict" source))
+(put 'erlang 'flycheck-predicate '(lambda () (and (buffer-file-name) (string-match-p "\\.erl\\'" (buffer-file-name)))))
+(setq flycheck-mode-line-lighter " fC")
+(global-flycheck-mode)
+
+(defun init--disable-emacs-lisp-checkdoc-in-org-src-mode ()
+  (make-local-variable 'flycheck-checkers)
+  (setq flycheck-checkers (delq 'emacs-lisp-checkdoc flycheck-checkers)))
+
+(add-hook 'org-src-mode-hook 'init--disable-emacs-lisp-checkdoc-in-org-src-mode)
+
+(custom-set-variables
+ '(flyspell-use-meta-tab nil))
+
+(defun init--flyspell-mode ()
+  (define-key flyspell-mode-map [(control ?\,)] nil)
+  (define-key flyspell-mode-map [(control ?\.)] nil))
+
+(add-hook 'flyspell-mode-hook 'init--flyspell-mode)
+
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+(add-hook 'message-mode-hook 'flyspell-mode)
+(add-hook 'org-mode-hook 'flyspell-mode)
+(add-hook 'markdown-mode-hook 'flyspell-mode)
+
 (defmacro diminish-on-load (hook mode &optional to-what)
   (let ((func (intern (concat "diminish-" (symbol-name mode)))))
     `(if (and (boundp ',mode) ,mode)
@@ -617,3 +739,57 @@ If called with a prefix, prompts for flags to pass to ag."
 (diminish-on-load ruby-end-mode-hook ruby-end-mode)
 (diminish 'abbrev-mode)
 (diminish 'auto-fill-function " F")
+
+(defcustom server-delete-frame-functions
+  '(anything-c-adaptive-save-history
+    bookmark-exit-hook-internal
+    ac-comphist-save
+    ido-kill-emacs-hook
+    org-clock-save
+    org-id-locations-save
+    org-babel-remove-temporary-directory
+    recentf-save-list
+    semanticdb-kill-emacs-hook
+    session-save-session
+    w3m-arrived-shutdown
+    w3m-cookie-shutdown
+    tramp-dump-connection-properties)
+  "List of functions that should be called when a OS window is closed"
+  :group 'server
+  :type '(repeat symbol))
+
+(defun server--last-frontend-frame-p ()
+  (= 2 (length (frame-list))))
+
+(defun server--run-delete-frame-functions (frame)
+  (when (server--last-frontend-frame-p)
+    (mapc (lambda (f)
+            (when (fboundp f)
+              (funcall f)))
+          server-delete-frame-functions)))
+
+;; Buggy to run the functions in MacOS X
+(when (daemonp)
+  (add-hook 'delete-frame-functions 'server--run-delete-frame-functions))
+
+(define-minor-mode server-edit-minor-mode
+  "Allow C-c C-c to run server-edit without change major modes keymap"
+  nil ""
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c C-c") 'server-edit)
+    map))
+
+(defun init--server-visit ()
+  (when (and
+         (buffer-file-name)
+         (string-match-p
+          "^zsh[a-zA-Z0-9]+$"
+          (file-name-nondirectory (buffer-file-name))))
+    (sh-mode)
+    (sh-set-shell "zsh"))
+  (server-edit-minor-mode +1))
+
+;; run last to run on the minor mode for any enabled major modes
+(add-hook 'server-visit-hook 'init--server-visit t)
+
+(server-start)

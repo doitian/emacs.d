@@ -429,7 +429,8 @@ Remove annoying UI
     "tcd" 'tmux-cd
     "u" 'undo-tree-visualize
     "n" 'evil-ex-nohighlight
-    "," 'projectile-find-file)
+    "," 'projectile-find-file
+    " " 'whitespace-cleanup-and-save)
   (define-key evil-normal-state-map (kbd ";") 'evil-ex)
 
   ;; (setq evil-default-state 'emacs)
@@ -488,12 +489,13 @@ Remove annoying UI
   (define-key evil-normal-state-map "gM" 'evil-window-middle)
   (define-key evil-normal-state-map "H" 'beginning-of-line)
   (define-key evil-normal-state-map "L" 'end-of-line)
-  (define-key evil-normal-state-map "M" 'back-to-ind)
+  (define-key evil-normal-state-map "M" 'back-to-indentation)
   (define-key evil-motion-state-map "gH" 'evil-window-top)
   (define-key evil-motion-state-map "gL" 'evil-window-bottom)
   (define-key evil-motion-state-map "gM" 'evil-window-middle)
   (define-key evil-motion-state-map "H" 'beginning-of-line)
   (define-key evil-motion-state-map "L" 'end-of-line)
+  (define-key evil-motion-state-map "M" 'back-to-indentation)
 
   (define-key evil-normal-state-map "`" 'evil-goto-mark-line)
   (define-key evil-normal-state-map "'" 'evil-goto-mark)
@@ -585,6 +587,8 @@ Remove annoying UI
 #+BEGIN_SRC emacs-lisp
   (require-package 'projectile)
   (custom-set-variables
+   '(projectile-generic-command "ag %s -l --nocolor -g ''")
+   '(projectile-svn-command "svn list -R . | grep -v '/$' | tr '\\n' '\\0'")
    '(projectile-enable-caching t))
   (projectile-global-mode)
   (setq projectile-mode-line "")
@@ -861,6 +865,21 @@ Remove annoying UI
 (add-hook 'message-mode-hook 'flyspell-mode)
 (add-hook 'org-mode-hook 'flyspell-mode)
 (add-hook 'markdown-mode-hook 'flyspell-mode)
+#+END_SRC
+** whitespace
+#+BEGIN_SRC emacs-lisp
+  (custom-set-variables
+   '(whitespace-action nil)
+   '(whitespace-global-modes nil)
+   '(whitespace-line-column nil)
+   '(whitespace-style (quote (face tabs trailing newline indentation space-before-tab tab-mark newline-mark)))
+   '(coffee-cleanup-whitespace nil))
+
+  (add-hook 'prog-mode-hook 'whitespace-mode)
+  (defun whitespace-cleanup-and-save ()
+    (interactive)
+    (whitespace-cleanup)
+    (call-interactively (key-binding (kbd "C-x C-s"))))
 #+END_SRC
 ** diminish
 

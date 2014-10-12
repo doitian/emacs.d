@@ -355,7 +355,8 @@ will not work - use `labels' instead" (symbol-name (car x))))
     "tcd" 'tmux-cd
     "u" 'undo-tree-visualize
     "n" 'evil-ex-nohighlight
-    "," 'projectile-find-file)
+    "," 'projectile-find-file
+    " " 'whitespace-cleanup-and-save)
   (define-key evil-normal-state-map (kbd ";") 'evil-ex)
 
   ;; (setq evil-default-state 'emacs)
@@ -414,12 +415,13 @@ will not work - use `labels' instead" (symbol-name (car x))))
   (define-key evil-normal-state-map "gM" 'evil-window-middle)
   (define-key evil-normal-state-map "H" 'beginning-of-line)
   (define-key evil-normal-state-map "L" 'end-of-line)
-  (define-key evil-normal-state-map "M" 'back-to-ind)
+  (define-key evil-normal-state-map "M" 'back-to-indentation)
   (define-key evil-motion-state-map "gH" 'evil-window-top)
   (define-key evil-motion-state-map "gL" 'evil-window-bottom)
   (define-key evil-motion-state-map "gM" 'evil-window-middle)
   (define-key evil-motion-state-map "H" 'beginning-of-line)
   (define-key evil-motion-state-map "L" 'end-of-line)
+  (define-key evil-motion-state-map "M" 'back-to-indentation)
 
   (define-key evil-normal-state-map "`" 'evil-goto-mark-line)
   (define-key evil-normal-state-map "'" 'evil-goto-mark)
@@ -495,6 +497,8 @@ will not work - use `labels' instead" (symbol-name (car x))))
 
 (require-package 'projectile)
 (custom-set-variables
+ '(projectile-generic-command "ag %s -l --nocolor -g ''")
+ '(projectile-svn-command "svn list -R . | grep -v '/$' | tr '\\n' '\\0'")
  '(projectile-enable-caching t))
 (projectile-global-mode)
 (setq projectile-mode-line "")
@@ -715,6 +719,19 @@ If called with a prefix, prompts for flags to pass to ag."
 (add-hook 'message-mode-hook 'flyspell-mode)
 (add-hook 'org-mode-hook 'flyspell-mode)
 (add-hook 'markdown-mode-hook 'flyspell-mode)
+
+(custom-set-variables
+ '(whitespace-action nil)
+ '(whitespace-global-modes nil)
+ '(whitespace-line-column nil)
+ '(whitespace-style (quote (face tabs trailing newline indentation space-before-tab tab-mark newline-mark)))
+ '(coffee-cleanup-whitespace nil))
+
+(add-hook 'prog-mode-hook 'whitespace-mode)
+(defun whitespace-cleanup-and-save ()
+  (interactive)
+  (whitespace-cleanup)
+  (call-interactively (key-binding (kbd "C-x C-s"))))
 
 (defmacro diminish-on-load (hook mode &optional to-what)
   (let ((func (intern (concat "diminish-" (symbol-name mode)))))

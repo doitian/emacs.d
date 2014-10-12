@@ -840,4 +840,4 @@ If called with a prefix, prompts for flags to pass to ag."
 ;; run last to run on the minor mode for any enabled major modes
 (add-hook 'server-visit-hook 'init--server-visit t)
 
-(server-start)
+;; (server-start)

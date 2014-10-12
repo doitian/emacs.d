@@ -131,9 +131,7 @@ will not work - use `labels' instead" (symbol-name (car x))))
                               ("^~/Dropbox/" ":db:")
                               ("^:\\([^:]*\\):Documento?s/" ":\\1/Doc:")
                               ("^~/codebase/" ":cb:")
-                              ))
-
- )
+                              )))
 
 (global-hl-line-mode)
 (require-package 'solarized-theme)
@@ -726,6 +724,14 @@ If called with a prefix, prompts for flags to pass to ag."
  '(whitespace-line-column nil)
  '(whitespace-style (quote (face tabs trailing newline indentation space-before-tab tab-mark newline-mark)))
  '(coffee-cleanup-whitespace nil))
+
+(defun init--whitespace-mode ()
+  (remove-hook 'whitespace-mode-hook 'init--whitespace-mode)
+  (set-face-attribute 'whitespace-newline nil
+                      :background "#073642"
+                      :foreground "#002b36"
+                      :inverse-video t))
+(add-hook 'whitespace-mode-hook 'init--whitespace-mode)
 
 (add-hook 'prog-mode-hook 'whitespace-mode)
 (defun whitespace-cleanup-and-save ()

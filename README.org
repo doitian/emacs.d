@@ -66,6 +66,7 @@ Remove annoying UI
           (require-package package min-version t)))))
 
   (package-initialize)
+  (setq package-check-signature nil)
 
   (setq package-archives
         '(("melpa" . "http://melpa.milkbox.net/packages/")
@@ -118,7 +119,7 @@ Remove annoying UI
 
   (defun run-after-make-frame-hooks (frame)
     "Selectively run either `after-make-console-frame-hooks' or
-        `after-make-window-system-frame-hooks'"
+          `after-make-window-system-frame-hooks'"
     (select-frame frame)
     (run-hooks (if window-system
                    'after-make-window-system-frame-hooks
@@ -166,6 +167,18 @@ Remove annoying UI
   (load-theme 'solarized-dark)
   (require-package 'smart-mode-line)
   (sml/setup)
+
+  (defface solarized-whitespace-newline
+    '((default :weight normal)
+      (((class color) (background dark)) :foreground "#073642")
+      (((class color) (min-colors 88) (background light)) :foreground "#eee8d5")
+      ;; Displays with 16 colors use lightgray as background, so using a
+      ;; lightgray foreground makes the newline mark invisible.
+      (((class color) (background light)) :foreground "brown")
+      (t :underline t))
+    "Remap whitespace-newline for solarized.")
+
+  (setq face-remapping-alist (cons '(whitespace-newline solarized-whitespace-newline) face-remapping-alist))
 #+END_SRC
 
 * My Config
@@ -380,6 +393,7 @@ Remove annoying UI
    '(evil-shift-width 2)
    '(evil-esc-delay 0)
    '(evil-search-module 'evil-search)
+   '(evil-default-cursor #'iy/evil-cursor)
    '(evil-leader/leader ","))
   (require-package 'evil)
   (require-package 'evil-surround)
@@ -395,7 +409,7 @@ Remove annoying UI
   (require 'evil-jumper)
   (evil-exchange-install)
   (autoload 'dired-jump "dired" "Jump to Dired buffer corresponding to current buffer.
-")
+  ")
   (evil-leader/set-key
     ":" 'evil-repeat-find-char-reverse
     ";" 'evil-repeat-find-char
@@ -440,15 +454,13 @@ Remove annoying UI
   (define-key evil-normal-state-map (kbd "C-k")  'windmove-up)
   (define-key evil-normal-state-map (kbd "C-h")  'windmove-left)
   (define-key evil-normal-state-map (kbd "C-l")  'windmove-right)
-  (setq evil-emacs-state-cursor '("sienna" box))
-  (setq evil-normal-state-cursor '("#839496" box))
-  (setq evil-normal-state-tag   (propertize " <N>" 'face '((:foreground "#AFD628")))
-        evil-emacs-state-tag    (propertize " <E>" 'face '((:foreground "sienna")))
-        evil-replace-state-tag    (propertize " <R>" 'face '((:foreground "#D4000B")))
-        evil-insert-state-tag   (propertize " <I>" 'face '((:foreground "white")))
-        evil-motion-state-tag   (propertize " <M>" 'face '((:foreground "#AFD628")))
-        evil-visual-state-tag   (propertize " <V>" 'face '((:foreground "#FDAD24")))
-        evil-operator-state-tag (propertize " <O>" 'face '((:foreground "#AFD628"))))
+  (setq evil-normal-state-tag   (propertize " «N»" 'face '((:foreground "#859900")))
+        evil-emacs-state-tag    (propertize " «E»" 'face '((:foreground "#b58900")))
+        evil-replace-state-tag    (propertize " «R»" 'face '((:foreground "#dc322f")))
+        evil-insert-state-tag   (propertize " «I»" 'face '((:foreground "#6c71c4")))
+        evil-motion-state-tag   (propertize " «M»" 'face '((:foreground "#859900")))
+        evil-visual-state-tag   (propertize " «V»" 'face '((:foreground "#cb4b16")))
+        evil-operator-state-tag (propertize " «O»" 'face '((:foreground "#859900"))))
 
   (define-key evil-normal-state-map (kbd "C-n") nil)
   (define-key evil-normal-state-map (kbd "C-p") nil)
@@ -510,6 +522,16 @@ Remove annoying UI
   (define-key evil-normal-state-map "Y" (kbd "y$"))
   (define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
   (define-key evil-insert-state-map (kbd "C-y") 'yank)
+
+  (defun iy/evil-cursor ()
+    "Change cursor color according to evil-state."
+    (setq cursor-type (if (eq evil-state 'insert)
+                          'bar
+                        (if (eq evil-state 'visual) 'hollow 'box)))
+    (evil-set-cursor-color (if (eq evil-state 'emacs)
+                               "sienna"
+                             (if (eq (frame-parameter nil 'background-mode) 'dark)
+                                 "#839496" "#657b83"))))
 #+END_SRC
 
 ** ido
@@ -873,19 +895,15 @@ Remove annoying UI
    '(whitespace-style (quote (face tabs trailing newline indentation space-before-tab tab-mark newline-mark)))
    '(coffee-cleanup-whitespace nil))
 
-  (defun init--whitespace-mode ()
-    (remove-hook 'whitespace-mode-hook 'init--whitespace-mode)
-    (set-face-attribute 'whitespace-newline nil
-                        :background "#073642"
-                        :foreground "#002b36"
-                        :inverse-video t))
-  (add-hook 'whitespace-mode-hook 'init--whitespace-mode)
-
   (add-hook 'prog-mode-hook 'whitespace-mode)
   (defun whitespace-cleanup-and-save ()
     (interactive)
     (whitespace-cleanup)
     (call-interactively (key-binding (kbd "C-x C-s"))))
+#+END_SRC
+** rainbow-mode
+#+BEGIN_SRC emacs-lisp
+(require-package 'rainbow-mode)
 #+END_SRC
 ** diminish
 

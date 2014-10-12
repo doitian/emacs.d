@@ -41,6 +41,7 @@
         (require-package package min-version t)))))
 
 (package-initialize)
+(setq package-check-signature nil)
 
 (setq package-archives
       '(("melpa" . "http://melpa.milkbox.net/packages/")
@@ -90,7 +91,7 @@ will not work - use `labels' instead" (symbol-name (car x))))
 
 (defun run-after-make-frame-hooks (frame)
   "Selectively run either `after-make-console-frame-hooks' or
-      `after-make-window-system-frame-hooks'"
+        `after-make-window-system-frame-hooks'"
   (select-frame frame)
   (run-hooks (if window-system
                  'after-make-window-system-frame-hooks
@@ -138,6 +139,18 @@ will not work - use `labels' instead" (symbol-name (car x))))
 (load-theme 'solarized-dark)
 (require-package 'smart-mode-line)
 (sml/setup)
+
+(defface solarized-whitespace-newline
+  '((default :weight normal)
+    (((class color) (background dark)) :foreground "#073642")
+    (((class color) (min-colors 88) (background light)) :foreground "#eee8d5")
+    ;; Displays with 16 colors use lightgray as background, so using a
+    ;; lightgray foreground makes the newline mark invisible.
+    (((class color) (background light)) :foreground "brown")
+    (t :underline t))
+  "Remap whitespace-newline for solarized.")
+
+(setq face-remapping-alist (cons '(whitespace-newline solarized-whitespace-newline) face-remapping-alist))
 
 (custom-set-variables
  '(default-major-mode (quote text-mode) t)
@@ -303,139 +316,148 @@ will not work - use `labels' instead" (symbol-name (car x))))
 (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
 
 (custom-set-variables
-   '(evil-shift-width 2)
-   '(evil-esc-delay 0)
-   '(evil-search-module 'evil-search)
-   '(evil-leader/leader ","))
-  (require-package 'evil)
-  (require-package 'evil-surround)
-  (require-package 'evil-indent-textobject)
-  (require-package 'evil-leader)
-  (require-package 'evil-visualstar)
-  (require-package 'evil-jumper)
-  (require-package 'evil-exchange)
-  (evil-mode 1)
-  (global-evil-surround-mode 1)
-  (global-evil-leader-mode 1)
-  (require 'evil-visualstar)
-  (require 'evil-jumper)
-  (evil-exchange-install)
-  (autoload 'dired-jump "dired" "Jump to Dired buffer corresponding to current buffer.
+ '(evil-shift-width 2)
+ '(evil-esc-delay 0)
+ '(evil-search-module 'evil-search)
+ '(evil-default-cursor #'iy/evil-cursor)
+ '(evil-leader/leader ","))
+(require-package 'evil)
+(require-package 'evil-surround)
+(require-package 'evil-indent-textobject)
+(require-package 'evil-leader)
+(require-package 'evil-visualstar)
+(require-package 'evil-jumper)
+(require-package 'evil-exchange)
+(evil-mode 1)
+(global-evil-surround-mode 1)
+(global-evil-leader-mode 1)
+(require 'evil-visualstar)
+(require 'evil-jumper)
+(evil-exchange-install)
+(autoload 'dired-jump "dired" "Jump to Dired buffer corresponding to current buffer.
 ")
-  (evil-leader/set-key
-    ":" 'evil-repeat-find-char-reverse
-    ";" 'evil-repeat-find-char
-    "a" 'ag-project-at-point
-    "cc" 'iy-kill-buffer-and-window
-    "gh" 'fasd-find-file
-    "gf" 'find-file
-    "gb" 'ido-switch-buffer
-    "go" 'occur
-    "gr" 'ido-choose-from-recentf
-    "i" 'idomenu
-    "ll" 'dired-jump
-    "lf" 'dired-jump
-    "lbe" 'ibuffer
-    "lbs" 'ibuffer
-    "lbv" 'ibuffer
-    "m" 'next-error
-    "M" 'compile
-    "f" 'flycheck-next-error
-    "F" 'flycheck-buffer
-    "ot" 'open-in-terminal
-    "of" 'reveal-in-finder
-    "om" 'open-in-marked-2
-    "oM" 'open-dir-in-marked-2
-    "tt" 'tmux-repeat
-    "to" 'tmux-select
-    "ts" 'tmux-send
-    "tn" 'tmux-toggle-send-next-compile-command
-    "tcd" 'tmux-cd
-    "u" 'undo-tree-visualize
-    "n" 'evil-ex-nohighlight
-    "," 'projectile-find-file
-    " " 'whitespace-cleanup-and-save)
-  (define-key evil-normal-state-map (kbd ";") 'evil-ex)
+(evil-leader/set-key
+  ":" 'evil-repeat-find-char-reverse
+  ";" 'evil-repeat-find-char
+  "a" 'ag-project-at-point
+  "cc" 'iy-kill-buffer-and-window
+  "gh" 'fasd-find-file
+  "gf" 'find-file
+  "gb" 'ido-switch-buffer
+  "go" 'occur
+  "gr" 'ido-choose-from-recentf
+  "i" 'idomenu
+  "ll" 'dired-jump
+  "lf" 'dired-jump
+  "lbe" 'ibuffer
+  "lbs" 'ibuffer
+  "lbv" 'ibuffer
+  "m" 'next-error
+  "M" 'compile
+  "f" 'flycheck-next-error
+  "F" 'flycheck-buffer
+  "ot" 'open-in-terminal
+  "of" 'reveal-in-finder
+  "om" 'open-in-marked-2
+  "oM" 'open-dir-in-marked-2
+  "tt" 'tmux-repeat
+  "to" 'tmux-select
+  "ts" 'tmux-send
+  "tn" 'tmux-toggle-send-next-compile-command
+  "tcd" 'tmux-cd
+  "u" 'undo-tree-visualize
+  "n" 'evil-ex-nohighlight
+  "," 'projectile-find-file
+  " " 'whitespace-cleanup-and-save)
+(define-key evil-normal-state-map (kbd ";") 'evil-ex)
 
-  ;; (setq evil-default-state 'emacs)
-  (define-key evil-emacs-state-map (kbd "C-o") 'evil-execute-in-normal-state)
-  (evil-set-initial-state 'magit-log-edit-mode 'emacs)
-  (evil-set-initial-state 'ibuffer-mode 'normal)
+;; (setq evil-default-state 'emacs)
+(define-key evil-emacs-state-map (kbd "C-o") 'evil-execute-in-normal-state)
+(evil-set-initial-state 'magit-log-edit-mode 'emacs)
+(evil-set-initial-state 'ibuffer-mode 'normal)
 
-  (define-key evil-normal-state-map (kbd "C-j")  'windmove-down)
-  (define-key evil-normal-state-map (kbd "C-k")  'windmove-up)
-  (define-key evil-normal-state-map (kbd "C-h")  'windmove-left)
-  (define-key evil-normal-state-map (kbd "C-l")  'windmove-right)
-  (setq evil-emacs-state-cursor '("sienna" box))
-  (setq evil-normal-state-cursor '("#839496" box))
-  (setq evil-normal-state-tag   (propertize " <N>" 'face '((:foreground "#AFD628")))
-        evil-emacs-state-tag    (propertize " <E>" 'face '((:foreground "sienna")))
-        evil-replace-state-tag    (propertize " <R>" 'face '((:foreground "#D4000B")))
-        evil-insert-state-tag   (propertize " <I>" 'face '((:foreground "white")))
-        evil-motion-state-tag   (propertize " <M>" 'face '((:foreground "#AFD628")))
-        evil-visual-state-tag   (propertize " <V>" 'face '((:foreground "#FDAD24")))
-        evil-operator-state-tag (propertize " <O>" 'face '((:foreground "#AFD628"))))
+(define-key evil-normal-state-map (kbd "C-j")  'windmove-down)
+(define-key evil-normal-state-map (kbd "C-k")  'windmove-up)
+(define-key evil-normal-state-map (kbd "C-h")  'windmove-left)
+(define-key evil-normal-state-map (kbd "C-l")  'windmove-right)
+(setq evil-normal-state-tag   (propertize " «N»" 'face '((:foreground "#859900")))
+      evil-emacs-state-tag    (propertize " «E»" 'face '((:foreground "#b58900")))
+      evil-replace-state-tag    (propertize " «R»" 'face '((:foreground "#dc322f")))
+      evil-insert-state-tag   (propertize " «I»" 'face '((:foreground "#6c71c4")))
+      evil-motion-state-tag   (propertize " «M»" 'face '((:foreground "#859900")))
+      evil-visual-state-tag   (propertize " «V»" 'face '((:foreground "#cb4b16")))
+      evil-operator-state-tag (propertize " «O»" 'face '((:foreground "#859900"))))
 
-  (define-key evil-normal-state-map (kbd "C-n") nil)
-  (define-key evil-normal-state-map (kbd "C-p") nil)
-  (define-key evil-normal-state-map "]e"  'next-error)
-  (define-key evil-normal-state-map "[e"  'previous-error)
-  (define-key evil-normal-state-map "]l"  'flycheck-next-error)
-  (define-key evil-normal-state-map "[l"  'flycheck-previous-error)
-  (define-key evil-normal-state-map "]s"  'flyspell-goto-next-error)
-  (define-key evil-normal-state-map "z="  'ispell-word)
-  (define-key evil-insert-state-map (kbd "C-x s") 'ispell-word)
+(define-key evil-normal-state-map (kbd "C-n") nil)
+(define-key evil-normal-state-map (kbd "C-p") nil)
+(define-key evil-normal-state-map "]e"  'next-error)
+(define-key evil-normal-state-map "[e"  'previous-error)
+(define-key evil-normal-state-map "]l"  'flycheck-next-error)
+(define-key evil-normal-state-map "[l"  'flycheck-previous-error)
+(define-key evil-normal-state-map "]s"  'flyspell-goto-next-error)
+(define-key evil-normal-state-map "z="  'ispell-word)
+(define-key evil-insert-state-map (kbd "C-x s") 'ispell-word)
 
-  (define-key evil-normal-state-map " j" 'evil-ace-jump-line-mode)
-  (define-key evil-normal-state-map " k" 'evil-ace-jump-line-mode)
-  (define-key evil-normal-state-map " w" 'evil-ace-jump-word-mode)
-  (define-key evil-normal-state-map " b" 'evil-ace-jump-word-mode)
-  (define-key evil-normal-state-map " s" 'evil-ace-jump-char-mode)
-  (define-key evil-normal-state-map " f" 'evil-ace-jump-char-mode)
-  (define-key evil-normal-state-map " t" 'evil-ace-jump-char-to-mode)
-  (define-key evil-operator-state-map " j" 'evil-ace-jump-line-mode)
-  (define-key evil-operator-state-map " k" 'evil-ace-jump-line-mode)
-  (define-key evil-operator-state-map " w" 'evil-ace-jump-word-mode)
-  (define-key evil-operator-state-map " b" 'evil-ace-jump-word-mode)
-  (define-key evil-operator-state-map " s" 'evil-ace-jump-char-mode)
-  (define-key evil-operator-state-map " f" 'evil-ace-jump-char-mode)
-  (define-key evil-operator-state-map " t" 'evil-ace-jump-char-to-mode)
-  (define-key evil-visual-state-map " j" 'evil-ace-jump-line-mode)
-  (define-key evil-visual-state-map " k" 'evil-ace-jump-line-mode)
-  (define-key evil-visual-state-map " w" 'evil-ace-jump-word-mode)
-  (define-key evil-visual-state-map " b" 'evil-ace-jump-word-mode)
-  (define-key evil-visual-state-map " s" 'evil-ace-jump-char-mode)
-  (define-key evil-visual-state-map " f" 'evil-ace-jump-char-mode)
-  (define-key evil-visual-state-map " t" 'evil-ace-jump-char-to-mode)
+(define-key evil-normal-state-map " j" 'evil-ace-jump-line-mode)
+(define-key evil-normal-state-map " k" 'evil-ace-jump-line-mode)
+(define-key evil-normal-state-map " w" 'evil-ace-jump-word-mode)
+(define-key evil-normal-state-map " b" 'evil-ace-jump-word-mode)
+(define-key evil-normal-state-map " s" 'evil-ace-jump-char-mode)
+(define-key evil-normal-state-map " f" 'evil-ace-jump-char-mode)
+(define-key evil-normal-state-map " t" 'evil-ace-jump-char-to-mode)
+(define-key evil-operator-state-map " j" 'evil-ace-jump-line-mode)
+(define-key evil-operator-state-map " k" 'evil-ace-jump-line-mode)
+(define-key evil-operator-state-map " w" 'evil-ace-jump-word-mode)
+(define-key evil-operator-state-map " b" 'evil-ace-jump-word-mode)
+(define-key evil-operator-state-map " s" 'evil-ace-jump-char-mode)
+(define-key evil-operator-state-map " f" 'evil-ace-jump-char-mode)
+(define-key evil-operator-state-map " t" 'evil-ace-jump-char-to-mode)
+(define-key evil-visual-state-map " j" 'evil-ace-jump-line-mode)
+(define-key evil-visual-state-map " k" 'evil-ace-jump-line-mode)
+(define-key evil-visual-state-map " w" 'evil-ace-jump-word-mode)
+(define-key evil-visual-state-map " b" 'evil-ace-jump-word-mode)
+(define-key evil-visual-state-map " s" 'evil-ace-jump-char-mode)
+(define-key evil-visual-state-map " f" 'evil-ace-jump-char-mode)
+(define-key evil-visual-state-map " t" 'evil-ace-jump-char-to-mode)
 
-  (define-key evil-normal-state-map "gH" 'evil-window-top)
-  (define-key evil-normal-state-map "gL" 'evil-window-bottom)
-  (define-key evil-normal-state-map "gM" 'evil-window-middle)
-  (define-key evil-normal-state-map "H" 'beginning-of-line)
-  (define-key evil-normal-state-map "L" 'end-of-line)
-  (define-key evil-normal-state-map "M" 'back-to-indentation)
-  (define-key evil-motion-state-map "gH" 'evil-window-top)
-  (define-key evil-motion-state-map "gL" 'evil-window-bottom)
-  (define-key evil-motion-state-map "gM" 'evil-window-middle)
-  (define-key evil-motion-state-map "H" 'beginning-of-line)
-  (define-key evil-motion-state-map "L" 'end-of-line)
-  (define-key evil-motion-state-map "M" 'back-to-indentation)
+(define-key evil-normal-state-map "gH" 'evil-window-top)
+(define-key evil-normal-state-map "gL" 'evil-window-bottom)
+(define-key evil-normal-state-map "gM" 'evil-window-middle)
+(define-key evil-normal-state-map "H" 'beginning-of-line)
+(define-key evil-normal-state-map "L" 'end-of-line)
+(define-key evil-normal-state-map "M" 'back-to-indentation)
+(define-key evil-motion-state-map "gH" 'evil-window-top)
+(define-key evil-motion-state-map "gL" 'evil-window-bottom)
+(define-key evil-motion-state-map "gM" 'evil-window-middle)
+(define-key evil-motion-state-map "H" 'beginning-of-line)
+(define-key evil-motion-state-map "L" 'end-of-line)
+(define-key evil-motion-state-map "M" 'back-to-indentation)
 
-  (define-key evil-normal-state-map "`" 'evil-goto-mark-line)
-  (define-key evil-normal-state-map "'" 'evil-goto-mark)
-  (define-key evil-operator-state-map "`" 'evil-goto-mark-line)
-  (define-key evil-operator-state-map "'" 'evil-goto-mark)
-  (define-key evil-motion-state-map "`" 'evil-goto-mark-line)
-  (define-key evil-motion-state-map "'" 'evil-goto-mark)
-  (define-key evil-visual-state-map "`" 'evil-goto-mark-line)
-  (define-key evil-visual-state-map "'" 'evil-goto-mark)
+(define-key evil-normal-state-map "`" 'evil-goto-mark-line)
+(define-key evil-normal-state-map "'" 'evil-goto-mark)
+(define-key evil-operator-state-map "`" 'evil-goto-mark-line)
+(define-key evil-operator-state-map "'" 'evil-goto-mark)
+(define-key evil-motion-state-map "`" 'evil-goto-mark-line)
+(define-key evil-motion-state-map "'" 'evil-goto-mark)
+(define-key evil-visual-state-map "`" 'evil-goto-mark-line)
+(define-key evil-visual-state-map "'" 'evil-goto-mark)
 
-  (define-key evil-visual-state-map "gc" 'comment-dwim)
-  (define-key evil-visual-state-map "Q" 'evil-fill-and-move)
-  (define-key evil-normal-state-map "Q" (kbd "gqap"))
-  (define-key evil-normal-state-map "Y" (kbd "y$"))
-  (define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
-  (define-key evil-insert-state-map (kbd "C-y") 'yank)
+(define-key evil-visual-state-map "gc" 'comment-dwim)
+(define-key evil-visual-state-map "Q" 'evil-fill-and-move)
+(define-key evil-normal-state-map "Q" (kbd "gqap"))
+(define-key evil-normal-state-map "Y" (kbd "y$"))
+(define-key evil-insert-state-map (kbd "C-e") 'end-of-line)
+(define-key evil-insert-state-map (kbd "C-y") 'yank)
+
+(defun iy/evil-cursor ()
+  "Change cursor color according to evil-state."
+  (setq cursor-type (if (eq evil-state 'insert)
+                        'bar
+                      (if (eq evil-state 'visual) 'hollow 'box)))
+  (evil-set-cursor-color (if (eq evil-state 'emacs)
+                             "sienna"
+                           (if (eq (frame-parameter nil 'background-mode) 'dark)
+                               "#839496" "#657b83"))))
 
 (ido-mode +1)
 (ido-load-history)
@@ -725,19 +747,13 @@ If called with a prefix, prompts for flags to pass to ag."
  '(whitespace-style (quote (face tabs trailing newline indentation space-before-tab tab-mark newline-mark)))
  '(coffee-cleanup-whitespace nil))
 
-(defun init--whitespace-mode ()
-  (remove-hook 'whitespace-mode-hook 'init--whitespace-mode)
-  (set-face-attribute 'whitespace-newline nil
-                      :background "#073642"
-                      :foreground "#002b36"
-                      :inverse-video t))
-(add-hook 'whitespace-mode-hook 'init--whitespace-mode)
-
 (add-hook 'prog-mode-hook 'whitespace-mode)
 (defun whitespace-cleanup-and-save ()
   (interactive)
   (whitespace-cleanup)
   (call-interactively (key-binding (kbd "C-x C-s"))))
+
+(require-package 'rainbow-mode)
 
 (defmacro diminish-on-load (hook mode &optional to-what)
   (let ((func (intern (concat "diminish-" (symbol-name mode)))))

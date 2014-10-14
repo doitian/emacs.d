@@ -83,8 +83,8 @@ will not work - use `labels' instead" (symbol-name (car x))))
      ,@body))
 
 (defun init--theme ()
-  (set-frame-font "Source Code Pro for Powerline-18:weight=medium")
-  (set-fontset-font "fontset-default" 'chinese-gbk "Hiragino Sans GB-22:weight=medium"))
+  (set-frame-font "Source Code Pro for Powerline-16:weight=medium")
+  (set-fontset-font "fontset-default" 'chinese-gbk "Hiragino Sans GB-20:weight=medium"))
 (init--theme)
 
 (setq frame-title-format '(buffer-file-name "Emacs: %b (%f)" "Emacs: %b"))

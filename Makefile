@@ -25,12 +25,13 @@ lisp/my-loaddefs.el: $(ELFILES)
 		 -f batch-update-autoloads lisp
 
 init.el: README.org
+	rm -rf custom.el
 	$(BATCH) -l ob-tangle -eval "(org-babel-tangle-file \"$<\" \"$@\")"
 
 elpa: init.el
 	$(BATCH) -l ./init.el
 
 clean:
-	rm -rf init.el init.elc
+	rm -rf init.el init.elc $(ELCFILES) lisp/my-loaddefs.el
 
 .PHONY: all clean elpa

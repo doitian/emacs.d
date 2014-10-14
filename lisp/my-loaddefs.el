@@ -3,8 +3,9 @@
 ;;; Code:
 
 
-;;;### (autoloads nil "alternative-files" "alternative-files.el"
-;;;;;;  (21559 56845 0 0))
+;;;### (autoloads (alternative-files-create-file alternative-files-find-file
+;;;;;;  alternative-files-missing alternative-files-existing) "alternative-files"
+;;;;;;  "alternative-files.el" (21559 56845 0 0))
 ;;; Generated autoloads from alternative-files.el
 
 (defvar alternative-files-rules nil)
@@ -39,7 +40,9 @@ With a \\[universal-argument] prefix argument P to open in other window, \\[univ
 
 ;;;***
 
-;;;### (autoloads nil "tmux-send" "tmux-send.el" (21560 3208 0 0))
+;;;### (autoloads (tmux-repeat tmux-cd tmux-toggle-send-next-compile-command
+;;;;;;  tmux-send tmux-select) "tmux-send" "tmux-send.el" (21560
+;;;;;;  3208 0 0))
 ;;; Generated autoloads from tmux-send.el
 
 (autoload 'tmux-select "tmux-send" "\

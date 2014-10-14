@@ -49,7 +49,15 @@
 
 (require 'cl)
 (defmacro noflet (bindings &rest body)
-  "Make temporary overriding function definitions."
+  "Make temporary overriding function definitions.
+This is an analogue of a dynamically scoped `let' that operates on the function
+cell of FUNCs rather than their value cell.
+If you want the Common-Lisp style of `flet', you should use `cl-flet'.
+The FORMs are evaluated with the specified function definitions in place,
+then the definitions are undone (the FUNCs go back to their previous
+definitions, or lack thereof).
+
+\(fn ((FUNC ARGLIST BODY...) ...) FORM...)"
   (declare (indent 1) (debug cl-flet))
   `(letf ,(mapcar
            (lambda (x)
@@ -373,7 +381,6 @@ will not work - use `labels' instead" (symbol-name (car x))))
 
 ;; (setq evil-default-state 'emacs)
 (define-key evil-emacs-state-map (kbd "C-o") 'evil-execute-in-normal-state)
-(evil-set-initial-state 'magit-log-edit-mode 'emacs)
 (evil-set-initial-state 'ibuffer-mode 'normal)
 
 (define-key evil-normal-state-map (kbd "C-j")  'windmove-down)

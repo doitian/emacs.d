@@ -347,10 +347,15 @@ will not work - use `labels' instead" (symbol-name (car x))))
 (evil-leader/set-key
   ":" 'evil-repeat-find-char-reverse
   ";" 'evil-repeat-find-char
+  "." (kbd "@:")
   "a" 'ag-project-at-point
   "cc" 'iy-kill-buffer-and-window
+  "f" 'flycheck-next-error
+  "F" 'flycheck-buffer
   "gh" 'fasd-find-file
+  "gd" 'ido-dired
   "gf" 'find-file
+  "g." 'find-file
   "gb" 'ido-switch-buffer
   "go" 'occur
   "gr" 'ido-choose-from-recentf
@@ -360,10 +365,8 @@ will not work - use `labels' instead" (symbol-name (car x))))
   "lbe" 'ibuffer
   "lbs" 'ibuffer
   "lbv" 'ibuffer
-  "m" 'next-error
-  "M" 'compile
-  "f" 'flycheck-next-error
-  "F" 'flycheck-buffer
+  "m" 'compile
+  "n" 'evil-ex-nohighlight
   "ot" 'open-in-terminal
   "of" 'reveal-in-finder
   "om" 'open-in-marked-2
@@ -374,9 +377,9 @@ will not work - use `labels' instead" (symbol-name (car x))))
   "tn" 'tmux-toggle-send-next-compile-command
   "tcd" 'tmux-cd
   "u" 'undo-tree-visualize
-  "n" 'evil-ex-nohighlight
-  "," 'projectile-find-file
-  " " 'whitespace-cleanup-and-save)
+  "sw" 'whitespace-cleanup-and-save
+  "//" 'evil-ex-nohighlight
+  "," 'projectile-find-file)
 (define-key evil-normal-state-map (kbd ";") 'evil-ex)
 
 ;; (setq evil-default-state 'emacs)

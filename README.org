@@ -741,6 +741,8 @@ Remove annoying UI
 
 #+BEGIN_SRC emacs-lisp
   (add-hook 'prog-mode-hook 'electric-pair-mode)
+  (define-key global-map "\C-j" 'newline)
+  (define-key global-map "\C-m" 'newline-and-indent)
 #+END_SRC
 
 ** erlang

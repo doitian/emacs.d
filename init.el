@@ -623,6 +623,8 @@ If called with a prefix, prompts for flags to pass to ag."
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
 (add-hook 'prog-mode-hook 'electric-pair-mode)
+(define-key global-map "\C-j" 'newline)
+(define-key global-map "\C-m" 'newline-and-indent)
 
 (defun init--erlang-mode ()
   (run-hooks 'prog-mode-hook))

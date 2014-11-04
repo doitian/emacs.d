@@ -460,10 +460,6 @@ Remove annoying UI
   (define-key evil-emacs-state-map (kbd "C-o") 'evil-execute-in-normal-state)
   (evil-set-initial-state 'ibuffer-mode 'normal)
 
-  (define-key evil-normal-state-map (kbd "C-j")  'windmove-down)
-  (define-key evil-normal-state-map (kbd "C-k")  'windmove-up)
-  (define-key evil-normal-state-map (kbd "C-h")  'windmove-left)
-  (define-key evil-normal-state-map (kbd "C-l")  'windmove-right)
   (setq evil-normal-state-tag   (propertize " «N»" 'face '((:foreground "#859900")))
         evil-emacs-state-tag    (propertize " «E»" 'face '((:foreground "#b58900")))
         evil-replace-state-tag    (propertize " «R»" 'face '((:foreground "#dc322f")))

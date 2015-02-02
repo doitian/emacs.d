@@ -248,18 +248,6 @@ will not work - use `labels' instead" (symbol-name (car x))))
       (setq insert-directory-program "/usr/local/bin/gls")
     (setq dired-use-ls-dired nil))
 
-  (defun system-move-file-to-trash--using-rm-trash (filename)
-    "Remove file specified by FILENAME using rm-trash"
-    (call-process "ruby" nil nil nil
-                  "-W0" "-KU"
-                  (expand-file-name "~/.rm-trash/rm.rb")
-                  "-rf"
-                  filename))
-  (unless (fboundp 'system-move-file-to-trash)
-    (defalias
-      'system-move-file-to-trash
-      'system-move-file-to-trash--using-rm-trash))
-
   (require-package 'reveal-in-finder)
   (defun open-in-terminal ()
     (interactive)

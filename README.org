@@ -156,7 +156,7 @@ Remove annoying UI
    '(ps-print-color-p nil)
    '(custom-safe-themes
      (quote
-      ("3a727bdc09a7a141e58925258b6e873c65ccf393b2240c51553098ca93957723" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" default)))
+      ("c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
 
    '(sml/theme 'respectful)
    '(sml/mode-width 'right)
@@ -423,7 +423,8 @@ Remove annoying UI
     "gr" 'ido-choose-from-recentf
     "i" 'idomenu
     "ll" 'dired-jump
-    "lf" 'dired-jump
+    "lr" 'list-registers
+    "l@" 'list-registers
     "lbe" 'ibuffer
     "lbs" 'ibuffer
     "lbv" 'ibuffer
@@ -458,8 +459,8 @@ Remove annoying UI
 
   (define-key evil-normal-state-map (kbd "C-n") nil)
   (define-key evil-normal-state-map (kbd "C-p") nil)
-  (define-key evil-normal-state-map "]e"  'next-error)
-  (define-key evil-normal-state-map "[e"  'previous-error)
+  (define-key evil-normal-state-map "]q"  'next-error)
+  (define-key evil-normal-state-map "[q"  'previous-error)
   (define-key evil-normal-state-map "]l"  'flycheck-next-error)
   (define-key evil-normal-state-map "[l"  'flycheck-previous-error)
   (define-key evil-normal-state-map "]s"  'flyspell-goto-next-error)

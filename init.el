@@ -83,7 +83,7 @@ will not work - use `labels' instead" (symbol-name (car x))))
      ,@body))
 
 (defun init--theme ()
-  (set-frame-font "Source Code Pro for Powerline-16:weight=medium")
+  (set-frame-font "Source Code Pro-16:weight=medium")
   (set-fontset-font "fontset-default" 'chinese-gbk "Hiragino Sans GB-20:weight=medium"))
 (init--theme)
 
